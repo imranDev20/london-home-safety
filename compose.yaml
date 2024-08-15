@@ -1,0 +1,7 @@
+services:
+  db:
+    image: yobasystems/alpine-mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - "3306:3306"
