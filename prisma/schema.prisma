@@ -12,7 +12,7 @@ model User {
   email          String   @unique
   password       String
   name           String
-  type           String // Replaces the UserType enum
+  role           String // Replaces the UserType enum
   address        Address?
   orders         Order[]  @relation("UserOrders")
   assignedOrders Order[]  @relation("AssignedOrders")
