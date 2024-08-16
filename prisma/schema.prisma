@@ -1,10 +1,10 @@
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
 }
 
 model User {
@@ -12,13 +12,13 @@ model User {
   email          String   @unique
   password       String
   name           String
-  role           String // Replaces the UserType enum
-  address        Address?
-  orders         Order[]  @relation("UserOrders")
-  assignedOrders Order[]  @relation("AssignedOrders")
-  reviews        Review[]
+  role           Role
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  address        Address?
+  assignedOrders Order[]  @relation("AssignedOrders")
+  orders         Order[]  @relation("UserOrders")
+  reviews        Review[]
 }
 
 model Address {
@@ -26,22 +26,19 @@ model Address {
   street    String
   city      String
   postcode  String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Order {
-  id                 String    @id @default(cuid())
-  user               User      @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  id                 String        @id @default(cuid())
   userId             String
-  assignedEngineer   User?     @relation("AssignedOrders", fields: [assignedEngineerId], references: [id], onDelete: SetNull)
   assignedEngineerId String?
-  services           Service[]
-  status             String    @default("PENDING")
-  paymentStatus      String    @default("UNPAID")
-  paymentMethod      String    @default("CREDIT_CARD")
+  status             OrderStatus
+  paymentStatus      PaymentStatus @default(UNPAID)
+  paymentMethod      String        @default("CREDIT_CARD")
   isParkingAvailable Boolean
   isCongestionZone   Boolean
   inspectionTime     String
@@ -49,50 +46,53 @@ model Order {
   orderNotes         String?
   totalPrice         String
   invoiceId          String
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  assignedEngineer   User?         @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
+  user               User          @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  services           Service[]
 }
 
 model Review {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
   rating    Int      @default(5)
   title     String
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Service {
-  id              String    @id @default(cuid())
+  id              String           @id @default(cuid())
   name            String
-  type            String // Replaces the ServiceType enum
-  category        String // Replaces the Category enum
+  type            ServiceType
+  category        String
   description     String?
-  propertyType    String // Replaces the PropertyType enum
-  residentialType String? // Replaces the ResidentialType enum
-  commercialType  String? // Replaces the CommercialType enum
+  propertyType    PropertyType
+  residentialType ResidentialType?
+  commercialType  CommercialType?
   unitType        String?
   issuedDate      DateTime?
   expiryDate      DateTime?
-  order           Order?    @relation(fields: [orderId], references: [id])
   orderId         String?
-  packages        Package[] @relation("ServicePackages")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  packages        Package[]        @relation("ServicePackages")
+  order           Order?           @relation(fields: [orderId], references: [id])
 }
 
 model Package {
   id          String   @id @default(cuid())
-  service     Service  @relation("ServicePackages", fields: [serviceId], references: [id], onDelete: Cascade)
   serviceId   String
   name        String
   description String?
   unitCount   Int
-  price       String // Store price as a string for precise control
+  price       String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  service     Service  @relation("ServicePackages", fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 model SiteSettings {
@@ -107,4 +107,57 @@ model SiteSettings {
   openingHours  String?
   contactPerson String?
   updatedAt     DateTime @updatedAt
+}
+
+enum ServiceType {
+  CERTIFICATE
+  REPAIR
+  INSTALLATION
+  INSPECTION
+  OTHER
+}
+
+enum Role {
+  ADMIN
+  STAFF
+  CUSTOMER
+}
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+}
+
+enum ResidentialType {
+  BUNGALOW
+  MID_TERRACED_HOUSE
+  DETACHED_HOUSE
+  SEMI_DETACHED_HOUSE
+  FLAT
+  APARTMENT
+  OTHER
+}
+
+enum CommercialType {
+  PUB
+  STORE
+  OFFICE
+  RESTAURANT
+  WAREHOUSE
+  OTHER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+  REFUNDED
 }

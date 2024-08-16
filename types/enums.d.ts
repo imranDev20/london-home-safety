@@ -6,7 +6,7 @@ export enum ServiceType {
   OTHER = "OTHER",
 }
 
-export enum UserType {
+export enum Role {
   ADMIN = "ADMIN",
   STAFF = "STAFF",
   USER = "USER",
