@@ -5,22 +5,24 @@ import CartProvider from "@/providers/cart-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Your Company Name - Professional Services",
+  title: "London Home Safety Limited - Comprehensive Safety Solutions",
   description:
-    "We provide top-quality electrical, gas, fire safety, and health & safety services for residential and commercial properties.",
+    "Expert electrical, gas, fire safety, and health services for homes across London. Your safety is our priority.",
 
   // Basic metadata
-  applicationName: "Your Company Name",
-  authors: [{ name: "Your Name", url: "https://yourwebsite.com" }],
+  applicationName: "London Home Safety Limited",
+  authors: [
+    { name: "London Home Safety Team", url: "https://londonhomesafety.com" },
+  ],
   generator: "Next.js",
   keywords: [
-    "electrical services",
-    "gas services",
-    "fire safety",
-    "health and safety",
-    "property maintenance",
+    "London home safety",
+    "electrical safety London",
+    "gas safety London",
+    "fire prevention London",
+    "health services London",
+    "home safety solutions",
   ],
   referrer: "origin-when-cross-origin",
 
@@ -33,31 +35,31 @@ export const metadata: Metadata = {
 
   // Open Graph metadata
   openGraph: {
-    title: "Your Company Name - Professional Property Services",
+    title: "London Home Safety Limited - Comprehensive Safety Solutions",
     description:
-      "Expert electrical, gas, fire safety, and health & safety services for your property.",
-    url: "https://yourwebsite.com",
-    siteName: "Your Company Name",
+      "Protecting your home with expert safety solutions. From electrical and gas safety to fire prevention and health services, we ensure peace of mind for homeowners across London.",
+    url: "https://londonhomesafety.com",
+    siteName: "London Home Safety Limited",
     images: [
       {
-        url: "https://yourwebsite.com/og-image.jpg",
+        url: "https://londonhomesafety.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Your Company Name banner image",
+        alt: "London Home Safety Limited banner image",
       },
     ],
-    locale: "en_US",
+    locale: "en_GB",
     type: "website",
   },
 
   // Twitter metadata
   twitter: {
     card: "summary_large_image",
-    title: "Your Company Name - Professional Property Services",
+    title: "London Home Safety Limited - Comprehensive Safety Solutions",
     description:
-      "Expert electrical, gas, fire safety, and health & safety services for your property.",
-    creator: "@yourtwitter",
-    images: ["https://yourwebsite.com/twitter-image.jpg"],
+      "Expert safety solutions for your home in London. From electrical to fire safety, we've got you covered.",
+    creator: "@LondonHomeSafety",
+    images: ["https://londonhomesafety.com/twitter-image.jpg"],
   },
 
   // Verification for search engines
@@ -84,16 +86,16 @@ export const metadata: Metadata = {
 
   // Alternate languages
   alternates: {
-    canonical: "https://yourwebsite.com",
+    canonical: "https://londonhomesafety.com",
     languages: {
-      "en-US": "https://yourwebsite.com/en-US",
-      "es-ES": "https://yourwebsite.com/es-ES",
+      "en-GB": "https://londonhomesafety.com/en-GB",
+      "es-ES": "https://londonhomesafety.com/es-ES",
     },
   },
 
   // App-specific metadata
   appleWebApp: {
-    title: "Your Company App",
+    title: "London Home Safety App",
     statusBarStyle: "black-translucent",
     startupImage: [
       "/apple-splash-2048-2732.jpg",
@@ -110,9 +112,9 @@ export const metadata: Metadata = {
 
   // Other metadata
   category: "business",
-  classification: "Property Services",
-  creator: "Your Company Name",
-  publisher: "Your Company Name",
+  classification: "Home Safety Services",
+  creator: "London Home Safety Limited",
+  publisher: "London Home Safety Limited",
 };
 
 export default function RootLayout({

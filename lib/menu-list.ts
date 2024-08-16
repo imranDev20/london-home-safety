@@ -34,9 +34,9 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "",
       menus: [
         {
-          href: "/dashboard",
+          href: "/",
           label: "Dashboard",
-          active: pathname === "/admin" || pathname.includes("/dashboard"),
+          active: pathname === "/admin",
           icon: LayoutGrid,
           submenus: [],
         },
@@ -44,7 +44,7 @@ export function getMenuList(pathname: string): Group[] {
     },
 
     {
-      groupLabel: "Some group",
+      groupLabel: "Management",
       menus: [
         {
           href: "/orders",
@@ -54,16 +54,16 @@ export function getMenuList(pathname: string): Group[] {
           submenus: [],
         },
         {
-          href: "/users",
-          label: "Users",
-          active: pathname.includes("/users"),
+          href: "/customers",
+          label: "Customers",
+          active: pathname.includes("/customers"),
           icon: Users,
           submenus: [],
         },
         {
           href: "/services",
           label: "Services",
-          active: pathname.includes("/users"),
+          active: pathname.includes("/services"),
           icon: Users,
           submenus: [],
         },
@@ -78,7 +78,7 @@ export function getMenuList(pathname: string): Group[] {
     },
 
     {
-      groupLabel: "Others",
+      groupLabel: "Configuration",
       menus: [
         {
           href: "/settings",

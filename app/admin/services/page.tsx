@@ -1,3 +1,5 @@
+import { ContentLayout } from "../_components/content-layout";
+
 export default function AdminServicesPage() {
-  return <div></div>;
+  return <ContentLayout title="Services">Services</ContentLayout>;
 }

@@ -87,3 +87,17 @@ model Package {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model SiteSettings {
+  id            String   @id @default(cuid())
+  email         String
+  phone         String
+  address       String
+  websiteUrl    String?
+  facebookUrl   String?
+  twitterUrl    String?
+  instagramUrl  String?
+  openingHours  String?
+  contactPerson String?
+  updatedAt     DateTime @updatedAt
+}
