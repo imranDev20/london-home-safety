@@ -34,14 +34,21 @@ model Address {
 
 model Order {
   id                 String    @id @default(cuid())
-  user               User      @relation("UserOrders", fields: [userId], references: [id])
+  user               User      @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
   userId             String
-  assignedEngineer   User?     @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
+  assignedEngineer   User?     @relation("AssignedOrders", fields: [assignedEngineerId], references: [id], onDelete: SetNull)
   assignedEngineerId String?
   services           Service[]
-  status             String // Replaces the OrderStatus enum
-  paymentStatus      String // Replaces the PaymentStatus enum
+  status             String    @default("PENDING")
+  paymentStatus      String    @default("UNPAID")
+  paymentMethod      String    @default("CREDIT_CARD")
+  isParkingAvailable Boolean
+  isCongestionZone   Boolean
+  inspectionTime     String
   date               DateTime
+  orderNotes         String?
+  totalPrice         String
+  invoiceId          String
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }
@@ -71,14 +78,14 @@ model Service {
   expiryDate      DateTime?
   order           Order?    @relation(fields: [orderId], references: [id])
   orderId         String?
-  packages        Package[]
+  packages        Package[] @relation("ServicePackages")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
 
 model Package {
   id          String   @id @default(cuid())
-  service     Service  @relation(fields: [serviceId], references: [id])
+  service     Service  @relation("ServicePackages", fields: [serviceId], references: [id], onDelete: Cascade)
   serviceId   String
   name        String
   description String?

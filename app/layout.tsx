@@ -6,12 +6,12 @@ import { ThemeProvider } from "@/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: "London Home Safety Limited - Comprehensive Safety Solutions",
+  title: "London Home Safety - Comprehensive Safety Solutions",
   description:
     "Expert electrical, gas, fire safety, and health services for homes across London. Your safety is our priority.",
 
   // Basic metadata
-  applicationName: "London Home Safety Limited",
+  applicationName: "London Home Safety",
   authors: [
     { name: "London Home Safety Team", url: "https://londonhomesafety.com" },
   ],
@@ -35,17 +35,17 @@ export const metadata: Metadata = {
 
   // Open Graph metadata
   openGraph: {
-    title: "London Home Safety Limited - Comprehensive Safety Solutions",
+    title: "London Home Safety - Comprehensive Safety Solutions",
     description:
       "Protecting your home with expert safety solutions. From electrical and gas safety to fire prevention and health services, we ensure peace of mind for homeowners across London.",
     url: "https://londonhomesafety.com",
-    siteName: "London Home Safety Limited",
+    siteName: "London Home Safety",
     images: [
       {
         url: "https://londonhomesafety.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "London Home Safety Limited banner image",
+        alt: "London Home Safety banner image",
       },
     ],
     locale: "en_GB",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   // Twitter metadata
   twitter: {
     card: "summary_large_image",
-    title: "London Home Safety Limited - Comprehensive Safety Solutions",
+    title: "London Home Safety - Comprehensive Safety Solutions",
     description:
       "Expert safety solutions for your home in London. From electrical to fire safety, we've got you covered.",
     creator: "@LondonHomeSafety",
@@ -113,8 +113,8 @@ export const metadata: Metadata = {
   // Other metadata
   category: "business",
   classification: "Home Safety Services",
-  creator: "London Home Safety Limited",
-  publisher: "London Home Safety Limited",
+  creator: "London Home Safety",
+  publisher: "London Home Safety",
 };
 
 export default function RootLayout({

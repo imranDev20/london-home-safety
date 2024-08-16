@@ -10,7 +10,7 @@ import OrderTableRow from "./order-table-row";
 import { getOrders } from "../actions";
 
 export default async function OrderList() {
-  const orders = await getOrders();
+  const { orders, pagination } = await getOrders();
 
   return (
     <>
@@ -20,6 +20,7 @@ export default async function OrderList() {
             <TableHeader>
               <TableRow>
                 <TableHead>User</TableHead>
+                <TableHead className="hidden md:table-cell">Invoice</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="hidden md:table-cell">Cost</TableHead>
                 <TableHead className="hidden md:table-cell w-[23%]">
@@ -42,7 +43,8 @@ export default async function OrderList() {
         </CardContent>
         <CardFooter>
           <div className="text-xs text-muted-foreground">
-            Showing <strong>1-10</strong> of <strong>32</strong> products
+            Showing <strong>{orders.length}</strong> of{" "}
+            <strong>{pagination.totalCount}</strong> products
           </div>
         </CardFooter>
       </Card>

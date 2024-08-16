@@ -1,15 +1,68 @@
+"use server";
+
 import prisma from "@/lib/prisma";
 import { unstable_cache as cache } from "next/cache";
 
-export const getOrders = cache(async () => {
+export const getOrders = cache(
+  async (page: number = 1, pageSize: number = 10) => {
+    try {
+      const skip = (page - 1) * pageSize;
+
+      const [orders, totalCount] = await Promise.all([
+        prisma.order.findMany({
+          skip,
+          take: pageSize,
+          include: {
+            user: {
+              include: {
+                address: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc", // You can change this to sort by any field
+          },
+        }),
+        prisma.order.count(), // Get total count for pagination info
+      ]);
+
+      return {
+        orders,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalCount,
+          totalPages: Math.ceil(totalCount / pageSize),
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw new Error("Failed to fetch orders");
+    }
+  }
+);
+
+export const getOrdersById = cache(async (orderId: string) => {
   try {
-    const orders = await prisma.order.findMany({
+    if (!orderId) {
+      console.error("No product ID available");
+      return null;
+    }
+
+    const order = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
       include: {
-        _count: true,
-        user: true,
+        user: {
+          include: {
+            address: true,
+          },
+        },
       },
     });
-    return orders;
+
+    return order;
   } catch (error) {
     console.error("Error fetching orders:", error);
     throw new Error("Failed to fetch orders");

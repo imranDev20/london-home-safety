@@ -12,21 +12,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Order, Prisma } from "@prisma/client";
 import { useRouter } from "next/navigation";
-
-export type OrderWithRelation = Prisma.OrderGetPayload<{
-  include: {
-    user: true;
-    _count: true;
-  };
-}>;
+import { NumericFormat } from "react-number-format";
+import dayjs from "dayjs";
+import { OrderWithRelation } from "@/types/order";
 
 export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
   const router = useRouter();
+
   return (
     <TableRow
-      onClick={() => router.push(`/orders/${order.id}`)}
+      onClick={() => router.push(`/admin/orders/${order.id}`)}
       className="hover:cursor-pointer"
     >
       <TableCell className="font-medium flex">
@@ -35,16 +31,41 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
         </Avatar>
         <div>
           <p className="text-sm">{order.user.name}</p>
-          <p className="text-xs text-gray-500">{order.user.email}</p>
+          <p className="text-xs text-gray-500 font-normal">
+            {order.user.email}
+          </p>
         </div>
       </TableCell>
+      <TableCell>{order.invoiceId || "N/A"}</TableCell>
       <TableCell>
         <Badge variant="outline">{order.status || "N/A"}</Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell">$499.99</TableCell>
-      <TableCell className="hidden md:table-cell"></TableCell>
       <TableCell className="hidden md:table-cell">
-        2023-07-12 10:42 AM
+        £
+        {order.totalPrice ? (
+          <NumericFormat
+            displayType="text"
+            value={order.totalPrice}
+            thousandsGroupStyle="lakh"
+            thousandSeparator=","
+            renderText={(value) => <>{value}</>}
+          />
+        ) : (
+          0
+        )}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {order.user.address ? (
+          <>
+            {order.user.address?.street}, {order.user.address?.city}{" "}
+            {order.user.address?.postcode}
+          </>
+        ) : (
+          "N/A"
+        )}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {dayjs(new Date(order.createdAt)).format("DD-MM-YYYY HH:mm A")}
       </TableCell>
       <TableCell>
         <DropdownMenu>
