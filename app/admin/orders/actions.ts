@@ -42,7 +42,7 @@ export const getOrders = cache(
   }
 );
 
-export const getOrdersById = cache(async (orderId: string) => {
+export const getOrdersById = async (orderId: string) => {
   try {
     if (!orderId) {
       console.error("No product ID available");
@@ -67,4 +67,4 @@ export const getOrdersById = cache(async (orderId: string) => {
     console.error("Error fetching orders:", error);
     throw new Error("Failed to fetch orders");
   }
-});
+};
