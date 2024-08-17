@@ -8,13 +8,14 @@ import {
 } from "@/components/ui/table";
 import OrderTableRow from "./order-table-row";
 import { getOrders } from "../actions";
+import TableEmpty from "@/components/table-empty";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default async function OrderList() {
   const { orders, pagination } = await getOrders();
 
-  await sleep(10000);
+  // await sleep(10000);
 
   return (
     <>
@@ -38,11 +39,16 @@ export default async function OrderList() {
                 </TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {orders.map((order) => (
-                <OrderTableRow key={order.id} order={order} />
-              ))}
-            </TableBody>
+
+            {orders.length > 0 ? (
+              <TableBody>
+                {orders.map((order) => (
+                  <OrderTableRow key={order.id} order={order} />
+                ))}
+              </TableBody>
+            ) : (
+              <TableEmpty colSpan={7} />
+            )}
           </Table>
         </CardContent>
         <CardFooter>

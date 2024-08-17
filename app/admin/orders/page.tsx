@@ -4,6 +4,7 @@ import OrderList from "./_components/order-list";
 import OrderTableHeader from "./_components/order-table-header";
 import { OrderPagination } from "./_components/order-pagination";
 import { Suspense } from "react";
+import OrdersLoading from "./_components/orders-loading";
 
 const breadcrumbItems = [
   { label: "Dashboard", href: "/admin" },
@@ -15,7 +16,7 @@ export default function AdminOrdersPage() {
     <ContentLayout title="Orders">
       <DynamicBreadcrumb items={breadcrumbItems} />
       <OrderTableHeader />
-      <Suspense fallback="Loading...">
+      <Suspense fallback={<OrdersLoading />}>
         <OrderList />
       </Suspense>
       <OrderPagination />
