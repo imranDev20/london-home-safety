@@ -66,6 +66,7 @@ export default function OrderTableHeader() {
           <SelectTrigger className="w-full sm:w-auto">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
+
           <SelectContent>
             <SelectItem value="name">Name</SelectItem>
             <SelectItem value="status">Status</SelectItem>

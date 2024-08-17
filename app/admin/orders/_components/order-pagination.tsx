@@ -40,7 +40,6 @@ export function OrderPagination({
     pageLinks.push(
       <PaginationItem key={1}>
         <PaginationLink
-          href="#"
           onClick={() => handlePageChange(1)}
           isActive={currentPage === 1}
         >
@@ -67,7 +66,6 @@ export function OrderPagination({
       pageLinks.push(
         <PaginationItem key={i}>
           <PaginationLink
-            href="#"
             onClick={() => handlePageChange(i)}
             isActive={currentPage === i}
           >
@@ -91,7 +89,6 @@ export function OrderPagination({
       pageLinks.push(
         <PaginationItem key={totalPages}>
           <PaginationLink
-            href="#"
             onClick={() => handlePageChange(totalPages)}
             isActive={currentPage === totalPages}
           >
@@ -114,7 +111,6 @@ export function OrderPagination({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              href="#"
               onClick={() =>
                 handlePageChange(Math.max(1, pagination.currentPage - 1))
               }
@@ -130,7 +126,6 @@ export function OrderPagination({
 
           <PaginationItem>
             <PaginationNext
-              href="#"
               onClick={() =>
                 handlePageChange(
                   Math.min(pagination.totalPages, pagination.currentPage + 1)

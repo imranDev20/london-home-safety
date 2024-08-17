@@ -19,6 +19,7 @@ import { OrderWithRelation } from "@/types/order";
 import { useTransition } from "react";
 import { deleteOrder } from "../actions";
 import { useToast } from "@/components/ui/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
   const router = useRouter();
@@ -53,19 +54,27 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
       onClick={() => router.push(`/admin/orders/${order.id}`)}
       className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
-      <TableCell className="font-medium flex">
-        <Avatar className="mr-3">
-          <AvatarFallback>{order.user.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-sm">{order.user.name}</p>
-          <p className="text-xs text-gray-500 font-normal">
-            {order.user.email}
-          </p>
+      <TableCell>
+        <div className="flex justify-center">
+          <Checkbox />
         </div>
       </TableCell>
-      <TableCell>{order.invoiceId || "N/A"}</TableCell>
-      <TableCell>
+
+      <TableCell className="w-[25%]">
+        <div className="flex">
+          <Avatar className="mr-3">
+            <AvatarFallback>{order.user.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-medium">{order.user.name}</p>
+            <p className="text-xs text-gray-500 font-normal">
+              {order.user.email}
+            </p>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className="">{order.invoiceId || "N/A"}</TableCell>
+      <TableCell className="">
         <Badge variant="outline">{order.status || "N/A"}</Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
@@ -96,7 +105,7 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
         {dayjs(new Date(order.createdAt)).format("DD-MM-YYYY HH:mm A")}
       </TableCell>
 
-      <TableCell>
+      <TableCell className="w-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button aria-haspopup="true" size="icon" variant="ghost">
