@@ -15,6 +15,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useQueryString from "@/hooks/use-query-string";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
+import { kebabToNormal } from "@/lib/utils";
 
 export default function OrderTableHeader() {
   const router = useRouter();
@@ -23,6 +25,10 @@ export default function OrderTableHeader() {
   const searchParams = useSearchParams();
 
   const initialSearchValue = searchParams.get("search") ?? "";
+  const sortBy = searchParams.get("sort_by") ?? "";
+  const sortOrder = searchParams.get("sort_order") ?? "";
+  const filterStatus = searchParams.get("filter_status") ?? "";
+
   const [searchValue, setSearchValue] = useState(initialSearchValue);
   const debouncedSearchValue = useDebounce(searchValue, 300); // 300ms delay
 
@@ -62,28 +68,73 @@ export default function OrderTableHeader() {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
         />
-        <Select>
+        <Select
+          value={sortBy}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  sort_by: value,
+                })}`
+              );
+            }
+          }}
+        >
           <SelectTrigger className="w-full sm:w-auto">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
 
           <SelectContent>
             <SelectItem value="name">Name</SelectItem>
-            <SelectItem value="status">Status</SelectItem>
-            <SelectItem value="price">Price</SelectItem>
-            <SelectItem value="totalSales">Total Sales</SelectItem>
-            <SelectItem value="createdAt">Created at</SelectItem>
+            <SelectItem value="price">Cost</SelectItem>
+            <SelectItem value="email">Email</SelectItem>
+            <SelectItem value="createdAt">Created At</SelectItem>
           </SelectContent>
         </Select>
 
-        <Select>
+        <Select
+          value={sortOrder}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  sort_order: value,
+                })}`
+              );
+            }
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-auto">
+            <SelectValue placeholder="Sort Order" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="desc">Desc</SelectItem>
+            <SelectItem value="asc">Asc</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={filterStatus}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  filter_status: value !== "ALL" ? value : "",
+                })}`
+              );
+            }
+          }}
+        >
           <SelectTrigger className="w-full sm:w-auto">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="ALL">ALL</SelectItem>
+            {ORDER_STATUS_OPTIONS.map((option) => (
+              <SelectItem value={option} key={option}>
+                {kebabToNormal(option)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

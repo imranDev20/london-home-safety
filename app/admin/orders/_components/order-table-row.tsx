@@ -20,6 +20,7 @@ import { useTransition } from "react";
 import { deleteOrder } from "../actions";
 import { useToast } from "@/components/ui/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { kebabToNormal } from "@/lib/utils";
 
 export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
   const router = useRouter();
@@ -75,7 +76,7 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
       </TableCell>
       <TableCell className="">{order.invoiceId || "N/A"}</TableCell>
       <TableCell className="">
-        <Badge variant="outline">{order.status || "N/A"}</Badge>
+        <Badge variant="outline">{kebabToNormal(order.status) || "N/A"}</Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
         £

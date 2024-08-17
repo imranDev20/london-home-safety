@@ -1,27 +1,53 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { OrderStatus, Prisma } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
 
 export const getOrders = async (
   page: number = 1,
   pageSize: number = 10,
-  search: string = ""
+  search: string = "",
+  sortBy: string = "createdAt",
+  sortOrder: "asc" | "desc" = "desc",
+  filterStatus: OrderStatus | "" = ""
 ) => {
   try {
     const skip = (page - 1) * pageSize;
 
-    // Create a where clause for searching
-    const whereClause: Prisma.OrderWhereInput = search
-      ? {
-          OR: [
-            { invoiceId: { contains: search, mode: "insensitive" } },
-            { user: { email: { contains: search, mode: "insensitive" } } },
-            { user: { name: { contains: search, mode: "insensitive" } } },
-          ],
-        }
-      : {};
+    const whereClause: Prisma.OrderWhereInput = {
+      AND: [
+        search
+          ? {
+              OR: [
+                { invoiceId: { contains: search, mode: "insensitive" } },
+                { user: { email: { contains: search, mode: "insensitive" } } },
+                { user: { name: { contains: search, mode: "insensitive" } } },
+              ],
+            }
+          : {},
+        filterStatus ? { status: filterStatus } : {},
+      ],
+    };
+
+    // Create orderBy clause
+    const orderByClause: Prisma.OrderOrderByWithRelationInput = {};
+    switch (sortBy) {
+      case "name":
+        orderByClause.user = { name: sortOrder };
+        break;
+      case "email":
+        orderByClause.user = { email: sortOrder };
+        break;
+      case "price":
+        orderByClause.totalPrice = sortOrder;
+        break;
+      case "createdAt":
+        orderByClause.createdAt = sortOrder;
+        break;
+      default:
+        orderByClause.createdAt = "desc";
+    }
 
     const [orders, totalCount] = await Promise.all([
       prisma.order.findMany({
@@ -35,9 +61,7 @@ export const getOrders = async (
             },
           },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: orderByClause,
       }),
       prisma.order.count({ where: whereClause }),
     ]);

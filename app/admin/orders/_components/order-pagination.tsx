@@ -12,6 +12,7 @@ import {
 import useQueryString from "@/hooks/use-query-string";
 import { OrderWithRelation, Pagination as PaginationType } from "@/types/order";
 import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils"; // Make sure this import is correct for your project structure
 
 export function OrderPagination({
   orders,
@@ -40,6 +41,7 @@ export function OrderPagination({
     pageLinks.push(
       <PaginationItem key={1}>
         <PaginationLink
+          className={cn("cursor-pointer")}
           onClick={() => handlePageChange(1)}
           isActive={currentPage === 1}
         >
@@ -52,7 +54,7 @@ export function OrderPagination({
     if (totalPages > 7 && currentPage > 3) {
       pageLinks.push(
         <PaginationItem key="ellipsis1">
-          <PaginationEllipsis />
+          <PaginationEllipsis className={cn("cursor-pointer")} />
         </PaginationItem>
       );
     }
@@ -66,6 +68,7 @@ export function OrderPagination({
       pageLinks.push(
         <PaginationItem key={i}>
           <PaginationLink
+            className={cn("cursor-pointer")}
             onClick={() => handlePageChange(i)}
             isActive={currentPage === i}
           >
@@ -79,7 +82,7 @@ export function OrderPagination({
     if (totalPages > 7 && currentPage < totalPages - 2) {
       pageLinks.push(
         <PaginationItem key="ellipsis2">
-          <PaginationEllipsis />
+          <PaginationEllipsis className={cn("cursor-pointer")} />
         </PaginationItem>
       );
     }
@@ -89,6 +92,7 @@ export function OrderPagination({
       pageLinks.push(
         <PaginationItem key={totalPages}>
           <PaginationLink
+            className={cn("cursor-pointer")}
             onClick={() => handlePageChange(totalPages)}
             isActive={currentPage === totalPages}
           >
@@ -111,13 +115,11 @@ export function OrderPagination({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
+              className={cn("cursor-pointer", {
+                "pointer-events-none opacity-50": pagination.currentPage === 1,
+              })}
               onClick={() =>
                 handlePageChange(Math.max(1, pagination.currentPage - 1))
-              }
-              className={
-                pagination.currentPage === 1
-                  ? "pointer-events-none opacity-50"
-                  : ""
               }
             />
           </PaginationItem>
@@ -126,15 +128,14 @@ export function OrderPagination({
 
           <PaginationItem>
             <PaginationNext
+              className={cn("cursor-pointer", {
+                "pointer-events-none opacity-50":
+                  pagination.currentPage === pagination.totalPages,
+              })}
               onClick={() =>
                 handlePageChange(
                   Math.min(pagination.totalPages, pagination.currentPage + 1)
                 )
-              }
-              className={
-                pagination.currentPage === pagination.totalPages
-                  ? "pointer-events-none opacity-50"
-                  : ""
               }
             />
           </PaginationItem>

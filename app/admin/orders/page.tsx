@@ -6,6 +6,7 @@ import { OrderPagination } from "./_components/order-pagination";
 import { Suspense } from "react";
 import OrdersLoading from "./_components/orders-loading";
 import { getOrders } from "./actions";
+import { OrderStatus } from "@prisma/client";
 
 const breadcrumbItems = [
   { label: "Dashboard", href: "/admin" },
@@ -18,16 +19,20 @@ export default async function AdminOrdersPage({
   searchParams: {
     search: string;
     page: string;
+    sort_by: OrderStatus;
+    sort_order: "asc" | "desc";
+    filter_status: OrderStatus;
   };
 }) {
-  const { search, page } = searchParams;
+  const { search, page, sort_by, sort_order, filter_status } = searchParams;
   const { orders, pagination } = await getOrders(
     parseInt(page) || 1,
     10,
-    search
+    search,
+    sort_by,
+    sort_order,
+    filter_status
   );
-
-  console.log(page);
 
   return (
     <ContentLayout title="Orders">

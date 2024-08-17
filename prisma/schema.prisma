@@ -46,7 +46,7 @@ model Order {
   inspectionTime     String
   date               DateTime
   orderNotes         String?
-  totalPrice         String
+  totalPrice         Float
   invoiceId          String        @unique
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
