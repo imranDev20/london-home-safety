@@ -1,14 +1,31 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
 
-export const getOrders = async (page: number = 1, pageSize: number = 10) => {
+export const getOrders = async (
+  page: number = 1,
+  pageSize: number = 10,
+  search: string = ""
+) => {
   try {
     const skip = (page - 1) * pageSize;
 
+    // Create a where clause for searching
+    const whereClause: Prisma.OrderWhereInput = search
+      ? {
+          OR: [
+            { invoiceId: { contains: search, mode: "insensitive" } },
+            { user: { email: { contains: search, mode: "insensitive" } } },
+            { user: { name: { contains: search, mode: "insensitive" } } },
+          ],
+        }
+      : {};
+
     const [orders, totalCount] = await Promise.all([
       prisma.order.findMany({
+        where: whereClause,
         skip,
         take: pageSize,
         include: {
@@ -19,10 +36,10 @@ export const getOrders = async (page: number = 1, pageSize: number = 10) => {
           },
         },
         orderBy: {
-          createdAt: "desc", // You can change this to sort by any field
+          createdAt: "desc",
         },
       }),
-      prisma.order.count(), // Get total count for pagination info
+      prisma.order.count({ where: whereClause }),
     ]);
 
     return {
