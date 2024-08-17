@@ -9,8 +9,12 @@ import {
 import OrderTableRow from "./order-table-row";
 import { getOrders } from "../actions";
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export default async function OrderList() {
   const { orders, pagination } = await getOrders();
+
+  await sleep(10000);
 
   return (
     <>

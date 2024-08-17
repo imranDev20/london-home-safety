@@ -16,14 +16,42 @@ import { useRouter } from "next/navigation";
 import { NumericFormat } from "react-number-format";
 import dayjs from "dayjs";
 import { OrderWithRelation } from "@/types/order";
+import { useTransition } from "react";
+import { deleteOrder } from "../actions";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+
+  const handleDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation(); // Stop the propagation to prevent routing
+
+    startTransition(async () => {
+      const result = await deleteOrder(order.id);
+
+      if (result.success) {
+        toast({
+          title: "Order Deleted",
+          description: result.message,
+          variant: "success",
+        });
+      } else {
+        // Handle error (e.g., show an error message)
+        toast({
+          title: "Error Deleting Product",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   return (
     <TableRow
       onClick={() => router.push(`/admin/orders/${order.id}`)}
-      className="hover:cursor-pointer"
+      className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
       <TableCell className="font-medium flex">
         <Avatar className="mr-3">
@@ -67,6 +95,7 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
       <TableCell className="hidden md:table-cell">
         {dayjs(new Date(order.createdAt)).format("DD-MM-YYYY HH:mm A")}
       </TableCell>
+
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -78,7 +107,13 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                handleDelete(e);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>
