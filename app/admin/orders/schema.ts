@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const orderSchema = z.object({
   userId: z.string().cuid(),
-  assignedEngineerId: z.string().cuid().optional().nullable(),
+  assignedEngineer: z.string().cuid().optional().nullable(),
   services: z.array(z.string().cuid()), // Array of service IDs
   status: z
     .enum(["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"])

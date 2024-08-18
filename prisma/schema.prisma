@@ -46,8 +46,8 @@ model Order {
   inspectionTime     String
   date               DateTime
   orderNotes         String?
-  totalPrice         String
-  invoiceId          String
+  totalPrice         Float
+  invoiceId          String        @unique
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
   services           Service[]
@@ -66,7 +66,7 @@ model Review {
 
 model Service {
   id              String           @id @default(cuid())
-  name            String
+  name            String           @unique
   type            ServiceType
   category        String
   description     String?

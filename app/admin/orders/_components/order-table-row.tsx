@@ -16,29 +16,67 @@ import { useRouter } from "next/navigation";
 import { NumericFormat } from "react-number-format";
 import dayjs from "dayjs";
 import { OrderWithRelation } from "@/types/order";
+import { useTransition } from "react";
+import { deleteOrder } from "../actions";
+import { useToast } from "@/components/ui/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
+import { kebabToNormal } from "@/lib/utils";
 
 export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+
+  const handleDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation(); // Stop the propagation to prevent routing
+
+    startTransition(async () => {
+      const result = await deleteOrder(order.id);
+
+      if (result.success) {
+        toast({
+          title: "Order Deleted",
+          description: result.message,
+          variant: "success",
+        });
+      } else {
+        // Handle error (e.g., show an error message)
+        toast({
+          title: "Error Deleting Product",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   return (
     <TableRow
       onClick={() => router.push(`/admin/orders/${order.id}`)}
-      className="hover:cursor-pointer"
+      className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
-      <TableCell className="font-medium flex">
-        <Avatar className="mr-3">
-          <AvatarFallback>{order.user.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-sm">{order.user.name}</p>
-          <p className="text-xs text-gray-500 font-normal">
-            {order.user.email}
-          </p>
+      <TableCell>
+        <div className="flex justify-center">
+          <Checkbox />
         </div>
       </TableCell>
-      <TableCell>{order.invoiceId || "N/A"}</TableCell>
-      <TableCell>
-        <Badge variant="outline">{order.status || "N/A"}</Badge>
+
+      <TableCell className="w-[25%]">
+        <div className="flex">
+          <Avatar className="mr-3">
+            <AvatarFallback>{order.user.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-medium">{order.user.name}</p>
+            <p className="text-xs text-gray-500 font-normal">
+              {order.user.email}
+            </p>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className="">{order.invoiceId || "N/A"}</TableCell>
+      <TableCell className="">
+        <Badge variant="outline">{kebabToNormal(order.status) || "N/A"}</Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
         £
@@ -67,7 +105,8 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
       <TableCell className="hidden md:table-cell">
         {dayjs(new Date(order.createdAt)).format("DD-MM-YYYY HH:mm A")}
       </TableCell>
-      <TableCell>
+
+      <TableCell className="w-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -78,7 +117,13 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                handleDelete(e);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>
