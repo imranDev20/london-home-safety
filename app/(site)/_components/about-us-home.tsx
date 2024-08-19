@@ -35,7 +35,7 @@ export default function AboutUsHome() {
         <div className="col-span-12 md:col-span-7 relative">
           <div className="flex justify-center    ">
             <div className="grid grid-cols-2 gap-6 relative">
-              <div className="row-span-2 w-72 h-96 rounded-lg overflow-hidden">
+              <div className="row-span-2 w-72 h-96 rounded-lg overflow-hidden mt-3">
                 <Image
                   src={BackgroundImage}
                   alt="Large Image"

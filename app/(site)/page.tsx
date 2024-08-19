@@ -1,4 +1,3 @@
-import Footer from "@/components/global/foooter";
 import Topbar from "@/components/global/header/topbar";
 import AboutUsHome from "./_components/about-us-home";
 import CallToAction from "./_components/call-to-action";
@@ -19,7 +18,6 @@ export default function Home() {
       <Faq />
       <Contact />
       <Reviews />
-      <Footer />
     </main>
   );
 }
