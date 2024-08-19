@@ -32,16 +32,10 @@ export default async function ServiceList({
                   </div>
                 </TableHead>
                 <TableHead className="w-[25%]">Name</TableHead>
-                <TableHead className="hidden md:table-cell">Type</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="hidden md:table-cell">Description</TableHead>
-                <TableHead className="hidden md:table-cell ">Property Type</TableHead>
-                <TableHead className="hidden md:table-cell ">Residential Type</TableHead>
-                <TableHead className="hidden md:table-cell ">Commercial Type</TableHead>
-                <TableHead className="hidden md:table-cell ">Unit Type</TableHead>
-                <TableHead className="hidden md:table-cell w-[17%]">
-                  Created at
-                </TableHead>
+                <TableHead className="hidden md:table-cell">Category</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead className="hidden md:table-cell">Unit</TableHead>                             
+                <TableHead className="hidden md:table-cell">Property Type</TableHead>                             
                 <TableHead className="w-10">
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -55,7 +49,7 @@ export default async function ServiceList({
                 ))}
               </TableBody>
             ) : (
-              <TableEmpty colSpan={10} />
+              <TableEmpty colSpan={5} />
             )}
           </Table>
         </div>
