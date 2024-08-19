@@ -1,5 +1,46 @@
+import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { ContentLayout } from "../_components/content-layout";
 
-export default function AdminServicesPage() {
-  return <ContentLayout title="Services">Services</ContentLayout>;
+import { Suspense } from "react";
+
+import {  ServiceType } from "@prisma/client";
+import { getServices } from "./actions";
+import ServiceTableHeader from "./_components/service-table-header";
+import ServiceLoading from "./_components/service-loading";
+import { ServicePagination } from "./_components/service-pagination";
+import ServiceList from "./_components/service-list";
+
+const breadcrumbItems = [
+  { label: "Dashboard", href: "/admin" },
+  { label: "Services", href: "/admin/services", isCurrentPage: true },
+];
+
+export default async function AdminOrdersPage({
+  searchParams,
+}: {
+  searchParams: {
+    search: string;
+    page: string;  
+    filter_status: ServiceType;
+  };
+}) {
+  const { search, page, filter_status } = searchParams;
+  const { services, pagination } = await getServices(
+    parseInt(page) || 1,
+    10,
+    search,   
+    filter_status
+  );
+
+  return (
+    <ContentLayout title="Services">
+      <DynamicBreadcrumb items={breadcrumbItems} />
+      <ServiceTableHeader />
+      <Suspense fallback={<ServiceLoading />}>
+        <ServiceList services={services} pagination={pagination} />
+      </Suspense>
+
+      <ServicePagination services={services} pagination={pagination} />
+    </ContentLayout>
+  );
 }

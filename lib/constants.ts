@@ -1,4 +1,4 @@
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, ServiceType } from "@prisma/client";
 
 export const ORDER_STATUS_OPTIONS: OrderStatus[] = [
   "CANCELLED",
@@ -6,4 +6,12 @@ export const ORDER_STATUS_OPTIONS: OrderStatus[] = [
   "IN_PROGRESS",
   "PENDING",
   "CONFIRMED",
+];
+
+export const SERVICE_TYPE_OPTIONS: ServiceType[] = [
+  "CERTIFICATE",
+  "REPAIR",
+  "INSTALLATION",
+  "INSPECTION",
+  "OTHER",
 ];
