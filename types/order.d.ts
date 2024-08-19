@@ -9,3 +9,10 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
     };
   };
 }>;
+
+export type Pagination = {
+  currentPage: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+};

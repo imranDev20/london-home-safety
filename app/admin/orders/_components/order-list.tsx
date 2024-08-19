@@ -7,26 +7,35 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import OrderTableRow from "./order-table-row";
-import { getOrders } from "../actions";
+import TableEmpty from "@/components/table-empty";
+import { OrderWithRelation, Pagination } from "@/types/order";
+import { Checkbox } from "@/components/ui/checkbox";
 
-export default async function OrderList() {
-  const { orders, pagination } = await getOrders();
-
+export default async function OrderList({
+  orders,
+  pagination,
+}: {
+  orders: OrderWithRelation[];
+  pagination: Pagination;
+}) {
   return (
-    <>
-      <Card>
-        <CardContent>
+    <Card className="flex flex-col justify-between">
+      <CardContent className="p-0">
+        <div className="overflow-auto h-[calc(100vh-320px)]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User</TableHead>
+                <TableHead className="w-8">
+                  <div className="flex justify-center items-center">
+                    <Checkbox />
+                  </div>
+                </TableHead>
+                <TableHead className="w-[25%]">User</TableHead>
                 <TableHead className="hidden md:table-cell">Invoice</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="hidden md:table-cell">Cost</TableHead>
-                <TableHead className="hidden md:table-cell w-[23%]">
-                  Address
-                </TableHead>
-                <TableHead className="hidden md:table-cell w-[18%]">
+                <TableHead className="hidden md:table-cell ">Address</TableHead>
+                <TableHead className="hidden md:table-cell w-[17%]">
                   Created at
                 </TableHead>
                 <TableHead className="w-10">
@@ -34,20 +43,19 @@ export default async function OrderList() {
                 </TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {orders.map((order) => (
-                <OrderTableRow key={order.id} order={order} />
-              ))}
-            </TableBody>
+
+            {orders.length > 0 ? (
+              <TableBody>
+                {orders.map((order) => (
+                  <OrderTableRow key={order.id} order={order} />
+                ))}
+              </TableBody>
+            ) : (
+              <TableEmpty colSpan={7} />
+            )}
           </Table>
-        </CardContent>
-        <CardFooter>
-          <div className="text-xs text-muted-foreground">
-            Showing <strong>{orders.length}</strong> of{" "}
-            <strong>{pagination.totalCount}</strong> products
-          </div>
-        </CardFooter>
-      </Card>
-    </>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

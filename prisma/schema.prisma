@@ -12,7 +12,7 @@ model User {
   email          String   @unique
   password       String
   name           String
-  role           Role
+  role           Role     @default(CUSTOMER)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   address        Address?
@@ -27,46 +27,46 @@ model Address {
   city      String
   postcode  String
   userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Order {
   id                 String        @id @default(cuid())
   userId             String
+  user               User          @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
   assignedEngineerId String?
+  assignedEngineer   User?         @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
   status             OrderStatus
   paymentStatus      PaymentStatus @default(UNPAID)
-  paymentMethod      String        @default("CREDIT_CARD")
+  paymentMethod      PaymentMethod @default(CREDIT_CARD)
   isParkingAvailable Boolean
   isCongestionZone   Boolean
   inspectionTime     String
   date               DateTime
   orderNotes         String?
-  totalPrice         String
-  invoiceId          String
+  totalPrice         Float
+  invoiceId          String        @unique
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
-  assignedEngineer   User?         @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
-  user               User          @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
   services           Service[]
 }
 
 model Review {
   id        String   @id @default(cuid())
   userId    String
+  user      User     @relation(fields: [userId], references: [id])
   rating    Int      @default(5)
   title     String
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Service {
   id              String           @id @default(cuid())
-  name            String
+  name            String           @unique
   type            ServiceType
   category        String
   description     String?
@@ -77,22 +77,22 @@ model Service {
   issuedDate      DateTime?
   expiryDate      DateTime?
   orderId         String?
+  order           Order?           @relation(fields: [orderId], references: [id])
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   packages        Package[]        @relation("ServicePackages")
-  order           Order?           @relation(fields: [orderId], references: [id])
 }
 
 model Package {
   id          String   @id @default(cuid())
   serviceId   String
+  service     Service  @relation("ServicePackages", fields: [serviceId], references: [id], onDelete: Cascade)
   name        String
   description String?
   unitCount   Int
   price       String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  service     Service  @relation("ServicePackages", fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 model SiteSettings {
@@ -160,4 +160,10 @@ enum PaymentStatus {
   PARTIALLY_PAID
   PAID
   REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  CASH_TO_ENGINEER
+  BANK_TRANSFER
 }
