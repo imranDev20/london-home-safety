@@ -1,8 +1,9 @@
+import Footer from "@/components/global/foooter";
+import CartProvider from "@/providers/cart-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import CartProvider from "@/providers/cart-provider";
-import { ThemeProvider } from "@/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -127,6 +128,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
           <CartProvider>{children}</CartProvider>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
