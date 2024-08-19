@@ -72,7 +72,9 @@ export default function CustomerTableRow({ customer: customer }: { customer: Cus
           </div>
         </div>
       </TableCell>
-               
+      <TableCell className="hidden md:table-cell">
+       
+      </TableCell>
       <TableCell className="hidden md:table-cell">
         {customer.address ? (
           <>
