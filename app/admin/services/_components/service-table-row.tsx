@@ -67,29 +67,16 @@ export default function ServiceTableRow({
       </TableCell>
 
       <TableCell className="w-[25%]">{service.name}</TableCell>
-      <TableCell className="">{service.type || "N/A"}</TableCell>
       <TableCell className="">
         <Badge variant="outline">{service.category || "N/A"}</Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {service.description || "N/A"}
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {service.propertyType || "N/A"}
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {service.residentialType || "N/A"}
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {service.commercialType || "N/A"}
-      </TableCell>
+      <TableCell className="">{service.type || "N/A"}</TableCell>
       <TableCell className="hidden md:table-cell">
         {service.unitType || "N/A"}
       </TableCell>
       <TableCell className="hidden md:table-cell">
-        {dayjs(new Date(service.createdAt)).format("DD-MM-YYYY HH:mm A")}
-      </TableCell>
-
+        {service.propertyType || "N/A"}
+      </TableCell>     
       <TableCell className="w-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
