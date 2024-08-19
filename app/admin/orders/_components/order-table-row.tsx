@@ -28,7 +28,7 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
   const { toast } = useToast();
 
   const handleDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation(); // Stop the propagation to prevent routing
+    e.stopPropagation();
 
     startTransition(async () => {
       const result = await deleteOrder(order.id);
@@ -55,9 +55,13 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
       onClick={() => router.push(`/admin/orders/${order.id}`)}
       className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
-      <TableCell>
+      <TableCell onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-center">
-          <Checkbox />
+          <Checkbox
+            onCheckedChange={(checked) => {
+              console.log(checked);
+            }}
+          />
         </div>
       </TableCell>
 
