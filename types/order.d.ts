@@ -9,6 +9,16 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
     };
   };
 }>;
+export type OrderIdWithRelation = Prisma.OrderGetPayload<{
+  include: {
+    user: {
+      include: {
+        address: true;
+      };
+    };
+    services: true,
+  };
+}>;
 
 export type Pagination = {
   currentPage: number;

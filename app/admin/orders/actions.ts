@@ -67,7 +67,7 @@ export const getOrders = async (
       prisma.order.count({ where: whereClause }),
     ]);
     // Generate Excel file
-   
+
     return {
       orders,
       pagination: {
@@ -97,13 +97,21 @@ export const getOrdersById = async (orderId: string) => {
       include: {
         user: {
           include: {
-            address: true,
-          },
+            address: true,            
+          },          
         },
+        services: true,
+      },
+    });
+
+    const engineer = await prisma.user.findMany({
+      where: {
+        role: "STAFF",
       },
     });
 
     return order;
+    
   } catch (error) {
     console.error("Error fetching orders:", error);
     throw new Error("Failed to fetch orders");
@@ -135,53 +143,55 @@ export async function deleteOrder(orderId: string) {
 }
 
 export const getExportOrders = async () => {
-try {
-  const orders = await prisma.order.findMany({
-    include: {
-      user: {
-        include: {
-          address:true
-        }
-      },      
-    }
-  })
-  const workbook = new exceljs.Workbook();
-  const worksheet = workbook.addWorksheet("Orders");
-  worksheet.columns = [
-    { header: "Invoice ID", key: "invoice_id", width: 20, },
-    { header: "Name", key: "name", width: 30 },
-    { header: "Email", key: "email", width: 30 },
-    { header: "Phone", key: "phone", width: 20 },
-    { header: "Address", key: "address", width: 60 },  
-    { header: "Cost", key: "cost", width: 15 },
-    { header: "Placed On", key: "createdAt", width: 20 }, 
-  ];
-
-  orders.forEach((order) => {
-    worksheet.addRow({
-      invoice_id: order.invoiceId,
-      name: order.user?.name,
-      email: order.user?.email,
-      // phone: order.user?.phone,
-      address: `${order.user?.address?.street ? order.user?.address?.street + ',' : ""} ${order.user?.address?.city ?? ""} ${order.user?.address?.postcode ?? ""}`,    
-      cost: order.totalPrice,
-      createdAt: dayjs(order?.user?.createdAt).format("DD MMMM YYYY"),
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        user: {
+          include: {
+            address: true,
+          },
+        },
+      },
     });
-  });
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet("Orders");
+    worksheet.columns = [
+      { header: "Invoice ID", key: "invoice_id", width: 20 },
+      { header: "Name", key: "name", width: 30 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Phone", key: "phone", width: 20 },
+      { header: "Address", key: "address", width: 60 },
+      { header: "Cost", key: "cost", width: 15 },
+      { header: "Placed On", key: "createdAt", width: 20 },
+    ];
 
-  const buffer = await workbook.xlsx.writeBuffer();
-  const excelData = Buffer.from(buffer).toString("base64");
-  return {
-    message: "Orders Data Downloaded Successfully",
-    data: excelData,
-    success: true,
-  }
-  
-} catch (error) {
-  return {
-    message: "An error occured when downloading orders data" + error,   
-    success: false,
-  }
-}
+    orders.forEach((order) => {
+      worksheet.addRow({
+        invoice_id: order.invoiceId,
+        name: order.user?.name,
+        email: order.user?.email,
+        // phone: order.user?.phone,
+        address: `${
+          order.user?.address?.street ? order.user?.address?.street + "," : ""
+        } ${order.user?.address?.city ?? ""} ${
+          order.user?.address?.postcode ?? ""
+        }`,
+        cost: order.totalPrice,
+        createdAt: dayjs(order?.user?.createdAt).format("DD MMMM YYYY"),
+      });
+    });
 
-}
+    const buffer = await workbook.xlsx.writeBuffer();
+    const excelData = Buffer.from(buffer).toString("base64");
+    return {
+      message: "Orders Data Downloaded Successfully",
+      data: excelData,
+      success: true,
+    };
+  } catch (error) {
+    return {
+      message: "An error occured when downloading orders data" + error,
+      success: false,
+    };
+  }
+};
