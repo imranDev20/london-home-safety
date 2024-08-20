@@ -3,7 +3,8 @@
 import prisma from "@/lib/prisma";
 import {Prisma } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
-
+import dayjs from "dayjs";
+import exceljs from "exceljs";
 export const getCustomers = async (
     page: number = 1,
     pageSize: number = 10,
@@ -57,8 +58,32 @@ export const getCustomers = async (
         }),
         prisma.user.count({ where: whereClause }),
       ]);
-  
+   // Generate Excel file
+   const workbook = new exceljs.Workbook();
+   const worksheet = workbook.addWorksheet("Customers");
+
+   worksheet.columns = [  
+     { header: "Name", key: "name", width: 30 },
+     { header: "Email", key: "email", width: 30 },
+     { header: "Phone", key: "phone", width: 20 },
+     { header: "Address", key: "address", width: 60 },    
+     { header: "Placed On", key: "createdAt", width: 20 },  
+   ];
+
+   users.forEach((user) => {
+     worksheet.addRow({    
+       name: user?.name,
+       email: user?.email,
+       // phone:user?.phone,
+       address: `${user?.address?.street ? user?.address?.street + ',' : ""} ${user?.address?.city ?? ""} ${user?.address?.postcode ?? ""}`,    
+       createdAt: dayjs(user?.createdAt).format("DD MMMM YYYY"),     
+     });
+   });
+
+   const buffer = await workbook.xlsx.writeBuffer();
+   const excelData = Buffer.from(buffer).toString("base64");
       return {
+        excelData,
         users,
         pagination: {
           currentPage: page,

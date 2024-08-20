@@ -26,7 +26,7 @@ export default async function AdminOrdersPage({
   };
 }) {
   const { search, page, sort_order, sort_by} = searchParams;
-  const { users: customers, pagination } = await getCustomers(
+  const { users: customers, pagination, excelData } = await getCustomers(
     parseInt(page) || 1,
     10,
     search,   
@@ -37,7 +37,7 @@ export default async function AdminOrdersPage({
   return (
     <ContentLayout title="Customers">
       <DynamicBreadcrumb items={breadcrumbItems} />
-      <CustomerTableHeader />
+      <CustomerTableHeader excelData={excelData} />
       <Suspense fallback={<CustomersLoading />}>
         <CustomerList customers={customers} pagination={pagination} />
       </Suspense>

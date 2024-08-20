@@ -3,7 +3,8 @@
 import prisma from "@/lib/prisma";
 import { OrderStatus, Prisma } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
-
+import dayjs from "dayjs";
+import exceljs from "exceljs";
 export const getOrders = async (
   page: number = 1,
   pageSize: number = 10,
@@ -65,8 +66,36 @@ export const getOrders = async (
       }),
       prisma.order.count({ where: whereClause }),
     ]);
+    // Generate Excel file
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet("Orders");
 
+    worksheet.columns = [
+      { header: "Invoice ID", key: "invoice_id", width: 20, },
+      { header: "Name", key: "name", width: 30 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Phone", key: "phone", width: 20 },
+      { header: "Address", key: "address", width: 60 },  
+      { header: "Cost", key: "cost", width: 15 },
+      { header: "Placed On", key: "createdAt", width: 20 }, 
+    ];
+
+    orders.forEach((order) => {
+      worksheet.addRow({
+        invoice_id: order.invoiceId,
+        name: order.user?.name,
+        email: order.user?.email,
+        // phone: order.user?.phone,
+        address: `${order.user?.address?.street ? order.user?.address?.street + ',' : ""} ${order.user?.address?.city ?? ""} ${order.user?.address?.postcode ?? ""}`,    
+        cost: order.totalPrice,
+        createdAt: dayjs(order?.user?.createdAt).format("DD MMMM YYYY"),
+      });
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const excelData = Buffer.from(buffer).toString("base64");
     return {
+      excelData,
       orders,
       pagination: {
         currentPage: page,
