@@ -69,7 +69,6 @@ export const getOrders = async (
     // Generate Excel file
     const workbook = new exceljs.Workbook();
     const worksheet = workbook.addWorksheet("Orders");
-
     worksheet.columns = [
       { header: "Invoice ID", key: "invoice_id", width: 20, },
       { header: "Name", key: "name", width: 30 },
