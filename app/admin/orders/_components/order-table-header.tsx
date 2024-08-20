@@ -13,19 +13,21 @@ import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useQueryString from "@/hooks/use-query-string";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
 import { kebabToNormal } from "@/lib/utils";
 import dayjs from "dayjs";
+import { getExportOrders } from "../actions";
+import { toast } from "@/components/ui/use-toast";
+import { LoadingButton } from "@/components/ui/loading-button";
 
-
-export default function OrderTableHeader({excelData}:{excelData:string}) {
+export default function OrderTableHeader() {
   const router = useRouter();
   const { createQueryString } = useQueryString();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
+  const [isPending, startTransition] = useTransition();
   const initialSearchValue = searchParams.get("search") ?? "";
   const sortBy = searchParams.get("sort_by") ?? "";
   const sortOrder = searchParams.get("sort_order") ?? "";
@@ -43,13 +45,11 @@ export default function OrderTableHeader({excelData}:{excelData:string}) {
   }, [debouncedSearchValue, pathname, router, createQueryString]);
 
   const handleExportOrders = async () => {
-    try {
-    
-
-      if (excelData) {
-              
-
-        // Download Excel file
+    startTransition(async () => {
+      const result = await getExportOrders();
+      if (result.success) {
+        // Handle successful deletion (e.g., show a success message, update UI)
+        const excelData = result.data as string;
         const byteArray = new Uint8Array(
           atob(excelData)
             .split("")
@@ -69,13 +69,20 @@ export default function OrderTableHeader({excelData}:{excelData:string}) {
         document.body.appendChild(link);
         link.click();
         link.remove();
+        toast({
+          title: "Orders  Downloaded",
+          description: result.message,
+          variant: "success",
+        });      
       } else {
-        console.log(excelData);
-        console.error("Error exporting orders:", excelData);
+        toast({
+          title: "Orders download failed",
+          description: result.message,
+          variant: "destructive",
+        });
+        console.error(result.message);
       }
-    } catch (err) {
-      console.error(err);
-    }  
+    });
   };
 
   return (
@@ -87,9 +94,17 @@ export default function OrderTableHeader({excelData}:{excelData:string}) {
         </h1>
 
         <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <Button variant="outline" size="sm"   onClick={handleExportOrders}>
+          <LoadingButton
+            type="button"
+            disabled={isPending}
+            size="sm"
+            loading={isPending}
+            className="text-xs font-semibold h-8"
+            onClick={handleExportOrders}
+            variant="outline"
+          >
             Download Excel
-          </Button>
+          </LoadingButton>
           <Link href="orders/new">
             <Button size="sm" className="whitespace-nowrap">
               Add New Order

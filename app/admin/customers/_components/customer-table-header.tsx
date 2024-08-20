@@ -13,20 +13,26 @@ import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useQueryString from "@/hooks/use-query-string";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import dayjs from "dayjs";
+import { getExportCustomers } from "../actions";
+import { toast } from "@/components/ui/use-toast";
+import { LoadingButton } from "@/components/ui/loading-button";
 
-export default function CustomerTableHeader({excelData}:{excelData:string}) {
+export default function CustomerTableHeader({
+  excelData,
+}: {
+  excelData: string;
+}) {
   const router = useRouter();
   const { createQueryString } = useQueryString();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
+  const [isPending, startTransition] = useTransition();
   const initialSearchValue = searchParams.get("search") ?? "";
   const sortBy = searchParams.get("sort_by") ?? "";
   const sortOrder = searchParams.get("sort_order") ?? "";
-  
 
   const [searchValue, setSearchValue] = useState(initialSearchValue);
   const debouncedSearchValue = useDebounce(searchValue, 300); // 300ms delay
@@ -38,14 +44,13 @@ export default function CustomerTableHeader({excelData}:{excelData:string}) {
       })}`
     );
   }, [debouncedSearchValue, pathname, router, createQueryString]);
+
   const handleExportCustomers = async () => {
-    try {
-    
-
-      if (excelData) {
-              
-
-        // Download Excel file
+    startTransition(async () => {
+      const result = await getExportCustomers();
+      if (result.success) {
+        // Handle successful deletion (e.g., show a success message, update UI)
+        const excelData = result.data as string;
         const byteArray = new Uint8Array(
           atob(excelData)
             .split("")
@@ -65,13 +70,20 @@ export default function CustomerTableHeader({excelData}:{excelData:string}) {
         document.body.appendChild(link);
         link.click();
         link.remove();
+        toast({
+          title: "Customers  Downloaded",
+          description: result.message,
+          variant: "success",
+        });
       } else {
-        console.log(excelData);
-        console.error("Error exporting orders:", excelData);
+        toast({
+          title: "Customers download failed",
+          description: result.message,
+          variant: "destructive",
+        });
+        console.error(result.message);
       }
-    } catch (err) {
-      console.error(err);
-    }   
+    });
   };
 
   return (
@@ -83,9 +95,17 @@ export default function CustomerTableHeader({excelData}:{excelData:string}) {
         </h1>
 
         <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <Button variant="outline" size="sm" onClick={handleExportCustomers}>
+          <LoadingButton
+            type="button"
+            disabled={isPending}
+            size="sm"
+            loading={isPending}
+            className="text-xs font-semibold h-8"
+            onClick={handleExportCustomers}
+            variant="outline"
+          >
             Download Excel
-          </Button>
+          </LoadingButton>
           <Link href="customers/new">
             <Button size="sm" className="whitespace-nowrap">
               Add New Customer
@@ -119,8 +139,8 @@ export default function CustomerTableHeader({excelData}:{excelData:string}) {
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="name">Name</SelectItem>           
-            <SelectItem value="email">Email</SelectItem>            
+            <SelectItem value="name">Name</SelectItem>
+            <SelectItem value="email">Email</SelectItem>
             <SelectItem value="createdAt">Created At</SelectItem>
           </SelectContent>
         </Select>
@@ -145,8 +165,6 @@ export default function CustomerTableHeader({excelData}:{excelData:string}) {
             <SelectItem value="asc">Asc</SelectItem>
           </SelectContent>
         </Select>
-
-      
       </div>
     </>
   );
