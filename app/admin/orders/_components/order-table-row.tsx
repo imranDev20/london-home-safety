@@ -1,8 +1,9 @@
 "use client";
 
-import { MoreHorizontal } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,16 +12,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
-import { NumericFormat } from "react-number-format";
-import dayjs from "dayjs";
-import { OrderWithRelation } from "@/types/order";
-import { useTransition } from "react";
-import { deleteOrder } from "../actions";
 import { useToast } from "@/components/ui/use-toast";
-import { Checkbox } from "@/components/ui/checkbox";
 import { kebabToNormal } from "@/lib/utils";
+import { OrderWithRelation } from "@/types/order";
+import dayjs from "dayjs";
+import { MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { NumericFormat } from "react-number-format";
+import { deleteOrder } from "../actions";
 
 export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
   const router = useRouter();

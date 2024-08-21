@@ -2,9 +2,9 @@
 
 import prisma from "@/lib/prisma";
 import { OrderStatus, Prisma } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
+import { revalidatePath } from "next/cache";
 export const getOrders = async (
   page: number = 1,
   pageSize: number = 10,

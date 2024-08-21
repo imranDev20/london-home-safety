@@ -10,9 +10,9 @@ export default function ServiceTableRow({
   return (
     <TableRow key={service.id}>
       <TableCell className="font-medium">{service.name}</TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell className="text-right"></TableCell>
+      <TableCell>{service.category}</TableCell>
+      <TableCell>{service.unitType}</TableCell>
+      <TableCell >{service.propertyType}</TableCell>
     </TableRow>
   );
 }

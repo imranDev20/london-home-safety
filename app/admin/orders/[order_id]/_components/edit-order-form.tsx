@@ -1,20 +1,53 @@
 "use client";
 
 import { ContentLayout } from "@/app/admin/_components/content-layout";
+import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
+import { LoadingButton } from "@/components/ui/loading-button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useToast } from "@/components/ui/use-toast";
+import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
+import { cn, kebabToNormal } from "@/lib/utils";
+import { StaffWithRelations } from "@/types/engineers";
 import { OrderIdWithRelation } from "@/types/order";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { OrderFormInput } from "../../schema";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { OrderStatus } from "@prisma/client";
+import { SelectTrigger } from "@radix-ui/react-select";
+import dayjs from "dayjs";
 import {
   Building2,
   CalendarDays,
@@ -25,39 +58,16 @@ import {
   Clock,
   Copyright,
   House,
+  Mail,
   Map,
   Phone,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { LoadingButton } from "@/components/ui/loading-button";
-import { useState, useTransition } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { StaffWithRelations } from "@/types/engineers";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { OrderFormInput } from "../../schema";
+import { updateOrder } from "../actions";
 import ServiceTableRow from "./service-table-row";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function EditOrderForm({
   orderDetails,
@@ -66,7 +76,6 @@ export default function EditOrderForm({
   orderDetails: OrderIdWithRelation | null;
   engineers: StaffWithRelations[] | null;
 }) {
-  const [isPending, startTransaction] = useTransition();
 
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
@@ -78,26 +87,55 @@ export default function EditOrderForm({
     },
   ];
 
-  const form = useForm<OrderFormInput>({
-    defaultValues: {},
+  const form = useForm<OrderFormInput>({  
+    defaultValues: {
+      status: orderDetails?.status
+    },
   });
 
-  const { handleSubmit, reset, control } = form;
-
+  const { handleSubmit, reset, control, watch } = form;
+  const { toast } = useToast();
   const onEditOrderSubmit: SubmitHandler<OrderFormInput> = async () => {};
   const [openAssignedEngineers, setOpenAssignedEngineers] =
     useState<boolean>(false);
-  const languages = [
-    { label: "English", value: "en" },
-    { label: "French", value: "fr" },
-    { label: "German", value: "de" },
-    { label: "Spanish", value: "es" },
-    { label: "Portuguese", value: "pt" },
-    { label: "Russian", value: "ru" },
-    { label: "Japanese", value: "ja" },
-    { label: "Korean", value: "ko" },
-    { label: "Chinese", value: "zh" },
-  ] as const;
+   
+  useEffect(() => {
+    if (orderDetails) {
+      reset({
+        assignedEngineer: orderDetails?.assignedEngineerId ?? "",
+        status: orderDetails?.status,
+      });
+    }
+  }, [orderDetails, reset]);
+  const assignedEngineerChanged = watch("assignedEngineer");
+  const [isEngineerPending, startTransition] = useTransition();
+  useEffect(()=>{
+    if(assignedEngineerChanged){
+      if(orderDetails?.id) {
+        startTransition(async ()=>{
+          const updateEngineer = await updateOrder(orderDetails?.id, assignedEngineerChanged);
+          if(updateEngineer.success) {
+            setOpenAssignedEngineers(false);
+            toast({
+              title: "Order Updated",
+              description: updateEngineer.message,
+              variant: "success",
+            });
+          } else {
+            toast({
+              title: "Order update failed",
+              description: updateEngineer.message,
+              variant: "destructive",
+            });
+          }
+
+        })
+      }
+
+    }
+
+  },[assignedEngineerChanged])
+
   return (
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
@@ -120,18 +158,41 @@ export default function EditOrderForm({
             </Badge>
 
             <div className="hidden items-center gap-2 md:ml-auto md:flex">
-              <Button variant="outline" size="sm" type="button">
-                Discard
-              </Button>
+              <FormField
+                control={control}
+                name="status"               
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="px-2 py-1 border-none" disabled>
+                          <SelectValue  placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ORDER_STATUS_OPTIONS.map((option) => (
+                          <SelectItem value={option} key={option}>
+                            {kebabToNormal(option)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <LoadingButton
                 type="submit"
-                disabled={isPending}
+                // disabled={isEngineerPending}
                 size="sm"
-                loading={isPending}
+                // loading={isEngineerPending}
                 className="text-xs font-semibold h-8"
               >
-                Save Changes
+                Download Invoice
               </LoadingButton>
             </div>
           </div>
@@ -142,85 +203,92 @@ export default function EditOrderForm({
                 <h2 className="font-semibold text-lg mb-4">
                   Assigned Engineers
                 </h2>
-                {/* <FormField
-                        control={control}
-                        name="assignedEngineer"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Language</FormLabel>
-                            <Popover 
-                            open={openAssignedEngineers}
-                            onOpenChange={setOpenAssignedEngineers}
-                            >
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    aria-expanded={openAssignedEngineers}
-                                    className={cn(
-                                      "w-[200px] justify-between",
-                                      !field.value && "text-muted-foreground"
-                                    )}
-                                  >
-                                    {field.value
-                                      ? languages.find(
-                                          (language) =>
-                                            language.value === field.value
-                                        )?.label
-                                      : "Select language"}
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-[200px] p-0">
-                                <Command>
-                                  <CommandInput placeholder="Search language..." />
-                                  <CommandList>
-                                    <CommandEmpty>
-                                      No language found.
-                                    </CommandEmpty>
-                                    <CommandGroup>
-                                      {languages.map((language) => (
-                                        <CommandItem
-                                          value={language.label}
-                                          key={language.value}
-                                          onSelect={() => {
-                                            form.setValue(
-                                              "assignedEngineer",
-                                              language.value
-                                            );
-                                          }}
-                                        >
-                                          <Check
-                                            className={cn(
-                                              "mr-2 h-4 w-4",
-                                              language.value === field.value
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                            )}
-                                          />
-                                          {language.label}
-                                        </CommandItem>
-                                      ))}
-                                    </CommandGroup>
-                                  </CommandList>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>                         
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      /> */}
+                <div className="flex gap-4">
+                  <FormField
+                    control={control}
+                    name="assignedEngineer"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <Popover
+                          open={openAssignedEngineers}
+                          onOpenChange={setOpenAssignedEngineers}
+                        >
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openAssignedEngineers}
+                                className={cn(
+                                  "w-[400px] justify-between",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value
+                                  ? engineers?.find(
+                                      (engineer) => engineer.id === field.value
+                                    )?.name
+                                  : "Select engineer"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[400px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search engineer..." />
+                              <CommandList>
+                                <CommandEmpty>No engineer found.</CommandEmpty>
+                                <CommandGroup>
+                                  {engineers?.map((engineer) => (
+                                    <CommandItem
+                                      value={engineer.id}
+                                      key={engineer.id}
+                                      onSelect={() => {
+                                        form.setValue(
+                                          "assignedEngineer",
+                                          engineer.id
+                                        );
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          engineer.id === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {engineer.name}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="flex gap-2"
+                  >
+                    <Mail size={14} />
+                    Send Email
+                  </Button>
+                </div>
               </div>
               <div className="grid gap-3">
                 <h2 className="font-semibold text-lg mb-4">Order Items</h2>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Item</TableHead>
-                      <TableHead>Quantity</TableHead>
-                      <TableHead>Price</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Unit</TableHead>
+                      <TableHead>Property Type</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -241,13 +309,19 @@ export default function EditOrderForm({
                       <span>
                         <CalendarDays size={20} />
                       </span>
-                      <span></span>
+                      <span>
+                        {orderDetails?.date
+                          ? dayjs(new Date(orderDetails.date)).format(
+                              "DD MMM YYYY"
+                            )
+                          : "Date not available"}
+                      </span>
                     </div>
                     <div className="flex gap-2">
                       <span>
                         <Clock size={20} />
                       </span>
-                      <span></span>
+                      <span>{orderDetails?.inspectionTime ?? ""}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -262,7 +336,7 @@ export default function EditOrderForm({
               </div>
             </div>
             <div className="gird auto-rows-max items-star gap-4 lg:col-span-3 ">
-              <div className="grid grid-cols-1 md: grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="">
                   <h2 className="font-semibold text-lg mb-4">
                     Customer Details
@@ -298,8 +372,10 @@ export default function EditOrderForm({
                           {orderDetails?.user?.address?.street
                             ? orderDetails?.user?.address?.street + ", "
                             : ""}
-                          {orderDetails?.user?.address?.city}
-                          {" " + orderDetails?.user?.address?.postcode}
+                          {orderDetails?.user?.address?.city
+                            ? orderDetails?.user?.address?.city + " "
+                            : ""}
+                          {orderDetails?.user?.address?.postcode}
                         </span>
                       </div>
                     </CardContent>
@@ -323,29 +399,33 @@ export default function EditOrderForm({
                         </span>
                         <span></span>
                       </div>
-                      <div className="text-xs text-gray-500 font-normal ps-2 mt-2 flex gap-2">
+                      <div className="text-sm  font-semibold ps-2 mt-2 flex gap-2">
                         <span>
-                          <CarFront size={20} />
+                          <CarFront className="text-gray-500" size={20} />
                         </span>
-                        <span></span>
+                        <span>
+                          {orderDetails?.isParkingAvailable
+                            ? "Paid Parking Available"
+                            : "Parking Not Available"}
+                        </span>
                       </div>
-                      <div className="text-xs text-gray-500 font-normal ps-2 mt-2 flex gap-2">
+                      <div className="text-sm  font-semibold ps-2 mt-2 flex gap-2">
                         <span>
-                          <Copyright size={20} />
+                          <Copyright className="text-gray-500" size={20} />
                         </span>
-                        <span></span>
+                        <span>
+                          {orderDetails?.isCongestionZone
+                            ? "In Congestion Zone"
+                            : "Outside Congestion Zone"}
+                        </span>
                       </div>
                     </CardContent>
                   </Card>
                 </div>
                 <div className="">
-                  <h2 className="font-semibold text-lg mb-4">
-                  Order Activity
-                  </h2>
+                  <h2 className="font-semibold text-lg mb-4">Order Activity</h2>
                   <Card>
-                    <CardContent className="p-4">
-                   
-                    </CardContent>
+                    <CardContent className="p-4"></CardContent>
                   </Card>
                 </div>
               </div>
