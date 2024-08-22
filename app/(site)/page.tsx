@@ -9,13 +9,14 @@ import ServiceCategories from "./_components/service-categories";
 export default function Home() {
   return (
     <>
-      <Hero />
+      Hello world
+      {/* <Hero />
       <ServiceCategories />
       <AboutUsHome />
       <CallToAction />
       <Faq />
       <Contact />
-      <Reviews />
+      <Reviews /> */}
     </>
   );
 }
