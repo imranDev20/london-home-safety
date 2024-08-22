@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section className="relative h-screen flex items-center">
-      <Image
+      {/* <Image
         src={BackgroundImage}
         alt="London Home Safety Hero Background"
         fill
@@ -17,7 +17,7 @@ export default function Hero() {
         quality={30}
         rel="preload"
         sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" //
-      />
+      /> */}
 
       <div className="container mx-auto grid grid-cols-12 my-auto gap-5 z-10 relative max-w-screen-xl">
         <div className="col-span-8">
