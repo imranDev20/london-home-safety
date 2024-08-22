@@ -10,9 +10,9 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import useQueryString from "@/hooks/use-query-string";
+import { cn } from "@/lib/utils"; // Make sure this import is correct for your project structure
 import { OrderWithRelation, Pagination as PaginationType } from "@/types/order";
 import { usePathname, useRouter } from "next/navigation";
-import { cn } from "@/lib/utils"; // Make sure this import is correct for your project structure
 
 export function OrderPagination({
   orders,
