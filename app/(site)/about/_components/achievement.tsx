@@ -63,6 +63,7 @@ export default function Achievement() {
               height={200}
               layout="responsive"
               className="object-cover"
+              loading="lazy"
             />
           </div>
 
@@ -74,6 +75,7 @@ export default function Achievement() {
               height={133}
               layout="responsive"
               className="object-cover"
+              loading="lazy"
             />
           </div>
 

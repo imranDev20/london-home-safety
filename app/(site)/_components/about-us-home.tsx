@@ -41,6 +41,7 @@ export default function AboutUsHome() {
                   alt="Large Image"
                   width={384}
                   height={384}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -51,6 +52,7 @@ export default function AboutUsHome() {
                   alt="Small Image 1"
                   width={192}
                   height={192}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -61,6 +63,7 @@ export default function AboutUsHome() {
                   alt="Small Image 2"
                   width={192}
                   height={192}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -11,6 +11,7 @@ export default function AboutCta() {
         layout="fill"
         objectFit="cover"
         className="opacity-20"
+        loading="lazy"
       />
       <div className="relative z-10 text-center text-white">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">

@@ -13,6 +13,7 @@ export default function Contact() {
           className="w-[33%] h-[550px] rounded-l-xl"
           src={ContactUsImage}
           alt="ContactUsImage"
+          loading="lazy"
         />
         <div className="p-6 w-96  bg-white  pl-6 ">
           <h2 className="text-lg font-semibold mb-6">Working Hours:</h2>

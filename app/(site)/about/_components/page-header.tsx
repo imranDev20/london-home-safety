@@ -11,6 +11,7 @@ export default function PageHeader() {
         objectFit="cover"
         objectPosition="center"
         className="absolute z-0"
+        loading="lazy"
       />
       <div className="absolute inset-0 bg-blue-800 opacity-70 z-10"></div>{" "}
       <div className="relative z-20 text-center py-28">

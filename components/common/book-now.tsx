@@ -1,20 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function BookNow() {
   return (
-    <Card className="text-white text-center border-none rounded-xl bg-[#05a5d1] p-6 opacity-95">
-      <h1 className="text-3xl font-bold">Book Now</h1>
-      <p>Select Your Property as appropriate and get quote in 30 seconds!</p>
-      <Button className="bg-[#05a5d1] border border-white w-full mt-6 font-bold">
-        Residential Property
-      </Button>
-      <Button className="bg-[#05a5d1] border border-white w-full mt-4 font-bold">
-        Commercial Property
-      </Button>
-      <Button className="bg-yellow-500 hover:bg-yellow-500  text-black w-full mt-4 font-bold">
-        Request a Quote
-      </Button>
+    <Card className="text-white text-center border-none rounded-xl bg-primary">
+      <CardHeader className="pb-0"></CardHeader>
+      <CardContent>
+        <h3 className="text-3xl font-bold mb-2">Book Now</h3>
+        <p className="mb-4 font-normal">
+          Secure your home&apos;s safety with our expert services. Book now!
+        </p>
+
+        <Button className="bg-primary border border-white w-full font-medium">
+          Residential Property
+        </Button>
+        <Button className="bg-primary border border-white w-full  font-medium">
+          Commercial Property
+        </Button>
+        <Button className="bg-secondary  text-black w-full font-medium">
+          Request a Quote
+        </Button>
+      </CardContent>
     </Card>
   );
 }

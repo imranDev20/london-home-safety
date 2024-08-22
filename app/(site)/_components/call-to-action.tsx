@@ -10,6 +10,7 @@ export default function CallToAction() {
         alt="Background"
         layout="fill"
         objectFit="cover"
+        loading="lazy"
         className="opacity-30"
       />
       <div className="relative z-10 text-center text-white">
