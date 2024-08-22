@@ -1,5 +1,5 @@
 "use client";
- 
+
 import { ContentLayout } from "@/app/admin/_components/content-layout";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -61,6 +61,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { updateOrder, updateOrderStatus } from "../actions";
 import ServiceTableRow from "./service-table-row";
+import generateInvoice from "../../actions";
 
 export default function EditOrderForm({
   orderDetails,
@@ -79,7 +80,6 @@ export default function EditOrderForm({
     },
   ];
 
-
   const { toast } = useToast();
   const [openAssignedEngineers, setOpenAssignedEngineers] =
     useState<boolean>(false);
@@ -88,6 +88,33 @@ export default function EditOrderForm({
   );
   const [status, setStatus] = useState<string>(orderDetails?.status ?? "");
   const [isEngineerPending, startTransition] = useTransition();
+  const [loading, setLoading] = useState(false);
+  const downloadInvoice = async () => {
+   
+    setLoading(true);
+    try {
+      if (orderDetails?.id) {
+        const response = await generateInvoice(orderDetails?.id);
+         console.log(`response`, response);
+
+        if (response?.success && response.data) {
+          const blob = new Blob([response?.data], { type: "application/pdf" });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `invoice_${orderDetails?.invoiceId}.pdf`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          console.error("Failed to download invoice");
+        }
+      }
+    } catch (error) {
+      console.error("Error downloading invoice:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <ContentLayout title="Edit Order">
@@ -110,50 +137,51 @@ export default function EditOrderForm({
         </Badge>
 
         <div className="hidden md:flex ml-auto gap-4">
-         
-            <Select
-              value={status}
-              onValueChange={(value) => {
-                startTransition(async () => {
-                  if (orderDetails?.id) {
-                    setStatus(value);
-                    const result = await updateOrderStatus(
-                      orderDetails?.id,
-                      value
-                    );
-                    if (result.success) {
-                      toast({
-                        title: "Success",
-                        description: result.message,
-                        variant: "success",
-                      });
-                    } else {
-                      toast({
-                        title: "Error",
-                        description: result.message,
-                        variant: "destructive",
-                      });
-                    }
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              startTransition(async () => {
+                if (orderDetails?.id) {
+                  setStatus(value);
+                  const result = await updateOrderStatus(
+                    orderDetails?.id,
+                    value
+                  );
+                  if (result.success) {
+                    toast({
+                      title: "Success",
+                      description: result.message,
+                      variant: "success",
+                    });
+                  } else {
+                    toast({
+                      title: "Error",
+                      description: result.message,
+                      variant: "destructive",
+                    });
                   }
-                });
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a fruit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Fruits</SelectLabel>
-                  {ORDER_STATUS_OPTIONS.map((option) => (
-                    <SelectItem value={option} key={option}>
-                      {kebabToNormal(option)}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          
-          <Button size="sm" type="button">Download Invoice</Button>
+                }
+              });
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select a fruit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Fruits</SelectLabel>
+                {ORDER_STATUS_OPTIONS.map((option) => (
+                  <SelectItem value={option} key={option}>
+                    {kebabToNormal(option)}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <Button size="sm" onClick={ () =>  downloadInvoice()} disabled={loading} type="button">
+          {loading ? 'Generating...' : 'Download Invoice'}
+          </Button>
         </div>
       </div>
 

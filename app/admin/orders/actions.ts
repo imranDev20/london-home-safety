@@ -5,6 +5,7 @@ import { OrderStatus, Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
+import puppeteer from 'puppeteer';
 export const getOrders = async (
   page: number = 1,
   pageSize: number = 10,
@@ -195,3 +196,89 @@ export const getExportOrders = async () => {
     };
   }
 };
+
+
+import { NextApiRequest, NextApiResponse } from 'next';
+
+export default async function generateInvoice(orderId:string) {
+  try {
+    if (!orderId) {
+      console.error("No order ID available");
+      return null;
+    }
+
+    const orderDetails = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+      include: {
+        user: {
+          include: {
+            address: true,            
+          },          
+        },
+        services: true,
+      },
+    });
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // Generate HTML content based on orderDetails (similar to your PDF structure)
+    const content = `
+      <html>
+      <head><style>/* Add your styles here */</style></head>
+      <body>
+        <h1>London Home Safety</h1>
+        <p>43 Felton Road, Barking, London IG11 7YA</p>
+        <p>Email: info@londonhomesafety.co.uk</p>
+        <p>Phone: 020 8146 6698</p>
+        <h2>INVOICE</h2>
+        <p>Invoice Number: ${orderDetails?.invoiceId}</p>
+        <p>Date: ${orderDetails?.date}</p>
+        <h3>Billing Address:</h3>
+        <p>${orderDetails?.user.name}</p>
+        <p>${orderDetails?.user?.address?.street}</p>
+        <p>${orderDetails?.user?.address?.city} ${orderDetails?.user?.address?.postcode}</p>
+        <table>
+          <tr><th>Service</th><th>Quantity</th><th>Total</th></tr>
+          ${orderDetails?.services.map(service => `
+            <tr>
+              <td>${service?.name}</td>
+              <td>${service.category}</td>
+              <td>£${service.propertyType}</td>
+            </tr>
+          `).join('')}
+        </table>
+        <p>Subtotal: £${orderDetails?.totalPrice}</p>
+        <p>Parking Charge: £${orderDetails?.isParkingAvailable ? 'Yes' : 'No'}</p>
+        <p>Congestion Zone Charge: £${orderDetails?.isCongestionZone ? 'Yes': 'No'}</p>
+        <h3>Total: £${orderDetails?.totalPrice}</h3>
+        <p>Terms and conditions apply.</p>
+        <p>Thank you for your business!</p>
+      </body>
+      </html>
+    `;
+
+    await page.setContent(content, { waitUntil: 'networkidle0', timeout: 0 });
+
+
+    const pdfBuffer = await page.pdf({ format: 'A4' });
+
+    await browser.close();
+
+   
+    return {
+      message: "Invoice Generated Successfully",
+      data: pdfBuffer,
+      success: true,
+    };
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    return {
+      message: "An error occured when generating invoice" + error,
+      success: false,
+
+    };
+  }
+}
+
