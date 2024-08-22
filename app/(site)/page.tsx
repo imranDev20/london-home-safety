@@ -9,7 +9,7 @@ import ServiceCategories from "./_components/service-categories";
 export default function Home() {
   return (
     <>
-      {/* <Hero /> */}
+      <Hero />
       <ServiceCategories />
       <AboutUsHome />
       <CallToAction />
