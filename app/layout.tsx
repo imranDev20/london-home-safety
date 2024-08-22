@@ -1,9 +1,9 @@
 import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
-const outfit = Outfit({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "London Home Safety - Comprehensive Safety Solutions",
   description:
@@ -122,10 +122,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={outfit.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={GeistSans.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
