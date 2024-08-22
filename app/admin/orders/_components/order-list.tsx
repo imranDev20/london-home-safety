@@ -1,4 +1,6 @@
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import TableEmpty from "@/components/table-empty";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -6,10 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import OrderTableRow from "./order-table-row";
-import TableEmpty from "@/components/table-empty";
 import { OrderWithRelation, Pagination } from "@/types/order";
-import { Checkbox } from "@/components/ui/checkbox";
+import OrderTableRow from "./order-table-row";
 
 export default async function OrderList({
   orders,
