@@ -284,7 +284,7 @@ export default function EditOrderForm({
               </TableHeader>
               <TableBody>
                 {orderDetails?.services.map((service) => (
-                  <ServiceTableRow service={service} />
+                  <ServiceTableRow service={service} key={service?.id} />
                 ))}
               </TableBody>
             </Table>
