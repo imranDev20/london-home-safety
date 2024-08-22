@@ -31,8 +31,6 @@ const Reviews = dynamic(() => import("./_components/reviews"), {
   loading: () => <p>Loading...</p>,
 });
 
-export const runtime = "edge";
-
 export default function Home() {
   return (
     <>
