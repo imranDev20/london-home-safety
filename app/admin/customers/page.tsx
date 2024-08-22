@@ -26,7 +26,7 @@ export default async function AdminOrdersPage({
   };
 }) {
   const { search, page, sort_order, sort_by} = searchParams;
-  const { users: customers, pagination } = await getCustomers(
+  const { users: customers, pagination, } = await getCustomers(
     parseInt(page) || 1,
     10,
     search,   

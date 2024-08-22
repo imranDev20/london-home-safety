@@ -3,7 +3,8 @@
 import prisma from "@/lib/prisma";
 import { OrderStatus, Prisma } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
-
+import dayjs from "dayjs";
+import exceljs from "exceljs";
 export const getOrders = async (
   page: number = 1,
   pageSize: number = 10,
@@ -65,7 +66,8 @@ export const getOrders = async (
       }),
       prisma.order.count({ where: whereClause }),
     ]);
-
+    // Generate Excel file
+   
     return {
       orders,
       pagination: {
@@ -130,4 +132,56 @@ export async function deleteOrder(orderId: string) {
       success: false,
     };
   }
+}
+
+export const getExportOrders = async () => {
+try {
+  const orders = await prisma.order.findMany({
+    include: {
+      user: {
+        include: {
+          address:true
+        }
+      },      
+    }
+  })
+  const workbook = new exceljs.Workbook();
+  const worksheet = workbook.addWorksheet("Orders");
+  worksheet.columns = [
+    { header: "Invoice ID", key: "invoice_id", width: 20, },
+    { header: "Name", key: "name", width: 30 },
+    { header: "Email", key: "email", width: 30 },
+    { header: "Phone", key: "phone", width: 20 },
+    { header: "Address", key: "address", width: 60 },  
+    { header: "Cost", key: "cost", width: 15 },
+    { header: "Placed On", key: "createdAt", width: 20 }, 
+  ];
+
+  orders.forEach((order) => {
+    worksheet.addRow({
+      invoice_id: order.invoiceId,
+      name: order.user?.name,
+      email: order.user?.email,
+      // phone: order.user?.phone,
+      address: `${order.user?.address?.street ? order.user?.address?.street + ',' : ""} ${order.user?.address?.city ?? ""} ${order.user?.address?.postcode ?? ""}`,    
+      cost: order.totalPrice,
+      createdAt: dayjs(order?.user?.createdAt).format("DD MMMM YYYY"),
+    });
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const excelData = Buffer.from(buffer).toString("base64");
+  return {
+    message: "Orders Data Downloaded Successfully",
+    data: excelData,
+    success: true,
+  }
+  
+} catch (error) {
+  return {
+    message: "An error occured when downloading orders data" + error,   
+    success: false,
+  }
+}
+
 }
