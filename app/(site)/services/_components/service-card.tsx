@@ -1,17 +1,14 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { NavLeafItem } from "@/types/misc";
 import Image from "next/image";
-// import {
-//     Card,
-
-//   } from "@/components/ui/card"
 export default function ServiceCard({ service }: { service: NavLeafItem }) {
   const { description, image, path, label, categoryPath } = service;
 
   return (
-    <div className="relative bg-blue-50 rounded-lg shadow-lg  w-96">
+    <Card className="relative bg-blue-50 rounded-lg shadow-lg  w-96">
       <Image
-        src={image} // Replace with your image path
+        src={image}
         alt="Electrical Repairs"
         className="w-full h-60 object-cover rounded-t-lg"
       />
@@ -22,6 +19,6 @@ export default function ServiceCard({ service }: { service: NavLeafItem }) {
           Learn More
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }
