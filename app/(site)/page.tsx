@@ -8,7 +8,7 @@ import ServiceCategories from "./_components/service-categories";
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Hero />
       <ServiceCategories />
       <AboutUsHome />
@@ -16,6 +16,6 @@ export default function Home() {
       <Faq />
       <Contact />
       <Reviews />
-    </main>
+    </>
   );
 }

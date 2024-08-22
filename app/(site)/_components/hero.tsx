@@ -6,41 +6,34 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="bg-[rgba(6,44,100,0.98)] h-screen">
+    <section className="relative h-screen flex items-center">
       <Image
         src={BackgroundImage}
-        alt="Background"
-        layout="fill"
-        loading="lazy"
+        alt="London Home Safety Hero Background"
+        fill
+        priority
+        style={{ objectFit: "cover" }}
         placeholder="blur"
-        objectFit="cover"
-        className="opacity-20"
+        quality={30}
+        rel="preload"
+        sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" //
       />
 
-      <div className="max-w-6xl mx-auto flex">
-        <div className="relative px-4 pt-40  w-[70%]  ">
-          <div className="text-white  ">
-            <h1 className=" text-5xl font-bold leading-relaxed  mb-4">
-              Safeguarding London&apos;s
-              <span className="text-yellow-500"> Homes </span>
-              with Premier{" "}
-              <span className="text-yellow-500">Safety Solutions</span>
-            </h1>
-            <p className="text-lg md:text-xl mb-6">
-              Welcome to London Home Safety Limited, your trusted partner for
-              comprehensive safety solutions in the heart of London. With years
-              of experience and a team of certified professionals, we provide
-              top-notch services to ensure the safety and well-being of your
-              home.
-            </p>
+      <div className="container mx-auto grid grid-cols-12 my-auto gap-5 z-10 relative max-w-screen-xl">
+        <div className="col-span-8">
+          <h1 className=" text-5xl font-bold leading-relaxed  mb-4">
+            Safeguarding London&apos;s
+            <span className="text-secondary"> Homes </span>
+            with Premier{" "}
+            <span className="text-secondary">Safety Solutions</span>
+          </h1>
 
-            {/* <PhoneIcon className="w-6 h-6 text-yellow-500 mr-2" /> */}
-            <Button className="bg-yellow-500 text-black font-semibold text-lg">
-              020 8146 6698
-            </Button>
-          </div>
+          <Button className="bg-secondary text-black font-medium text-lg">
+            020 8146 6698
+          </Button>
         </div>
-        <div className="w-[30%] mt-44">
+
+        <div className="col-span-4">
           <BookNow />
         </div>
       </div>
