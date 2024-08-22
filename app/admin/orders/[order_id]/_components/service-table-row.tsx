@@ -8,7 +8,7 @@ export default function ServiceTableRow({
   service: ServiceWithRelation;
 }) {
   return (
-    <TableRow key={service.id}>
+    <TableRow>
       <TableCell className="font-medium">{service.name}</TableCell>
       <TableCell>{service.category}</TableCell>
       <TableCell>{service.unitType}</TableCell>
