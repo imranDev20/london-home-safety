@@ -20,11 +20,7 @@ import { getExportCustomers } from "../actions";
 import { toast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
 
-export default function CustomerTableHeader({
-  excelData,
-}: {
-  excelData: string;
-}) {
+export default function CustomerTableHeader() {
   const router = useRouter();
   const { createQueryString } = useQueryString();
   const pathname = usePathname();
