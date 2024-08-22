@@ -1,35 +1,10 @@
-import dynamic from "next/dynamic";
+import AboutUsHome from "./_components/about-us-home";
+import CallToAction from "./_components/call-to-action";
+import Contact from "./_components/contact";
+import Faq from "./_components/faq";
 import Hero from "./_components/hero";
-
-// const Hero = dynamic(() => import("./_components/hero"), {
-//   ssr: true,
-//   loading: () => <p>Loading...</p>,
-// });
-
-const ServiceCategories = dynamic(
-  () => import("./_components/service-categories"),
-  { ssr: true, loading: () => <p>Loading...</p> }
-);
-const AboutUsHome = dynamic(() => import("./_components/about-us-home"), {
-  ssr: true,
-  loading: () => <p>Loading...</p>,
-});
-const CallToAction = dynamic(() => import("./_components/call-to-action"), {
-  ssr: true,
-  loading: () => <p>Loading...</p>,
-});
-const Faq = dynamic(() => import("./_components/faq"), {
-  ssr: true,
-  loading: () => <p>Loading...</p>,
-});
-const Contact = dynamic(() => import("./_components/contact"), {
-  ssr: true,
-  loading: () => <p>Loading...</p>,
-});
-const Reviews = dynamic(() => import("./_components/reviews"), {
-  ssr: true,
-  loading: () => <p>Loading...</p>,
-});
+import Reviews from "./_components/reviews";
+import ServiceCategories from "./_components/service-categories";
 
 export default function Home() {
   return (
