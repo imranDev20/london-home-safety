@@ -1,6 +1,7 @@
 "use client";
 
 import { MoreHorizontal } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,17 +11,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
-import dayjs from "dayjs";
 
+import { useRouter } from "next/navigation";
+
+import dayjs from "dayjs";
 import { useTransition } from "react";
+
 import { useToast } from "@/components/ui/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CustomerWithRelation } from "@/types/customer";
-import { deleteCustomer } from "../actions";
 
-export default function CustomerTableRow({ customer: customer }: { customer: CustomerWithRelation }) {
+import { ServiceWithRelation } from "@/types/services";
+import { deleteService } from "../actions";
+
+export default function ServiceTableRow({
+  service: service,
+}: {
+  service: ServiceWithRelation;
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -29,18 +36,18 @@ export default function CustomerTableRow({ customer: customer }: { customer: Cus
     e.stopPropagation(); // Stop the propagation to prevent routing
 
     startTransition(async () => {
-      const result = await deleteCustomer(customer.id);
+      const result = await deleteService(service.id);
 
       if (result.success) {
         toast({
-          title: "Order Deleted",
+          title: "Service Deleted",
           description: result.message,
           variant: "success",
         });
       } else {
         // Handle error (e.g., show an error message)
         toast({
-          title: "Error Deleting Customer",
+          title: "Error Deleting Service",
           description: result.message,
           variant: "destructive",
         });
@@ -50,7 +57,7 @@ export default function CustomerTableRow({ customer: customer }: { customer: Cus
 
   return (
     <TableRow
-      onClick={() => router.push(`/admin/customers/${customer.id}`)}
+      onClick={() => router.push(`/admin/services/${service.id}`)}
       className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
       <TableCell>
@@ -59,36 +66,17 @@ export default function CustomerTableRow({ customer: customer }: { customer: Cus
         </div>
       </TableCell>
 
-      <TableCell className="w-[25%]">
-        <div className="flex">
-          <Avatar className="mr-3">
-            <AvatarFallback>{customer.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium">{customer.name}</p>
-            <p className="text-xs text-gray-500 font-normal">
-              {customer.email}
-            </p>
-          </div>
-        </div>
+      <TableCell className="w-[25%]">{service.name}</TableCell>
+      <TableCell className="">
+        <Badge variant="outline">{service.category || "N/A"}</Badge>
+      </TableCell>
+      <TableCell className="">{service.type || "N/A"}</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {service.unitType || "N/A"}
       </TableCell>
       <TableCell className="hidden md:table-cell">
-       
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {customer.address ? (
-          <>
-            {customer.address?.street}, {customer.address?.city}{" "}
-            {customer.address?.postcode}
-          </>
-        ) : (
-          "N/A"
-        )}
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {dayjs(new Date(customer.createdAt)).format("DD-MM-YYYY HH:mm A")}
-      </TableCell>
-
+        {service.propertyType || "N/A"}
+      </TableCell>     
       <TableCell className="w-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

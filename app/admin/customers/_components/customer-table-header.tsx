@@ -13,19 +13,22 @@ import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useQueryString from "@/hooks/use-query-string";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
+import dayjs from "dayjs";
+import { getExportCustomers } from "../actions";
+import { toast } from "@/components/ui/use-toast";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export default function CustomerTableHeader() {
   const router = useRouter();
   const { createQueryString } = useQueryString();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
+  const [isPending, startTransition] = useTransition();
   const initialSearchValue = searchParams.get("search") ?? "";
   const sortBy = searchParams.get("sort_by") ?? "";
   const sortOrder = searchParams.get("sort_order") ?? "";
-  
 
   const [searchValue, setSearchValue] = useState(initialSearchValue);
   const debouncedSearchValue = useDebounce(searchValue, 300); // 300ms delay
@@ -38,6 +41,47 @@ export default function CustomerTableHeader() {
     );
   }, [debouncedSearchValue, pathname, router, createQueryString]);
 
+  const handleExportCustomers = async () => {
+    startTransition(async () => {
+      const result = await getExportCustomers();
+      if (result.success) {
+        // Handle successful deletion (e.g., show a success message, update UI)
+        const excelData = result.data as string;
+        const byteArray = new Uint8Array(
+          atob(excelData)
+            .split("")
+            .map((char) => char.charCodeAt(0))
+        );
+        const blob = new Blob([byteArray], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const downloadUrl = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.setAttribute(
+          "download",
+          `Customers - ${dayjs().format("YYYY-MM-DD@hh:mm:ss")}.xlsx`
+        );
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        toast({
+          title: "Customers  Downloaded",
+          description: result.message,
+          variant: "success",
+        });
+      } else {
+        toast({
+          title: "Customers download failed",
+          description: result.message,
+          variant: "destructive",
+        });
+        console.error(result.message);
+      }
+    });
+  };
+
   return (
     <>
       <div className="flex items-center gap-4 mb-5 mt-7">
@@ -47,9 +91,17 @@ export default function CustomerTableHeader() {
         </h1>
 
         <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <Button variant="outline" size="sm">
+          <LoadingButton
+            type="button"
+            disabled={isPending}
+            size="sm"
+            loading={isPending}
+            className="text-xs font-semibold h-8"
+            onClick={handleExportCustomers}
+            variant="outline"
+          >
             Download Excel
-          </Button>
+          </LoadingButton>
           <Link href="customers/new">
             <Button size="sm" className="whitespace-nowrap">
               Add New Customer
@@ -83,8 +135,8 @@ export default function CustomerTableHeader() {
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="name">Name</SelectItem>           
-            <SelectItem value="email">Email</SelectItem>            
+            <SelectItem value="name">Name</SelectItem>
+            <SelectItem value="email">Email</SelectItem>
             <SelectItem value="createdAt">Created At</SelectItem>
           </SelectContent>
         </Select>
@@ -109,8 +161,6 @@ export default function CustomerTableHeader() {
             <SelectItem value="asc">Asc</SelectItem>
           </SelectContent>
         </Select>
-
-      
       </div>
     </>
   );
