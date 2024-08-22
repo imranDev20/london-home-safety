@@ -24,6 +24,7 @@ export default function CategoryServices({
                   src={item.image}
                   alt="itemImage"
                   className="w-full h-48 object-cover"
+                  loading="lazy"
                 />
 
                 <div className="p-6">

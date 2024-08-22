@@ -68,6 +68,7 @@ export default function Partners() {
             key={partner.id}
             src={partner.image}
             alt="partnerImage"
+            loading="lazy"
           />
         ))}
       </div>

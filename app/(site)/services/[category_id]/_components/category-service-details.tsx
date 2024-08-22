@@ -21,6 +21,7 @@ export default function CategoryServiceDetails({
         className="rounded-2xl"
         src={backgroundImage}
         alt="serviceImage"
+        loading="lazy"
       />
       <div>
         <h2 className="text-2xl font-bold mb-4 mt-2">{service.label}</h2>

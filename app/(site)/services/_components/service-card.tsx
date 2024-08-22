@@ -11,6 +11,7 @@ export default function ServiceCard({ service }: { service: NavLeafItem }) {
         src={image}
         alt="Electrical Repairs"
         className="w-full h-60 object-cover rounded-t-lg"
+        loading="lazy"
       />
       <div className="absolute inset-x-0 -bottom-28 mx-4 p-6 bg-sky-50 rounded-lg shadow-lg text-center">
         <h3 className="text-xl font-semibold text-gray-800 mb-2">{label}</h3>
