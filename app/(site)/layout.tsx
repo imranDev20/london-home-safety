@@ -5,12 +5,10 @@ import Topbar from "../_components/topbar";
 export default function SiteLayout(props: { children: React.ReactNode }) {
   return (
     <>
-      {/* <Topbar />
+      <Topbar />
       <Header />
       <main>{props.children}</main>
-      <Footer /> */}
-
-      <main>{props.children}</main>
+      <Footer />
     </>
   );
 }
