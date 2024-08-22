@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { OrderStatus } from '@prisma/client';
 import { revalidatePath } from "next/cache";
 
 export const getEngineersForOrder = async ( ) => {
@@ -47,6 +48,39 @@ export const getEngineersForOrder = async ( ) => {
       return {
         message:
           "An error occurred while updating the order. Please try again later.",
+        success: false,
+      };
+    }
+  }
+  export async function updateOrderStatus(
+    orderId: string,
+    orderStatus: string
+   
+  ) {
+    try {    
+      const updatedOrder = await prisma.order.update({
+        where: {
+          id: orderId,
+         
+        },
+        data: {
+        status: orderStatus as OrderStatus, 
+        },
+      });
+  
+      revalidatePath(`/admin/orders`);
+      revalidatePath(`/admin/orders/${updatedOrder.id}`);
+  
+      return {
+        message: "Order status updated successfully!",
+        data: updatedOrder,
+        success: true,
+      };
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      return {
+        message:
+          "An error occurred while updating the order status. Please try again later.",
         success: false,
       };
     }

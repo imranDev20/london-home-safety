@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { ContentLayout } from "@/app/admin/_components/content-layout";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -15,14 +15,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { LoadingButton } from "@/components/ui/loading-button";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -30,9 +22,13 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
+  SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import {
   Table,
   TableBody,
@@ -45,8 +41,7 @@ import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
 import { cn, kebabToNormal } from "@/lib/utils";
 import { StaffWithRelations } from "@/types/engineers";
 import { OrderIdWithRelation } from "@/types/order";
-import { OrderStatus } from "@prisma/client";
-import { SelectTrigger } from "@radix-ui/react-select";
+
 import dayjs from "dayjs";
 import {
   Building2,
@@ -63,10 +58,8 @@ import {
   Phone,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { OrderFormInput } from "../../schema";
-import { updateOrder } from "../actions";
+import { useState, useTransition } from "react";
+import { updateOrder, updateOrderStatus } from "../actions";
 import ServiceTableRow from "./service-table-row";
 
 export default function EditOrderForm({
@@ -76,7 +69,6 @@ export default function EditOrderForm({
   orderDetails: OrderIdWithRelation | null;
   engineers: StaffWithRelations[] | null;
 }) {
-
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
     { label: "Orders", href: "/admin/orders" },
@@ -87,352 +79,315 @@ export default function EditOrderForm({
     },
   ];
 
-  const form = useForm<OrderFormInput>({  
-    defaultValues: {
-      status: orderDetails?.status
-    },
-  });
 
-  const { handleSubmit, reset, control, watch } = form;
   const { toast } = useToast();
-  const onEditOrderSubmit: SubmitHandler<OrderFormInput> = async () => {};
   const [openAssignedEngineers, setOpenAssignedEngineers] =
     useState<boolean>(false);
-   
-  useEffect(() => {
-    if (orderDetails) {
-      reset({
-        assignedEngineer: orderDetails?.assignedEngineerId ?? "",
-        status: orderDetails?.status,
-      });
-    }
-  }, [orderDetails, reset]);
-  const assignedEngineerChanged = watch("assignedEngineer");
+  const [selectedEngineer, setSelectedEngineer] = useState<string>(
+    orderDetails?.assignedEngineerId ?? ""
+  );
+  const [status, setStatus] = useState<string>(orderDetails?.status ?? "");
   const [isEngineerPending, startTransition] = useTransition();
-  useEffect(()=>{
-    if(assignedEngineerChanged){
-      if(orderDetails?.id) {
-        startTransition(async ()=>{
-          const updateEngineer = await updateOrder(orderDetails?.id, assignedEngineerChanged);
-          if(updateEngineer.success) {
-            setOpenAssignedEngineers(false);
-            toast({
-              title: "Order Updated",
-              description: updateEngineer.message,
-              variant: "success",
-            });
-          } else {
-            toast({
-              title: "Order update failed",
-              description: updateEngineer.message,
-              variant: "destructive",
-            });
-          }
-
-        })
-      }
-
-    }
-
-  },[assignedEngineerChanged])
 
   return (
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
-      <Form {...form}>
-        <form onSubmit={handleSubmit(onEditOrderSubmit)}>
-          <div className="flex items-center gap-4 mb-5 mt-7">
-            <Link href="/admin/orders">
-              <Button variant="outline" size="icon" className="h-7 w-7">
-                <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Back</span>
-              </Button>
-            </Link>
 
-            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              {`Edit ${orderDetails?.invoiceId}`}
-            </h1>
+      <div className="flex items-center gap-4 mb-5 mt-7">
+        <Link href="/admin/orders">
+          <Button variant="outline" size="icon" className="h-7 w-7">
+            <ChevronLeft className="h-4 w-4" />
+            <span className="sr-only">Back</span>
+          </Button>
+        </Link>
 
-            <Badge variant="outline" className="ml-auto sm:ml-0">
-              {orderDetails?.status}
-            </Badge>
+        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+          {`Edit ${orderDetails?.invoiceId}`}
+        </h1>
 
-            <div className="hidden items-center gap-2 md:ml-auto md:flex">
-              <FormField
-                control={control}
-                name="status"               
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="px-2 py-1 border-none" disabled>
-                          <SelectValue  placeholder="Select status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ORDER_STATUS_OPTIONS.map((option) => (
-                          <SelectItem value={option} key={option}>
-                            {kebabToNormal(option)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <Badge variant="outline" className="ml-auto sm:ml-0">
+          {orderDetails?.status || status}
+        </Badge>
 
-              <LoadingButton
-                type="submit"
-                // disabled={isEngineerPending}
-                size="sm"
-                // loading={isEngineerPending}
-                className="text-xs font-semibold h-8"
+        <div className="hidden md:flex ml-auto gap-4">
+         
+            <Select
+              value={status}
+              onValueChange={(value) => {
+                startTransition(async () => {
+                  if (orderDetails?.id) {
+                    setStatus(value);
+                    const result = await updateOrderStatus(
+                      orderDetails?.id,
+                      value
+                    );
+                    if (result.success) {
+                      toast({
+                        title: "Success",
+                        description: result.message,
+                        variant: "success",
+                      });
+                    } else {
+                      toast({
+                        title: "Error",
+                        description: result.message,
+                        variant: "destructive",
+                      });
+                    }
+                  }
+                });
+              }}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select a fruit" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Fruits</SelectLabel>
+                  {ORDER_STATUS_OPTIONS.map((option) => (
+                    <SelectItem value={option} key={option}>
+                      {kebabToNormal(option)}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          
+          <Button size="sm" type="button">Download Invoice</Button>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+        <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+          <div>
+            <h2 className="font-semibold text-lg mb-4">Assigned Engineers</h2>
+            <div className="flex gap-4">
+              <Popover
+                open={openAssignedEngineers}
+                onOpenChange={setOpenAssignedEngineers}
               >
-                Download Invoice
-              </LoadingButton>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-            <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-              <div>
-                <h2 className="font-semibold text-lg mb-4">
-                  Assigned Engineers
-                </h2>
-                <div className="flex gap-4">
-                  <FormField
-                    control={control}
-                    name="assignedEngineer"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <Popover
-                          open={openAssignedEngineers}
-                          onOpenChange={setOpenAssignedEngineers}
-                        >
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={openAssignedEngineers}
-                                className={cn(
-                                  "w-[400px] justify-between",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value
-                                  ? engineers?.find(
-                                      (engineer) => engineer.id === field.value
-                                    )?.name
-                                  : "Select engineer"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[400px] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search engineer..." />
-                              <CommandList>
-                                <CommandEmpty>No engineer found.</CommandEmpty>
-                                <CommandGroup>
-                                  {engineers?.map((engineer) => (
-                                    <CommandItem
-                                      value={engineer.id}
-                                      key={engineer.id}
-                                      onSelect={() => {
-                                        form.setValue(
-                                          "assignedEngineer",
-                                          engineer.id
-                                        );
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          engineer.id === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                      {engineer.name}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    type="button"
-                    className="flex gap-2"
+                    role="combobox"
+                    aria-expanded={openAssignedEngineers}
+                    className={cn(
+                      "w-[400px] justify-between",
+                      !selectedEngineer && "text-muted-foreground"
+                    )}
                   >
-                    <Mail size={14} />
-                    Send Email
+                    {selectedEngineer
+                      ? engineers?.find(
+                          (engineer) => engineer.id === selectedEngineer
+                        )?.name
+                      : "Select engineer"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
-                </div>
-              </div>
-              <div className="grid gap-3">
-                <h2 className="font-semibold text-lg mb-4">Order Items</h2>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Unit</TableHead>
-                      <TableHead>Property Type</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {orderDetails?.services.map((service) => (
-                      <ServiceTableRow service={service} />
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-[400px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search engineer..." />
+                    <CommandList>
+                      <CommandEmpty>No engineer found.</CommandEmpty>
+                      <CommandGroup>
+                        {engineers?.map((engineer) => (
+                          <CommandItem
+                            value={engineer.id}
+                            key={engineer.id}
+                            onSelect={() => {
+                              setSelectedEngineer(engineer?.id);
+                              startTransition(async () => {
+                                if (orderDetails?.id) {
+                                  const updateEngineer = await updateOrder(
+                                    orderDetails?.id,
+                                    engineer.id
+                                  );
+                                  if (updateEngineer.success) {
+                                    setOpenAssignedEngineers(false);
+                                    toast({
+                                      title: "Success",
+                                      description: updateEngineer.message,
+                                      variant: "success",
+                                    });
+                                  } else {
+                                    toast({
+                                      title: "Error",
+                                      description: updateEngineer.message,
+                                      variant: "destructive",
+                                    });
+                                  }
+                                }
+                              });
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                engineer.id === selectedEngineer
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {engineer.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
 
-            <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-              <div className="">
-                <h2 className="font-semibold text-lg mb-4">Schedule Info</h2>
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex gap-2 mb-4">
-                      <span>
-                        <CalendarDays size={20} />
-                      </span>
-                      <span>
-                        {orderDetails?.date
-                          ? dayjs(new Date(orderDetails.date)).format(
-                              "DD MMM YYYY"
-                            )
-                          : "Date not available"}
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <span>
-                        <Clock size={20} />
-                      </span>
-                      <span>{orderDetails?.inspectionTime ?? ""}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              <div className="">
-                <h2 className="font-semibold text-lg mb-4">Orders Note</h2>
-                <Card className="h-[200px]">
-                  <CardContent className="p-3">
-                    {orderDetails?.orderNotes}
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-            <div className="gird auto-rows-max items-star gap-4 lg:col-span-3 ">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="">
-                  <h2 className="font-semibold text-lg mb-4">
-                    Customer Details
-                  </h2>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="flex">
-                        <Avatar className="mr-3">
-                          <AvatarFallback>
-                            {orderDetails?.user.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">
-                            {orderDetails?.user.name}
-                          </p>
-                          <p className="text-xs text-gray-500 font-normal">
-                            {orderDetails?.user.email}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-xs text-gray-500 font-normal ps-2 mt-2">
-                        <span>
-                          <Phone size={20} />{" "}
-                        </span>
-                        {/* <span>{ orderDetails?.user?.phone}</span> */}
-                      </div>
-                      <div className="text-xs text-gray-500 font-semibold ps-2 mt-2 flex gap-2">
-                        <span>
-                          <Map size={20} />{" "}
-                        </span>
-                        <span>
-                          {orderDetails?.user?.address?.street
-                            ? orderDetails?.user?.address?.street + ", "
-                            : ""}
-                          {orderDetails?.user?.address?.city
-                            ? orderDetails?.user?.address?.city + " "
-                            : ""}
-                          {orderDetails?.user?.address?.postcode}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="">
-                  <h2 className="font-semibold text-lg mb-4">
-                    Property Details
-                  </h2>
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="text-xs text-gray-500 font-normal ps-2 mt-2">
-                        <span>
-                          <House size={20} />{" "}
-                        </span>
-                        {/* <span>{ orderDetails?.}</span> */}
-                      </div>
-                      <div className="text-xs text-gray-500 font-normal ps-2 mt-2 flex gap-2">
-                        <span>
-                          <Building2 size={20} />
-                        </span>
-                        <span></span>
-                      </div>
-                      <div className="text-sm  font-semibold ps-2 mt-2 flex gap-2">
-                        <span>
-                          <CarFront className="text-gray-500" size={20} />
-                        </span>
-                        <span>
-                          {orderDetails?.isParkingAvailable
-                            ? "Paid Parking Available"
-                            : "Parking Not Available"}
-                        </span>
-                      </div>
-                      <div className="text-sm  font-semibold ps-2 mt-2 flex gap-2">
-                        <span>
-                          <Copyright className="text-gray-500" size={20} />
-                        </span>
-                        <span>
-                          {orderDetails?.isCongestionZone
-                            ? "In Congestion Zone"
-                            : "Outside Congestion Zone"}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="">
-                  <h2 className="font-semibold text-lg mb-4">Order Activity</h2>
-                  <Card>
-                    <CardContent className="p-4"></CardContent>
-                  </Card>
-                </div>
-              </div>
+              <Button variant="outline" type="button" className="flex gap-2">
+                <Mail size={14} />
+                Send Email
+              </Button>
             </div>
           </div>
-        </form>
-      </Form>
+          <div className="grid gap-3">
+            <h2 className="font-semibold text-lg mb-4">Order Items</h2>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Unit</TableHead>
+                  <TableHead>Property Type</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {orderDetails?.services.map((service) => (
+                  <ServiceTableRow service={service} />
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+          <div className="">
+            <h2 className="font-semibold text-lg mb-4">Schedule Info</h2>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex gap-2 mb-4">
+                  <span>
+                    <CalendarDays size={20} />
+                  </span>
+                  <span>
+                    {orderDetails?.date
+                      ? dayjs(new Date(orderDetails.date)).format("DD MMM YYYY")
+                      : "Date not available"}
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <span>
+                    <Clock size={20} />
+                  </span>
+                  <span>{orderDetails?.inspectionTime ?? ""}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="">
+            <h2 className="font-semibold text-lg mb-4">Orders Note</h2>
+            <Card className="h-[200px]">
+              <CardContent className="p-3">
+                {orderDetails?.orderNotes}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        <div className="gird auto-rows-max items-star gap-4 lg:col-span-3 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="">
+              <h2 className="font-semibold text-lg mb-4">Customer Details</h2>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex">
+                    <Avatar className="mr-3">
+                      <AvatarFallback>
+                        {orderDetails?.user.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-medium">
+                        {orderDetails?.user.name}
+                      </p>
+                      <p className="text-xs text-gray-500 font-normal">
+                        {orderDetails?.user.email}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-500 font-normal ps-2 mt-2">
+                    <span>
+                      <Phone size={20} />{" "}
+                    </span>
+                    {/* <span>{ orderDetails?.user?.phone}</span> */}
+                  </div>
+                  <div className="text-xs text-gray-500 font-semibold ps-2 mt-2 flex gap-2">
+                    <span>
+                      <Map size={20} />{" "}
+                    </span>
+                    <span>
+                      {orderDetails?.user?.address?.street
+                        ? orderDetails?.user?.address?.street + ", "
+                        : ""}
+                      {orderDetails?.user?.address?.city
+                        ? orderDetails?.user?.address?.city + " "
+                        : ""}
+                      {orderDetails?.user?.address?.postcode}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="">
+              <h2 className="font-semibold text-lg mb-4">Property Details</h2>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="text-xs text-gray-500 font-normal ps-2 mt-2">
+                    <span>
+                      <House size={20} />{" "}
+                    </span>
+                    {/* <span>{ orderDetails?.}</span> */}
+                  </div>
+                  <div className="text-xs text-gray-500 font-normal ps-2 mt-2 flex gap-2">
+                    <span>
+                      <Building2 size={20} />
+                    </span>
+                    <span></span>
+                  </div>
+                  <div className="text-sm  font-semibold ps-2 mt-2 flex gap-2">
+                    <span>
+                      <CarFront className="text-gray-500" size={20} />
+                    </span>
+                    <span>
+                      {orderDetails?.isParkingAvailable
+                        ? "Paid Parking Available"
+                        : "Parking Not Available"}
+                    </span>
+                  </div>
+                  <div className="text-sm  font-semibold ps-2 mt-2 flex gap-2">
+                    <span>
+                      <Copyright className="text-gray-500" size={20} />
+                    </span>
+                    <span>
+                      {orderDetails?.isCongestionZone
+                        ? "In Congestion Zone"
+                        : "Outside Congestion Zone"}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="">
+              <h2 className="font-semibold text-lg mb-4">Order Activity</h2>
+              <Card>
+                <CardContent className="p-4"></CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
     </ContentLayout>
   );
 }
