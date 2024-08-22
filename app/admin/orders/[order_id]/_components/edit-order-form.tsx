@@ -264,7 +264,6 @@ export default function EditOrderForm({
                   </Command>
                 </PopoverContent>
               </Popover>
-
               <Button variant="outline" type="button" className="flex gap-2">
                 <Mail size={14} />
                 Send Email
