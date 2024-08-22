@@ -1,4 +1,3 @@
-import Footer from "@/components/global/foooter";
 import CartProvider from "@/providers/cart-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
@@ -128,7 +127,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
           <CartProvider>{children}</CartProvider>
-          <Footer />
         </ThemeProvider>
       </body>
     </html>

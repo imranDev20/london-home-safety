@@ -57,7 +57,9 @@ export default function Partners() {
   return (
     <div className="max-w-6xl mx-auto my-24">
       <h1 className="text-4xl font-bold mb-16 text-center">
-        Certified and Trusted Professional Engineers
+        Proudly <span className="text-blue-600">Certified</span> &{" "}
+        <span className="text-blue-600">Accredited</span> <br /> by Leading
+        Authorities
       </h1>
       <div className="flex justify-around">
         {SPONSER_PARTNER.map((partner) => (
