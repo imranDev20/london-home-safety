@@ -1,10 +1,10 @@
-import CartProvider from "@/providers/cart-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"], display: "swap" });
+
 export const metadata: Metadata = {
   title: "London Home Safety - Comprehensive Safety Solutions",
   description:
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   // Basic metadata
   applicationName: "London Home Safety",
   authors: [
-    { name: "London Home Safety Team", url: "https://londonhomesafety.com" },
+    { name: "London Home Safety Team", url: "https://londonhomesafety.co.uk" },
   ],
   generator: "Next.js",
   keywords: [
@@ -38,11 +38,11 @@ export const metadata: Metadata = {
     title: "London Home Safety - Comprehensive Safety Solutions",
     description:
       "Protecting your home with expert safety solutions. From electrical and gas safety to fire prevention and health services, we ensure peace of mind for homeowners across London.",
-    url: "https://londonhomesafety.com",
+    url: "https://londonhomesafety.co.uk",
     siteName: "London Home Safety",
     images: [
       {
-        url: "https://londonhomesafety.com/og-image.jpg",
+        url: "https://londonhomesafety.co.uk/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "London Home Safety banner image",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     description:
       "Expert safety solutions for your home in London. From electrical to fire safety, we've got you covered.",
     creator: "@LondonHomeSafety",
-    images: ["https://londonhomesafety.com/twitter-image.jpg"],
+    images: ["https://londonhomesafety.co.uk/twitter-image.jpg"],
   },
 
   // Verification for search engines
@@ -86,10 +86,10 @@ export const metadata: Metadata = {
 
   // Alternate languages
   alternates: {
-    canonical: "https://londonhomesafety.com",
+    canonical: "https://londonhomesafety.co.uk",
     languages: {
-      "en-GB": "https://londonhomesafety.com/en-GB",
-      "es-ES": "https://londonhomesafety.com/es-ES",
+      "en-GB": "https://londonhomesafety.co.uk/en-GB",
+      "es-ES": "https://londonhomesafety.co.uk/es-ES",
     },
   },
 
@@ -124,9 +124,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={outfit.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <CartProvider>{children}</CartProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>

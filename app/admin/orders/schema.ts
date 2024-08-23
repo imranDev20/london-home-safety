@@ -5,7 +5,7 @@ export const orderSchema = z.object({
   assignedEngineer: z.string().cuid().optional().nullable(),
   services: z.array(z.string().cuid()), // Array of service IDs
   status: z
-    .enum(["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"])
+    .enum(["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED",  "CONFIRMED",])
     .default("PENDING"),
   paymentStatus: z.enum(["UNPAID", "PAID", "REFUNDED"]).default("UNPAID"),
   paymentMethod: z

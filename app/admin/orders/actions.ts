@@ -2,9 +2,10 @@
 
 import prisma from "@/lib/prisma";
 import { OrderStatus, Prisma } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
+import { revalidatePath } from "next/cache";
+import puppeteer from 'puppeteer';
 export const getOrders = async (
   page: number = 1,
   pageSize: number = 10,
@@ -67,7 +68,7 @@ export const getOrders = async (
       prisma.order.count({ where: whereClause }),
     ]);
     // Generate Excel file
-   
+
     return {
       orders,
       pagination: {
@@ -97,13 +98,21 @@ export const getOrdersById = async (orderId: string) => {
       include: {
         user: {
           include: {
-            address: true,
-          },
+            address: true,            
+          },          
         },
+        services: true,
+      },
+    });
+
+    const engineer = await prisma.user.findMany({
+      where: {
+        role: "STAFF",
       },
     });
 
     return order;
+    
   } catch (error) {
     console.error("Error fetching orders:", error);
     throw new Error("Failed to fetch orders");
@@ -135,53 +144,141 @@ export async function deleteOrder(orderId: string) {
 }
 
 export const getExportOrders = async () => {
-try {
-  const orders = await prisma.order.findMany({
-    include: {
-      user: {
-        include: {
-          address:true
-        }
-      },      
-    }
-  })
-  const workbook = new exceljs.Workbook();
-  const worksheet = workbook.addWorksheet("Orders");
-  worksheet.columns = [
-    { header: "Invoice ID", key: "invoice_id", width: 20, },
-    { header: "Name", key: "name", width: 30 },
-    { header: "Email", key: "email", width: 30 },
-    { header: "Phone", key: "phone", width: 20 },
-    { header: "Address", key: "address", width: 60 },  
-    { header: "Cost", key: "cost", width: 15 },
-    { header: "Placed On", key: "createdAt", width: 20 }, 
-  ];
-
-  orders.forEach((order) => {
-    worksheet.addRow({
-      invoice_id: order.invoiceId,
-      name: order.user?.name,
-      email: order.user?.email,
-      // phone: order.user?.phone,
-      address: `${order.user?.address?.street ? order.user?.address?.street + ',' : ""} ${order.user?.address?.city ?? ""} ${order.user?.address?.postcode ?? ""}`,    
-      cost: order.totalPrice,
-      createdAt: dayjs(order?.user?.createdAt).format("DD MMMM YYYY"),
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        user: {
+          include: {
+            address: true,
+          },
+        },
+      },
     });
-  });
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet("Orders");
+    worksheet.columns = [
+      { header: "Invoice ID", key: "invoice_id", width: 20 },
+      { header: "Name", key: "name", width: 30 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Phone", key: "phone", width: 20 },
+      { header: "Address", key: "address", width: 60 },
+      { header: "Cost", key: "cost", width: 15 },
+      { header: "Placed On", key: "createdAt", width: 20 },
+    ];
 
-  const buffer = await workbook.xlsx.writeBuffer();
-  const excelData = Buffer.from(buffer).toString("base64");
-  return {
-    message: "Orders Data Downloaded Successfully",
-    data: excelData,
-    success: true,
+    orders.forEach((order) => {
+      worksheet.addRow({
+        invoice_id: order.invoiceId,
+        name: order.user?.name,
+        email: order.user?.email,
+        // phone: order.user?.phone,
+        address: `${
+          order.user?.address?.street ? order.user?.address?.street + "," : ""
+        } ${order.user?.address?.city ?? ""} ${
+          order.user?.address?.postcode ?? ""
+        }`,
+        cost: order.totalPrice,
+        createdAt: dayjs(order?.user?.createdAt).format("DD MMMM YYYY"),
+      });
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const excelData = Buffer.from(buffer).toString("base64");
+    return {
+      message: "Orders Data Downloaded Successfully",
+      data: excelData,
+      success: true,
+    };
+  } catch (error) {
+    return {
+      message: "An error occured when downloading orders data" + error,
+      success: false,
+    };
   }
-  
-} catch (error) {
-  return {
-    message: "An error occured when downloading orders data" + error,   
-    success: false,
+};
+
+
+import { NextApiRequest, NextApiResponse } from 'next';
+
+export default async function generateInvoice(orderId:string) {
+  try {
+    if (!orderId) {
+      console.error("No order ID available");
+      return null;
+    }
+
+    const orderDetails = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+      include: {
+        user: {
+          include: {
+            address: true,            
+          },          
+        },
+        services: true,
+      },
+    });
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // Generate HTML content based on orderDetails (similar to your PDF structure)
+    const content = `
+      <html>
+      <head><style>/* Add your styles here */</style></head>
+      <body>
+        <h1>London Home Safety</h1>
+        <p>43 Felton Road, Barking, London IG11 7YA</p>
+        <p>Email: info@londonhomesafety.co.uk</p>
+        <p>Phone: 020 8146 6698</p>
+        <h2>INVOICE</h2>
+        <p>Invoice Number: ${orderDetails?.invoiceId}</p>
+        <p>Date: ${orderDetails?.date}</p>
+        <h3>Billing Address:</h3>
+        <p>${orderDetails?.user.name}</p>
+        <p>${orderDetails?.user?.address?.street}</p>
+        <p>${orderDetails?.user?.address?.city} ${orderDetails?.user?.address?.postcode}</p>
+        <table>
+          <tr><th>Service</th><th>Quantity</th><th>Total</th></tr>
+          ${orderDetails?.services.map(service => `
+            <tr>
+              <td>${service?.name}</td>
+              <td>${service.category}</td>
+              <td>£${service.propertyType}</td>
+            </tr>
+          `).join('')}
+        </table>
+        <p>Subtotal: £${orderDetails?.totalPrice}</p>
+        <p>Parking Charge: £${orderDetails?.isParkingAvailable ? 'Yes' : 'No'}</p>
+        <p>Congestion Zone Charge: £${orderDetails?.isCongestionZone ? 'Yes': 'No'}</p>
+        <h3>Total: £${orderDetails?.totalPrice}</h3>
+        <p>Terms and conditions apply.</p>
+        <p>Thank you for your business!</p>
+      </body>
+      </html>
+    `;
+
+    await page.setContent(content, { waitUntil: 'networkidle0', timeout: 0 });
+
+
+    const pdfBuffer = await page.pdf({ format: 'A4' });
+
+    await browser.close();
+
+   
+    return {
+      message: "Invoice Generated Successfully",
+      data: pdfBuffer,
+      success: true,
+    };
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    return {
+      message: "An error occured when generating invoice" + error,
+      success: false,
+
+    };
   }
 }
 
-}

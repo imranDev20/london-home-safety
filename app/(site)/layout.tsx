@@ -1,10 +1,11 @@
-import Footer from "@/components/global/foooter";
-import Header from "@/components/global/header/header";
-import React from "react";
+import Footer from "../_components/foooter";
+import Header from "../_components/header";
+import Topbar from "../_components/topbar";
 
 export default function SiteLayout(props: { children: React.ReactNode }) {
   return (
     <>
+      <Topbar />
       <Header />
       <main>{props.children}</main>
       <Footer />

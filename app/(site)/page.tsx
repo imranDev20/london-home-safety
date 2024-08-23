@@ -5,17 +5,19 @@ import Faq from "./_components/faq";
 import Hero from "./_components/hero";
 import Reviews from "./_components/reviews";
 import ServiceCategories from "./_components/service-categories";
+import Services from "./_components/services";
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Hero />
-      <ServiceCategories />
+      <Services />
       <AboutUsHome />
+      <ServiceCategories />
+      <Reviews />
       <CallToAction />
       <Faq />
       <Contact />
-      <Reviews />
-    </main>
+    </>
   );
 }

@@ -5,3 +5,12 @@ export type EngineersWithRelation = Prisma.UserGetPayload<{
         address: true
     }
 }>
+
+export type StaffWithRelations = Prisma.UserGetPayload<{
+    where: {
+        role: "STAFF"
+    },
+    include: {
+        address: true
+    }
+}>

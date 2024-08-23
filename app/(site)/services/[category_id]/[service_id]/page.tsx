@@ -1,4 +1,4 @@
-import PageHeader from "@/components/common/page-header";
+import PageHeader from "@/components/page-header";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { ALL_SERVICES } from "@/shared/data";
 import { kebabCaseToNormalText } from "@/shared/function";

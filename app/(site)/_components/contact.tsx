@@ -1,18 +1,19 @@
-import ContactUsForm from "@/components/common/contact-us-form";
+import ContactUsForm from "@/app/_components/contact-us-form";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
 import Image from "next/image";
 
 export default function Contact() {
   return (
     <div className=" bg-slate-200 py-24 ">
-      <h1 className="text-center text-4xl font-bold mb-16">
+      <h2 className="text-center text-4xl font-bold mb-16">
         Get in Touch with London&apos;s Home Safety Experts
-      </h1>
+      </h2>
       <div className=" flex max-w-7xl mx-auto  ">
         <Image
           className="w-[33%] h-[550px] rounded-l-xl"
           src={ContactUsImage}
           alt="ContactUsImage"
+          loading="lazy"
         />
         <div className="p-6 w-96  bg-white  pl-6 ">
           <h2 className="text-lg font-semibold mb-6">Working Hours:</h2>

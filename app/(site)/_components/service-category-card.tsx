@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import Link from "next/link";
 interface ServiceProps {
   service: {
     id: number;
@@ -8,9 +9,13 @@ interface ServiceProps {
 }
 export default function ServiceCategoryCard({ service }: ServiceProps) {
   return (
-    <Card className="p-8 mt-8 rounded-2xl   hover:bg-blue-500 hover:text-white">
-      <h2 className="text-2xl font-bold mb-4">{service.serviceName}</h2>
-      <p>{service.serviceDetail}</p>
-    </Card>
+    <Link href="/">
+      <Card className="p-8 shadow-md hover:bg-primary hover:text-white group">
+        <h4 className="text-2xl font-semibold mb-4">{service.serviceName}</h4>
+        <p className="text-body group-hover:text-white font-normal leading-6">
+          {service.serviceDetail}
+        </p>
+      </Card>
+    </Link>
   );
 }

@@ -1,5 +1,7 @@
+
 import { getOrdersById } from "../actions";
 import EditOrderForm from "./_components/edit-order-form";
+import { getEngineersForOrder } from "./actions";
 
 export default async function AdminEditOrderPage({
   params: { order_id },
@@ -9,6 +11,7 @@ export default async function AdminEditOrderPage({
   };
 }) {
   const order = await getOrdersById(order_id);
+  const engineers = await getEngineersForOrder();
 
-  return <EditOrderForm orderDetails={order} />;
+  return <EditOrderForm orderDetails={order} engineers={engineers} />;
 }

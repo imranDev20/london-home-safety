@@ -10,9 +10,9 @@ import Image from "next/image";
 export default function Faq() {
   return (
     <div className="flex max-w-6xl mx-auto my-24">
-      <Image className="w-1/2" src={faqImage} alt="faqimage" />
+      <Image className="w-1/2" src={faqImage} alt="faqimage" loading="lazy" />
       <div>
-        <h1 className="text-3xl font-bold">Frequently Asked Questions</h1>
+        <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
         <p className="text-gray-600 mt-6 mb-8">
           Got questions? We&apos;ve got answers! Here are some of the most
           common questions we receive from our customers, along with clear and

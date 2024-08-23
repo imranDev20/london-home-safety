@@ -27,9 +27,9 @@ export default function ContactForm() {
   return (
     <div className="max-w-6xl mx-auto flex mt-16">
       <div className="w-[40%] mt-6">
-        <h1 className="text-4xl font-bold mb-6">
+        <h2 className="text-4xl font-bold mb-6">
           Have Questions? We&apos;re Here to Help!
-        </h1>
+        </h2>
         <p className="text-gray-600 text-lg  ">
           If you have any questions about our services or need assistance,
           don&apos;t hesitate to reach out. Our team is here to help you.
