@@ -1,17 +1,20 @@
+import { ALL_SERVICES } from "@/shared/data";
 import Link from "next/link";
 
 export default function Footer() {
+  const services = ALL_SERVICES;
   return (
-    <footer className="bg-blue-700 text-white py-10 ">
+    <footer className="bg-primary text-white py-10 ">
       <div className="max-w-6xl mx-auto">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-4">
           <div className="">
             <h2 className="text-xl font-bold mb-4">London Home Safety</h2>
             <p className="text-sm leading-6">
-              London Property Inspections team are certified top quality
-              engineers ready to provide you with all types of landlord safety
-              certificates in London and the M25 area for domestic and
-              commercial purposes.
+              Protecting your home with expert safety solutions. From electrical
+              and gas safety to fire prevention and health services, we ensure
+              peace of mind for homeowners across London. Your safety is our
+              priority. Contact us today and experience the difference with our
+              professional team.
             </p>
           </div>
 
@@ -54,26 +57,13 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-2">
-              <li>
-                <Link href="#" className="hover:underline">
-                  Electrical Services
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:underline">
-                  Gas Services
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:underline">
-                  Fire Services
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:underline">
-                  Health & Safety
-                </Link>
-              </li>
+              {services.map((item) => (
+                <li key={item.path}>
+                  <Link href="#" className="hover:underline">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

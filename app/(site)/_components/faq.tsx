@@ -68,10 +68,12 @@ export default function Faq() {
         >
           {accordionData.map((item) => (
             <AccordionItem key={item.value} value={item.value}>
-              <AccordionTrigger className="font-bold">
+              <AccordionTrigger className="text-lg text-gray-700 font-semibold hover:no-underline">
                 {item.question}
               </AccordionTrigger>
-              <AccordionContent>{item.answer}</AccordionContent>
+              <AccordionContent className="text-lg  text-gray-500">
+                {item.answer}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
