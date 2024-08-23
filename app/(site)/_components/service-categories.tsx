@@ -43,20 +43,17 @@ const services = [
 
 export default function ServiceCategories() {
   return (
-    <div className="bg-slate-200   pt-32 pb-24">
-      <div className=" max-w-6xl mx-auto ">
-        <h1 className=" text-center  mb-8 text-4xl font-bold ">
+    <section className="py-20 my-20 bg-section-background">
+      <div className="container mx-auto max-w-screen-xl px-16">
+        <h2 className=" text-center mb-10 text-4xl font-bold ">
           Discover Our Wide Range of Safety Solutions
-        </h1>
+        </h2>
         <div className="grid md:grid-cols-2 gap-4  ">
           {services.map((service) => (
-            <ServiceCategoryCard
-              key={service.id}
-              service={service}
-            ></ServiceCategoryCard>
+            <ServiceCategoryCard key={service.id} service={service} />
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
