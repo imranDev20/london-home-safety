@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { NavLeafItem } from "@/types/misc";
 import Image from "next/image";
+
 export default function ServiceCard({ service }: { service: NavLeafItem }) {
   const { description, image, path, label, categoryPath } = service;
 

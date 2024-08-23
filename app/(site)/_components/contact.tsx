@@ -1,4 +1,4 @@
-import ContactUsForm from "@/components/common/contact-us-form";
+import ContactUsForm from "@/app/_components/contact-us-form";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
 import Image from "next/image";
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import Link from "next/link";
+import { HiPhone } from "react-icons/hi";
 
 const categories = [
   { text: "Our team is made up of highly skilled and certified experts." },
@@ -100,7 +101,7 @@ export default function AboutUsHome() {
 
         <hr className="my-8" />
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-7">
           <Button
             className="bg-primary hover:bg-secondary hover:text-black py-6 text-md"
             size="lg"
@@ -108,9 +109,14 @@ export default function AboutUsHome() {
           >
             <Link href="/about">More About Us</Link>
           </Button>
-          <div>
-            <p className="text-sm text-body">Call Us Anytime</p>
-            <p className="text-xl font-bold">020 8146 6698</p>
+          <div className="flex items-center">
+            <HiPhone className="text-4xl text-body mr-2" />
+            <div>
+              <p className="text-sm text-body">Call Us Anytime</p>
+              <p className="text-xl font-semibold text-body-dark">
+                020 8146 6698
+              </p>
+            </div>
           </div>
         </div>
       </div>

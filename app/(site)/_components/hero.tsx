@@ -1,4 +1,4 @@
-import BookNow from "@/components/common/book-now";
+import BookNow from "@/app/_components/book-now";
 import { Button } from "@/components/ui/button";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import Image from "next/image";
@@ -27,7 +27,7 @@ export default function Hero() {
             Solutions
           </h1>
 
-          <p className="text-white text-xl font-normal mb-10">
+          <p className="text-white text-xl font-normal mb-10 leading-relaxed">
             Welcome to London Home Safety Limited, your trusted partner for
             comprehensive safety solutions in the heart of London. With years of
             experience and a team of certified professionals, we provide

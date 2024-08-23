@@ -7,7 +7,7 @@ export type NavItem = {
   path: string;
   children?: NavItem[];
   abbr?: string;
-  Icon?: typeof SvgIcon;
+  // Icon?: typeof SvgIcon;
   image?: StaticImageData;
   description?: string;
   detailedDesc?: {
