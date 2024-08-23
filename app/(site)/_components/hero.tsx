@@ -6,7 +6,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 
 export default function Hero() {
   return (
-    <section className="relative h-screen flex items-center">
+    <section className="relative lg:h-screen flex items-center py-10 lg:py-0">
       <Image
         src={BackgroundImage}
         alt="London Home Safety Hero Background"
@@ -19,7 +19,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[rgba(6,44,100,0.9)] mix-blend-multiply"></div>
 
       <div className="container mx-auto grid grid-cols-12 my-auto gap-10 z-10 relative max-w-screen-xl px-16">
-        <div className="col-span-8">
+        <div className="col-span-12 lg:col-span-8 text-center lg:text-left flex flex-col items-center lg:items-start">
           <h1 className="text-5xl font-bold leading-relaxed mb-4 text-white">
             Safeguarding London&apos;s
             <span className="text-secondary"> Homes </span>
@@ -43,7 +43,7 @@ export default function Hero() {
           </Button>
         </div>
 
-        <div className="col-span-4">
+        <div className="col-span-12 lg:col-span-4">
           <BookNow />
         </div>
       </div>

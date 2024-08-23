@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FaCalendarCheck, FaCartShopping } from "react-icons/fa6";
+import { FaCalendarCheck } from "react-icons/fa6";
+import CartDrawer from "./cart-drawer";
 
 export default function Header() {
   return (
@@ -9,7 +10,7 @@ export default function Header() {
         <div>LoGo</div>
 
         <div className="flex items-center">
-          <ul className="flex gap-10">
+          <ul className="gap-10 hidden lg:flex">
             <li>Home</li>
             <li>About Us</li>
             <li>Services</li>
@@ -24,9 +25,7 @@ export default function Header() {
               </Button>
             </Link>
 
-            <Link href="/cart" className="p-3">
-              <FaCartShopping className="text-2xl text-primary" />
-            </Link>
+            <CartDrawer />
           </div>
         </div>
       </div>
