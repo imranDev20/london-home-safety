@@ -1,3 +1,5 @@
+import EicrIcon from "@/components/icons/eicr";
+import EpcIcon from "@/components/icons/epc";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { NavItem, NavLeafItem } from "@/types/misc";
 
@@ -19,7 +21,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Electrical Installation Condition Report",
             path: "/electrical-installation-condition-report",
             abbr: "EICR",
-
+            Icon: EicrIcon,
             image: backgroundImage,
             description:
               "Ensure the safety and compliance of your electrical installations with our thorough EICR.",
@@ -45,31 +47,28 @@ export const NAV_ITEMS: NavItem[] = [
                     unitCount: "Studio Flat",
                     price: 79,
                   },
-                  {
-                    unitCount: 1,
-                    price: 99,
-                  },
-                  {
-                    unitCount: 2,
-                    price: 99,
-                  },
+                ],
 
+                packages: [
                   {
-                    unitCount: 3,
-                    price: 119,
+                    name: "EICR for Studio Flat",
+                    price: 70,
+                    propertyType: "RESIDENTIAL",
                   },
                   {
-                    unitCount: 4,
-                    price: 119,
-                  },
-
-                  {
-                    unitCount: 5,
-                    price: 149,
+                    name: "EICR for 1-2 bedrooms",
+                    price: 90,
+                    propertyType: "RESIDENTIAL",
                   },
                   {
-                    unitCount: 6,
-                    price: 149,
+                    name: "EICR for 3-4 bedrooms",
+                    price: 110,
+                    propertyType: "RESIDENTIAL",
+                  },
+                  {
+                    name: "EICR for 5-6 bedrooms",
+                    price: 150,
+                    propertyType: "RESIDENTIAL",
                   },
                 ],
               },
@@ -85,83 +84,23 @@ export const NAV_ITEMS: NavItem[] = [
                     unitCount: 1,
                     price: 149,
                   },
-                  {
-                    unitCount: 2,
-                    price: 149,
-                  },
-                  {
-                    unitCount: 3,
-                    price: 149,
-                  },
+                ],
 
+                packages: [
                   {
-                    unitCount: 4,
-                    price: 149,
+                    name: "EICR for 1-5 circuits",
+                    price: 120,
+                    propertyType: "COMMERCIAL",
                   },
                   {
-                    unitCount: 5,
-                    price: 149,
-                  },
-
-                  {
-                    unitCount: 6,
-                    price: 199,
+                    name: "EICR for 6-10 circuits",
+                    price: 160,
+                    propertyType: "COMMERCIAL",
                   },
                   {
-                    unitCount: 7,
-                    price: 199,
-                  },
-                  {
-                    unitCount: 8,
-                    price: 199,
-                  },
-                  {
-                    unitCount: 9,
-                    price: 199,
-                  },
-                  {
-                    unitCount: 10,
-                    price: 199,
-                  },
-                  {
-                    unitCount: 11,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 12,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 13,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 14,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 15,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 16,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 17,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 18,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 19,
-                    price: 249,
-                  },
-                  {
-                    unitCount: 20,
-                    price: 249,
+                    name: "EICR for 11-20 circuits",
+                    price: 250,
+                    propertyType: "COMMERCIAL",
                   },
                 ],
               },
@@ -930,7 +869,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Energy Performance Certificate",
             path: "/energy-performance-certificate",
             abbr: "EPC",
-
+            Icon: EpcIcon,
             description:
               "Assess the energy efficiency of your home and get certified with our EPC service.",
             image: backgroundImage,

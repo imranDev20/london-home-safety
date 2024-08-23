@@ -1,3 +1,5 @@
+import { PropertyType } from "@prisma/client";
+
 export type ChildrenProp = {
   children: React.ReactNode;
 };
@@ -7,7 +9,7 @@ export type NavItem = {
   path: string;
   children?: NavItem[];
   abbr?: string;
-  // Icon?: typeof SvgIcon;
+  Icon?: any;
   image?: StaticImageData;
   description?: string;
   detailedDesc?: {
@@ -23,6 +25,12 @@ export type NavItem = {
     prices: {
       unitCount: string | number;
       price: number;
+    }[];
+
+    packages?: {
+      name: string;
+      price: number;
+      propertyType?: PropertyType;
     }[];
   }[];
 

@@ -1,12 +1,9 @@
-const EpcIcon = (props: any) => (
+const EpcIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     width={78}
     height={78}
-    style={{
-      enableBackground: "new 0 0 512 512",
-    }}
     viewBox="0 0 497 497"
     {...props}
   >
