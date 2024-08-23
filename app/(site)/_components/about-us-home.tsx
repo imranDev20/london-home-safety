@@ -1,22 +1,22 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
+import Image from "next/image";
 import Link from "next/link";
 import { HiPhone } from "react-icons/hi";
 
 const categories = [
-  { text: "Our team is made up of highly skilled and certified experts." },
+  { text: "Highly skilled and certified experts." },
   {
-    text: "We offer a wide range of services in electrical, gas, fire, and health and safety.",
+    text: "Wide range of electrical, gas, fire, and health safety services.",
   },
   {
-    text: "We prioritize your safety and satisfaction with top-quality service.",
+    text: "Top-quality service prioritizing safety and satisfaction.",
   },
   {
-    text: "Serving the heart of London with a deep understanding of local needs and regulations.",
+    text: "Deep understanding of London's local needs and regulations.",
   },
   {
-    text: "Trusted by homeowners across London for our reliability and professionalism.",
+    text: "Trusted by homeowners for reliability and professionalism.",
   },
 ];
 

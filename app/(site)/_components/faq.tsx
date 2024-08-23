@@ -8,6 +8,49 @@ import faqImage from "@/images/faq.jpg";
 import Image from "next/image";
 
 export default function Faq() {
+  const accordionData = [
+    {
+      value: "item-1",
+      question: "What is an EPC and why do I need one?",
+      answer: `An Energy Performance Certificate (EPC) provides information about
+               the energy efficiency of a property. It's required for
+               properties being sold or rented and helps improve energy use and
+               reduce costs.`,
+    },
+    {
+      value: "item-2",
+      question:
+        "How often should I have an Electrical Installation Condition Report (EICR) conducted?",
+      answer: `It's recommended to have an EICR conducted every 5 years for
+               rented properties and every 10 years for owner-occupied homes.
+               Regular inspections ensure your electrical systems are safe and
+               compliant with regulations.`,
+    },
+    {
+      value: "item-3",
+      question: "What does a Gas Safety Certificate entail?",
+      answer: `A Gas Safety Certificate confirms that all gas appliances,
+               fittings, and flues in a property are safe to use. It's a
+               legal requirement for landlords to have an annual gas safety check
+               conducted by a registered engineer.`,
+    },
+    {
+      value: "item-4",
+      question: "Why is PAT Testing important for my home?",
+      answer: `Portable Appliance Testing (PAT) is important to ensure that
+               electrical appliances are safe to use. Regular PAT testing helps
+               prevent electrical hazards and ensures compliance with safety
+               standards.`,
+    },
+    {
+      value: "item-5",
+      question:
+        "How can I benefit from installing an EV charging station at home?",
+      answer: `Installing an EV charging station at home offers convenience and
+               cost savings for electric vehicle owners. It ensures your vehicle
+               is always ready to go and can increase the value of your property.`,
+    },
+  ];
   return (
     <div className="flex max-w-6xl mx-auto my-24">
       <Image className="w-1/2" src={faqImage} alt="faqimage" loading="lazy" />
@@ -18,62 +61,21 @@ export default function Faq() {
           common questions we receive from our customers, along with clear and
           helpful answers to guide you through our services and processes.
         </p>
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="font-bold">
-              What is an EPC and why do I need one?
-            </AccordionTrigger>
-            <AccordionContent>
-              An Energy Performance Certificate (EPC) provides information about
-              the energy efficiency of a property. It&apos;s required for
-              properties being sold or rented and helps improve energy use and
-              reduce costs.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="font-bold">
-              How often should I have an Electrical Installation Condition
-              Report (EICR) conducted?
-            </AccordionTrigger>
-            <AccordionContent>
-              It&apos;s recommended to have an EICR conducted every 5 years for
-              rented properties and every 10 years for owner-occupied homes.
-              Regular inspections ensure your electrical systems are safe and
-              compliant with regulations.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger className="font-bold">
-              What does a Gas Safety Certificate entail?
-            </AccordionTrigger>
-            <AccordionContent>
-              A Gas Safety Certificate confirms that all gas appliances,
-              fittings, and flues in a property are safe to use. It&apos;s a
-              legal requirement for landlords to have an annual gas safety check
-              conducted by a registered engineer.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="font-bold">
-              Why is PAT Testing important for my home?
-            </AccordionTrigger>
-            <AccordionContent>
-              Portable Appliance Testing (PAT) is important to ensure that
-              electrical appliances are safe to use. Regular PAT testing helps
-              prevent electrical hazards and ensures compliance with safety
-              standards.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-5">
-            <AccordionTrigger className="font-bold">
-              How can I benefit from installing an EV charging station at home?
-            </AccordionTrigger>
-            <AccordionContent>
-              Installing an EV charging station at home offers convenience and
-              cost savings for electric vehicle owners. It ensures your vehicle
-              is always ready to go and can increase the value of your property.
-            </AccordionContent>
-          </AccordionItem>
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full hover:no-underline "
+        >
+          {accordionData.map((item) => (
+            <AccordionItem key={item.value} value={item.value}>
+              <AccordionTrigger className="text-lg text-gray-700 font-semibold hover:no-underline">
+                {item.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-lg  text-gray-500">
+                {item.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
         </Accordion>
       </div>
     </div>
