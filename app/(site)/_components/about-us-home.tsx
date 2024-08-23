@@ -29,7 +29,7 @@ const DotIcon = () => (
 export default function AboutUsHome() {
   return (
     <section className="container max-w-screen-xl mx-auto grid grid-cols-12 gap-20 my-20 px-16">
-      <div className="col-span-6 flex items-center gap-3 max-h-[500px]">
+      <div className="col-span-12 lg:col-span-6 flex items-center gap-3 max-h-[500px]">
         <div className="relative flex-1 h-5/6">
           <Image
             src={BackgroundImage}
