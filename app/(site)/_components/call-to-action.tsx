@@ -14,9 +14,9 @@ export default function CallToAction() {
         className="opacity-30"
       />
       <div className="relative z-10 text-center text-white">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+        <h2 className="text-4xl md:text-6xl font-bold mb-4">
           Take the First Step Towards <br /> Safety
-        </h1>
+        </h2>
         <p className="text-lg md:text-xl mb-8 w-2/3 mx-auto my-10">
           Book your desired service today and experience the peace of mind that
           comes with a safe and secure home. Visit our services page to find out

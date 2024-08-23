@@ -5,9 +5,9 @@ import Image from "next/image";
 export default function Contact() {
   return (
     <div className=" bg-slate-200 py-24 ">
-      <h1 className="text-center text-4xl font-bold mb-16">
+      <h2 className="text-center text-4xl font-bold mb-16">
         Get in Touch with London&apos;s Home Safety Experts
-      </h1>
+      </h2>
       <div className=" flex max-w-7xl mx-auto  ">
         <Image
           className="w-[33%] h-[550px] rounded-l-xl"

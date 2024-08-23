@@ -14,9 +14,9 @@ export default function AboutCta() {
         loading="lazy"
       />
       <div className="relative z-10 text-center text-white">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+        <h2 className="text-4xl md:text-6xl font-bold mb-4">
           How Can We Help You?
-        </h1>
+        </h2>
         <p className="text-lg md:text-xl mb-8 w-2/3 mx-auto my-10">
           London Home Safety collaborates with vetted professionals who are
           registered with official UK bodies. Our tradespeople are highly
