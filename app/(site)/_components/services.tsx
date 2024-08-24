@@ -15,6 +15,7 @@ export default function Services() {
             <ServiceCard
               key={item.label}
               title={item.label}
+              Icon={item.Icon}
               price={79.99}
               className="h-full"
             />

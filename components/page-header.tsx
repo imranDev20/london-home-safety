@@ -9,7 +9,7 @@ export default function PageHeader({
   const title = breadCrumbOptions.find((item) => item.isCurrentPage)?.label;
 
   return (
-    <section className="relative -mt-[68px]">
+    <section className="relative">
       <Image
         src={backgroundImage}
         alt="Background"
@@ -19,7 +19,7 @@ export default function PageHeader({
         placeholder="blur"
         className="object-cover"
       />
-      <div className="relative pt-[156px] pb-[80px] before:content-[''] before:absolute before:inset-0 before:bg-[#062C64] before:opacity-90 before:mix-blend-multiply">
+      <div className="relative py-20 before:content-[''] before:absolute before:inset-0 before:bg-[#062C64] before:opacity-90 before:mix-blend-multiply">
         <div className="container mx-auto px-4">
           <h1 className="relative z-10 text-center text-white text-4xl font-bold mb-4">
             {title}

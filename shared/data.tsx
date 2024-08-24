@@ -1,7 +1,10 @@
 import EicrIcon from "@/components/icons/eicr";
 import EpcIcon from "@/components/icons/epc";
+import FuseBoxIcon from "@/components/icons/fuse-box";
+import PatIcon from "@/components/icons/pat";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { NavItem, NavLeafItem } from "@/types/misc";
+import { v4 as uuidv4 } from "uuid";
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", path: "/" },
@@ -37,35 +40,36 @@ export const NAV_ITEMS: NavItem[] = [
 
             pricingDetails: [
               {
-                type: "Residential",
+                type: "RESIDENTIAL",
                 unit: "bedroom",
 
                 description:
                   "Ensure your home's electrical installations are safe and compliant.",
-                prices: [
-                  {
-                    unitCount: "Studio Flat",
-                    price: 79,
-                  },
-                ],
 
                 packages: [
                   {
+                    id: uuidv4(),
                     name: "EICR for Studio Flat",
                     price: 70,
                     propertyType: "RESIDENTIAL",
                   },
                   {
+                    id: uuidv4(),
+
                     name: "EICR for 1-2 bedrooms",
                     price: 90,
                     propertyType: "RESIDENTIAL",
                   },
                   {
+                    id: uuidv4(),
+
                     name: "EICR for 3-4 bedrooms",
                     price: 110,
                     propertyType: "RESIDENTIAL",
                   },
                   {
+                    id: uuidv4(),
+
                     name: "EICR for 5-6 bedrooms",
                     price: 150,
                     propertyType: "RESIDENTIAL",
@@ -74,30 +78,30 @@ export const NAV_ITEMS: NavItem[] = [
               },
 
               {
-                type: "Commercial",
+                type: "COMMERCIAL",
                 unit: "circuit",
 
                 description:
                   "Comprehensive electrical safety reports for commercial properties.",
-                prices: [
-                  {
-                    unitCount: 1,
-                    price: 149,
-                  },
-                ],
 
                 packages: [
                   {
+                    id: uuidv4(),
+
                     name: "EICR for 1-5 circuits",
                     price: 120,
                     propertyType: "COMMERCIAL",
                   },
                   {
+                    id: uuidv4(),
+
                     name: "EICR for 6-10 circuits",
                     price: 160,
                     propertyType: "COMMERCIAL",
                   },
                   {
+                    id: uuidv4(),
+
                     name: "EICR for 11-20 circuits",
                     price: 250,
                     propertyType: "COMMERCIAL",
@@ -212,11 +216,12 @@ export const NAV_ITEMS: NavItem[] = [
               },
             ],
           },
+
           {
             label: "Portable Appliance Testing",
             path: "/portable-appliance-testing",
             abbr: "PAT",
-
+            Icon: PatIcon,
             image: backgroundImage,
             description:
               "Test the safety of your portable appliances to prevent electrical hazards with our PAT service.",
@@ -231,56 +236,51 @@ export const NAV_ITEMS: NavItem[] = [
             },
             pricingDetails: [
               {
-                type: "Residential",
-                unit: "item",
+                type: "RESIDENTIAL",
+                unit: "appliances",
 
                 description:
                   "Ensure your home's portable appliances are safe and compliant.",
-                prices: [
+
+                packages: [
                   {
-                    unitCount: 1,
-                    price: 50,
+                    id: uuidv4(),
+
+                    name: "EPC Upto 10 Appliances",
+                    price: 59.99,
                   },
                   {
-                    unitCount: 5,
-                    price: 75,
-                  },
-                  {
-                    unitCount: 10,
-                    price: 100,
-                  },
-                  {
-                    unitCount: 20,
-                    price: 150,
+                    id: uuidv4(),
+
+                    name: "EPC Upto 20 Appliances",
+                    price: 69.99,
                   },
                 ],
               },
               {
-                type: "Commercial",
+                type: "COMMERCIAL",
                 unit: "item",
 
                 description:
                   "Comprehensive PAT testing for commercial properties.",
-                prices: [
+
+                packages: [
                   {
-                    unitCount: 1,
-                    price: 60,
+                    id: uuidv4(),
+
+                    name: "EPC Upto 10 Appliances",
+                    price: 79.99,
                   },
                   {
-                    unitCount: 5,
-                    price: 85,
-                  },
-                  {
-                    unitCount: 10,
-                    price: 110,
-                  },
-                  {
-                    unitCount: 20,
-                    price: 160,
+                    id: uuidv4(),
+
+                    name: "EPC Upto 20 Appliances",
+                    price: 99.99,
                   },
                 ],
               },
             ],
+
             pageContent: {
               title: "Ensuring Appliance Safety with Professional PAT Testing",
               html: `
@@ -364,7 +364,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Fuse Box Installation",
             path: "/fuse-box-installation",
-
+            Icon: FuseBoxIcon,
             image: backgroundImage,
             description:
               "Upgrade or install a new fuse box to enhance your home's electrical safety and performance.",
@@ -379,36 +379,34 @@ export const NAV_ITEMS: NavItem[] = [
             },
             pricingDetails: [
               {
-                type: "Residential",
+                type: "RESIDENTIAL",
                 unit: "installation",
 
                 description:
                   "Enhance your home's electrical safety with a new fuse box.",
-                prices: [
+
+                packages: [
                   {
-                    unitCount: "Standard Installation",
-                    price: 300,
-                  },
-                  {
-                    unitCount: "Advanced Installation with Upgrades",
-                    price: 450,
+                    id: uuidv4(),
+
+                    name: "Domestic Fuse Box Installation",
+                    price: 299.99,
                   },
                 ],
               },
               {
-                type: "Commercial",
+                type: "COMMERCIAL",
                 unit: "installation",
 
                 description:
                   "Ensure your business is compliant and safe with a new fuse box.",
-                prices: [
+
+                packages: [
                   {
-                    unitCount: "Standard Installation",
-                    price: 500,
-                  },
-                  {
-                    unitCount: "Advanced Installation with Upgrades",
-                    price: 700,
+                    id: uuidv4(),
+
+                    name: "Commercial Fuse Box Installation",
+                    price: 799.99,
                   },
                 ],
               },
@@ -485,8 +483,8 @@ export const NAV_ITEMS: NavItem[] = [
           },
 
           {
-            label: "Electrical Repairs",
-            path: "/electrical-repairs",
+            label: "Electrical Diagnostic & Repair Services",
+            path: "/electrical-diagnostic-and-repair-services",
 
             image: backgroundImage,
             description:
@@ -502,48 +500,60 @@ export const NAV_ITEMS: NavItem[] = [
             },
             pricingDetails: [
               {
-                type: "Residential",
+                type: "RESIDENTIAL",
                 unit: "repair",
 
                 description:
                   "Comprehensive electrical repair services for your home.",
-                prices: [
+
+                packages: [
                   {
-                    unitCount: "Minor Repairs",
-                    price: 80,
+                    id: uuidv4(),
+
+                    name: "Fuse box repairs",
+                    price: 0,
                   },
                   {
-                    unitCount: "Major Repairs",
-                    price: 200,
+                    id: uuidv4(),
+
+                    name: "Earth Bonding",
+                    price: 0,
                   },
                   {
-                    unitCount: "Emergency Call-Out",
-                    price: 150,
+                    id: uuidv4(),
+
+                    name: "Electrical alters",
+                    price: 0,
+                  },
+                  {
+                    id: uuidv4(),
+
+                    name: "Socket setup",
+                    price: 0,
+                  },
+                  {
+                    id: uuidv4(),
+
+                    name: "Bath circuit",
+                    price: 0,
+                  },
+                  {
+                    id: uuidv4(),
+
+                    name: "Spotlight placement",
+                    price: 0,
                   },
                 ],
               },
               {
-                type: "Commercial",
+                type: "COMMERCIAL",
                 unit: "repair",
 
                 description:
                   "Professional electrical repair services for businesses.",
-                prices: [
-                  {
-                    unitCount: "Minor Repairs",
-                    price: 120,
-                  },
-                  {
-                    unitCount: "Major Repairs",
-                    price: 300,
-                  },
-                  {
-                    unitCount: "Emergency Call-Out",
-                    price: 200,
-                  },
-                ],
               },
             ],
+
             pageContent: {
               title: "Reliable and Efficient Electrical Repairs",
               html: `
@@ -635,38 +645,18 @@ export const NAV_ITEMS: NavItem[] = [
             },
             pricingDetails: [
               {
-                type: "Residential",
+                type: "RESIDENTIAL",
                 unit: "installation",
 
                 description:
                   "Install a home EV charger for convenient and efficient charging.",
-                prices: [
-                  {
-                    unitCount: "Standard Charger",
-                    price: 500,
-                  },
-                  {
-                    unitCount: "Fast Charger",
-                    price: 750,
-                  },
-                ],
               },
               {
-                type: "Commercial",
+                type: "COMMERCIAL",
                 unit: "installation",
 
                 description:
                   "Install EV chargers at your business premises for employees and customers.",
-                prices: [
-                  {
-                    unitCount: "Standard Charger",
-                    price: 800,
-                  },
-                  {
-                    unitCount: "Fast Charger",
-                    price: 1000,
-                  },
-                ],
               },
             ],
             pageContent: {
@@ -772,46 +762,18 @@ export const NAV_ITEMS: NavItem[] = [
 
             pricingDetails: [
               {
-                type: "Residential",
+                type: "RESIDENTIAL",
                 unit: "service",
 
                 description:
                   "Comprehensive gas safety checks and repairs for your home.",
-                prices: [
-                  {
-                    unitCount: "Gas Safety Certificate",
-                    price: 80,
-                  },
-                  {
-                    unitCount: "Minor Gas Appliance Repair",
-                    price: 100,
-                  },
-                  {
-                    unitCount: "Major Gas Appliance Repair",
-                    price: 200,
-                  },
-                ],
               },
               {
-                type: "Commercial",
+                type: "COMMERCIAL",
                 unit: "service",
 
                 description:
                   "Professional gas safety services and repairs for businesses.",
-                prices: [
-                  {
-                    unitCount: "Gas Safety Certificate",
-                    price: 120,
-                  },
-                  {
-                    unitCount: "Minor Gas Appliance Repair",
-                    price: 150,
-                  },
-                  {
-                    unitCount: "Major Gas Appliance Repair",
-                    price: 300,
-                  },
-                ],
               },
             ],
           },
@@ -822,6 +784,16 @@ export const NAV_ITEMS: NavItem[] = [
             image: backgroundImage,
             description:
               "Maintain and repair your boiler to ensure efficient and safe operation.",
+
+            pricingDetails: [
+              {
+                type: "RESIDENTIAL",
+                unit: "boiler",
+                description: "",
+
+                packages: [],
+              },
+            ],
           },
         ],
       },
