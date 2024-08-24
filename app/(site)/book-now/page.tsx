@@ -184,7 +184,7 @@ export default function BookNow() {
                             : ""
                         }`}
                       >
-                        {item.Icon && <item.Icon height={48} width={48} />}
+                        {item.Icon && <item.Icon height={24} width={24} />}
                         <h4
                           className={`font-medium ml-3 text-sm ${
                             activeSection === item.path.toString().slice(1)
