@@ -2,8 +2,8 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { reviewSchema } from "./schema";
 import { z } from "zod";
+import { reviewSchema } from "./schema";
 
 export const getReviews = async () => {
   try {

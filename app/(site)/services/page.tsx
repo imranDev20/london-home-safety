@@ -1,11 +1,20 @@
+import PageHeader from "@/components/page-header";
+import BackgroundImage from "@/images/hero-image-new.jpeg";
 import ServiceCategories from "../_components/service-categories";
-import PageHeader from "./_components/page-header";
 import ServiceItems from "./_components/service-items";
-
+const breadCrumbOptions = [
+  {
+    label: "Contact us",
+    isCurrentPage: true,
+  },
+];
 export default function ServicesPage() {
   return (
     <div>
-      <PageHeader />
+      <PageHeader
+        backgroundImage={BackgroundImage}
+        breadCrumbOptions={breadCrumbOptions}
+      />
       <ServiceCategories />
       <ServiceItems />
     </div>

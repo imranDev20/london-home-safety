@@ -113,9 +113,11 @@ export default function AboutUsHome() {
             <HiPhone className="text-4xl text-body mr-2" />
             <div>
               <p className="text-sm text-body">Call Us Anytime</p>
-              <p className="text-xl font-semibold text-body-dark">
-                020 8146 6698
-              </p>
+              <Link href="tel:+020 8146 6698">
+                <p className="text-xl font-semibold text-body-dark hover:underline">
+                  020 8146 6698
+                </p>
+              </Link>
             </div>
           </div>
         </div>

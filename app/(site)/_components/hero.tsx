@@ -2,6 +2,7 @@ import BookNow from "@/app/_components/book-now";
 import { Button } from "@/components/ui/button";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import Image from "next/image";
+import Link from "next/link";
 import { FaPhoneAlt } from "react-icons/fa";
 
 export default function Hero() {
@@ -34,13 +35,15 @@ export default function Hero() {
             top-notch services to ensure the safety and well-being of your home.
           </p>
 
-          <Button
-            size="lg"
-            className="bg-secondary hover:bg-white text-black font-medium text-lg flex items-center py-6"
-          >
-            <FaPhoneAlt className="mr-2 text-lg" />
-            020 8146 6698
-          </Button>
+          <Link href="tel:+020 8146 6698">
+            <Button
+              size="lg"
+              className="bg-secondary hover:bg-white text-black font-medium text-lg flex items-center py-6"
+            >
+              <FaPhoneAlt className="mr-2 text-lg" />
+              020 8146 6698
+            </Button>
+          </Link>
         </div>
 
         <div className="col-span-12 lg:col-span-4">
