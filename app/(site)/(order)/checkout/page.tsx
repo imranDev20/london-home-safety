@@ -25,7 +25,6 @@ import {
   SelectValue,
   SelectGroup,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -33,11 +32,10 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { CheckoutFormInput, checkoutFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
+  const router = useRouter();
 
   const form = useForm<CheckoutFormInput>({
     resolver: zodResolver(checkoutFormSchema),
@@ -58,11 +56,6 @@ export default function CheckoutPage() {
   const parkingOption = form.watch("parkingOption");
   const isInCongestionZone = form.watch("isInCongestionZone");
 
-  const handleDateChange = (date: Date | undefined) => {
-    setSelectedDate(date);
-    form.setValue("date", date as Date);
-  };
-
   const handleParkingChange = (value: string) => {
     form.setValue("parkingOption", value as "free" | "no" | "paid");
   };
@@ -77,6 +70,8 @@ export default function CheckoutPage() {
 
   const onCheckoutSubmit: SubmitHandler<CheckoutFormInput> = async (data) => {
     console.log(data);
+
+    router.push("/payment");
   };
 
   return (
@@ -362,7 +357,6 @@ export default function CheckoutPage() {
                                 selected={field.value}
                                 onSelect={(date) => {
                                   field.onChange(date);
-                                  handleDateChange(date);
                                 }}
                                 initialFocus
                               />

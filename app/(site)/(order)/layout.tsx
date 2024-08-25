@@ -1,5 +1,6 @@
 import Stepper from "@/components/stepper";
 import React from "react";
+import StepperController from "./_components/stepper-controller";
 
 export default function OrderLayout({
   children,
@@ -8,7 +9,7 @@ export default function OrderLayout({
 }) {
   return (
     <div className="bg-section-background">
-      <Stepper />
+      <StepperController />
       {children}
     </div>
   );
