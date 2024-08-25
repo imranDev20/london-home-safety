@@ -199,6 +199,7 @@ export const getExportOrders = async () => {
 
 
 import { NextApiRequest, NextApiResponse } from 'next';
+import { CreateOrderFormInput } from "./new/schema";
 
 export default async function generateInvoice(orderId:string) {
   try {
@@ -282,3 +283,53 @@ export default async function generateInvoice(orderId:string) {
   }
 }
 
+export async function createOrder(data: CreateOrderFormInput) {
+  try {
+    // Calculate the total price based on the selected services
+    const services = await prisma.service.findMany({
+      where: {
+        id: {
+          in: data.services.map((service) => service.serviceId),
+        },
+      },
+    });
+
+  
+
+    // Create the order with the associated services
+    const createdOrder = await prisma.order.create({
+      data: {
+        userId: data.userId,
+        assignedEngineerId: data.assignedEngineer,
+        isCongestionZone: data.isCongestionZone,
+        isParkingAvailable: data.isParkingAvailable,
+        date: data.date,
+        inspectionTime: data.inspectionTime,
+        totalPrice: 500,
+        invoiceId: data.invoiceId,
+        status: "CONFIRMED", // Assuming default status is PENDING, adjust as needed
+        paymentStatus: "UNPAID", // Default as per the schema
+        paymentMethod: data.PaymentMethod, // Default as per the schema
+        services: {
+          connect: data.services.map((service) => ({ id: service.serviceId })),
+        },
+      },
+    });
+
+    // Revalidate paths if needed
+    revalidatePath("/admin/orders");
+    revalidatePath("/admin/orders/new");
+
+    return {
+      message: "Order created successfully!",
+      data: createdOrder,
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "An error occurred while creating the order.",
+      success: false,
+    };
+  }
+}

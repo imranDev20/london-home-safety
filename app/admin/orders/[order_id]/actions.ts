@@ -86,3 +86,43 @@ export const getEngineersForOrder = async ( ) => {
     }
   }
   
+
+  
+export const getUsers = async () => {
+  try {
+    const users = await prisma.user.findMany({
+      where: { role: "CUSTOMER" },
+      include: {
+        address: true,
+      },
+    });
+    return  users
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw new Error("Failed to fetch users");
+  }
+};
+export const getEngineers = async () => {
+  try {
+    const engineers = await prisma.user.findMany({
+      where: { role: "STAFF" },
+      include: {
+        address: true,
+      },
+    });
+    return  engineers
+  } catch (error) {
+    console.error("Error fetching engineer:", error);
+    throw new Error("Failed to fetch engineer");
+  }
+};
+
+export const getServices = async () => {
+  try {
+    const services = await prisma.service.findMany({ });
+    return services
+  } catch (error) {
+    console.error("Error fetching services:", error);
+    throw new Error("Failed to fetch services");
+  }
+}
