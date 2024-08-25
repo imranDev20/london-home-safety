@@ -70,19 +70,23 @@ export default function CartPage() {
 
           <Separator className="my-7" />
 
-          <Button
-            className="mt-5 block w-full border border-primary/80 hover:border-primary text-primary hover:text-primary"
-            variant="outline"
-          >
-            Continue Shopping
-          </Button>
+          <Link href="/book-now">
+            <Button
+              className="mt-5 block w-full border border-primary/80 hover:border-primary text-primary hover:text-primary"
+              variant="outline"
+            >
+              Continue Shopping
+            </Button>
+          </Link>
 
-          <Button
-            className="mt-3 block w-full border border-primary/80 hover:border-primary"
-            variant="default"
-          >
-            Checkout Now
-          </Button>
+          <Link href="/checkout">
+            <Button
+              className="mt-3 block w-full border border-primary/80 hover:border-primary"
+              variant="default"
+            >
+              Checkout Now
+            </Button>
+          </Link>
         </Card>
       </div>
     </div>
