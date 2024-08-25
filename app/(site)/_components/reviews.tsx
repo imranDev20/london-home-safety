@@ -1,13 +1,7 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { Prisma, Review } from "@prisma/client";
-import { StarFilledIcon } from "@radix-ui/react-icons";
-import { ImQuotesRight } from "react-icons/im";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -26,11 +20,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ReviewFormValues, reviewSchema } from "../schema";
+import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Review } from "@prisma/client";
+import { StarFilledIcon } from "@radix-ui/react-icons";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { ImQuotesRight } from "react-icons/im";
+import { createReview } from "../actions";
+import { ReviewFormValues, reviewSchema } from "../schema";
 
 export default function Reviews({ reviews }: { reviews: Review[] }) {
+  const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "start",
@@ -59,9 +63,29 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
     [emblaApi]
   );
 
-  const onSubmit = (data: ReviewFormValues) => {
+  const onSubmit = async (data: ReviewFormValues) => {
     console.log(data);
-    // Here you would typically send the data to your backend
+
+    try {
+      const response = await createReview(data);
+      if (response.success) {
+        toast({
+          title: "Review submitted successfully",
+          description: response.message,
+          variant: "success",
+        });
+
+        setIsDialogOpen(false);
+      } else {
+        toast({
+          title: "Review submitted failed",
+          description: response.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   };
 
   useEffect(() => {
@@ -85,7 +109,7 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
             through in their words.
           </p>
 
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
