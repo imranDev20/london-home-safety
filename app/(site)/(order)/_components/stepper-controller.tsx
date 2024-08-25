@@ -18,11 +18,16 @@ export default function StepperController() {
     activeStep = 3;
   }
 
-  console.log(pathname);
-
   return (
     <>
-      <Stepper steps={steps} activeStep={activeStep} />
+      <Stepper
+        steps={[
+          { label: "Cart", link: "/cart" },
+          { label: "Checkout", link: "/checkout" },
+          { label: "Payment", link: "/payment" },
+        ]}
+        activeStep={activeStep}
+      />
     </>
   );
 }

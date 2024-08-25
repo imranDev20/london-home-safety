@@ -1,29 +1,30 @@
 import React from "react";
+import Link from "next/link";
 
 interface StepperProps {
   activeStep: number;
-  steps: string[]; // Array of step labels
+  steps: Array<{ label: string; link: string }>;
 }
 
 export default function Stepper({ activeStep, steps }: StepperProps) {
   return (
     <div className="flex items-center justify-center py-8">
       <div className="flex w-full max-w-3xl items-center justify-between">
-        {steps.map((stepLabel, index) => {
+        {steps.map((step, index) => {
           const isActive = index + 1 === activeStep;
           const isCompleted = index + 1 < activeStep;
           const isLastStep = index === steps.length - 1;
 
           return (
             <React.Fragment key={index}>
-              <div className="flex flex-col items-center">
+              <Link href={step.link} className="flex flex-col items-center">
                 <div
                   className={`relative flex h-8 w-8 items-center justify-center rounded-full ${
                     isCompleted
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary text-white"
                       : isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
+                      ? "bg-primary text-white"
+                      : "bg-primary/20 text-muted-foreground"
                   }`}
                 >
                   {isCompleted ? (
@@ -43,12 +44,12 @@ export default function Stepper({ activeStep, steps }: StepperProps) {
                     <span className="text-sm font-medium">{index + 1}</span>
                   )}
                 </div>
-                <span className="mt-2 text-sm font-medium">{stepLabel}</span>
-              </div>
+                <span className="mt-2 text-sm font-medium">{step.label}</span>
+              </Link>
               {!isLastStep && (
                 <div
                   className={`h-1 flex-1 ${
-                    isCompleted ? "bg-primary" : "bg-muted"
+                    isCompleted ? "bg-primary" : "bg-primary/20 rounded-full"
                   }`}
                 />
               )}
