@@ -269,7 +269,7 @@ export default function CreateOrderForm({
                         <DialogTitle>Edit profile</DialogTitle>
                         <DialogDescription>
                           Make changes to your profile here. Click save when
-                          you're done.
+                          you &apos;re done.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
@@ -428,13 +428,13 @@ export default function CreateOrderForm({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="08:00 AM - 12:00 PM">
+                            <SelectItem value="MORNING">
                               08:00 AM - 12:00 PM
                             </SelectItem>
-                            <SelectItem value="12:00 PM - 04:00 PM">
+                            <SelectItem value="AFTERNOON">
                               12:00 PM - 04:00 PM
                             </SelectItem>
-                            <SelectItem value="04:00 AM - 08:00 PM">
+                            <SelectItem value="EVENING">
                               04:00 AM - 08:00 PM
                             </SelectItem>
                           </SelectContent>
