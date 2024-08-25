@@ -1,5 +1,5 @@
 import PageHeader from "@/components/page-header";
-import backgroundImage from "@/images/about-bg.jpeg";
+import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { kebabCaseToNormalText } from "@/shared/function";
 import CallToAction from "../../_components/call-to-action";
 import Partners from "../../about/_components/partners";
@@ -28,7 +28,7 @@ export default function CategoryDetailsPage({
     <div>
       {" "}
       <PageHeader
-        backgroundImage={backgroundImage}
+        backgroundImage={BackgroundImage}
         breadCrumbOptions={breadCrumbOptions}
       />
       <CategoryServices categoryId={category_id} />

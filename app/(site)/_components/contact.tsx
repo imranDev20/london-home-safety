@@ -1,6 +1,8 @@
 import ContactUsForm from "@/app/_components/contact-us-form";
+import { Button } from "@/components/ui/button";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Contact() {
   return (
@@ -39,8 +41,12 @@ export default function Contact() {
             ))}
           </ul>
           <div className="mt-6 flex items-center space-x-2">
-            <span className="text-primary font-medium">Need Help?</span>
-            <span className="  font-semibold">020 8146 6698</span>
+            <span className="text-primary font-medium ">Need Help?</span>
+            <Link href="tel:+020 8146 6698">
+              <Button className=" bg-white text-black shadow-none hover:bg-white font-semibold hover:underline">
+                020 8146 6698
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="col-span-5">

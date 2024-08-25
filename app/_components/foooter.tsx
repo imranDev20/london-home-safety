@@ -2,10 +2,9 @@ import { ALL_SERVICES, NAV_ITEMS } from "@/shared/data";
 import Link from "next/link";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { IoMdMail } from "react-icons/io";
+import { IoLogoFacebook, IoMdMail } from "react-icons/io";
 import { IoLocationSharp } from "react-icons/io5";
 import { MdLocalPhone } from "react-icons/md";
-import { IoLogoFacebook } from "react-icons/io";
 
 export default function Footer() {
   return (
@@ -33,12 +32,6 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-
-              <li>
-                <Link href="#" className="hover:underline">
-                  About us
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -67,18 +60,18 @@ export default function Footer() {
                   href="mailto:info@homesafetylondon.co.uk"
                   className="hover:underline"
                 >
-                  info@homesafetylondon.co.uk
+                  info@londonhomesafety.co.uk
                 </Link>
               </li>
               <li className="flex items-center">
                 <MdLocalPhone className="mr-2 text-xl" />
-                <Link href="tel:+1234567890" className="hover:underline">
-                  +123-456-7890
+                <Link href="tel:+020 8146 6698" className="hover:underline">
+                  020 8146 6698
                 </Link>
               </li>
               <li className="flex items-center">
                 <IoLocationSharp className="mr-2 text-2xl" />
-                27 Old Gloucester Street, London WC1N 3AX
+                43 Felton Road, Barking, London IG11 7YA
               </li>
             </ul>
             <div className="flex space-x-3 text-xl mt-4">
