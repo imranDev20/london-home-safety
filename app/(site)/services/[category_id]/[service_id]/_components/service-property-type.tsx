@@ -54,12 +54,13 @@ export default function ServicePropertyType({
         Pricing for Every Home and Business
       </h1>
       <div className="flex max-w-5xl mx-auto bg-white p-10 text-center shadow-lg rounded-2xl">
-        {propertyTypePriceDetails &&
+        {/* {propertyTypePriceDetails &&
           propertyTypePriceDetails.map((item, index) => {
             const simplifiedPricesArray = simplifyPrices(
               item.unit,
               item.prices
             );
+
             return (
               <div key={item.type} className=" ">
                 <h2 className="text-3xl font-bold mb-2">
@@ -94,7 +95,7 @@ export default function ServicePropertyType({
                 </div>
               </div>
             );
-          })}
+          })} */}
       </div>
     </div>
   );
