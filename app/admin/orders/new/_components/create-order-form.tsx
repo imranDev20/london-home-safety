@@ -20,15 +20,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import {
   Form,
   FormControl,
@@ -38,7 +30,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { LoadingButton } from "@/components/ui/loading-button";
 import {
   Popover,
@@ -53,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { CustomerWithRelation } from "@/types/customer";
 import { StaffWithRelations } from "@/types/engineers";
@@ -67,13 +59,12 @@ import {
   Trash,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { CreateOrderFormInput, createOrderSchema } from "../schema";
-import { generateInvoiceId } from "@/lib/generate-invoice";
 import { createOrder } from "../../actions";
-import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+import { CreateOrderFormInput, createOrderSchema } from "../schema";
+import CreateUserForOrder from "./create-user";
 
 export default function CreateOrderForm({
   users,
@@ -260,45 +251,7 @@ export default function CreateOrderForm({
                       </FormItem>
                     )}
                   />
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button>Add User</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Edit profile</DialogTitle>
-                        <DialogDescription>
-                          Make changes to your profile here. Click save when
-                          you &apos;re done.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="name" className="text-right">
-                            Name
-                          </Label>
-                          <Input
-                            id="name"
-                            defaultValue="Pedro Duarte"
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="username" className="text-right">
-                            Username
-                          </Label>
-                          <Input
-                            id="username"
-                            defaultValue="@peduarte"
-                            className="col-span-3"
-                          />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit">Save changes</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                  <CreateUserForOrder />
                 </div>
                 <div className="grid gap-3 grid-cols-1  mt-4">
                   <h1 className="font-semibold">Assigned Engineer</h1>

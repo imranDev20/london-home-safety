@@ -5,7 +5,7 @@ import { OrderStatus, Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
-import puppeteer from 'puppeteer';
+import puppeteer from "puppeteer";
 export const getOrders = async (
   page: number = 1,
   pageSize: number = 10,
@@ -98,8 +98,8 @@ export const getOrdersById = async (orderId: string) => {
       include: {
         user: {
           include: {
-            address: true,            
-          },          
+            address: true,
+          },
         },
         services: true,
       },
@@ -112,7 +112,6 @@ export const getOrdersById = async (orderId: string) => {
     });
 
     return order;
-    
   } catch (error) {
     console.error("Error fetching orders:", error);
     throw new Error("Failed to fetch orders");
@@ -197,11 +196,10 @@ export const getExportOrders = async () => {
   }
 };
 
+import { NextApiRequest, NextApiResponse } from "next";
+import { CreateOrderFormInput, CreateUserFormInput } from "./new/schema";
 
-import { NextApiRequest, NextApiResponse } from 'next';
-import { CreateOrderFormInput } from "./new/schema";
-
-export default async function generateInvoice(orderId:string) {
+export default async function generateInvoice(orderId: string) {
   try {
     if (!orderId) {
       console.error("No order ID available");
@@ -215,8 +213,8 @@ export default async function generateInvoice(orderId:string) {
       include: {
         user: {
           include: {
-            address: true,            
-          },          
+            address: true,
+          },
         },
         services: true,
       },
@@ -239,20 +237,30 @@ export default async function generateInvoice(orderId:string) {
         <h3>Billing Address:</h3>
         <p>${orderDetails?.user.name}</p>
         <p>${orderDetails?.user?.address?.street}</p>
-        <p>${orderDetails?.user?.address?.city} ${orderDetails?.user?.address?.postcode}</p>
+        <p>${orderDetails?.user?.address?.city} ${
+      orderDetails?.user?.address?.postcode
+    }</p>
         <table>
           <tr><th>Service</th><th>Quantity</th><th>Total</th></tr>
-          ${orderDetails?.services.map(service => `
+          ${orderDetails?.services
+            .map(
+              (service) => `
             <tr>
               <td>${service?.name}</td>
               <td>${service.category}</td>
               <td>£${service.propertyType}</td>
             </tr>
-          `).join('')}
+          `
+            )
+            .join("")}
         </table>
         <p>Subtotal: £${orderDetails?.totalPrice}</p>
-        <p>Parking Charge: £${orderDetails?.isParkingAvailable ? 'Yes' : 'No'}</p>
-        <p>Congestion Zone Charge: £${orderDetails?.isCongestionZone ? 'Yes': 'No'}</p>
+        <p>Parking Charge: £${
+          orderDetails?.isParkingAvailable ? "Yes" : "No"
+        }</p>
+        <p>Congestion Zone Charge: £${
+          orderDetails?.isCongestionZone ? "Yes" : "No"
+        }</p>
         <h3>Total: £${orderDetails?.totalPrice}</h3>
         <p>Terms and conditions apply.</p>
         <p>Thank you for your business!</p>
@@ -260,25 +268,22 @@ export default async function generateInvoice(orderId:string) {
       </html>
     `;
 
-    await page.setContent(content, { waitUntil: 'networkidle0', timeout: 0 });
+    await page.setContent(content, { waitUntil: "networkidle0", timeout: 0 });
 
-
-    const pdfBuffer = await page.pdf({ format: 'A4' });
+    const pdfBuffer = await page.pdf({ format: "A4" });
 
     await browser.close();
 
-   
     return {
       message: "Invoice Generated Successfully",
       data: pdfBuffer,
       success: true,
     };
   } catch (error) {
-    console.error('Error generating PDF:', error);
+    console.error("Error generating PDF:", error);
     return {
       message: "An error occured when generating invoice" + error,
       success: false,
-
     };
   }
 }
@@ -293,8 +298,6 @@ export async function createOrder(data: CreateOrderFormInput) {
         },
       },
     });
-
-  
 
     // Create the order with the associated services
     const createdOrder = await prisma.order.create({
@@ -329,6 +332,55 @@ export async function createOrder(data: CreateOrderFormInput) {
     console.error(error);
     return {
       message: "An error occurred while creating the order.",
+      success: false,
+    };
+  }
+}
+
+interface CreateUserInput {
+  name: string;
+  email: string;
+  phone: string | "";
+  address: {
+    city: string | "";
+    street: string | "";
+    postcode: string | "";
+  };
+}
+export async function createUser(data: CreateUserInput) {
+  try {
+    // Create the new user with an optional address
+    const newUser = await prisma.user.create({
+      data: {
+        email: data.email,
+        name: data.name, // Set name to null if not provided
+        password: "123456",
+        address: data.address
+          ? {
+              create: {
+                street: data.address.street,
+                city: data.address.city,
+                postcode: data.address.postcode,
+              },
+            }
+          : undefined,
+      },
+      include: {
+        address: true, // Include the address in the returned data
+      },
+    });
+
+    revalidatePath("/admin/orders");
+    revalidatePath("/admin/orders/new");
+    return {
+      message: "User created successfully!",
+      data: newUser,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return {
+      message: "An error occurred while creating the user.",
       success: false,
     };
   }
