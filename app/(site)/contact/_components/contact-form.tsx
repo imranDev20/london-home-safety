@@ -30,12 +30,12 @@ export default function ContactForm() {
         <h2 className="text-4xl font-bold mb-6">
           Have Questions? We&apos;re Here to Help!
         </h2>
-        <p className="text-gray-600 text-lg  ">
+        <p className="text-body text-lg  ">
           If you have any questions about our services or need assistance,
           don&apos;t hesitate to reach out. Our team is here to help you.
         </p>
       </div>
-      {/* contact form */}
+
       <div className="  h-[450px] w-[60%] mx-auto   rounded-r-xl  ">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex flex-col md:flex-row md:space-x-4">

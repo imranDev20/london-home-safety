@@ -34,13 +34,13 @@ export default function Contact() {
                 className="flex justify-between border-b border-gray-200 pb-2"
               >
                 <span className="font-medium">{item.day}:</span>
-                <span className="text-gray-600">{item.time}</span>
+                <span className="text-body">{item.time}</span>
               </li>
             ))}
           </ul>
           <div className="mt-6 flex items-center space-x-2">
-            <span className="text-blue-600 font-medium">Need Help?</span>
-            <span className="text-gray-800 font-semibold">020 8146 6698</span>
+            <span className="text-primary font-medium">Need Help?</span>
+            <span className="  font-semibold">020 8146 6698</span>
           </div>
         </div>
         <div className="col-span-5">

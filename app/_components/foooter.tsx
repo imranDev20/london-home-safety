@@ -1,8 +1,14 @@
-import { ALL_SERVICES } from "@/shared/data";
+import { ALL_SERVICES, NAV_ITEMS } from "@/shared/data";
 import Link from "next/link";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { IoMdMail } from "react-icons/io";
+import { IoLocationSharp } from "react-icons/io5";
+import { MdLocalPhone } from "react-icons/md";
+
+import { IoLogoFacebook } from "react-icons/io";
 
 export default function Footer() {
-  const services = ALL_SERVICES;
   return (
     <footer className="bg-primary text-white py-10 ">
       <div className="max-w-6xl mx-auto">
@@ -21,34 +27,17 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Company</h3>
             <ul className="space-y-2">
-              <li>
-                <Link href="#" className="hover:underline">
-                  Home
-                </Link>
-              </li>
+              {NAV_ITEMS.map((option) => (
+                <li key={option.path}>
+                  <Link href={option.path} className="hover:underline">
+                    {option.label}
+                  </Link>
+                </li>
+              ))}
+
               <li>
                 <Link href="#" className="hover:underline">
                   About us
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:underline">
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:underline">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:underline">
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:underline">
-                  Privacy Policy
                 </Link>
               </li>
             </ul>
@@ -57,9 +46,12 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-2">
-              {services.map((item) => (
+              {ALL_SERVICES.map((item) => (
                 <li key={item.path}>
-                  <Link href="#" className="hover:underline">
+                  <Link
+                    href={`/services${item.categoryPath}${item.path}`}
+                    className="hover:underline"
+                  >
                     {item.label}
                   </Link>
                 </li>
@@ -69,8 +61,9 @@ export default function Footer() {
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2  ">
               <li className="flex items-center">
+                <IoMdMail className="mr-2 text-xl" />
                 <Link
                   href="mailto:info@homesafetylondon.co.uk"
                   className="hover:underline"
@@ -79,26 +72,28 @@ export default function Footer() {
                 </Link>
               </li>
               <li className="flex items-center">
+                <MdLocalPhone className="mr-2 text-xl" />
                 <Link href="tel:+1234567890" className="hover:underline">
                   +123-456-7890
                 </Link>
               </li>
               <li className="flex items-center">
+                <IoLocationSharp className="mr-2 text-2xl" />
                 27 Old Gloucester Street, London WC1N 3AX
               </li>
             </ul>
-            <div className="flex space-x-4 mt-4">
+            <div className="flex space-x-3 text-xl mt-4">
               <Link href="#" className="hover:underline">
-                <span className="material-icons">facebook</span>
+                <IoLogoFacebook />
               </Link>
               <Link href="#" className="hover:underline">
-                <span className="material-icons">instagram</span>
+                <FaInstagram />
               </Link>
               <Link href="#" className="hover:underline">
-                <span className="material-icons">twitter</span>
+                <FaXTwitter />
               </Link>
               <Link href="#" className="hover:underline">
-                <span className="material-icons">youtube</span>
+                <FaYoutube />
               </Link>
             </div>
           </div>

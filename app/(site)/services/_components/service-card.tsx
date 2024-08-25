@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { NavLeafItem } from "@/types/misc";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ServiceCard({ service }: { service: NavLeafItem }) {
   const { description, image, path, label, categoryPath } = service;
@@ -15,11 +16,13 @@ export default function ServiceCard({ service }: { service: NavLeafItem }) {
         loading="lazy"
       />
       <div className="absolute inset-x-0 -bottom-28 mx-4 p-6 bg-sky-50 rounded-lg shadow-lg text-center">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">{label}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
-        <Button className="bg-blue-500 text-white font-bold w-[80%]  mt-6  rounded hover:bg-yellow-500 hover:text-black transition">
-          Learn More
-        </Button>
+        <h3 className="text-xl font-semibold   mb-2">{label}</h3>
+        <p className="text-body mb-4">{description}</p>
+        <Link href={`/services${categoryPath}${path}`}>
+          <Button className="bg-blue-500 text-white font-bold w-[80%]  mt-6  rounded hover:bg-yellow-500 hover:text-black transition">
+            Learn More
+          </Button>
+        </Link>
       </div>
     </Card>
   );
