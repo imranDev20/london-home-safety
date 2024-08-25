@@ -6,16 +6,19 @@ import Hero from "./_components/hero";
 import Reviews from "./_components/reviews";
 import ServiceCategories from "./_components/service-categories";
 import Services from "./_components/services";
+import { getReviews } from "./actions";
 
-export default function Home() {
+export default async function Home() {
+  const reviews = await getReviews();
+
   return (
     <>
       <Hero />
       <Services />
       <AboutUsHome />
       <ServiceCategories />
-      <Reviews />
       <CallToAction />
+      <Reviews reviews={reviews} />
       <Faq />
       <Contact />
     </>
