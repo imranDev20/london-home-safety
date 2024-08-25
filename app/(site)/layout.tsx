@@ -7,7 +7,7 @@ export default function SiteLayout(props: { children: React.ReactNode }) {
     <>
       <Topbar />
       <Header />
-      <main className="max-w-[100vw] overflow-hidden">{props.children}</main>
+      <main>{props.children}</main>
       <Footer />
     </>
   );

@@ -5,7 +5,6 @@ import { FaXTwitter } from "react-icons/fa6";
 import { IoMdMail } from "react-icons/io";
 import { IoLocationSharp } from "react-icons/io5";
 import { MdLocalPhone } from "react-icons/md";
-
 import { IoLogoFacebook } from "react-icons/io";
 
 export default function Footer() {

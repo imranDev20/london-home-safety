@@ -5,7 +5,7 @@ import { MdLocalPhone } from "react-icons/md";
 
 export default function Topbar() {
   return (
-    <div className="bg-primary text-white h-12 pt-3">
+    <div className="bg-primary text-white h-10  pt-2 ">
       <div className="flex justify-between max-w-6xl mx-auto">
         <div className="flex justify-around space-x-8">
           <p className="flex items-center gap-2 font-semibold">

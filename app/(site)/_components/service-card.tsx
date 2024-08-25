@@ -6,17 +6,20 @@ export default function ServiceCard({
   title,
   price,
   className,
+  Icon,
 }: {
   title: string;
   price?: number;
   className?: string;
+  Icon: any;
 }) {
   return (
     <Card
       className={`p-5 flex flex-col justify-between items-center hover:shadow-lg transition-all ${className}`}
     >
       <div className="flex flex-col items-center">
-        <EpcIcon />
+        {Icon ? <Icon /> : <EpcIcon />}
+
         <h3 className="text-xl font-semibold text-body-dark mb-2 mt-3 text-center">
           {title}
         </h3>
