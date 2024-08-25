@@ -76,10 +76,10 @@ export default function ServiceDetailsPage({
             <Accordion type="single" collapsible className="w-full  ">
               {currentService?.faqs.map((item) => (
                 <AccordionItem key={item.ques} value={item.ques}>
-                  <AccordionTrigger className="text-lg text-gray-700 font-semibold hover:no-underline">
+                  <AccordionTrigger className="text-lg font-semibold hover:no-underline">
                     {item.ques}
                   </AccordionTrigger>
-                  <AccordionContent className="text-lg  text-gray-500">
+                  <AccordionContent className="text-lg text-body">
                     {item.ans}
                   </AccordionContent>
                 </AccordionItem>

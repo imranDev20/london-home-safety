@@ -25,7 +25,7 @@ export default function ContactUsForm() {
     console.log(data);
   };
   return (
-    <div className="p-8   h-full mx-auto bg-blue-500 rounded-r-xl  ">
+    <div className="p-8   h-full mx-auto bg-primary rounded-r-xl  ">
       <h2 className="text-4xl font-bold text-white mb-8 text-center">
         Contact Us
       </h2>
@@ -38,7 +38,9 @@ export default function ContactUsForm() {
               className="bg- w-full"
             />
             {errors.name && (
-              <p className="text-white">{errors.name.message as string}</p>
+              <p className="text-white text-sm">
+                {errors.name.message as string}
+              </p>
             )}
           </div>
           <div className="flex-1">
@@ -48,7 +50,9 @@ export default function ContactUsForm() {
               className="bg- w-full"
             />
             {errors.email && (
-              <p className="text-white">{errors.email.message as string}</p>
+              <p className="text-white text-sm">
+                {errors.email.message as string}
+              </p>
             )}
           </div>
         </div>
@@ -60,7 +64,9 @@ export default function ContactUsForm() {
               className="bg- w-full"
             />
             {errors.phone && (
-              <p className="text-white">{errors.phone.message as string}</p>
+              <p className="text-white  text-sm">
+                {errors.phone.message as string}
+              </p>
             )}
           </div>
           <div className="flex-1">
@@ -70,7 +76,9 @@ export default function ContactUsForm() {
               className="bg- w-full"
             />
             {errors.subject && (
-              <p className="text-white">{errors.subject.message as string}</p>
+              <p className="text-white  text-sm">
+                {errors.subject.message as string}
+              </p>
             )}
           </div>
         </div>
@@ -81,7 +89,9 @@ export default function ContactUsForm() {
             className="bg- w-full h-32"
           />
           {errors.message && (
-            <p className="text-white">{errors.message.message as string}</p>
+            <p className="text-white text-sm">
+              {errors.message.message as string}
+            </p>
           )}
         </div>
         <Button

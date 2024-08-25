@@ -25,7 +25,7 @@ export default function CategoryServiceDetails({
       />
       <div>
         <h2 className="text-2xl font-bold mb-4 mt-2">{service.label}</h2>
-        <p className="  text-gray-500 mb-3">{service.detailedDesc?.details}</p>
+        <p className="  text-body mb-3">{service.detailedDesc?.details}</p>
         {service.detailedDesc?.points.map((point) => (
           <div key={point}>
             {" "}

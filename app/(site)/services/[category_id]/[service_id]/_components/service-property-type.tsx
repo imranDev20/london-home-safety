@@ -66,7 +66,7 @@ export default function ServicePropertyType({
                 <h2 className="text-3xl font-bold mb-2">
                   {item.type} {currentService.abbr || currentService.label}
                 </h2>
-                <p className="font-semibold text-gray-500">
+                <p className="font-semibold text-body">
                   Ensure your home&apos;s electrical installations are safe and
                   compliant.
                 </p>
@@ -77,7 +77,7 @@ export default function ServicePropertyType({
                 <h3 className="text-xl font-bold mt-6">
                   Pricing Based on Number of {item.unit}s
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-body">
                   {" "}
                   <span className="text-red-600 mb-1">*</span>Prices are all tax
                   inclusive

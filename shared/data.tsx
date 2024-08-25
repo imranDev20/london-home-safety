@@ -870,3 +870,32 @@ export const ALL_SERVICES: NavLeafItem[] =
         categoryPath: category.path,
       }))
   ) ?? [];
+
+export const FAQ_HOME = [
+  {
+    title: "What is an EPC and why do I need one?",
+    content:
+      "An Energy Performance Certificate (EPC) provides information about the energy efficiency of a property. It's required for properties being sold or rented and helps improve energy use and reduce costs.",
+  },
+  {
+    title:
+      "How often should I have an Electrical Installation Condition Report (EICR) conducted?",
+    content:
+      "It's recommended to have an EICR conducted every 5 years for rented properties and every 10 years for owner-occupied homes. Regular inspections ensure your electrical systems are safe and compliant with regulations.",
+  },
+  {
+    title: "What does a Gas Safety Certificate entail?",
+    content:
+      "A Gas Safety Certificate confirms that all gas appliances, fittings, and flues in a property are safe to use. It's a legal requirement for landlords to have an annual gas safety check conducted by a registered engineer.",
+  },
+  {
+    title: "Why is PAT Testing important for my home?",
+    content:
+      "Portable Appliance Testing (PAT) is important to ensure that electrical appliances are safe to use. Regular PAT testing helps prevent electrical hazards and ensures compliance with safety standards.",
+  },
+  {
+    title: "How can I benefit from installing an EV charging station at home?",
+    content:
+      "Installing an EV charging station at home offers convenience and cost savings for electric vehicle owners. It ensures your vehicle is always ready to go and can increase the value of your property.",
+  },
+];

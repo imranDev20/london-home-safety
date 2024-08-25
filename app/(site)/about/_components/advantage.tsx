@@ -4,7 +4,7 @@ export default function Advantage() {
     <section className="bg-blue-100 py-16">
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-3xl font-bold mb-4">Reasons You Should Call Us</h2>
-        <p className="text-gray-600 mb-10">
+        <p className="text-body mb-10">
           Electrician is your single source for a complete range of high quality
           electrical <br /> services, including design/build, engineering and
           maintenance.
@@ -15,24 +15,24 @@ export default function Advantage() {
             <h3 className="text-lg font-semibold mb-2">
               Our Qualified Engineers
             </h3>
-            <p className="text-gray-600">Over 30 Years Experience</p>
+            <p className="text-body">Over 30 Years Experience</p>
           </Card>
           <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
             <p>Icon</p>
             <h3 className="text-lg font-semibold mb-2">Low Price Promise</h3>
-            <p className="text-gray-600">We won&apos;t be beaten on price.</p>
+            <p className="text-body">We won&apos;t be beaten on price.</p>
           </Card>
           <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
             <p>Icon</p>
             <h3 className="text-lg font-semibold mb-2">Fast Response</h3>
-            <p className="text-gray-600">
+            <p className="text-body">
               Arrange an appointment, as early as tomorrow
             </p>
           </Card>
           <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
             <p>Icon</p>
             <h3 className="text-lg font-semibold mb-2">Book Any Time</h3>
-            <p className="text-gray-600">Book at a time that works for you</p>
+            <p className="text-body">Book at a time that works for you</p>
           </Card>
         </div>
       </div>

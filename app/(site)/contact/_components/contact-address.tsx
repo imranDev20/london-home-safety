@@ -28,7 +28,7 @@ export default function ContactAddress() {
             <p>Icon</p>
             <div>
               <h3 className="font-bold text-xl mb-4">{item.title}</h3>
-              <p className=" text-gray-500 font-semibold">{item.info}</p>
+              <p className=" text-body font-semibold">{item.info}</p>
             </div>
           </div>
         ))}
