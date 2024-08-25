@@ -5,17 +5,22 @@ import Faq from "./_components/faq";
 import Hero from "./_components/hero";
 import Reviews from "./_components/reviews";
 import ServiceCategories from "./_components/service-categories";
+import Services from "./_components/services";
+import { getReviews } from "./actions";
 
-export default function Home() {
+export default async function Home() {
+  const reviews = await getReviews();
+
   return (
-    <main>
+    <>
       <Hero />
-      <ServiceCategories />
+      <Services />
       <AboutUsHome />
+      <ServiceCategories />
       <CallToAction />
+      <Reviews reviews={reviews} />
       <Faq />
       <Contact />
-      <Reviews />
-    </main>
+    </>
   );
 }

@@ -54,18 +54,19 @@ export default function ServicePropertyType({
         Pricing for Every Home and Business
       </h1>
       <div className="flex max-w-5xl mx-auto bg-white p-10 text-center shadow-lg rounded-2xl">
-        {propertyTypePriceDetails &&
+        {/* {propertyTypePriceDetails &&
           propertyTypePriceDetails.map((item, index) => {
             const simplifiedPricesArray = simplifyPrices(
               item.unit,
               item.prices
             );
+
             return (
               <div key={item.type} className=" ">
                 <h2 className="text-3xl font-bold mb-2">
                   {item.type} {currentService.abbr || currentService.label}
                 </h2>
-                <p className="font-semibold text-gray-500">
+                <p className="font-semibold text-body">
                   Ensure your home&apos;s electrical installations are safe and
                   compliant.
                 </p>
@@ -76,7 +77,7 @@ export default function ServicePropertyType({
                 <h3 className="text-xl font-bold mt-6">
                   Pricing Based on Number of {item.unit}s
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-body">
                   {" "}
                   <span className="text-red-600 mb-1">*</span>Prices are all tax
                   inclusive
@@ -94,7 +95,7 @@ export default function ServicePropertyType({
                 </div>
               </div>
             );
-          })}
+          })} */}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export default function AboutCategory({
       <h1 className="text-4xl font-bold text-center mb-6">
         About {kebabCaseToNormalText(category)}
       </h1>
-      <p className="text-gray-500 font-semibold text-center w-[80%] mx-auto">
+      <p className="text-body font-semibold text-center w-[80%] mx-auto">
         <span className="text-blue-600">
           <span className="capitalize"> {category.split("-")[0]}</span> safety
         </span>{" "}

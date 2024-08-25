@@ -8,13 +8,6 @@ import { z } from "zod";
 export const getReviews = async () => {
   try {
     const reviews = await prisma.review.findMany({
-      include: {
-        user: {
-          select: {
-            name: true,
-          },
-        },
-      },
       orderBy: {
         createdAt: "desc",
       },
@@ -30,14 +23,14 @@ export const getReviews = async () => {
 
 export async function createReview(data: unknown) {
   try {
-    const { rating, title, comment, userId } = reviewSchema.parse(data);
+    const { rating, subject, description, name } = reviewSchema.parse(data);
 
     const newReview = await prisma.review.create({
       data: {
         rating,
-        title,
-        comment,
-        userId,
+        title: subject,
+        comment: description,
+        userName: name,
       },
     });
 

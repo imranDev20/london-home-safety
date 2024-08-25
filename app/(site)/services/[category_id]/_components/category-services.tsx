@@ -24,13 +24,12 @@ export default function CategoryServices({
                   src={item.image}
                   alt="itemImage"
                   className="w-full h-48 object-cover"
+                  loading="lazy"
                 />
 
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    {item.label}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <h3 className="text-xl font-semibold   mb-2">{item.label}</h3>
+                  <p className="text-body mb-4">{item.description}</p>
                   <hr className="my-6  " />
                   <div className="flex justify-between items-center">
                     <div>

@@ -1,20 +1,23 @@
-import ContactUsForm from "@/components/common/contact-us-form";
+import ContactUsForm from "@/app/_components/contact-us-form";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
 import Image from "next/image";
 
 export default function Contact() {
   return (
     <div className=" bg-slate-200 py-24 ">
-      <h1 className="text-center text-4xl font-bold mb-16">
+      <h2 className="text-center text-4xl font-bold mb-16">
         Get in Touch with London&apos;s Home Safety Experts
-      </h1>
-      <div className=" flex max-w-7xl mx-auto  ">
-        <Image
-          className="w-[33%] h-[550px] rounded-l-xl"
-          src={ContactUsImage}
-          alt="ContactUsImage"
-        />
-        <div className="p-6 w-96  bg-white  pl-6 ">
+      </h2>
+      <div className=" grid grid-cols-12 max-w-7xl mx-auto  ">
+        <div className="col-span-3">
+          <Image
+            className="h-full rounded-l-xl"
+            src={ContactUsImage}
+            alt="ContactUsImage"
+            loading="lazy"
+          />
+        </div>
+        <div className="col-span-4 p-6    bg-white  pl-6 ">
           <h2 className="text-lg font-semibold mb-6">Working Hours:</h2>
           <ul className="space-y-7  ">
             {[
@@ -31,16 +34,16 @@ export default function Contact() {
                 className="flex justify-between border-b border-gray-200 pb-2"
               >
                 <span className="font-medium">{item.day}:</span>
-                <span className="text-gray-600">{item.time}</span>
+                <span className="text-body">{item.time}</span>
               </li>
             ))}
           </ul>
           <div className="mt-6 flex items-center space-x-2">
-            <span className="text-blue-600 font-medium">Need Help?</span>
-            <span className="text-gray-800 font-semibold">020 8146 6698</span>
+            <span className="text-primary font-medium">Need Help?</span>
+            <span className="  font-semibold">020 8146 6698</span>
           </div>
         </div>
-        <div>
+        <div className="col-span-5">
           <ContactUsForm />
         </div>
       </div>

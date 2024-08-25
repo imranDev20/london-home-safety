@@ -12,8 +12,5 @@ import { kebabToNormal } from "@/lib/utils";
 import React from "react";
 
 export default function EditEngineersPage() {
-  return (
-    <>asdasd</>
-
-  );
+  return <>asdasd</>;
 }

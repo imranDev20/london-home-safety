@@ -25,11 +25,11 @@ export default function Achievement() {
     <section className="bg-white py-16">
       <div className="max-w-6xl mx-auto px-4 lg:flex lg:items-center lg:justify-between">
         <div className="lg:w-1/2">
-          <h3 className="text-lg text-blue-600 font-bold">Why choose us</h3>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h3 className="text-lg text-primary font-bold">Why choose us</h3>
+          <h2 className="text-4xl font-bold   mb-4">
             Reliable & Professional Maintenance Work
           </h2>
-          <p className="text-gray-600 mb-8 w-4/5">
+          <p className="text-body mb-8 w-4/5">
             Mauris ac risus sed quam semper auctor. Nam tempus volutpat ipsum,
             non viverra odio mollis mollis. Integer lacus ligula, imperdiet vel
             massa in, maximus suscipit turpis. Mauris ac risus sed quam semper
@@ -42,10 +42,10 @@ export default function Achievement() {
                   {" "}
                   {counter}+
                 </h3>
-                <h4 className="text-xl font-semibold text-gray-900 mt-2">
+                <h4 className="text-xl font-semibold   mt-2">
                   Years Experience
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-body">
                   The standard chunk of <br /> Lorem Ipsum used since <br /> the
                   1500s below.
                 </p>
@@ -63,6 +63,7 @@ export default function Achievement() {
               height={200}
               layout="responsive"
               className="object-cover"
+              loading="lazy"
             />
           </div>
 
@@ -74,6 +75,7 @@ export default function Achievement() {
               height={133}
               layout="responsive"
               className="object-cover"
+              loading="lazy"
             />
           </div>
 
