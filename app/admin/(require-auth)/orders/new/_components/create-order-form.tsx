@@ -434,29 +434,36 @@ export default function CreateOrderForm({
                 <div className="col-span-3">
                   <FormField
                     control={form.control}
-                    name="isParkingAvailable"
+                    name="parkingOptions"
                     render={({ field }) => (
                       <FormItem className="space-y-3">
                         <FormLabel>Is Parking Available?</FormLabel>
                         <FormControl>
                           <RadioGroup
-                            onValueChange={(value) =>
-                              field.onChange(value === "true")
-                            }
-                            value={field.value ? "true" : "false"}
+                            onValueChange={(value) => field.onChange(value)}
+                            value={field.value}
                             className="flex flex-col space-y-1"
                           >
                             <FormItem className="flex items-center space-x-3 space-y-0">
                               <FormControl>
-                                <RadioGroupItem value="true" />
+                                <RadioGroupItem value="YES" />
                               </FormControl>
                               <FormLabel className="font-normal">Yes</FormLabel>
                             </FormItem>
                             <FormItem className="flex items-center space-x-3 space-y-0">
                               <FormControl>
-                                <RadioGroupItem value="false" />
+                                <RadioGroupItem value="NO" />
                               </FormControl>
                               <FormLabel className="font-normal">No</FormLabel>
+                            </FormItem>
+
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="PAID" />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                Paid
+                              </FormLabel>
                             </FormItem>
                           </RadioGroup>
                         </FormControl>

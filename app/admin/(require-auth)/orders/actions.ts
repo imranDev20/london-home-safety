@@ -254,9 +254,7 @@ export default async function generateInvoice(orderId: string) {
             .join("")}
         </table>
         <p>Subtotal: £${orderDetails?.totalPrice}</p>
-        <p>Parking Charge: £${
-          orderDetails?.isParkingAvailable ? "Yes" : "No"
-        }</p>
+        <p>Parking Charge: £${orderDetails?.parkingOptions}</p>
         <p>Congestion Zone Charge: £${
           orderDetails?.isCongestionZone ? "Yes" : "No"
         }</p>
@@ -303,7 +301,7 @@ export async function createOrder(data: CreateOrderFormInput) {
         userId: data.userId,
         assignedEngineerId: data.assignedEngineer,
         isCongestionZone: data.isCongestionZone,
-        isParkingAvailable: data.isParkingAvailable,
+        parkingOptions: data.parkingOptions,
         date: data.date,
         inspectionTime: data.inspectionTime,
         totalPrice: 500,
@@ -347,7 +345,6 @@ interface CreateUserInput {
 }
 export async function createUser(data: CreateUserInput) {
   try {
-    // Create the new user with an optional address
     const newUser = await prisma.user.create({
       data: {
         email: data.email,

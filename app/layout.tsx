@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const outfit = Outfit({ subsets: ["latin"], display: "swap" });
 
@@ -127,6 +128,7 @@ export default function RootLayout({
       <body className={outfit.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

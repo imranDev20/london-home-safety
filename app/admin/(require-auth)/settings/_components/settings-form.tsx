@@ -185,7 +185,7 @@ export default function SettingsForm({
                   <FormItem>
                     <FormLabel>Primary Phone</FormLabel>
                     <FormControl>
-                      <Input placeholder="20 1234 5678" {...field} />
+                      <Input placeholder="07123 456789" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -199,7 +199,7 @@ export default function SettingsForm({
                   <FormItem>
                     <FormLabel>Secondary Phone (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="7700 900123" {...field} />
+                      <Input placeholder="07123 456789" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -213,7 +213,7 @@ export default function SettingsForm({
                   <FormItem>
                     <FormLabel>WhatsApp (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="7700 900123" {...field} />
+                      <Input placeholder="07123 456789" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

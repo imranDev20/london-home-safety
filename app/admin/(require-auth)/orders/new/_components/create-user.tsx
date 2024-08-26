@@ -59,167 +59,183 @@ export default function CreateUserForOrder() {
     };
 
     startTransition(async () => {
-      const result = await createUser(submitData);
+      try {
+        const result = await createUser(submitData);
 
-      if (result.success) {
-        toast({
-          title: "Success",
-          description: result.message,
-          variant: "success",
-        });
+        if (result.success) {
+          toast({
+            title: "Success",
+            description: result.message,
+            variant: "success",
+          });
 
-        setUserDialogOpen(false);
-      } else {
+          setUserDialogOpen(false);
+        } else {
+          toast({
+            title: "Error",
+            description: result.message,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
         toast({
           title: "Error",
-          description: result.message,
+          description: "An unknown error occurred while creating the user.",
           variant: "destructive",
         });
       }
     });
   };
   return (
-    <form onSubmit={handleSubmit(onCreateUserSubmit)}>
-      <Dialog open={isUserDialogOpen} onOpenChange={setUserDialogOpen}>
-        <DialogTrigger asChild>
-          <Button type="button" className="h-9 w-full text-sm font-medium flex">
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Add Customer
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[550px]">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold">
-              Create New Customer
-            </DialogTitle>
-            <DialogDescription>
-              Fill in the details below to add a new customer to the system.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-6 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="John Doe"
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="john@example.com"
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="+44 1234 567890"
-                      {...field}
-                      className="w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="street"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Street Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="123 Main St"
-                      {...field}
-                      className="w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>City</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="London"
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="postcode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Postcode</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="SW1A 1AA"
-                        {...field}
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setUserDialogOpen(false)}>
-              Cancel
-            </Button>
-            <LoadingButton
-              onClick={() => handleSubmit(onCreateUserSubmit)()}
-              loading={isPending}
-              className="ml-2"
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onCreateUserSubmit)}>
+        <Dialog open={isUserDialogOpen} onOpenChange={setUserDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              type="button"
+              className="h-9 w-full text-sm font-medium flex"
             >
-              Create Customer
-            </LoadingButton>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </form>
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Add Customer
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[550px]">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-semibold">
+                Create New Customer
+              </DialogTitle>
+              <DialogDescription>
+                Fill in the details below to add a new customer to the system.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-6 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="John Doe"
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="john@example.com"
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder="07123 456789"
+                        {...field}
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="street"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Street Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="123 Main St"
+                        {...field}
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>City</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="London"
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="postcode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Postcode</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="SW1A 1AA"
+                          {...field}
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setUserDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <LoadingButton
+                onClick={() => handleSubmit(onCreateUserSubmit)()}
+                loading={isPending}
+                className="ml-2"
+              >
+                Create Customer
+              </LoadingButton>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </form>
+    </Form>
   );
 }

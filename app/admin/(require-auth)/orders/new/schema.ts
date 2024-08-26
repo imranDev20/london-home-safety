@@ -23,8 +23,9 @@ export const createOrderSchema = z.object({
     .min(1, {
       message: "At least one service must be selected",
     }),
-  isParkingAvailable: z.boolean({
-    required_error: "Please indicate if parking is available",
+  parkingOptions: z.enum(["PAID", "FREE", "NO"], {
+    required_error: "Please select a parking option",
+    invalid_type_error: "Invalid parking option selected",
   }),
   isCongestionZone: z.boolean({
     required_error: "Please indicate if the property is in a congestion zone",
@@ -67,33 +68,31 @@ export const createUserSchema = z.object({
     .email({
       message: "Please enter a valid email address",
     }),
-  phone: z
-    .string()
-    .optional()
-    .refine((val) => !val || /^[0-9]{10}$/.test(val), {
-      message: "Phone number must be 10 digits",
-    }),
+  phone: z.string({
+    required_error: "Phone number is required",
+  }),
+
   street: z
-    .string()
+    .string({
+      required_error: "Street address is required",
+    })
     .min(3, {
       message: "Street address must be at least 3 characters long",
-    })
-    .optional(),
+    }),
   city: z
-    .string()
+    .string({
+      required_error: "City is required",
+    })
     .min(2, {
       message: "City name must be at least 2 characters long",
-    })
-    .optional(),
+    }),
   postcode: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || /^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/.test(val),
-      {
-        message: "Please enter a valid UK postcode",
-      }
-    ),
+    .string({
+      required_error: "Postcode is required",
+    })
+    .refine((val) => /^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/.test(val), {
+      message: "Please enter a valid UK postcode",
+    }),
 });
 
 export type CreateUserFormInput = z.infer<typeof createUserSchema>;
