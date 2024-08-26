@@ -250,7 +250,7 @@ export default function CreateOrderForm({
                   />
                 </div>
 
-                <div className="col-span-1 mt-8">
+                <div className="col-span-2 mt-8">
                   <CreateUserForOrder />
                 </div>
               </div>

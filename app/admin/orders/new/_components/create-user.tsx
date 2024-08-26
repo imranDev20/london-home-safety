@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -25,6 +26,7 @@ import { CreateUserFormInput, createUserSchema } from "../schema";
 import { Input } from "@/components/ui/input";
 import { createUser } from "../../actions";
 import { useToast } from "@/components/ui/use-toast";
+import { PlusIcon } from "lucide-react";
 export default function CreateUserForOrder() {
   const [isPending, startTransition] = useTransition();
   const [isUserDialogOpen, setUserDialogOpen] = useState(false);
@@ -80,24 +82,34 @@ export default function CreateUserForOrder() {
     <form onSubmit={handleSubmit(onCreateUserSubmit)}>
       <Dialog open={isUserDialogOpen} onOpenChange={setUserDialogOpen}>
         <DialogTrigger asChild>
-          <Button type="button" className="h-9 w-full">
-            Add User
+          <Button type="button" className="h-9 w-full text-sm font-medium">
+            <PlusIcon className="mr-2 h-4 w-4" />
+            Add New Customer
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[650px]">
+        <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
-            <DialogTitle>Create User</DialogTitle>
+            <DialogTitle className="text-2xl font-semibold">
+              Create New Customer
+            </DialogTitle>
+            <DialogDescription>
+              Fill in the details below to add a new customer to the system.
+            </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 items-center gap-4">
+          <div className="grid gap-6 py-4">
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User Name</FormLabel>
+                    <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter Name" {...field} />
+                      <Input
+                        placeholder="John Doe"
+                        {...field}
+                        className="w-full"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -108,12 +120,13 @@ export default function CreateUserForOrder() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User Email</FormLabel>
+                    <FormLabel>Email Address</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Enter email"
+                        placeholder="john@example.com"
                         {...field}
+                        className="w-full"
                       />
                     </FormControl>
                     <FormMessage />
@@ -121,39 +134,42 @@ export default function CreateUserForOrder() {
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 items-center gap-4">
-              <FormField
-                control={control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>User Phone</FormLabel>
-                    <FormControl>
-                      <Input type="text" placeholder="Enter phone" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="street"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Street</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Enter street"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 items-center gap-4">
+            <FormField
+              control={control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="tel"
+                      placeholder="+44 1234 567890"
+                      {...field}
+                      className="w-full"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="street"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Street Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="123 Main St"
+                      {...field}
+                      className="w-full"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={control}
                 name="city"
@@ -161,7 +177,11 @@ export default function CreateUserForOrder() {
                   <FormItem>
                     <FormLabel>City</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter city" {...field} />
+                      <Input
+                        placeholder="London"
+                        {...field}
+                        className="w-full"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -175,9 +195,9 @@ export default function CreateUserForOrder() {
                     <FormLabel>Postcode</FormLabel>
                     <FormControl>
                       <Input
-                        type="text"
-                        placeholder="Enter postcode"
+                        placeholder="SW1A 1AA"
                         {...field}
+                        className="w-full"
                       />
                     </FormControl>
                     <FormMessage />
@@ -187,11 +207,15 @@ export default function CreateUserForOrder() {
             </div>
           </div>
           <DialogFooter>
+            <Button variant="outline" onClick={() => setUserDialogOpen(false)}>
+              Cancel
+            </Button>
             <LoadingButton
               onClick={() => handleSubmit(onCreateUserSubmit)()}
               loading={isPending}
+              className="ml-2"
             >
-              Save changes
+              Create Customer
             </LoadingButton>
           </DialogFooter>
         </DialogContent>
