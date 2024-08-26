@@ -168,8 +168,7 @@ export default function EditOrderForm({
               <SelectValue placeholder="Select a fruit" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
+              <SelectGroup>               
                 {ORDER_STATUS_OPTIONS.map((option) => (
                   <SelectItem value={option} key={option}>
                     {kebabToNormal(option)}

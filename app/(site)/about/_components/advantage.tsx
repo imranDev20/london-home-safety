@@ -1,3 +1,4 @@
+import EngineerIcon from "@/components/icons/engineer";
 import { Card } from "@/components/ui/card";
 export default function Advantage() {
   return (
@@ -11,7 +12,7 @@ export default function Advantage() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
-            <p>Icon</p>
+           <EngineerIcon className="fill-primary" />
             <h3 className="text-lg font-semibold mb-2">
               Our Qualified Engineers
             </h3>
