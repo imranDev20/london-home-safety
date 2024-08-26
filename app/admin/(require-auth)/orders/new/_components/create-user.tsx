@@ -82,9 +82,9 @@ export default function CreateUserForOrder() {
     <form onSubmit={handleSubmit(onCreateUserSubmit)}>
       <Dialog open={isUserDialogOpen} onOpenChange={setUserDialogOpen}>
         <DialogTrigger asChild>
-          <Button type="button" className="h-9 w-full text-sm font-medium">
+          <Button type="button" className="h-9 w-full text-sm font-medium flex">
             <PlusIcon className="mr-2 h-4 w-4" />
-            Add New Customer
+            Add Customer
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[550px]">

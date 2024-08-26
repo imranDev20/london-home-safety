@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentLayout } from "@/app/admin/_components/content-layout";
+import { ContentLayout } from "@/app/admin/(require-auth)/_components/content-layout";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Button } from "@/components/ui/button";
 
@@ -379,7 +379,7 @@ export default function CreateOrderForm({
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-[350px] p-0">
+                            <PopoverContent className="w-[250px] p-0">
                               <Command>
                                 <CommandInput placeholder="Search engineers..." />
                                 <CommandList>

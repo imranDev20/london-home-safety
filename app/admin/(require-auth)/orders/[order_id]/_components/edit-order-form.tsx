@@ -1,6 +1,6 @@
 "use client";
 
-import { ContentLayout } from "@/app/admin/_components/content-layout";
+import { ContentLayout } from "@/app/admin/(require-auth)/_components/content-layout";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -90,12 +90,11 @@ export default function EditOrderForm({
   const [isEngineerPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(false);
   const downloadInvoice = async () => {
-   
     setLoading(true);
     try {
       if (orderDetails?.id) {
         const response = await generateInvoice(orderDetails?.id);
-         console.log(`response`, response);
+        console.log(`response`, response);
 
         if (response?.success && response.data) {
           const blob = new Blob([response?.data], { type: "application/pdf" });
@@ -168,7 +167,7 @@ export default function EditOrderForm({
               <SelectValue placeholder="Select a fruit" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup>               
+              <SelectGroup>
                 {ORDER_STATUS_OPTIONS.map((option) => (
                   <SelectItem value={option} key={option}>
                     {kebabToNormal(option)}
@@ -178,8 +177,13 @@ export default function EditOrderForm({
             </SelectContent>
           </Select>
 
-          <Button size="sm" onClick={ () =>  downloadInvoice()} disabled={loading} type="button">
-          {loading ? 'Generating...' : 'Download Invoice'}
+          <Button
+            size="sm"
+            onClick={() => downloadInvoice()}
+            disabled={loading}
+            type="button"
+          >
+            {loading ? "Generating..." : "Download Invoice"}
           </Button>
         </div>
       </div>
