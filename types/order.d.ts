@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 
 export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
+    services: true;
     user: {
       include: {
         address: true;
@@ -9,14 +10,15 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
     };
   };
 }>;
-export type OrderIdWithRelation = Prisma.OrderGetPayload<{
+
+export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
     user: {
       include: {
         address: true;
       };
     };
-    services: true,
+    services: true;
   };
 }>;
 

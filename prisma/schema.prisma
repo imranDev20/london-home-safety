@@ -11,44 +11,47 @@ model User {
   id             String   @id @default(cuid())
   email          String   @unique
   password       String
-  name           String
+  name           String?
+  phone          String?
   role           Role     @default(CUSTOMER)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
   address        Address?
   assignedOrders Order[]  @relation("AssignedOrders")
   orders         Order[]  @relation("UserOrders")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Address {
-  id        String   @id @default(cuid())
-  street    String
-  city      String
-  postcode  String
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String        @id @default(cuid())
+  street         String
+  city           String
+  postcode       String
+  userId         String?       @unique
+  user           User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  siteSettingsId String?       @unique
+  siteSettings   SiteSettings? @relation(fields: [siteSettingsId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model Order {
-  id                 String        @id @default(cuid())
+  id                 String         @id @default(cuid())
   userId             String
-  user               User          @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  user               User           @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
   assignedEngineerId String?
-  assignedEngineer   User?         @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
-  status             OrderStatus
-  paymentStatus      PaymentStatus @default(UNPAID)
-  paymentMethod      PaymentMethod @default(CREDIT_CARD)
-  isParkingAvailable Boolean
+  assignedEngineer   User?          @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
+  status             OrderStatus    @default(PENDING)
+  paymentStatus      PaymentStatus  @default(UNPAID)
+  paymentMethod      PaymentMethod  @default(CREDIT_CARD)
+  parkingOptions     ParkingOptions @default(NO)
   isCongestionZone   Boolean
-  inspectionTime     String
+  inspectionTime     InspectionTime
   date               DateTime
   orderNotes         String?
   totalPrice         Float
-  invoiceId          String        @unique
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  invoiceId          String         @unique
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
   services           Service[]
 }
 
@@ -66,7 +69,7 @@ model Service {
   id              String           @id @default(cuid())
   name            String           @unique
   type            ServiceType
-  category        String
+  category        ServiceCategory
   description     String?
   propertyType    PropertyType
   residentialType ResidentialType?
@@ -94,17 +97,37 @@ model Package {
 }
 
 model SiteSettings {
-  id            String   @id @default(cuid())
-  email         String
-  phone         String
-  address       String
-  websiteUrl    String?
-  facebookUrl   String?
-  twitterUrl    String?
-  instagramUrl  String?
-  openingHours  String?
-  contactPerson String?
-  updatedAt     DateTime @updatedAt
+  id              String            @id @default(cuid())
+  email           String?
+  phone1          String?
+  phone2          String?
+  whatsapp        String?
+  websiteUrl      String?
+  facebookUrl     String?
+  twitterUrl      String?
+  instagramUrl    String?
+  address         Address?
+  openingDateTime OpeningDateTime[]
+  updatedAt       DateTime          @updatedAt
+}
+
+model OpeningDateTime {
+  id             String       @id @default(cuid())
+  dayOfWeek      DayOfWeek
+  openingTime    String
+  closingTime    String
+  siteSettingsId String
+  siteSettings   SiteSettings @relation(fields: [siteSettingsId], references: [id], onDelete: Cascade)
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 
 enum ServiceType {
@@ -164,4 +187,23 @@ enum PaymentMethod {
   CREDIT_CARD
   CASH_TO_ENGINEER
   BANK_TRANSFER
+}
+
+enum ParkingOptions {
+  PAID
+  FREE
+  NO
+}
+
+enum InspectionTime {
+  MORNING
+  AFTERNOON
+  EVENING
+}
+
+enum ServiceCategory {
+  ELECTRICAL
+  FIRE
+  GAS
+  HEALTH_SAFETY
 }
