@@ -11,7 +11,6 @@ import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { ALL_SERVICES } from "@/shared/data";
 import { PropertyType } from "@prisma/client";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const breadCrumbOptions = [
@@ -32,12 +31,13 @@ const smoothScroll = (
   }
 };
 
-export default function BookNowCompo() {
+export default function BookNowCompo({
+  propertyType,
+}: {
+  propertyType: PropertyType | null;
+}) {
   const [isCommercial, setIsCommercial] = useState<boolean>(false);
   const { items, addItem } = useCartStore();
-  const searchParams = useSearchParams();
-  const propertyType =
-    (searchParams.get("property_type") as PropertyType) || null;
 
   const handleAddToCart = (cartItem: {
     name: string;
