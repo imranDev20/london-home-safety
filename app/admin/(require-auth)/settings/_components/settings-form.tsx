@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { SiteSettingsFormValues, siteSettingsSchema } from "../schema";
@@ -27,8 +27,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Prisma } from "@prisma/client";
 
-export default function SettingsForm() {
+export type SettingsWithRelation = Prisma.SiteSettingsGetPayload<{
+  include: {
+    address: true;
+    openingDateTime: true;
+  };
+}>;
+
+export default function SettingsForm({
+  settings,
+}: {
+  settings: SettingsWithRelation | null;
+}) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
 
@@ -56,6 +68,27 @@ export default function SettingsForm() {
     control: form.control,
     name: "openingDateTime",
   });
+
+  useEffect(() => {
+    if (settings) {
+      form.reset({
+        email: settings.email ?? "",
+        phone1: settings.phone1 ?? "",
+        phone2: settings.phone2 || "",
+        whatsapp: settings.whatsapp || "",
+        websiteUrl: settings.websiteUrl || "",
+        facebookUrl: settings.facebookUrl || "",
+        twitterUrl: settings.twitterUrl || "",
+        instagramUrl: settings.instagramUrl || "",
+        address: {
+          street: settings.address?.street || "",
+          city: settings.address?.city || "",
+          postcode: settings.address?.postcode || "",
+        },
+        openingDateTime: settings.openingDateTime || [],
+      });
+    }
+  }, [form, toast]);
 
   function onSubmit(data: SiteSettingsFormValues) {
     startTransition(async () => {
@@ -152,7 +185,7 @@ export default function SettingsForm() {
                   <FormItem>
                     <FormLabel>Primary Phone</FormLabel>
                     <FormControl>
-                      <Input placeholder="+44 20 1234 5678" {...field} />
+                      <Input placeholder="20 1234 5678" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -166,7 +199,7 @@ export default function SettingsForm() {
                   <FormItem>
                     <FormLabel>Secondary Phone (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="+44 7700 900123" {...field} />
+                      <Input placeholder="7700 900123" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -180,7 +213,7 @@ export default function SettingsForm() {
                   <FormItem>
                     <FormLabel>WhatsApp (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="+44 7700 900123" {...field} />
+                      <Input placeholder="7700 900123" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -339,7 +372,11 @@ export default function SettingsForm() {
                 </Button>
               </div>
 
-              <LoadingButton type="submit" className="w-full">
+              <LoadingButton
+                type="submit"
+                className="w-full"
+                loading={isPending}
+              >
                 Save Settings
               </LoadingButton>
             </form>

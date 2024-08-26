@@ -24,28 +24,11 @@ export const siteSettingsSchema = z.object({
   email: z
     .string()
     .email("Please enter a valid email address for customer inquiries."),
-  phone1: z
-    .string()
-    .regex(
-      /^\+?[1-9]\d{1,14}$/,
-      "Please enter a valid phone number including the country code."
-    ),
-  phone2: z
-    .string()
-    .regex(
-      /^\+?[1-9]\d{1,14}$/,
-      "Please enter a valid alternative phone number including the country code."
-    )
-    .optional()
-    .or(z.literal("")),
-  whatsapp: z
-    .string()
-    .regex(
-      /^\+?[1-9]\d{1,14}$/,
-      "Please enter a valid WhatsApp number including the country code."
-    )
-    .optional()
-    .or(z.literal("")),
+
+  phone1: z.string().min(1, "Phone number is required"),
+  phone2: z.string().optional().or(z.literal("")),
+  whatsapp: z.string().optional().or(z.literal("")),
+
   websiteUrl: z
     .string()
     .url(

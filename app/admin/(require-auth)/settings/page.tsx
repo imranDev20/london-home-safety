@@ -1,9 +1,12 @@
 import SettingsForm from "./_components/settings-form";
+import { getSettings } from "./actions";
 
-export default function AdminSettingsForm() {
+export default async function AdminSettingsForm() {
+  const settings = await getSettings();
+
   return (
     <>
-      <SettingsForm />
+      <SettingsForm settings={settings} />
     </>
   );
 }
