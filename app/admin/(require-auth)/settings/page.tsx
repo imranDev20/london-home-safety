@@ -1,3 +1,9 @@
+import SettingsForm from "./_components/settings-form";
+
 export default function AdminSettingsForm() {
-  return <div>AdminSettingsForm</div>;
+  return (
+    <>
+      <SettingsForm />
+    </>
+  );
 }

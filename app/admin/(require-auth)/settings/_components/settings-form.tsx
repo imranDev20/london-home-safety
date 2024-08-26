@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +19,14 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { SiteSettingsFormValues, siteSettingsSchema } from "../schema";
 import { updateSiteSettings } from "../actions";
 import { ContentLayout } from "../../_components/content-layout";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function SettingsForm() {
   const { toast } = useToast();
@@ -40,7 +48,13 @@ export default function SettingsForm() {
         city: "",
         postcode: "",
       },
+      openingDateTime: [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "openingDateTime",
   });
 
   function onSubmit(data: SiteSettingsFormValues) {
@@ -237,6 +251,93 @@ export default function SettingsForm() {
                   </FormItem>
                 )}
               />
+
+              <div>
+                <h3 className="mb-4 font-semibold">Opening Hours</h3>
+                {fields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="flex items-center space-x-2 mb-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name={`openingDateTime.${index}.dayOfWeek`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select day" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {[
+                                "MONDAY",
+                                "TUESDAY",
+                                "WEDNESDAY",
+                                "THURSDAY",
+                                "FRIDAY",
+                                "SATURDAY",
+                                "SUNDAY",
+                              ].map((day) => (
+                                <SelectItem key={day} value={day}>
+                                  {day}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`openingDateTime.${index}.openingTime`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormControl>
+                            <Input type="time" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`openingDateTime.${index}.closingTime`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormControl>
+                            <Input type="time" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={() => remove(index)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    append({
+                      dayOfWeek: "MONDAY",
+                      openingTime: "",
+                      closingTime: "",
+                    })
+                  }
+                >
+                  Add Opening Hours
+                </Button>
+              </div>
 
               <LoadingButton type="submit" className="w-full">
                 Save Settings

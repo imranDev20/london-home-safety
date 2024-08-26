@@ -5,7 +5,18 @@ import { revalidatePath } from "next/cache";
 import { SiteSettingsFormValues, siteSettingsSchema } from "./schema";
 
 export const getSettings = async () => {
-  const settings = await prisma.siteSettings.findFirst({});
+  try {
+    const settings = await prisma.siteSettings.findFirst({
+      include: {
+        address: true,
+        openingDateTime: true,
+      },
+    });
+    return settings;
+  } catch (error) {
+    console.error("Error fetching site settings:", error);
+    throw new Error("Failed to fetch site settings");
+  }
 };
 
 export async function updateSiteSettings(input: SiteSettingsFormValues) {
