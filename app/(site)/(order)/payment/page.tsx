@@ -80,9 +80,9 @@ export default function PaymentPage() {
       <div className="grid grid-cols-12 gap-5">
         {/* Payment Options */}
         <div className="col-span-8">
-          <Card className="p-5 space-y-4">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
+          <Card className="py-5 space-y-4">
+            <div className="space-y-4 ">
+              <div className="flex items-center space-x-2 px-5">
                 <CustomRadio
                   id="card"
                   value="card"
@@ -98,22 +98,26 @@ export default function PaymentPage() {
               </div>
 
               {paymentMethod === "card" && stripePromise && clientSecret ? (
-                <Elements
-                  stripe={stripePromise}
-                  options={{
-                    clientSecret,
-                    loader: "always",
-                    appearance: {
-                      theme: "stripe",
-                      labels: "above",
-                    },
-                  }}
-                >
-                  <StripePaymentElement />
-                </Elements>
+                <div className="px-5">
+                  <Elements
+                    stripe={stripePromise}
+                    options={{
+                      clientSecret,
+                      loader: "always",
+                      appearance: {
+                        theme: "stripe",
+                        labels: "above",
+                      },
+                    }}
+                  >
+                    <StripePaymentElement />
+                  </Elements>
+                </div>
               ) : null}
+
               <Separator />
-              <div className="flex items-center space-x-2">
+
+              <div className="flex items-center space-x-2 px-5">
                 <CustomRadio
                   id="bank_transfer"
                   value="bank_transfer"
@@ -127,8 +131,10 @@ export default function PaymentPage() {
                   Bank Transfer
                 </label>
               </div>
+
               <Separator />
-              <div className="flex items-center space-x-2">
+
+              <div className="flex items-center space-x-2 px-5">
                 <CustomRadio
                   id="cash"
                   value="cash"

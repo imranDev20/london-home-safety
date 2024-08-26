@@ -1,5 +1,7 @@
 import EicrIcon from "@/components/icons/eicr";
+import ElectricalRepairs from "@/components/icons/electrical-repairs";
 import EpcIcon from "@/components/icons/epc";
+import EvCrarger from "@/components/icons/ev-charger";
 import FuseBoxIcon from "@/components/icons/fuse-box";
 import PatIcon from "@/components/icons/pat";
 import backgroundImage from "@/images/about-bg.jpeg";
@@ -485,7 +487,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Electrical Diagnostic & Repair Services",
             path: "/electrical-diagnostic-and-repair-services",
-
+            Icon: ElectricalRepairs,
             image: backgroundImage,
             description:
               "Get reliable and efficient electrical repairs from our certified professionals.",
@@ -630,7 +632,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "EV Charger Installation",
             path: "/ev-charger-installation",
-
+            Icon: EvCrarger,
             image: backgroundImage,
             description:
               "Install a convenient and efficient EV charger at your home for your electric vehicle.",

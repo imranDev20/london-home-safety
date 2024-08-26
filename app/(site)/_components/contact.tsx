@@ -17,6 +17,9 @@ export default function Contact() {
             src={ContactUsImage}
             alt="ContactUsImage"
             loading="lazy"
+            style={{
+              objectFit: "cover",
+            }}
           />
         </div>
         <div className="col-span-4 p-6    bg-white  pl-6 ">

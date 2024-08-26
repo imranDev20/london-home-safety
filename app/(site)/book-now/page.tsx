@@ -9,8 +9,10 @@ import { Switch } from "@/components/ui/switch";
 import useCartStore from "@/hooks/use-cart-store";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { ALL_SERVICES } from "@/shared/data";
+import { PropertyType } from "@prisma/client";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const breadCrumbOptions = [
   {
@@ -32,8 +34,10 @@ const smoothScroll = (
 
 export default function BookNow() {
   const [isCommercial, setIsCommercial] = useState<boolean>(false);
-  const { items, addItem, removeItem, clearCart } = useCartStore();
-  const [activeSection, setActiveSection] = useState("");
+  const { items, addItem } = useCartStore();
+  const searchParams = useSearchParams();
+  const propertyType =
+    (searchParams.get("property_type") as PropertyType) || null;
 
   const handleAddToCart = (cartItem: {
     name: string;
@@ -46,6 +50,14 @@ export default function BookNow() {
   const isProductInCart = (id: string) => {
     return items.some((item) => item.id === id);
   };
+
+  useEffect(() => {
+    if (propertyType === "COMMERCIAL") {
+      setIsCommercial(true);
+    } else {
+      setIsCommercial(false);
+    }
+  }, [propertyType]);
 
   return (
     <div className="bg-section-background">
@@ -177,21 +189,9 @@ export default function BookNow() {
                         smoothScroll(e, item.path.toString().slice(1))
                       }
                     >
-                      <div
-                        className={`flex items-center my-3 px-5 ${
-                          activeSection === item.path.toString().slice(1)
-                            ? "bg-secondary"
-                            : ""
-                        }`}
-                      >
+                      <div className={`flex items-center my-3 px-5`}>
                         {item.Icon && <item.Icon height={24} width={24} />}
-                        <h4
-                          className={`font-medium ml-3 text-sm ${
-                            activeSection === item.path.toString().slice(1)
-                              ? "text-primary"
-                              : ""
-                          }`}
-                        >
+                        <h4 className={`font-medium ml-3 text-sm `}>
                           {item.label}
                         </h4>
                       </div>
