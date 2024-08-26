@@ -8,14 +8,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { OrderWithRelation, Pagination } from "@/types/order";
+import { Pagination } from "@/types/order";
 import OrderTableRow from "./order-table-row";
+import { Prisma } from "@prisma/client";
+
+export type OrderWithUserRelation = Prisma.OrderGetPayload<{
+  include: {
+    user: {
+      include: {
+        address: true;
+      };
+    };
+  };
+}>;
 
 export default async function OrderList({
   orders,
   pagination,
 }: {
-  orders: OrderWithRelation[];
+  orders: OrderWithUserRelation[];
   pagination: Pagination;
 }) {
   return (

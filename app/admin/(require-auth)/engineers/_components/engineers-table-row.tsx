@@ -66,7 +66,7 @@ export default function EngineersTableRow({
       <TableCell className="w-[25%]">
         <div className="flex">
           <Avatar className="mr-3">
-            <AvatarFallback>{engineer.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback>{engineer?.name?.charAt(0) ?? "A"}</AvatarFallback>
           </Avatar>
           <div>
             <p className="text-sm font-medium">{engineer.name}</p>

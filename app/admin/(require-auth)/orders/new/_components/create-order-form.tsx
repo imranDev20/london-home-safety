@@ -29,7 +29,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { LoadingButton } from "@/components/ui/loading-button";
 import {
   Popover,
@@ -175,7 +174,8 @@ export default function CreateOrderForm({
             <CardHeader>
               <CardTitle>Customer Information</CardTitle>
               <CardDescription>
-                Provide the customer's details or create a new customer profile.
+                Provide the customer&lsquo;s details or create a new customer
+                profile.
               </CardDescription>
             </CardHeader>
             <CardContent>

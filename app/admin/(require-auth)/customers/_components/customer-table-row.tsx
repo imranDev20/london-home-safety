@@ -20,7 +20,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CustomerWithRelation } from "@/types/customer";
 import { deleteCustomer } from "../actions";
 
-export default function CustomerTableRow({ customer: customer }: { customer: CustomerWithRelation }) {
+export default function CustomerTableRow({
+  customer: customer,
+}: {
+  customer: CustomerWithRelation;
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -62,7 +66,7 @@ export default function CustomerTableRow({ customer: customer }: { customer: Cus
       <TableCell className="w-[25%]">
         <div className="flex">
           <Avatar className="mr-3">
-            <AvatarFallback>{customer.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback>{customer?.name?.charAt(0) ?? "A"}</AvatarFallback>
           </Avatar>
           <div>
             <p className="text-sm font-medium">{customer.name}</p>
@@ -72,9 +76,7 @@ export default function CustomerTableRow({ customer: customer }: { customer: Cus
           </div>
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell">
-       
-      </TableCell>
+      <TableCell className="hidden md:table-cell"></TableCell>
       <TableCell className="hidden md:table-cell">
         {customer.address ? (
           <>

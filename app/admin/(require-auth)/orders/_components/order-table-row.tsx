@@ -14,15 +14,19 @@ import {
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { kebabToNormal } from "@/lib/utils";
-import { OrderWithRelation } from "@/types/order";
 import dayjs from "dayjs";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { NumericFormat } from "react-number-format";
 import { deleteOrder } from "../actions";
+import { OrderWithUserRelation } from "./order-list";
 
-export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
+export default function OrderTableRow({
+  order,
+}: {
+  order: OrderWithUserRelation;
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -64,7 +68,7 @@ export default function OrderTableRow({ order }: { order: OrderWithRelation }) {
       <TableCell className="w-[25%]">
         <div className="flex">
           <Avatar className="mr-3">
-            <AvatarFallback>{order.user.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback>{order.user?.name?.charAt(0) ?? ""}</AvatarFallback>
           </Avatar>
           <div>
             <p className="text-sm font-medium">{order.user.name}</p>

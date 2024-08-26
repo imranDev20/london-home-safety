@@ -40,7 +40,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
 import { cn, kebabToNormal } from "@/lib/utils";
 import { StaffWithRelations } from "@/types/engineers";
-import { OrderIdWithRelation } from "@/types/order";
+import { OrderWithRelation } from "@/types/order";
 
 import dayjs from "dayjs";
 import {
@@ -67,7 +67,7 @@ export default function EditOrderForm({
   orderDetails,
   engineers,
 }: {
-  orderDetails: OrderIdWithRelation | null;
+  orderDetails: OrderWithRelation | null;
   engineers: StaffWithRelations[] | null;
 }) {
   const breadcrumbItems = [
@@ -335,7 +335,7 @@ export default function EditOrderForm({
                   <div className="flex">
                     <Avatar className="mr-3">
                       <AvatarFallback>
-                        {orderDetails?.user.name.charAt(0)}
+                        {orderDetails?.user?.name?.charAt(0) ?? "A"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -391,9 +391,11 @@ export default function EditOrderForm({
                       <CarFront className="text-gray-500" size={20} />
                     </span>
                     <span>
-                      {orderDetails?.isParkingAvailable
-                        ? "Paid Parking Available"
-                        : "Parking Not Available"}
+                      {orderDetails?.parkingOptions === "PAID"
+                        ? "Paid parking available"
+                        : orderDetails?.parkingOptions === "NO"
+                        ? "No parking available"
+                        : "Free parking available"}
                     </span>
                   </div>
                   <div className="text-sm  font-semibold ps-2 mt-2 flex gap-2">

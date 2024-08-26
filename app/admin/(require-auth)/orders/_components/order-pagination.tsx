@@ -11,14 +11,15 @@ import {
 } from "@/components/ui/pagination";
 import useQueryString from "@/hooks/use-query-string";
 import { cn } from "@/lib/utils"; // Make sure this import is correct for your project structure
-import { OrderWithRelation, Pagination as PaginationType } from "@/types/order";
+import { Pagination as PaginationType } from "@/types/order";
 import { usePathname, useRouter } from "next/navigation";
+import { OrderWithUserRelation } from "./order-list";
 
 export function OrderPagination({
   orders,
   pagination,
 }: {
-  orders: OrderWithRelation[];
+  orders: OrderWithUserRelation[];
   pagination: PaginationType;
 }) {
   const router = useRouter();
