@@ -26,15 +26,19 @@ import { Review } from "@prisma/client";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { ImQuotesRight } from "react-icons/im";
 import { createReview } from "../actions";
 import { ReviewFormValues, reviewSchema } from "../schema";
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export default function Reviews({ reviews }: { reviews: Review[] }) {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "start",
@@ -64,28 +68,28 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
   );
 
   const onSubmit = async (data: ReviewFormValues) => {
-    console.log(data);
+    startTransition(async () => {
+      try {
+        const response = await createReview(data);
+        if (response.success) {
+          toast({
+            title: "Review submitted successfully",
+            description: response.message,
+            variant: "success",
+          });
 
-    try {
-      const response = await createReview(data);
-      if (response.success) {
-        toast({
-          title: "Review submitted successfully",
-          description: response.message,
-          variant: "success",
-        });
-
-        setIsDialogOpen(false);
-      } else {
-        toast({
-          title: "Review submitted failed",
-          description: response.message,
-          variant: "destructive",
-        });
+          setIsDialogOpen(false);
+        } else {
+          toast({
+            title: "Review submitted failed",
+            description: response.message,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Error submitting review:", error);
       }
-    } catch (error) {
-      console.error("Error submitting review:", error);
-    }
+    });
   };
 
   useEffect(() => {
@@ -207,7 +211,9 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
                     )}
                   />
 
-                  <Button type="submit">Submit Review</Button>
+                  <LoadingButton type="submit" loading={isPending}>
+                    Submit Review
+                  </LoadingButton>
                 </form>
               </Form>
             </DialogContent>

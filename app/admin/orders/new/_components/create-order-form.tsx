@@ -100,9 +100,7 @@ export default function CreateOrderForm({
   const [openUserComboBox, setOpenUserComboBox] = useState<boolean>(false);
   const [openEngineerComboBox, setOpenEngineerComboBox] =
     useState<boolean>(false);
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [openServiceComboBox, setOpenServiceComboBox] =
-    useState<boolean>(false);
+
   const {
     fields: serviceFields,
     append: appendService,
@@ -111,14 +109,14 @@ export default function CreateOrderForm({
     control,
     name: "services",
   });
-  const {toast} = useToast();
+
+  const { toast } = useToast();
   const router = useRouter();
   const onCreateOrderSubmit: SubmitHandler<CreateOrderFormInput> = async (
     data
   ) => {
-    console.log(`data`, data);
     startTransition(async () => {
-      const result = await createOrder(data);   
+      const result = await createOrder(data);
       if (result.success) {
         toast({
           title: "Success",
@@ -139,59 +137,56 @@ export default function CreateOrderForm({
     <ContentLayout title="Create Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
       <Form {...form}>
-        <form onSubmit={handleSubmit(onCreateOrderSubmit)}>
-          <div className="flex items-center gap-4 mb-5 mt-7">
-            <Link href="/admin/orders">
-              <Button variant="outline" size="icon" className="h-7 w-7">
-                <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Back</span>
-              </Button>
-            </Link>
+        <form
+          onSubmit={handleSubmit(onCreateOrderSubmit)}
+          className="space-y-8 mt-7"
+        >
+          <div className="mb-8 flex justify-between">
+            <div className="">
+              <h1 className="text-2xl font-bold mb-2">
+                Create New Inspection Order
+              </h1>
+              <p className="text-gray-600">
+                Please fill out the details below to create a new inspection
+                order.
+              </p>
+            </div>
 
-            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              Create Order
-            </h1>
-            <FormField
-              control={control}
-              name="invoiceId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input disabled placeholder="shadcn" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="hidden items-center gap-2 md:ml-auto md:flex">
-              <Button variant="outline" size="sm">
-                Discard
-              </Button>
+            <div className="flex justify-end gap-3">
+              <Link href="/admin/orders">
+                <Button type="button" variant="outline" size="sm">
+                  Cancel
+                </Button>
+              </Link>
+
               <LoadingButton
-                type="submit"
+                onClick={() => handleSubmit(onCreateOrderSubmit)()}
                 disabled={isPending}
-                size="sm"
                 loading={isPending}
-                className="text-xs font-semibold h-8"
+                className="py-2 text-xs h-8"
+                size="sm"
               >
-                Save Order
+                Create Order
               </LoadingButton>
             </div>
           </div>
 
-          <div className="grid grid-cols-[800px] items-center justify-center">
-            <Card>
-              <CardHeader>
-                <CardTitle>User Details</CardTitle>
-                <CardDescription>Please provide user details.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-3 grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Customer Information</CardTitle>
+              <CardDescription>
+                Provide the customer's details or create a new customer profile.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-12">
+                <div className="col-span-4">
                   <FormField
                     control={control}
                     name="userId"
                     render={({ field }) => (
                       <FormItem>
+                        <FormLabel>Select Customer</FormLabel>
                         <FormControl>
                           <Popover
                             open={openUserComboBox}
@@ -202,24 +197,26 @@ export default function CreateOrderForm({
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={openUserComboBox}
-                                className="w-[350px] justify-between"
+                                className="w-full justify-between"
                               >
                                 {field.value ? (
                                   users?.find((user) => user.id === field.value)
                                     ?.email
                                 ) : (
-                                  <p className="text-muted-foreground">
-                                    Select a user
-                                  </p>
+                                  <span className="text-muted-foreground">
+                                    Select a customer
+                                  </span>
                                 )}
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-[350px] p-0">
                               <Command>
-                                <CommandInput placeholder="Search users..." />
+                                <CommandInput placeholder="Search customers..." />
                                 <CommandList>
-                                  <CommandEmpty>No users found.</CommandEmpty>
+                                  <CommandEmpty>
+                                    No customers found.
+                                  </CommandEmpty>
                                   <CommandGroup>
                                     {users?.map((user) => (
                                       <CommandItem
@@ -251,85 +248,32 @@ export default function CreateOrderForm({
                       </FormItem>
                     )}
                   />
+                </div>
+
+                <div className="col-span-1 mt-8">
                   <CreateUserForOrder />
                 </div>
-                <div className="grid gap-3 grid-cols-1  mt-4">
-                  <h1 className="font-semibold">Assigned Engineer</h1>
-                  <FormField
-                    control={control}
-                    name="assignedEngineer"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Popover
-                            open={openEngineerComboBox}
-                            onOpenChange={setOpenEngineerComboBox}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={openEngineerComboBox}
-                                className="w-full justify-between"
-                              >
-                                {field.value ? (
-                                  engineers?.find(
-                                    (engineer) => engineer.id === field.value
-                                  )?.email
-                                ) : (
-                                  <p className="text-muted-foreground">
-                                    Select a engineer
-                                  </p>
-                                )}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-full  p-0">
-                              <Command>
-                                <CommandInput placeholder="Search engineer..." />
-                                <CommandList>
-                                  <CommandEmpty>
-                                    No engineer found.
-                                  </CommandEmpty>
-                                  <CommandGroup>
-                                    {engineers?.map((engineer) => (
-                                      <CommandItem
-                                        key={engineer.id}
-                                        value={engineer.email}
-                                        onSelect={() => {
-                                          field.onChange(engineer.id);
-                                          setOpenEngineerComboBox(false);
-                                        }}
-                                      >
-                                        <Check
-                                          className={cn(
-                                            "mr-2 h-4 w-4",
-                                            field.value === engineer.id
-                                              ? "opacity-100"
-                                              : "opacity-0"
-                                          )}
-                                        />
-                                        {engineer.email}
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 mt-4">
-                  <h1 className="font-semibold col-span-2">Date & Time</h1>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Inspection Details</CardTitle>
+              <CardDescription>
+                Specify the date, time, and assigned engineer for the
+                inspection.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-12">
+                <div className="col-span-3">
                   <FormField
                     control={control}
                     name="date"
                     render={({ field }) => (
-                      <FormItem className="flex flex-col">
+                      <FormItem>
+                        <FormLabel>Inspection Date</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -366,11 +310,15 @@ export default function CreateOrderForm({
                       </FormItem>
                     )}
                   />
+                </div>
+
+                <div className="col-span-3">
                   <FormField
                     control={control}
                     name="inspectionTime"
                     render={({ field }) => (
                       <FormItem>
+                        <FormLabel>Inspection Time</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -388,7 +336,7 @@ export default function CreateOrderForm({
                               12:00 PM - 04:00 PM
                             </SelectItem>
                             <SelectItem value="EVENING">
-                              04:00 AM - 08:00 PM
+                              04:00 PM - 08:00 PM
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -397,158 +345,248 @@ export default function CreateOrderForm({
                     )}
                   />
                 </div>
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h1 className="font-semibold mb-4">
-                      Select Parking Options
-                    </h1>
-                    <FormField
-                      control={form.control}
-                      name="isParkingAvailable"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={(value) =>
-                                field.onChange(value === "true")
-                              }
-                              value={field.value ? "true" : "false"}
-                              className="flex flex-col space-y-1"
-                            >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="true" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  Yes
-                                </FormLabel>
-                              </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="false" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  No
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div>
-                    <h1 className="font-semibold mb-4">
-                      Is property in congestion zone?
-                    </h1>
+
+                <div className="col-span-6"></div>
+
+                <div className="col-span-3">
+                  <FormField
+                    control={control}
+                    name="assignedEngineer"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Assigned Engineer</FormLabel>
+                        <FormControl>
+                          <Popover
+                            open={openEngineerComboBox}
+                            onOpenChange={setOpenEngineerComboBox}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openEngineerComboBox}
+                                className="w-full justify-between"
+                              >
+                                {field.value ? (
+                                  engineers?.find(
+                                    (engineer) => engineer.id === field.value
+                                  )?.email
+                                ) : (
+                                  <span className="text-muted-foreground">
+                                    Select an engineer
+                                  </span>
+                                )}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[350px] p-0">
+                              <Command>
+                                <CommandInput placeholder="Search engineers..." />
+                                <CommandList>
+                                  <CommandEmpty>
+                                    No engineers found.
+                                  </CommandEmpty>
+                                  <CommandGroup>
+                                    {engineers?.map((engineer) => (
+                                      <CommandItem
+                                        key={engineer.id}
+                                        value={engineer.email}
+                                        onSelect={() => {
+                                          field.onChange(engineer.id);
+                                          setOpenEngineerComboBox(false);
+                                        }}
+                                      >
+                                        <Check
+                                          className={cn(
+                                            "mr-2 h-4 w-4",
+                                            field.value === engineer.id
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                        {engineer.email}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Property Information</CardTitle>
+              <CardDescription>
+                Provide details about the property and parking situation.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-12">
+                <div className="col-span-3">
+                  <FormField
+                    control={form.control}
+                    name="isParkingAvailable"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <FormLabel>Is Parking Available?</FormLabel>
+                        <FormControl>
+                          <RadioGroup
+                            onValueChange={(value) =>
+                              field.onChange(value === "true")
+                            }
+                            value={field.value ? "true" : "false"}
+                            className="flex flex-col space-y-1"
+                          >
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="true" />
+                              </FormControl>
+                              <FormLabel className="font-normal">Yes</FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="false" />
+                              </FormControl>
+                              <FormLabel className="font-normal">No</FormLabel>
+                            </FormItem>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="col-span-3">
+                  <FormField
+                    control={control}
+                    name="isCongestionZone"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <FormLabel>Is Property in Congestion Zone?</FormLabel>
+                        <FormControl>
+                          <RadioGroup
+                            onValueChange={(value) =>
+                              field.onChange(value === "true")
+                            }
+                            value={field.value ? "true" : "false"}
+                            className="flex flex-col space-y-1"
+                          >
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="true" />
+                              </FormControl>
+                              <FormLabel className="font-normal">Yes</FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="false" />
+                              </FormControl>
+                              <FormLabel className="font-normal">No</FormLabel>
+                            </FormItem>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Services</CardTitle>
+              <CardDescription>
+                Select the services to be performed during the inspection.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {serviceFields.map((field, index) => (
+                <div key={field.id} className="grid gap-4 sm:grid-cols-12 mb-4">
+                  <div className="col-span-3">
                     <FormField
                       control={control}
-                      name="isCongestionZone"
+                      name={`services.${index}.serviceId`}
                       render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={(value) =>
-                                field.onChange(value === "true")
-                              }
-                              value={field.value ? "true" : "false"}
-                              className="flex flex-col space-y-1"
-                            >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="true" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  Yes
-                                </FormLabel>
-                              </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="false" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  No
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
-                          </FormControl>
+                        <FormItem>
+                          <FormLabel>Service {index + 1}</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a service" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {services?.map((service) => (
+                                <SelectItem key={service.id} value={service.id}>
+                                  {service.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
-                </div>
-                <div className="mt-4 mb-4">
-                  <h1 className="font-semibold mb-4">Services</h1>
-                  <div className="">
-                    {serviceFields.map((field, index) => (
-                      <div key={field.id} className="grid gap-3 sm:grid-cols-8">
-                        <div className="grid gap-3 col-span-7">
-                          <FormField
-                            control={control}
-                            name={`services.${index}.serviceId`}
-                            render={({ field }) => (
-                              <FormItem className="my-2">
-                                <FormControl>
-                                  <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                  >
-                                    <SelectTrigger className="w-full">
-                                      <SelectValue placeholder="Select a service" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {services?.map((service) => (
-                                        <SelectItem
-                                          key={service.id}
-                                          value={service.id}
-                                        >
-                                          {service.name}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="grid gap-3 col-span-1">
-                          <Button
-                            variant="ghost"
-                            type="button"
-                            disabled={serviceFields.length <= 1}
-                            onClick={() => removeService(index)}
-                          >
-                            <Trash className="w-4 h-4 text-primary" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                    <div>
-                      <Button
-                        type="button"
-                        onClick={() => appendService({ serviceId: "" })}
-                        className="mt-4"
-                      >
-                        Add New Service
-                      </Button>
-                    </div>
+
+                  <div className="col-span-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => removeService(index)}
+                      disabled={serviceFields.length === 1}
+                      className="mt-8"
+                    >
+                      <Trash className="h-4 w-4 " />
+                    </Button>
                   </div>
                 </div>
-                <div>
-                  <h1 className="font-semibold mb-4">Payment Method</h1>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                onClick={() => appendService({ serviceId: "" })}
+              >
+                Add Service
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Information</CardTitle>
+              <CardDescription>
+                Choose the preferred payment method for this order.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-12">
+                <div className="col-span-3">
                   <FormField
                     control={control}
                     name="PaymentMethod"
                     render={({ field }) => (
                       <FormItem>
-                       
-                        <Select
-                          onValueChange={field.onChange}                         
-                        >
+                        <FormLabel>Payment Method</FormLabel>
+                        <Select onValueChange={field.onChange}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select payment method" />
@@ -563,15 +601,14 @@ export default function CreateOrderForm({
                             </SelectItem>
                           </SelectContent>
                         </Select>
-
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </form>
       </Form>
     </ContentLayout>

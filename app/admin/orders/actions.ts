@@ -196,8 +196,7 @@ export const getExportOrders = async () => {
   }
 };
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { CreateOrderFormInput, CreateUserFormInput } from "./new/schema";
+import { CreateOrderFormInput } from "./new/schema";
 
 export default async function generateInvoice(orderId: string) {
   try {
@@ -269,7 +268,6 @@ export default async function generateInvoice(orderId: string) {
     `;
 
     await page.setContent(content, { waitUntil: "networkidle0", timeout: 0 });
-
     const pdfBuffer = await page.pdf({ format: "A4" });
 
     await browser.close();

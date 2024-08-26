@@ -8,10 +8,12 @@ export default async function AdminCreateOrderPage() {
   const services = await getServices();
   const invoiceId = await generateInvoiceId();
 
-  return <CreateOrderForm 
-  users={users} 
-  engineers={engineers}  
-  services={services}
-  invoiceId={invoiceId}
-  />;
+  return (
+    <CreateOrderForm
+      users={users}
+      engineers={engineers}
+      services={services}
+      invoiceId={invoiceId}
+    />
+  );
 }
