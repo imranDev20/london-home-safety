@@ -4,16 +4,6 @@ import Link from "next/link";
 import { FaCalendarCheck } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
 import { NAV_ITEMS } from "@/shared/data";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
 
 export default function Header() {
   return (
