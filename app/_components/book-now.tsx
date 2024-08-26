@@ -1,17 +1,16 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
-
 import { FaHouse, FaBuilding, FaPenToSquare } from "react-icons/fa6";
 
 const buttonData = [
   {
     label: "Residential Property",
-    route: "/book-now",
+    route: "/book-now?property_type=RESIDENTIAL",
     Icon: FaHouse,
   },
   {
     label: "Commercial Property",
-    route: "/book-now",
+    route: "/book-now?property_type=COMMERCIAL",
     Icon: FaBuilding,
   },
   {

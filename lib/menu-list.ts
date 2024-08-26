@@ -7,6 +7,10 @@ import {
   Award,
   Blocks,
   PackagePlus,
+  Users2,
+  Plug,
+  HardHat,
+  Cog,
 } from "lucide-react";
 
 type Submenu = {
@@ -64,14 +68,14 @@ export function getMenuList(pathname: string): Group[] {
           href: "/services",
           label: "Services",
           active: pathname.includes("/services"),
-          icon: Users,
+          icon: Plug,
           submenus: [],
         },
         {
           href: "/engineers",
           label: "Engineers",
           active: pathname.includes("/users"),
-          icon: Users,
+          icon: HardHat,
           submenus: [],
         },
       ],
@@ -84,7 +88,7 @@ export function getMenuList(pathname: string): Group[] {
           href: "/settings",
           label: "Settings",
           active: pathname.includes("/settings"),
-          icon: Users,
+          icon: Cog,
           submenus: [],
         },
       ],

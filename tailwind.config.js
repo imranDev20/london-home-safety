@@ -54,6 +54,7 @@ module.exports = {
         "section-background": "#EAF3FB",
         body: "#636B74",
         "body-dark": "#222",
+        "primary-darker": "#206AB2",
       },
       borderRadius: {
         lg: "var(--radius)",

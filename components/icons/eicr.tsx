@@ -4,34 +4,81 @@ const EicrIcon = (props: React.SVGProps<SVGSVGElement>) => (
     xmlSpace="preserve"
     width={78}
     height={78}
-    viewBox="0 0 62.002 62.002"
+    viewBox="0 0 58 58"
     {...props}
   >
-    <path
-      fill="#106cbf"
-      d="M46.001 5.002a3.999 3.999 0 0 1 4 4v49a4 4 0 0 1-4 4h-30a4 4 0 0 1-4-4v-49a4 4 0 0 1 4-4h7v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5z"
-      data-original="#106cbf"
-    />
-    <path
-      fill="#0faaeb"
-      d="M16.001 56.002a2 2 0 0 0 2 2h26a2 2 0 0 0 2-2v-45a2 2 0 0 0-2-2h-5v1a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1v-.001a.999.999 0 0 0-.999-.999h-4.001a2 2 0 0 0-2 2z"
-      data-original="#0faaeb"
-    />
-    <path
-      fill="#a6d1f0"
-      d="M23.001 5.002a.997.997 0 0 1 1-1h4V2.998A2.999 2.999 0 0 1 30.999 0h.002c.796 0 1.559.316 2.121.879.563.562.879 1.325.879 2.121v1.002h4a.997.997 0 0 1 1 1v5a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1v-5z"
-      data-original="#a6d1f0"
-    />
-    <path
-      fill="#106cbf"
-      d="M40.001 42.002h-18a1 1 0 0 1 0-2h18a1 1 0 0 1 0 2zm-12 4h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2zm12 0h-8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2zm-7 4h-11a1 1 0 0 1 0-2h11a1 1 0 0 1 0 2zm7 0h-3a1 1 0 0 1 0-2h3a1 1 0 0 1 0 2zm-10 4h-8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2zm10 0h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2z"
-      data-original="#106cbf"
-    />
-    <path
-      fill="#e7bc2d"
-      d="M31.001 18.001v7.286h6.071l-6.071 9.714v-6.072H24.93z"
-      data-original="#e7bc2d"
-    />
+    <g fill="none">
+      <path
+        fill="#e64c3c"
+        d="M26 41.4C14.736 44.164 3.364 37.274.6 26.01S4.726 3.374 15.99.61C27.254-2.154 38.626 4.736 41.39 16z"
+        data-original="#e64c3c"
+      />
+      <path
+        fill="#f0c419"
+        d="m26 26.09-5.24 8.46a.945.945 0 0 1-1.73-.68l1.73-8.67a1 1 0 0 0-.98-1.2h-5.52a1 1 0 0 1-.97-1.23l3.53-15a1 1 0 0 1 .97-.77h6.66a1 1 0 0 1 .91 1.41L22 17h7.92a1.074 1.074 0 0 1 .88 1.69l-.94 1.32z"
+        data-original="#f0c419"
+      />
+      <path
+        fill="#cb8252"
+        d="M50 20h4a4.012 4.012 0 0 1 4 4v30a4.012 4.012 0 0 1-4 4H30a4.012 4.012 0 0 1-4-4V24a4.012 4.012 0 0 1 4-4z"
+        data-original="#cb8252"
+      />
+      <path
+        fill="#ecf0f1"
+        d="M50 24h2a2.006 2.006 0 0 1 2 2v26a2.006 2.006 0 0 1-2 2H32a2.006 2.006 0 0 1-2-2V26a2.006 2.006 0 0 1 2-2z"
+        data-original="#ecf0f1"
+      />
+      <path
+        fill="#3f5c6c"
+        d="M42 31h-8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2z"
+        data-original="#3f5c6c"
+      />
+      <path
+        fill="#4fba6f"
+        d="M47 33a1 1 0 0 1-.707-.293l-1-1a1 1 0 0 1 1.414-1.414l.185.185L49.2 27.4a1 1 0 0 1 1.6 1.2l-3 4a1 1 0 0 1-.729.4z"
+        data-original="#4fba6f"
+      />
+      <path
+        fill="#3f5c6c"
+        d="M42 37h-8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2z"
+        data-original="#3f5c6c"
+      />
+      <path
+        fill="#4fba6f"
+        d="M47 39a1 1 0 0 1-.707-.293l-1-1a1 1 0 0 1 1.414-1.414l.185.185L49.2 33.4a1 1 0 1 1 1.6 1.2l-3 4a1 1 0 0 1-.729.4z"
+        data-original="#4fba6f"
+      />
+      <path
+        fill="#3f5c6c"
+        d="M42 43h-8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2z"
+        data-original="#3f5c6c"
+      />
+      <path
+        fill="#4fba6f"
+        d="M47 45a1 1 0 0 1-.707-.293l-1-1a1 1 0 0 1 1.414-1.414l.185.185L49.2 39.4a1 1 0 1 1 1.6 1.2l-3 4a1 1 0 0 1-.729.4z"
+        data-original="#4fba6f"
+      />
+      <path
+        fill="#3f5c6c"
+        d="M42 49h-8a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2z"
+        data-original="#3f5c6c"
+      />
+      <path
+        fill="#4fba6f"
+        d="M47 51a1 1 0 0 1-.707-.293l-1-1a1 1 0 0 1 1.414-1.414l.185.185L49.2 45.4a1 1 0 1 1 1.6 1.2l-3 4a1 1 0 0 1-.729.4z"
+        data-original="#4fba6f"
+      />
+      <path
+        fill="#95a5a5"
+        d="M50 20v4a1 1 0 0 1-1 1H35a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h3v-1a2.006 2.006 0 0 1 2-2h4a2.006 2.006 0 0 1 2 2v1h3a1 1 0 0 1 1 1z"
+        data-original="#95a5a5"
+      />
+      <path
+        fill="#7f8c8d"
+        d="M38 19v2a1 1 0 0 1-2 0v-2zm10 0v2a1 1 0 0 1-2 0v-2z"
+        data-original="#7f8c8d"
+      />
+    </g>
   </svg>
 );
 export default EicrIcon;

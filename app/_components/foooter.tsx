@@ -8,7 +8,7 @@ import { MdLocalPhone } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-white py-10 ">
+    <footer className="bg-primary-darker text-white py-10 ">
       <div className="max-w-6xl mx-auto">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-4">
           <div className="">

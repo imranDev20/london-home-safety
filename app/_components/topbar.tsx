@@ -28,10 +28,18 @@ export default function Topbar() {
             info@homesafetylondon.co.uk
           </Link>
         </div>
-        <div className="flex gap-2 text-2xl text-secondary">
-          <IoLogoFacebook />
-          <FaInstagram />
-          <FaXTwitter />
+        <div className="flex gap-4 text-2xl text-secondary">
+          <a href="#">
+            <IoLogoFacebook />
+          </a>
+
+          <a href="#">
+            <FaInstagram />
+          </a>
+
+          <a href="#">
+            <FaXTwitter />
+          </a>
         </div>
       </div>
     </div>
