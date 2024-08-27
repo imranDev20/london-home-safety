@@ -33,7 +33,8 @@ export default async function EngineersList({
                   </div>
                 </TableHead>
                 <TableHead className="w-[25%]">User</TableHead>                               
-                <TableHead className="hidden md:table-cell ">Specialty</TableHead>
+                <TableHead className="hidden md:table-cell">Phone</TableHead>                               
+                <TableHead className="hidden md:table-cell">Specialty</TableHead>
                 <TableHead className="hidden md:table-cell ">Address</TableHead>
                 <TableHead className="hidden md:table-cell w-[17%]">
                   Created at

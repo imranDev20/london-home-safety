@@ -41,7 +41,6 @@ export default async function AdminEngineersPage({
       <Suspense fallback={<EngineersLoading />}>
         <EngineersList engineers={engineers} pagination={pagination} />
       </Suspense>
-
       <EngineersPagination engineers={engineers} pagination={pagination} />
     </ContentLayout>
   );

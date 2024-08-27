@@ -1,40 +1,34 @@
 import EngineerIcon from "@/components/icons/engineer";
 import { Card } from "@/components/ui/card";
+import { ADVANTAGES } from "@/shared/data";
 export default function Advantage() {
   return (
-    <section className="bg-blue-100 py-16">
+    <section className="bg-[#EAF3FB] py-20">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-4">Reasons You Should Call Us</h2>
-        <p className="text-body mb-10">
-          Electrician is your single source for a complete range of high quality
-          electrical <br /> services, including design/build, engineering and
-          maintenance.
+        <h2 className="text-3xl font-bold mb-4">
+          Why Choose London Home Safety Limited
+        </h2>
+        <p className="text-center text-gray-500 mb-10 leading-relaxed md:text-md max-w-[918px] mx-auto">
+          We pride ourselves on delivering exceptional service and unparalleled
+          expertise. Our certified professionals, competitive pricing, rapid
+          response times, and flexible scheduling make us the trusted choice for
+          all your home safety needs.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
-           <EngineerIcon className="fill-primary" />
-            <h3 className="text-lg font-semibold mb-2">
-              Our Qualified Engineers
-            </h3>
-            <p className="text-body">Over 30 Years Experience</p>
-          </Card>
-          <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
-            <p>Icon</p>
-            <h3 className="text-lg font-semibold mb-2">Low Price Promise</h3>
-            <p className="text-body">We won&apos;t be beaten on price.</p>
-          </Card>
-          <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
-            <p>Icon</p>
-            <h3 className="text-lg font-semibold mb-2">Fast Response</h3>
-            <p className="text-body">
-              Arrange an appointment, as early as tomorrow
-            </p>
-          </Card>
-          <Card className="bg-white p-6  rounded-2xl shadow-lg text-center">
-            <p>Icon</p>
-            <h3 className="text-lg font-semibold mb-2">Book Any Time</h3>
-            <p className="text-body">Book at a time that works for you</p>
-          </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt">
+          {ADVANTAGES?.map((advantage) => (
+            <Card
+              key={advantage.id}
+              className="bg-white p-6 rounded-2xl shadow-lg text-center"
+            >
+              <advantage.Icon width={50} height={50} className="fill-primary mx-auto mb-2" />
+              <h3 className="text-lg font-semibold mb-2">
+               {
+                advantage.advantageName
+               }
+              </h3>
+              <p className="text-body">{advantage.advantageDetail}</p>
+            </Card>
+          ))}
         </div>
       </div>
     </section>

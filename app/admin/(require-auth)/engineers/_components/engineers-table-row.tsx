@@ -76,7 +76,7 @@ export default function EngineersTableRow({
           </div>
         </div>
       </TableCell>
-      <TableCell></TableCell>
+      <TableCell>{engineer?.phone}</TableCell>
       <TableCell className="hidden md:table-cell">
         {engineer.address ? (
           <>

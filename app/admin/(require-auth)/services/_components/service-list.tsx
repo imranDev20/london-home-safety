@@ -49,7 +49,7 @@ export default async function ServiceList({
                 ))}
               </TableBody>
             ) : (
-              <TableEmpty colSpan={5} />
+              <TableEmpty colSpan={7} />
             )}
           </Table>
         </div>

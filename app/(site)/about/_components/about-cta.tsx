@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function AboutCta() {
   return (
-    <div className="relative  py-16 flex items-center justify-center bg-blue-800">
+    <div className="relative  py-16 flex items-center justify-center bg-[#1D63A9]">
       <Image
         src={backgroundImage}
         alt="Background"
