@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { ServiceType, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { ServiceFormInputType } from "./schema";
 
 export const getServices = async (
   page: number = 1,
@@ -75,6 +76,56 @@ export async function deleteService(serviceId: string) {
     console.error("Error deleting service:", error);
     return {
       message: "An error occurred while deleting the service.",
+      success: false,
+    };
+  }
+}
+
+export async function createService(data: ServiceFormInputType) {
+  try {
+    // Create the service with the associated packages
+    const createdService = await prisma.service.create({
+      data: {
+        name: data.name,
+        type: data.type,
+        category: data.category,
+        description: data.description,
+        propertyType: data.propertyType,
+        residentialType:
+          data.propertyType === "RESIDENTIAL"
+            ? data.residentialType
+            : null,
+        commercialType:
+          data.propertyType === "COMMERCIAL"
+            ? data.commercialType
+            : null,
+        unitType: data.unitType,
+        issuedDate: data.issuedDate,
+        expiryDate: data.expiryDate,
+        packages: {
+          create: data.packages.map((pkg) => ({
+            name: pkg.name,
+            description: pkg.description,
+            unitCount: pkg.unitCount,
+            price: pkg.price,
+          })),
+        },
+      },
+    });
+
+    // Revalidate paths if needed
+    revalidatePath("/admin/services");
+    revalidatePath("/admin/services/new");
+
+    return {
+      message: "Service created successfully!",
+      data: createdService,
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "An error occurred while creating the service.",
       success: false,
     };
   }
