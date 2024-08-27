@@ -1,11 +1,13 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
-export const getCustomers = async (
+
+export const getUsers = async (
+  type: Role,
   page: number = 1,
   pageSize: number = 10,
   search: string = "",
@@ -17,7 +19,7 @@ export const getCustomers = async (
 
     const whereClause: Prisma.UserWhereInput = {
       AND: [
-        { role: "CUSTOMER" },
+        { role: type },
         search
           ? {
               OR: [
@@ -142,5 +144,43 @@ export const getExportCustomers = async () => {
       message: "An error occured when downloading customers data" + error,
       success: false,
     };
+  }
+};
+
+export const getCustomerById = async (customerId: string) => {
+  try {
+    const customer = await prisma.user.findUnique({
+      where: { id: customerId },
+      include: {
+        address: true,
+        orders: true,
+      },
+    });
+
+    if (!customer) {
+      return null;
+    }
+
+    return customer;
+  } catch (error) {
+    console.error("Error fetching customer:", error);
+    throw new Error("Failed to fetch customer");
+  }
+};
+
+export const getOrdersByUsers = async (userId: string) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        services: true,
+      },
+    });
+    return orders;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw new Error("Failed to fetch orders");
   }
 };

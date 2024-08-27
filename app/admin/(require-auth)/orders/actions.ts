@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus, Prisma } from "@prisma/client";
+import { OrderStatus, Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
@@ -85,7 +85,7 @@ export const getOrders = async (
   }
 };
 
-export const getOrdersById = async (orderId: string) => {
+export const getOrderById = async (orderId: string) => {
   try {
     if (!orderId) {
       console.error("No product ID available");
@@ -106,16 +106,10 @@ export const getOrdersById = async (orderId: string) => {
       },
     });
 
-    const engineer = await prisma.user.findMany({
-      where: {
-        role: "STAFF",
-      },
-    });
-
     return order;
   } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw new Error("Failed to fetch orders");
+    console.error("Error fetching order:", error);
+    throw new Error("Failed to fetch order");
   }
 };
 
@@ -287,7 +281,6 @@ export default async function generateInvoice(orderId: string) {
 
 export async function createOrder(data: CreateOrderFormInput) {
   try {
-    // Calculate the total price based on the selected services
     const services = await prisma.service.findMany({
       where: {
         id: {
@@ -301,15 +294,17 @@ export async function createOrder(data: CreateOrderFormInput) {
       data: {
         userId: data.userId,
         assignedEngineerId: data.assignedEngineer,
+        propertyType: data.propertyType,
+        residentialType: data.residentialType,
         isCongestionZone: data.isCongestionZone,
         parkingOptions: data.parkingOptions,
         date: data.date,
         inspectionTime: data.inspectionTime,
         totalPrice: 500,
         invoiceId: data.invoiceId,
-        status: "CONFIRMED", // Assuming default status is PENDING, adjust as needed
-        paymentStatus: "UNPAID", // Default as per the schema
-        paymentMethod: data.PaymentMethod, // Default as per the schema
+        status: "CONFIRMED",
+        paymentStatus: "UNPAID",
+        paymentMethod: data.PaymentMethod,
         services: {
           connect: data.services.map((service) => ({ id: service.serviceId })),
         },
@@ -344,13 +339,14 @@ interface CreateUserInput {
     postcode: string | "";
   };
 }
-export async function createUser(data: CreateUserInput) {
+export async function createUser(data: CreateUserInput, userType: Role) {
   try {
     const newUser = await prisma.user.create({
       data: {
         email: data.email,
         name: data.name, // Set name to null if not provided
         password: "123456",
+        role: userType,
         address: data.address
           ? {
               create: {
@@ -362,12 +358,15 @@ export async function createUser(data: CreateUserInput) {
           : undefined,
       },
       include: {
-        address: true, // Include the address in the returned data
+        address: true,
       },
     });
 
     revalidatePath("/admin/orders");
     revalidatePath("/admin/orders/new");
+    revalidatePath("/admin/customers");
+    revalidatePath("/admin/engineers");
+
     return {
       message: "User created successfully!",
       data: newUser,

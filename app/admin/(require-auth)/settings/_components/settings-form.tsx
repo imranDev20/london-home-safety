@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Prisma } from "@prisma/client";
+import { CalendarIcon, Clock, Plus } from "lucide-react";
 
 export type SettingsWithRelation = Prisma.SiteSettingsGetPayload<{
   include: {
@@ -69,6 +70,8 @@ export default function SettingsForm({
     name: "openingDateTime",
   });
 
+  console.log(form.formState.errors);
+
   useEffect(() => {
     if (settings) {
       form.reset({
@@ -88,7 +91,7 @@ export default function SettingsForm({
         openingDateTime: settings.openingDateTime || [],
       });
     }
-  }, [form, toast]);
+  }, [form, toast, settings]);
 
   function onSubmit(data: SiteSettingsFormValues) {
     startTransition(async () => {
@@ -287,89 +290,121 @@ export default function SettingsForm({
 
               <div>
                 <h3 className="mb-4 font-semibold">Opening Hours</h3>
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="flex items-center space-x-2 mb-4"
-                  >
-                    <FormField
-                      control={form.control}
-                      name={`openingDateTime.${index}.dayOfWeek`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select day" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {[
-                                "MONDAY",
-                                "TUESDAY",
-                                "WEDNESDAY",
-                                "THURSDAY",
-                                "FRIDAY",
-                                "SATURDAY",
-                                "SUNDAY",
-                              ].map((day) => (
-                                <SelectItem key={day} value={day}>
-                                  {day}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                      )}
-                    />
 
-                    <FormField
-                      control={form.control}
-                      name={`openingDateTime.${index}.openingTime`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormControl>
-                            <Input type="time" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`openingDateTime.${index}.closingTime`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormControl>
-                            <Input type="time" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                {fields.length === 0 ? (
+                  <div className="text-center p-6 bg-gray-100 rounded-md mb-4">
+                    <div className="flex justify-center mb-4">
+                      <Clock className="w-12 h-12 text-gray-400" />
+                      <CalendarIcon className="w-12 h-12 text-gray-400 ml-2" />
+                    </div>
+                    <p className="text-gray-600 mb-4">No opening hours set</p>
+                    <p className="text-sm text-gray-500 mb-4">
+                      Add your business hours to let customers know when
+                      you&lsquo;re open.
+                    </p>
                     <Button
                       type="button"
-                      variant="destructive"
-                      onClick={() => remove(index)}
+                      variant="outline"
+                      onClick={() =>
+                        append({
+                          dayOfWeek: "MONDAY",
+                          openingTime: "",
+                          closingTime: "",
+                        })
+                      }
                     >
-                      Remove
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Opening Hours
                     </Button>
                   </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() =>
-                    append({
-                      dayOfWeek: "MONDAY",
-                      openingTime: "",
-                      closingTime: "",
-                    })
-                  }
-                >
-                  Add Opening Hours
-                </Button>
+                ) : (
+                  <>
+                    {fields.map((field, index) => (
+                      <div
+                        key={field.id}
+                        className="flex items-center space-x-2 mb-4"
+                      >
+                        <FormField
+                          control={form.control}
+                          name={`openingDateTime.${index}.dayOfWeek`}
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select day" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {[
+                                    "MONDAY",
+                                    "TUESDAY",
+                                    "WEDNESDAY",
+                                    "THURSDAY",
+                                    "FRIDAY",
+                                    "SATURDAY",
+                                    "SUNDAY",
+                                  ].map((day) => (
+                                    <SelectItem key={day} value={day}>
+                                      {day}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name={`openingDateTime.${index}.openingTime`}
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <FormControl>
+                                <Input type="time" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`openingDateTime.${index}.closingTime`}
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <FormControl>
+                                <Input type="time" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => remove(index)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        append({
+                          dayOfWeek: "MONDAY",
+                          openingTime: "",
+                          closingTime: "",
+                        })
+                      }
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Opening Hours
+                    </Button>
+                  </>
+                )}
               </div>
 
               <LoadingButton

@@ -24,24 +24,44 @@ import {
 } from "@/components/ui/form";
 import { CreateUserFormInput, createUserSchema } from "../schema";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { createUser } from "../../actions";
 import { useToast } from "@/components/ui/use-toast";
-import { PlusIcon } from "lucide-react";
-export default function CreateUserForOrder() {
+import { Check, Loader2, PlusIcon, X } from "lucide-react";
+import { Role } from "@prisma/client";
+
+interface CreateUserForOrderProps {
+  userType: Role;
+}
+
+export default function CreateUser({ userType }: CreateUserForOrderProps) {
   const [isPending, startTransition] = useTransition();
   const [isUserDialogOpen, setUserDialogOpen] = useState(false);
 
   const form = useForm<CreateUserFormInput>({
     resolver: zodResolver(createUserSchema),
-    defaultValues: {},
+    defaultValues: {
+      city: "",
+      email: "",
+      name: "",
+      phone: "",
+      street: "",
+    },
   });
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = form;
-  console.log(`errors`, errors);
+
   const { toast } = useToast();
 
   const onCreateUserSubmit: SubmitHandler<CreateUserFormInput> = async (
@@ -56,11 +76,13 @@ export default function CreateUserForOrder() {
         street: data.street ?? "",
         postcode: data.postcode ?? "",
       },
+      role: userType === "CUSTOMER" ? "CUSTOMER" : "STAFF",
+      ...(userType === "STAFF" && { expertise: data.expertise }),
     };
 
     startTransition(async () => {
       try {
-        const result = await createUser(submitData);
+        const result = await createUser(submitData, userType);
 
         if (result.success) {
           toast({
@@ -70,6 +92,7 @@ export default function CreateUserForOrder() {
           });
 
           setUserDialogOpen(false);
+          reset();
         } else {
           toast({
             title: "Error",
@@ -86,6 +109,7 @@ export default function CreateUserForOrder() {
       }
     });
   };
+
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onCreateUserSubmit)}>
@@ -96,16 +120,17 @@ export default function CreateUserForOrder() {
               className="h-9 w-full text-sm font-medium flex"
             >
               <PlusIcon className="mr-2 h-4 w-4" />
-              Add Customer
+              {`Add ${userType === "CUSTOMER" ? "Customer" : "Engineer"}`}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[550px]">
             <DialogHeader>
               <DialogTitle className="text-2xl font-semibold">
-                Create New Customer
+                Create New {userType === "CUSTOMER" ? "Customer" : "Engineer"}
               </DialogTitle>
               <DialogDescription>
-                Fill in the details below to add a new customer to the system.
+                Fill in the details below to add a new {userType.toLowerCase()}{" "}
+                to the system.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-6 py-4">
@@ -217,20 +242,57 @@ export default function CreateUserForOrder() {
                   )}
                 />
               </div>
+              {userType === "STAFF" && (
+                <FormField
+                  control={control}
+                  name="expertise"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Expertise</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select expertise" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Electrical Services">
+                            Electrical Services
+                          </SelectItem>
+                          <SelectItem value="Gas Services">
+                            Gas Services
+                          </SelectItem>
+                          <SelectItem value="Fire Services">
+                            Fire Services
+                          </SelectItem>
+                          <SelectItem value="Others">Others</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
             <DialogFooter>
               <Button
                 variant="outline"
                 onClick={() => setUserDialogOpen(false)}
+                className="flex items-center"
               >
+                <X className="mr-2 h-4 w-4" />
                 Cancel
               </Button>
               <LoadingButton
                 onClick={() => handleSubmit(onCreateUserSubmit)()}
                 loading={isPending}
-                className="ml-2"
+                className="ml-2 flex items-center"
               >
-                Create Customer
+                <Check className="mr-2 h-4 w-4" />
+                Create {userType === "CUSTOMER" ? "Customer" : "Engineer"}
               </LoadingButton>
             </DialogFooter>
           </DialogContent>

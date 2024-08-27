@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import { getExportCustomers } from "../actions";
 import { toast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
+import CreateUser from "../../orders/new/_components/create-user";
 
 export default function CustomerTableHeader() {
   const router = useRouter();
@@ -94,19 +95,15 @@ export default function CustomerTableHeader() {
           <LoadingButton
             type="button"
             disabled={isPending}
-            size="sm"
             loading={isPending}
-            className="text-xs font-semibold h-8"
+            className="text-sm h-9 font-medium"
             onClick={handleExportCustomers}
             variant="outline"
           >
             Download Excel
           </LoadingButton>
-          <Link href="customers/new">
-            <Button size="sm" className="whitespace-nowrap">
-              Add New Customer
-            </Button>
-          </Link>
+
+          <CreateUser userType="CUSTOMER" />
         </div>
       </div>
 

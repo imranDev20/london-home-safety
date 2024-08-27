@@ -1,7 +1,19 @@
-import React from 'react'
+import { getCustomerById, getOrdersByUsers } from "../actions";
+import EditCustomerForm from "./_components/edit-customer-form";
 
-export default function EditCustomerPage() {
+export default async function AdminCustomerDetailsPage({
+  params,
+}: {
+  params: {
+    customer_id: string;
+  };
+}) {
+  const { customer_id } = params;
+  const customer = await getCustomerById(customer_id);
+
   return (
-    <div>EditCustomerPage</div>
-  )
+    <>
+      <EditCustomerForm user={customer} />
+    </>
+  );
 }

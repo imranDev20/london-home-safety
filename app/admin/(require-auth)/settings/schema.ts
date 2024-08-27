@@ -59,7 +59,6 @@ export const siteSettingsSchema = z.object({
 
   openingDateTime: z
     .array(openingDateTimeSchema)
-    .min(1, "Please add at least one opening hours entry")
     .refine(
       (items) =>
         new Set(items.map((item) => item.dayOfWeek)).size === items.length,
