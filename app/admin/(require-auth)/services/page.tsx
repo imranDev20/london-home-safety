@@ -39,7 +39,6 @@ export default async function AdminOrdersPage({
       <Suspense fallback={<ServiceLoading />}>
         <ServiceList services={services} pagination={pagination} />
       </Suspense>
-
       <ServicePagination services={services} pagination={pagination} />
     </ContentLayout>
   );

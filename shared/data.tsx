@@ -1,8 +1,12 @@
+import BookingIcon from "@/components/icons/booking-icon";
 import EicrIcon from "@/components/icons/eicr";
 import ElectricalRepairs from "@/components/icons/electrical-repairs";
+import EngineerIcon from "@/components/icons/engineer";
 import EpcIcon from "@/components/icons/epc";
 import EvCrarger from "@/components/icons/ev-charger";
+import FastResponseIcon from "@/components/icons/fast-response-icon";
 import FuseBoxIcon from "@/components/icons/fuse-box";
+import LowerPriceIcon from "@/components/icons/lower-price-icon";
 import PatIcon from "@/components/icons/pat";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { NavItem, NavLeafItem } from "@/types/misc";
@@ -115,71 +119,133 @@ export const NAV_ITEMS: NavItem[] = [
             pageContent: {
               title: "Ensuring Electrical Safety with Expert EICR Services",
               html: `
-    <p>An Electrical Installation Condition Report (EICR) is a detailed assessment of the electrical installations in your property. It identifies any potential hazards, deficiencies, or non-compliance with current safety standards. Our certified experts at London Home Safety Limited conduct thorough EICR inspections to ensure your electrical systems are safe and up to code. Whether for residential or commercial properties, our professional EICR services provide peace of mind, knowing that your environment is secure and compliant. Trust us to deliver reliable and comprehensive EICR solutions tailored to your needs.</p>
+    <div class="max-w-4xl mx-auto ">
+  <p class="text-lg mb-6">An Electrical Installation Condition Report (EICR) is a detailed assessment of the electrical installations in your property. It identifies any potential hazards, deficiencies, or non-compliance with current safety standards. Our certified experts at London Home Safety Limited conduct thorough EICR inspections to ensure your electrical systems are safe and up to code. Whether for residential or commercial properties, our professional EICR services provide peace of mind, knowing that your environment is secure and compliant. Trust us to deliver reliable and comprehensive EICR solutions tailored to your needs.</p>
 
-    <div>
-      <div>
-        <h2>Why Do You Need an EICR?</h2>
-        <p>An EICR is essential for ensuring the safety of your property’s electrical systems. Over time, electrical installations can deteriorate due to wear and tear, environmental conditions, or previous poor workmanship. Regular EICR inspections help identify these issues before they become serious hazards.</p>
-        <p><strong>Benefits of EICR:</strong></p>
-        <ul>
-          <li><strong>Safety:</strong> Identifies potential electrical hazards and prevents accidents such as fires or electric shocks.</li>
-          <li><strong>Compliance:</strong> Ensures your property complies with current electrical safety standards.</li>
-          <li><strong>Peace of Mind:</strong> Provides assurance that your electrical installations are safe and reliable.</li>
-          <li><strong>Insurance:</strong> Many insurance policies require an up-to-date EICR to maintain coverage.</li>
-        </ul>
-      </div>
-      <blockquote style="background:   font-size: 18px; padding: 20px; border-radius: 10px; margin: 0; margin-top: 20px">
-        <p style="margin:0">Did you know that outdated or faulty electrical installations can pose serious safety risks? Regular EICR inspections are essential to identify potential hazards and ensure compliance with safety standards.</p>
-      </blockquote>
-    </div>
-
-    <h2>Why Is It Required?</h2>
-    <p>EICR inspections are required to ensure compliance with safety regulations and standards, particularly in rented and commercial properties. Landlords are legally obligated to ensure their properties are electrically safe, and regular EICR checks are a key part of this responsibility.</p>
-    <p><strong>Legal Requirements:</strong></p>
-    <ul>
-      <li><strong>Landlords:</strong> Must have an EICR conducted at least every 5 years or at the change of tenancy.</li>
-      <li><strong>Businesses:</strong> Should conduct EICR inspections regularly to comply with health and safety regulations and insurance requirements.</li>
-      <li><strong>Homeowners:</strong> While not legally required, it is recommended to have an EICR conducted every 10 years for safety and peace of mind.</li>
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Why Do You Need an EICR?</h2>
+    <p class="mb-4">An EICR is essential for ensuring the safety of your property's electrical systems. Over time, electrical installations can deteriorate due to wear and tear, environmental conditions, or previous poor workmanship. Regular EICR inspections help identify these issues before they become serious hazards.</p>
+    <p class="font-bold mb-2">Benefits of EICR:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Safety:</span> Identifies potential electrical hazards and prevents accidents such as fires or electric shocks.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Compliance:</span> Ensures your property complies with current electrical safety standards.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Peace of Mind:</span> Provides assurance that your electrical installations are safe and reliable.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Insurance:</span> Many insurance policies require an up-to-date EICR to maintain coverage.</span>
+      </li>
     </ul>
+  </div>
 
-    <h2>What Will It Do?</h2>
-    <p>An EICR assesses the safety and condition of your electrical installations. It identifies any faults or defects that could pose a risk to the occupants.</p>
-    <p><strong>EICR Outcomes:</strong></p>
-    <ul>
-      <li><strong>Identification of Defects:</strong> Lists any issues with the electrical installations, such as outdated wiring or faulty components.</li>
-      <li><strong>Risk Assessment:</strong> Evaluates the level of risk associated with each defect.</li>
-      <li><strong>Recommendations:</strong> Provides guidance on necessary repairs or upgrades to ensure safety and compliance.</li>
-    </ul>
+  <blockquote class="bg-blue-50 text-lg p-6 rounded-lg mb-8">
+    <p>Did you know that outdated or faulty electrical installations can pose serious safety risks? Regular EICR inspections are essential to identify potential hazards and ensure compliance with safety standards.</p>
+  </blockquote>
 
-    <h2>Who Should Take It?</h2>
-    <p>EICR inspections are recommended for various types of property owners and occupants:</p>
-    <p><strong>Who Needs an EICR:</strong></p>
-    <ul>
-      <li><strong>Landlords:</strong> To ensure rental properties are safe and compliant with legal standards.</li>
-      <li><strong>Homeowners:</strong> For peace of mind and to address any potential electrical issues in their homes.</li>
-      <li><strong>Business Owners:</strong> To comply with health and safety regulations and protect employees and customers.</li>
-      <li><strong>Property Buyers/Sellers:</strong> To assess the condition of the electrical installations before completing a transaction.</li>
-    </ul>
+  <h2 class="text-2xl font-bold mb-4">Why Is It Required?</h2>
+  <p class="mb-4">EICR inspections are required to ensure compliance with safety regulations and standards, particularly in rented and commercial properties. Landlords are legally obligated to ensure their properties are electrically safe, and regular EICR checks are a key part of this responsibility.</p>
+  <p class="font-bold mb-2">Legal Requirements:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> Must have an EICR conducted at least every 5 years or at the change of tenancy.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Businesses:</span> Should conduct EICR inspections regularly to comply with health and safety regulations and insurance requirements.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> While not legally required, it is recommended to have an EICR conducted every 10 years for safety and peace of mind.</span>
+    </li>
+  </ul>
 
-    <h2>What Happens During an EICR?</h2>
-    <p>During an EICR inspection, a qualified electrician will perform a thorough examination of your property’s electrical systems.</p>
-    <p><strong>Inspection Process:</strong></p>
-    <ul>
-      <li><strong>Visual Inspection:</strong> Checks for visible signs of damage or wear.</li>
-      <li><strong>Testing:</strong> Conducts tests on the electrical installations to ensure they are functioning correctly and safely.</li>
-      <li><strong>Documentation:</strong> Records the findings and provides a detailed report, including any defects and recommendations.</li>
-    </ul>
+  <h2 class="text-2xl font-bold mb-4">What Will It Do?</h2>
+  <p class="mb-4">An EICR assesses the safety and condition of your electrical installations. It identifies any faults or defects that could pose a risk to the occupants.</p>
+  <p class="font-bold mb-2">EICR Outcomes:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Identification of Defects:</span> Lists any issues with the electrical installations, such as outdated wiring or faulty components.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Risk Assessment:</span> Evaluates the level of risk associated with each defect.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Recommendations:</span> Provides guidance on necessary repairs or upgrades to ensure safety and compliance.</span>
+    </li>
+  </ul>
 
-    <h2>What Happens Afterwards?</h2>
-    <p>After the EICR inspection, you will receive a comprehensive report detailing the condition of your electrical installations and any required actions.</p>
-    <p><strong>Post-Inspection Steps:</strong></p>
-    <ul>
-      <li><strong>Review Report:</strong> Go through the findings with the electrician to understand the condition of your electrical systems.</li>
-      <li><strong>Address Defects:</strong> Schedule necessary repairs or upgrades as recommended in the report.</li>
-      <li><strong>Certification:</strong> Once any required work is completed, you will receive a certificate confirming that your property meets the required safety standards.</li>
-    </ul>
-    <p>By following these steps, you can ensure that your property’s electrical systems are safe, compliant, and functioning properly. Regular EICR inspections are a proactive measure to protect your property and its occupants from electrical hazards.</p>
+  <h2 class="text-2xl font-bold mb-4">Who Should Take It?</h2>
+  <p class="mb-4">EICR inspections are recommended for various types of property owners and occupants:</p>
+  <p class="font-bold mb-2">Who Needs an EICR:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> To ensure rental properties are safe and compliant with legal standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> For peace of mind and to address any potential electrical issues in their homes.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Business Owners:</span> To comply with health and safety regulations and protect employees and customers.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Property Buyers/Sellers:</span> To assess the condition of the electrical installations before completing a transaction.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens During an EICR?</h2>
+  <p class="mb-4">During an EICR inspection, a qualified electrician will perform a thorough examination of your property's electrical systems.</p>
+  <p class="font-bold mb-2">Inspection Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Visual Inspection:</span> Checks for visible signs of damage or wear.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Testing:</span> Conducts tests on the electrical installations to ensure they are functioning correctly and safely.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> Records the findings and provides a detailed report, including any defects and recommendations.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens Afterwards?</h2>
+  <p class="mb-4">After the EICR inspection, you will receive a comprehensive report detailing the condition of your electrical installations and any required actions.</p>
+  <p class="font-bold mb-2">Post-Inspection Steps:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Review Report:</span> Go through the findings with the electrician to understand the condition of your electrical systems.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Address Defects:</span> Schedule necessary repairs or upgrades as recommended in the report.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Certification:</span> Once any required work is completed, you will receive a certificate confirming that your property meets the required safety standards.</span>
+    </li>
+  </ul>
+
+  <p class="mb-4">By following these steps, you can ensure that your property's electrical systems are safe, compliant, and functioning properly. Regular EICR inspections are a proactive measure to protect your property and its occupants from electrical hazards.</p>
+</div>
   `,
             },
 
@@ -286,45 +352,97 @@ export const NAV_ITEMS: NavItem[] = [
             pageContent: {
               title: "Ensuring Appliance Safety with Professional PAT Testing",
               html: `
-                <p>Portable Appliance Testing (PAT) is a vital process to ensure that electrical appliances in your property are safe to use. Our PAT service involves thorough inspections and tests conducted by qualified technicians, ensuring compliance with safety standards and preventing potential electrical hazards.</p>
-                
-                <h2>What Appliances Need PAT Testing?</h2>
-                <p>PAT testing is necessary for various types of portable electrical appliances, including but not limited to:</p>
-                <ul>
-                  <li>Computers and peripherals</li>
-                  <li>Kitchen appliances (e.g., kettles, toasters)</li>
-                  <li>Office equipment (e.g., printers, copiers)</li>
-                  <li>Power tools</li>
-                  <li>Extension cords and chargers</li>
-                </ul>
-                
-                <h2>Who Should Get PAT Testing?</h2>
-                <p>PAT testing is recommended for a wide range of property owners and users:</p>
-                <ul>
-                  <li><strong>Landlords:</strong> To ensure rental properties are safe and comply with regulations.</li>
-                  <li><strong>Homeowners:</strong> For peace of mind and to ensure the safety of appliances in the home.</li>
-                  <li><strong>Business Owners:</strong> To comply with health and safety regulations and protect employees and customers.</li>
-                  <li><strong>Educational Institutions:</strong> To ensure the safety of students and staff.</li>
-                </ul>
-                
-                <h2>What Happens During PAT Testing?</h2>
-                <p>During PAT testing, a qualified technician will perform a thorough examination of your portable appliances.</p>
-                <p><strong>Inspection Process:</strong></p>
-                <ul>
-                  <li><strong>Pre-Testing Inspection:</strong> Initial visual inspection to check for any visible damage or wear.</li>
-                  <li><strong>Electrical Testing:</strong> Conducts electrical tests to ensure appliances are functioning correctly and safely.</li>
-                  <li><strong>Documentation:</strong> Records the findings and provides a detailed report, including any defects and recommendations.</li>
-                </ul>
-                
-                <h2>What Happens After PAT Testing?</h2>
-                <p>After the PAT testing, you will receive a comprehensive report detailing the condition of your appliances and any required actions.</p>
-                <p><strong>Post-Testing Steps:</strong></p>
-                <ul>
-                  <li><strong>Review Report:</strong> Go through the findings with the technician to understand the condition of your appliances.</li>
-                  <li><strong>Address Faults:</strong> Schedule necessary repairs or replacements as recommended in the report.</li>
-                  <li><strong>Certification:</strong> Once any required work is completed, you will receive a certificate confirming that your appliances meet the required safety standards.</li>
-                </ul>
-                <p>By following these steps, you can ensure that your property’s electrical appliances are safe, compliant, and functioning properly. Regular PAT testing is a proactive measure to protect your property and its occupants from electrical hazards.</p>
+                <div class="max-w-4xl mx-auto ">
+  <p class="mb-6 text-lg">
+    Portable Appliance Testing (PAT) is a vital process to ensure that electrical appliances in your property are safe to use. Our PAT service involves thorough inspections and tests conducted by qualified technicians, ensuring compliance with safety standards and preventing potential electrical hazards.
+  </p>
+
+  <h2 class="text-2xl font-bold mb-4">What Appliances Need PAT Testing?</h2>
+  <p class="mb-4">PAT testing is necessary for various types of portable electrical appliances, including but not limited to:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span>Computers and peripherals</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span>Kitchen appliances (e.g., kettles, toasters)</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span>Office equipment (e.g., printers, copiers)</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span>Power tools</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span>Extension cords and chargers</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Who Should Get PAT Testing?</h2>
+  <p class="mb-4">PAT testing is recommended for a wide range of property owners and users:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> To ensure rental properties are safe and comply with regulations.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> For peace of mind and to ensure the safety of appliances in the home.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Business Owners:</span> To comply with health and safety regulations and protect employees and customers.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Educational Institutions:</span> To ensure the safety of students and staff.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens During PAT Testing?</h2>
+  <p class="mb-4">During PAT testing, a qualified technician will perform a thorough examination of your portable appliances.</p>
+  <p class="mb-2 font-bold">Inspection Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Pre-Testing Inspection:</span> Initial visual inspection to check for any visible damage or wear.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Electrical Testing:</span> Conducts electrical tests to ensure appliances are functioning correctly and safely.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> Records the findings and provides a detailed report, including any defects and recommendations.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens After PAT Testing?</h2>
+  <p class="mb-4">After the PAT testing, you will receive a comprehensive report detailing the condition of your appliances and any required actions.</p>
+  <p class="mb-2 font-bold">Post-Testing Steps:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Review Report:</span> Go through the findings with the technician to understand the condition of your appliances.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Address Faults:</span> Schedule necessary repairs or replacements as recommended in the report.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Certification:</span> Once any required work is completed, you will receive a certificate confirming that your appliances meet the required safety standards.</span>
+    </li>
+  </ul>
+
+  <p class="text-lg">
+    By following these steps, you can ensure that your property's electrical appliances are safe, compliant, and functioning properly. Regular PAT testing is a proactive measure to protect your property and its occupants from electrical hazards.
+  </p>
+</div>
               `,
             },
             faqs: [
@@ -417,43 +535,95 @@ export const NAV_ITEMS: NavItem[] = [
               title:
                 "Boost Electrical Safety with Professional Fuse Box Installation",
               html: `
-                <p>A properly installed fuse box is critical for maintaining the safety and efficiency of your property's electrical system. At London Home Safety Limited, our experienced electricians provide expert fuse box installations and upgrades to meet the latest safety standards and handle the electrical demands of modern homes and businesses.</p>
-                
-                <h2>Why Upgrade Your Fuse Box?</h2>
-                <p>Upgrading your fuse box can address several issues and improve the overall safety and performance of your electrical system:</p>
-                <ul>
-                  <li><strong>Enhanced Safety:</strong> Reduces the risk of electrical fires and other hazards.</li>
-                  <li><strong>Regulatory Compliance:</strong> Ensures your electrical system meets current regulations.</li>
-                  <li><strong>Increased Capacity:</strong> Supports the electrical load of modern appliances and devices.</li>
-                  <li><strong>Improved Reliability:</strong> Minimizes the likelihood of electrical faults and power outages.</li>
-                </ul>
-                
-                <h2>Who Needs a Fuse Box Upgrade?</h2>
-                <p>Several scenarios may necessitate a fuse box upgrade:</p>
-                <ul>
-                  <li><strong>Older Properties:</strong> Homes and businesses with outdated fuse boxes may not meet current safety standards.</li>
-                  <li><strong>Home Renovations:</strong> Upgrades are often needed when adding new rooms or major appliances.</li>
-                  <li><strong>Increased Electrical Demand:</strong> Properties that have seen an increase in electrical usage.</li>
-                  <li><strong>Safety Concerns:</strong> Addressing frequent electrical issues or concerns about safety.</li>
-                </ul>
-                
-                <h2>What Happens During Fuse Box Installation?</h2>
-                <p>Our professional installation process ensures your new fuse box is safely and efficiently installed:</p>
-                <ul>
-                  <li><strong>Assessment:</strong> Initial assessment of your current electrical system and fuse box.</li>
-                  <li><strong>Installation:</strong> Safe removal of the old fuse box and installation of the new one.</li>
-                  <li><strong>Testing:</strong> Comprehensive testing to ensure the new fuse box is functioning correctly.</li>
-                  <li><strong>Documentation:</strong> Providing you with all necessary certifications and documentation.</li>
-                </ul>
-                
-                <h2>What to Expect After Installation?</h2>
-                <p>After the installation of your new fuse box, you can expect several benefits:</p>
-                <ul>
-                  <li><strong>Improved Safety:</strong> Reduced risk of electrical hazards and enhanced safety for occupants.</li>
-                  <li><strong>Increased Reliability:</strong> More stable and reliable electrical system performance.</li>
-                  <li><strong>Peace of Mind:</strong> Knowing that your property meets current safety standards and regulations.</li>
-                </ul>
-                <p>By upgrading or installing a new fuse box, you are taking a proactive step towards ensuring the safety and efficiency of your property's electrical system. Contact London Home Safety Limited today to schedule your fuse box installation.</p>
+               <div class="max-w-4xl mx-auto">
+  <p class="mb-6 text-lg">
+    A properly installed fuse box is critical for maintaining the safety and efficiency of your property's electrical system. At London Home Safety Limited, our experienced electricians provide expert fuse box installations and upgrades to meet the latest safety standards and handle the electrical demands of modern homes and businesses.
+  </p>
+
+  <h2 class="text-2xl font-bold mb-4">Why Upgrade Your Fuse Box?</h2>
+  <p class="mb-4">Upgrading your fuse box can address several issues and improve the overall safety and performance of your electrical system:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Enhanced Safety:</span> Reduces the risk of electrical fires and other hazards.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Regulatory Compliance:</span> Ensures your electrical system meets current regulations.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Increased Capacity:</span> Supports the electrical load of modern appliances and devices.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Improved Reliability:</span> Minimizes the likelihood of electrical faults and power outages.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Who Needs a Fuse Box Upgrade?</h2>
+  <p class="mb-4">Several scenarios may necessitate a fuse box upgrade:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Older Properties:</span> Homes and businesses with outdated fuse boxes may not meet current safety standards.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Home Renovations:</span> Upgrades are often needed when adding new rooms or major appliances.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Increased Electrical Demand:</span> Properties that have seen an increase in electrical usage.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Safety Concerns:</span> Addressing frequent electrical issues or concerns about safety.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens During Fuse Box Installation?</h2>
+  <p class="mb-4">Our professional installation process ensures your new fuse box is safely and efficiently installed:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Assessment:</span> Initial assessment of your current electrical system and fuse box.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Installation:</span> Safe removal of the old fuse box and installation of the new one.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Testing:</span> Comprehensive testing to ensure the new fuse box is functioning correctly.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> Providing you with all necessary certifications and documentation.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What to Expect After Installation?</h2>
+  <p class="mb-4">After the installation of your new fuse box, you can expect several benefits:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Improved Safety:</span> Reduced risk of electrical hazards and enhanced safety for occupants.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Increased Reliability:</span> More stable and reliable electrical system performance.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Peace of Mind:</span> Knowing that your property meets current safety standards and regulations.</span>
+    </li>
+  </ul>
+
+  <p class="text-lg">
+    By upgrading or installing a new fuse box, you are taking a proactive step towards ensuring the safety and efficiency of your property's electrical system. Contact London Home Safety Limited today to schedule your fuse box installation.
+  </p>
+</div>
               `,
             },
             faqs: [
@@ -559,42 +729,91 @@ export const NAV_ITEMS: NavItem[] = [
             pageContent: {
               title: "Reliable and Efficient Electrical Repairs",
               html: `
-                <p>At London Home Safety Limited, we understand the importance of having a reliable and safe electrical system. Our certified professionals offer comprehensive electrical repair services, ensuring that any issues you face are resolved efficiently and effectively.</p>
-                
-                <h2>Why Choose Our Electrical Repair Services?</h2>
-                <p>We provide a wide range of repair services to address all your electrical needs, whether it's a simple fix or a complex problem:</p>
-                <ul>
-                  <li><strong>Minor Repairs:</strong> Fixes for common issues such as broken outlets, switches, and minor wiring problems.</li>
-                  <li><strong>Major Repairs:</strong> Handling more complex issues including faulty wiring, circuit breaker problems, and system overhauls.</li>
-                  <li><strong>Emergency Call-Out:</strong> Rapid response for urgent electrical issues that require immediate attention.</li>
-                </ul>
-                
-                <h2>Who Can Benefit from Our Services?</h2>
-                <p>Our electrical repair services are designed for a variety of clients:</p>
-                <ul>
-                  <li><strong>Homeowners:</strong> Ensuring your home’s electrical system is safe and functional.</li>
-                  <li><strong>Landlords:</strong> Maintaining electrical safety and compliance in rental properties.</li>
-                  <li><strong>Business Owners:</strong> Keeping your business’s electrical systems operational to avoid downtime.</li>
-                  <li><strong>Property Managers:</strong> Managing electrical repairs and maintenance for multiple properties.</li>
-                </ul>
-                
-                <h2>What Happens During an Electrical Repair?</h2>
-                <p>Our repair process is thorough and designed to address any issues effectively:</p>
-                <ul>
-                  <li><strong>Initial Assessment:</strong> Identifying the problem through a detailed inspection.</li>
-                  <li><strong>Repair Work:</strong> Conducting the necessary repairs using high-quality materials and professional techniques.</li>
-                  <li><strong>Testing:</strong> Ensuring that the repaired system is functioning safely and correctly.</li>
-                  <li><strong>Documentation:</strong> Providing a detailed report of the work carried out and any further recommendations.</li>
-                </ul>
-                
-                <h2>What to Expect After the Repair?</h2>
-                <p>After completing the repair, we ensure your electrical system is safe and reliable:</p>
-                <ul>
-                  <li><strong>Improved Safety:</strong> Addressing potential hazards to prevent future issues.</li>
-                  <li><strong>Enhanced Reliability:</strong> Ensuring your electrical system operates smoothly and efficiently.</li>
-                  <li><strong>Ongoing Support:</strong> Offering advice and support for maintaining your electrical system.</li>
-                </ul>
-                <p>With our professional electrical repair services, you can have peace of mind knowing that your electrical systems are in safe hands. Contact London Home Safety Limited today to schedule a repair.</p>
+                <div class="max-w-4xl mx-auto">
+  <p class="mb-6 text-lg">
+    At London Home Safety Limited, we understand the importance of having a reliable and safe electrical system. Our certified professionals offer comprehensive electrical repair services, ensuring that any issues you face are resolved efficiently and effectively.
+  </p>
+
+  <h2 class="text-2xl font-bold mb-4">Why Choose Our Electrical Repair Services?</h2>
+  <p class="mb-4">We provide a wide range of repair services to address all your electrical needs, whether it's a simple fix or a complex problem:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Minor Repairs:</span> Fixes for common issues such as broken outlets, switches, and minor wiring problems.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Major Repairs:</span> Handling more complex issues including faulty wiring, circuit breaker problems, and system overhauls.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Emergency Call-Out:</span> Rapid response for urgent electrical issues that require immediate attention.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Who Can Benefit from Our Services?</h2>
+  <p class="mb-4">Our electrical repair services are designed for a variety of clients:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> Ensuring your home's electrical system is safe and functional.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> Maintaining electrical safety and compliance in rental properties.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Business Owners:</span> Keeping your business's electrical systems operational to avoid downtime.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Property Managers:</span> Managing electrical repairs and maintenance for multiple properties.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens During an Electrical Repair?</h2>
+  <p class="mb-4">Our repair process is thorough and designed to address any issues effectively:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Initial Assessment:</span> Identifying the problem through a detailed inspection.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Repair Work:</span> Conducting the necessary repairs using high-quality materials and professional techniques.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Testing:</span> Ensuring that the repaired system is functioning safely and correctly.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> Providing a detailed report of the work carried out and any further recommendations.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What to Expect After the Repair?</h2>
+  <p class="mb-4">After completing the repair, we ensure your electrical system is safe and reliable:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Improved Safety:</span> Addressing potential hazards to prevent future issues.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Enhanced Reliability:</span> Ensuring your electrical system operates smoothly and efficiently.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Ongoing Support:</span> Offering advice and support for maintaining your electrical system.</span>
+    </li>
+  </ul>
+
+  <p class="text-lg">
+    With our professional electrical repair services, you can have peace of mind knowing that your electrical systems are in safe hands. Contact London Home Safety Limited today to schedule a repair.
+  </p>
+</div>
               `,
             },
             faqs: [
@@ -664,44 +883,100 @@ export const NAV_ITEMS: NavItem[] = [
             pageContent: {
               title: "Convenient and Efficient EV Charger Installation",
               html: `
-                <p>Electric vehicle (EV) chargers provide the convenience of charging your vehicle at home or at your business premises. At London Home Safety Limited, we offer professional EV charger installation services, ensuring safe and efficient setups tailored to your specific needs.</p>
-                
-                <h2>Why Install an EV Charger?</h2>
-                <p>Installing an EV charger at your home or business offers numerous benefits:</p>
-                <ul>
-                  <li><strong>Convenience:</strong> Charge your EV at your own premises without relying on public charging stations.</li>
-                  <li><strong>Cost Savings:</strong> Reduce the cost of charging compared to using public charging points.</li>
-                  <li><strong>Increased Property Value:</strong> Enhance the value of your property by adding modern EV charging facilities.</li>
-                  <li><strong>Environmental Benefits:</strong> Support sustainable practices by promoting the use of electric vehicles.</li>
-                </ul>
-                
-                <h2>Our EV Charger Installation Process</h2>
-                <p>Our professional installation process ensures a seamless and efficient setup:</p>
-                <ul>
-                  <li><strong>Assessment:</strong> Evaluate your electrical system and determine the best location for the charger.</li>
-                  <li><strong>Recommendation:</strong> Suggest the most suitable EV charger based on your vehicle and usage needs.</li>
-                  <li><strong>Installation:</strong> Safely install the charger, ensuring it meets all safety and regulatory standards.</li>
-                  <li><strong>Testing:</strong> Conduct thorough testing to ensure the charger is functioning correctly and safely.</li>
-                </ul>
-                
-                <h2>Who Can Benefit from EV Charger Installation?</h2>
-                <p>Our EV charger installation services are ideal for a variety of clients:</p>
-                <ul>
-                  <li><strong>Homeowners:</strong> Install a charger for personal use, enhancing convenience and property value.</li>
-                  <li><strong>Landlords:</strong> Provide EV charging options for tenants, making your property more attractive.</li>
-                  <li><strong>Business Owners:</strong> Offer charging facilities for employees and customers, supporting sustainability initiatives.</li>
-                  <li><strong>Property Developers:</strong> Include EV chargers in new developments to meet growing demand.</li>
-                </ul>
-                
-                <h2>What to Expect After Installation?</h2>
-                <p>Once the installation is complete, you can enjoy the following benefits:</p>
-                <ul>
-                  <li><strong>Seamless Charging:</strong> Easily charge your EV at home or work.</li>
-                  <li><strong>Reduced Costs:</strong> Save money on charging compared to public stations.</li>
-                  <li><strong>Enhanced Convenience:</strong> Charge your vehicle at your convenience, without the need to visit public chargers.</li>
-                  <li><strong>Ongoing Support:</strong> Receive support and maintenance services to ensure your charger remains in optimal condition.</li>
-                </ul>
-                <p>By installing an EV charger, you take a significant step towards sustainable living and support the growing infrastructure for electric vehicles. Contact London Home Safety Limited today to schedule your EV charger installation.</p>
+                <div class="max-w-3xl mx-auto p-6">
+  <p class="mb-6 text-lg">
+    Electric vehicle (EV) chargers provide the convenience of charging your vehicle at home or at your business premises. At London Home Safety Limited, we offer professional EV charger installation services, ensuring safe and efficient setups tailored to your specific needs.
+  </p>
+
+  <h2 class="text-2xl font-bold mb-4">Why Install an EV Charger?</h2>
+  <p class="mb-4">Installing an EV charger at your home or business offers numerous benefits:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Convenience:</span> Charge your EV at your own premises without relying on public charging stations.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Cost Savings:</span> Reduce the cost of charging compared to using public charging points.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Increased Property Value:</span> Enhance the value of your property by adding modern EV charging facilities.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Environmental Benefits:</span> Support sustainable practices by promoting the use of electric vehicles.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Our EV Charger Installation Process</h2>
+  <p class="mb-4">Our professional installation process ensures a seamless and efficient setup:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Assessment:</span> Evaluate your electrical system and determine the best location for the charger.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Recommendation:</span> Suggest the most suitable EV charger based on your vehicle and usage needs.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Installation:</span> Safely install the charger, ensuring it meets all safety and regulatory standards.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Testing:</span> Conduct thorough testing to ensure the charger is functioning correctly and safely.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Who Can Benefit from EV Charger Installation?</h2>
+  <p class="mb-4">Our EV charger installation services are ideal for a variety of clients:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> Install a charger for personal use, enhancing convenience and property value.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> Provide EV charging options for tenants, making your property more attractive.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Business Owners:</span> Offer charging facilities for employees and customers, supporting sustainability initiatives.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Property Developers:</span> Include EV chargers in new developments to meet growing demand.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What to Expect After Installation?</h2>
+  <p class="mb-4">Once the installation is complete, you can enjoy the following benefits:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Seamless Charging:</span> Easily charge your EV at home or work.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Reduced Costs:</span> Save money on charging compared to public stations.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Enhanced Convenience:</span> Charge your vehicle at your convenience, without the need to visit public chargers.</span>
+    </li>
+    <li class="flex items-center">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Ongoing Support:</span> Receive support and maintenance services to ensure your charger remains in optimal condition.</span>
+    </li>
+  </ul>
+
+  <p class="text-lg">
+    By installing an EV charger, you take a significant step towards sustainable living and support the growing infrastructure for electric vehicles. Contact London Home Safety Limited today to schedule your EV charger installation.
+  </p>
+</div>
+
               `,
             },
             faqs: [
@@ -899,5 +1174,33 @@ export const FAQ_HOME = [
     title: "How can I benefit from installing an EV charging station at home?",
     content:
       "Installing an EV charging station at home offers convenience and cost savings for electric vehicle owners. It ensures your vehicle is always ready to go and can increase the value of your property.",
+  },
+];
+
+
+export const ADVANTAGES = [
+  {
+    id: 1,
+    advantageName: "Certified Experts",
+    advantageDetail: "Highly trained and accredited professionals.",
+    Icon: EngineerIcon,
+  },
+  {
+    id: 2,
+    advantageName: "Price Match Guarantee",
+    advantageDetail: "We promise unbeatable pricing.",
+    Icon: LowerPriceIcon,
+  },
+  {
+    id: 3,
+    advantageName: "Rapid Response",
+    advantageDetail: "Appointments available as early as tomorrow.",
+    Icon: FastResponseIcon,
+  },
+  {
+    id: 4,
+    advantageName: "Flexible Scheduling",
+    advantageDetail: "Book appointments at your convenience.",
+    Icon: BookingIcon,
   },
 ];

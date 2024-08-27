@@ -19,7 +19,7 @@ export default function ServiceCard({ service }: { service: NavLeafItem }) {
         <h3 className="text-xl font-semibold   mb-2">{label}</h3>
         <p className="text-body mb-4">{description}</p>
         <Link href={`/services${categoryPath}${path}`}>
-          <Button className="bg-blue-500 text-white font-bold w-[80%]  mt-6  rounded hover:bg-yellow-500 hover:text-black transition">
+          <Button className="bg-primary text-white font-bold w-[80%]  mt-6  rounded hover:bg-secondary hover:text-black transition">
             Learn More
           </Button>
         </Link>

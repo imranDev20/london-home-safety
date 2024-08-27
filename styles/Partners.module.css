@@ -1,0 +1,32 @@
+.carouselContainer {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.carouselTrack {
+  display: flex;
+  gap: 20px;
+  width: 200%; /* Ensures there is enough width to cover the full scroll */
+  animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.logo {
+  min-width: 150px; /* Adjust based on your logo size */
+  margin: 0 10px;
+  flex: 0 0 auto;
+}
+
+.logo img {
+  max-width: 100%;
+  height: auto;
+}
