@@ -1,5 +1,5 @@
 import { getCustomerById, getOrdersByUsers } from "../actions";
-import EditCustomerForm from "./_components/edit-customer-form";
+import EditCustomerForm from "./_components/edit-user-form";
 
 export default async function AdminCustomerDetailsPage({
   params,

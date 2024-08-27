@@ -338,7 +338,9 @@ interface CreateUserInput {
     street: string | "";
     postcode: string | "";
   };
+  expertise?: string;
 }
+
 export async function createUser(data: CreateUserInput, userType: Role) {
   try {
     const newUser = await prisma.user.create({
@@ -347,6 +349,9 @@ export async function createUser(data: CreateUserInput, userType: Role) {
         name: data.name, // Set name to null if not provided
         password: "123456",
         role: userType,
+        phone: data.phone,
+        ...(userType === "STAFF" && { expertise: data.expertise }),
+
         address: data.address
           ? {
               create: {

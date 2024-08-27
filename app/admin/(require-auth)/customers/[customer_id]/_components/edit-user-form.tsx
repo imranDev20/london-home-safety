@@ -47,10 +47,16 @@ export default function EditCustomerForm({
 
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
-    { label: "Customers", href: "/admin/customers" },
+    {
+      label: user.role === "CUSTOMER" ? "Customers" : "Engineers",
+      href: user.role === "CUSTOMER" ? "/admin/customers" : "/admin/engineers",
+    },
     {
       label: `Edit ${user.name}`,
-      href: `/admin/customers/${user.id}`,
+      href:
+        user.role === "CUSTOMER"
+          ? `/admin/customers/${user.id}`
+          : `/admin/engineers/${user.id}`,
       isCurrentPage: true,
     },
   ];
