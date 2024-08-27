@@ -5,23 +5,7 @@ import { useEffect, useState } from "react";
 import Counter from "./counter";
 
 export default function Achievement() {
-  const [counter, setCounter] = useState(0);
 
-  useEffect(() => {
-    if (counter < 100) {
-      const intervalId = setInterval(() => {
-        setCounter((prevCounter) => {
-          const newCounter = prevCounter + 5;
-          if (newCounter >= 100) {
-            clearInterval(intervalId);
-          }
-          return newCounter;
-        });
-      }, 50);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [counter]);
   return (
     <section className="bg-white py-16">
       <div className="max-w-6xl mx-auto px-4 lg:flex lg:items-center lg:justify-between">
