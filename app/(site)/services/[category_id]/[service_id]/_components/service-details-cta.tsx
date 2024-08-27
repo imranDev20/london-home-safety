@@ -15,12 +15,16 @@ export default function ServiceDetailsCta() {
         </p>
 
         <div className="flex justify-center mt-5 space-x-3">
-          <Button className="bg-secondary text-black   rounded-md text-lg font-semibold hover:bg-white hover:text-black transition-colors">
-            <Link href="#">Book an Appointment</Link>
-          </Button>
-          <Button className="bg-white text-black   rounded-md text-lg font-semibold hover:bg-secondary hover:text-black transition-colors">
-            <Link href="#">Call: 020 8146 6698</Link>
-          </Button>
+          <Link href="/book-now">
+            <Button className="bg-secondary text-black   rounded-md text-lg font-semibold hover:bg-white hover:text-black transition-colors">
+              Book an Appointment
+            </Button>
+          </Link>
+          <Link href="tel:+020 8146 6698">
+            <Button className="bg-white text-black   rounded-md text-lg font-semibold hover:bg-secondary hover:text-black transition-colors">
+              Call: 020 8146 6698
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

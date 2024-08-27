@@ -4,7 +4,7 @@ import ServiceCategories from "../_components/service-categories";
 import ServiceItems from "./_components/service-items";
 const breadCrumbOptions = [
   {
-    label: "Contact us",
+    label: "Services",
     isCurrentPage: true,
   },
 ];
