@@ -124,7 +124,7 @@ export const getExportCustomers = async () => {
       worksheet.addRow({
         name: user?.name,
         email: user?.email,
-        // phone:user?.phone,
+        phone: user?.phone,
         address: `${user?.address?.street ? user?.address?.street + "," : ""} ${
           user?.address?.city ?? ""
         } ${user?.address?.postcode ?? ""}`,
@@ -134,6 +134,7 @@ export const getExportCustomers = async () => {
 
     const buffer = await workbook.xlsx.writeBuffer();
     const excelData = Buffer.from(buffer).toString("base64");
+
     return {
       message: "Customer Data Downloaded Successfully",
       data: excelData,

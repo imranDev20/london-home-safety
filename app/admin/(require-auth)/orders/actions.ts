@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
+import { CreateOrderFormInput } from "./new/schema";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const getOrders = async (
   page: number = 1,
@@ -191,8 +193,6 @@ export const getExportOrders = async () => {
   }
 };
 
-import { CreateOrderFormInput } from "./new/schema";
-
 export default async function generateInvoice(orderId: string) {
   try {
     if (!orderId) {
@@ -346,12 +346,11 @@ export async function createUser(data: CreateUserInput, userType: Role) {
     const newUser = await prisma.user.create({
       data: {
         email: data.email,
-        name: data.name, // Set name to null if not provided
+        name: data.name,
         password: "123456",
         role: userType,
         phone: data.phone,
         ...(userType === "STAFF" && { expertise: data.expertise }),
-
         address: data.address
           ? {
               create: {
@@ -378,10 +377,50 @@ export async function createUser(data: CreateUserInput, userType: Role) {
       success: true,
     };
   } catch (error) {
-    console.error("Error creating user:", error);
-    return {
-      message: "An error occurred while creating the user.",
-      success: false,
-    };
+    if (error instanceof PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case "P2002":
+          return {
+            message: `A user with this ${error.meta?.target} already exists.`,
+            success: false,
+          };
+        case "P2003":
+          return {
+            message: `Foreign key constraint failed on the field: ${error.meta?.field_name}`,
+            success: false,
+          };
+        case "P2005":
+          return {
+            message: `Invalid value provided for ${error.meta?.field_name}.`,
+            success: false,
+          };
+        case "P2006":
+          return {
+            message: `The value provided is too long for the field: ${error.meta?.field_name}.`,
+            success: false,
+          };
+        case "P2011":
+          return {
+            message: `Missing required field: ${error.meta?.field_name}.`,
+            success: false,
+          };
+        case "P2025":
+          return {
+            message: `Record does not exist.`,
+            success: false,
+          };
+        default:
+          return {
+            message: "An unknown error occurred.",
+            success: false,
+          };
+      }
+    } else {
+      console.error("Unhandled error:", error);
+      return {
+        message: "An unexpected error occurred.",
+        success: false,
+      };
+    }
   }
 }

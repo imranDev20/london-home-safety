@@ -97,7 +97,15 @@ export async function deleteEngineer(engineersId: string) {
   }
 }
 
-export const getEngineerById = async (engineerId: string) => {
+export const getEngineerById = async (
+  engineerId: string
+): Promise<Prisma.UserGetPayload<{
+  include: { address: true; assignedOrders: true };
+}> | null> => {
+  if (!engineerId || typeof engineerId !== "string") {
+    throw new Error("Invalid engineer ID provided");
+  }
+
   try {
     const engineer = await prisma.user.findUnique({
       where: { id: engineerId },
@@ -107,13 +115,15 @@ export const getEngineerById = async (engineerId: string) => {
       },
     });
 
-    if (!engineer) {
-      return null;
-    }
-
-    return engineer;
+    return engineer; // This will be null if no engineer is found
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      // Handle known Prisma errors
+      if (error.code === "P2023") {
+        throw new Error("Invalid ID format");
+      }
+    }
     console.error("Error fetching engineer:", error);
-    throw new Error("Failed to fetch engineer");
+    throw new Error("An unexpected error occurred while fetching the engineer");
   }
 };

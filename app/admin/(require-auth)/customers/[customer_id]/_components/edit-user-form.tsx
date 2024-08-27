@@ -34,16 +34,12 @@ export type EngineerWithAssignedOrders = Prisma.UserGetPayload<{
 export default function EditCustomerForm({
   user,
 }: {
-  user: CustomerWithOrders | EngineerWithAssignedOrders | null;
+  user: CustomerWithOrders | EngineerWithAssignedOrders;
 }) {
   const orders =
     user?.role === "CUSTOMER"
       ? (user as CustomerWithOrders)?.orders
       : (user as EngineerWithAssignedOrders)?.assignedOrders;
-
-  if (!user) {
-    return <div>Loading...</div>;
-  }
 
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
@@ -88,7 +84,9 @@ export default function EditCustomerForm({
   ];
 
   return (
-    <ContentLayout title={`Customer: ${user.name}`}>
+    <ContentLayout
+      title={`${user.role === "STAFF" ? "Engineer" : "Customer"}: ${user.name}`}
+    >
       <DynamicBreadcrumb items={breadcrumbItems} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">

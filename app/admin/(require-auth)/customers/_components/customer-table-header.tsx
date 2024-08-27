@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import { Users } from "lucide-react";
+import { Download, Search, SortAsc, SortDesc, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useQueryString from "@/hooks/use-query-string";
@@ -96,10 +96,11 @@ export default function CustomerTableHeader() {
             type="button"
             disabled={isPending}
             loading={isPending}
-            className="text-sm h-9 font-medium"
+            className="text-sm h-9 font-medium flex items-center"
             onClick={handleExportCustomers}
             variant="outline"
           >
+            {!isPending && <Download className="mr-2 h-4 w-4" />}
             Download Excel
           </LoadingButton>
 
@@ -108,13 +109,17 @@ export default function CustomerTableHeader() {
       </div>
 
       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto mb-5">
-        <Input
-          type="search"
-          placeholder="Search customer..."
-          className="w-full sm:w-auto flex-1"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <div className="relative flex-1">
+          <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            type="search"
+            placeholder="Search customer..."
+            className="pl-10 w-full"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
+
         <Select
           value={sortBy}
           onValueChange={(value) => {
@@ -127,7 +132,8 @@ export default function CustomerTableHeader() {
             }
           }}
         >
-          <SelectTrigger className="w-full sm:w-auto">
+          <SelectTrigger className="w-[180px]">
+            <SortAsc className="mr-2 h-4 w-4" />
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
 
@@ -150,7 +156,13 @@ export default function CustomerTableHeader() {
             }
           }}
         >
-          <SelectTrigger className="w-full sm:w-auto">
+          <SelectTrigger className="w-[180px]">
+            {sortOrder === "asc" ? (
+              <SortAsc className="mr-2 h-4 w-4" />
+            ) : (
+              <SortDesc className="mr-2 h-4 w-4" />
+            )}
+
             <SelectValue placeholder="Sort Order" />
           </SelectTrigger>
           <SelectContent>

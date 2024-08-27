@@ -289,9 +289,9 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
               <LoadingButton
                 onClick={() => handleSubmit(onCreateUserSubmit)()}
                 loading={isPending}
-                className="ml-2 flex items-center"
+                className="ml-2"
               >
-                <Check className="mr-2 h-4 w-4" />
+                {!isPending && <Check className="mr-2 h-4 w-4" />}
                 Create {userType === "CUSTOMER" ? "Customer" : "Engineer"}
               </LoadingButton>
             </DialogFooter>
