@@ -3,12 +3,12 @@ import { Card } from "@/components/ui/card";
 import { ADVANTAGES } from "@/shared/data";
 export default function Advantage() {
   return (
-    <section className="bg-[#EAF3FB] py-16">
+    <section className="bg-[#EAF3FB] py-20">
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-4 pt-10">
+        <h2 className="text-3xl font-bold mb-4">
           Why Choose London Home Safety Limited
         </h2>
-        <p className="text-center text-gray-500 mb-14 leading-relaxed md:text-md max-w-[918px] mx-auto">
+        <p className="text-center text-gray-500 mb-10 leading-relaxed md:text-md max-w-[918px] mx-auto">
           We pride ourselves on delivering exceptional service and unparalleled
           expertise. Our certified professionals, competitive pricing, rapid
           response times, and flexible scheduling make us the trusted choice for
