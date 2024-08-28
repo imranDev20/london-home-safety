@@ -10,7 +10,7 @@ export const ContactDetails = ({ item }: { item: Contact }) => {
       <div> {item.icons}</div>
       <div>
         <h3 className="font-bold text-xl mb-4">{item.title}</h3>
-        <p className="text-body text-[1.125rem]   max-w-[259px] ">{item.info}</p>
+        <p className="text-body text-[1.10rem]   max-w-[260px] ">{item.info}</p>
       </div>
     </div>
   );
