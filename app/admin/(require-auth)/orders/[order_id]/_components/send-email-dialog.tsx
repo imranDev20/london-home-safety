@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,23 +16,59 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Mail, Send, X } from "lucide-react";
+import { OrderWithRelation } from "@/types/order";
+import { EMAIL_ADDRESS } from "@/shared/data";
+import { sendEmailToEngineerAction } from "../../../engineers/actions";
+import { useToast } from "@/components/ui/use-toast";
 
-export default function SendEmailDialog() {
+export default function SendEmailDialog({
+  engineerEmail,
+  orderDetails,
+}: {
+  engineerEmail: string;
+  orderDetails: OrderWithRelation | null;
+}) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [open, setOpen] = useState(false);
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add your email sending logic here
-    console.log("Sending email from:", from, "to:", to);
-    console.log("Subject:", subject);
-    console.log("Email body:", body);
-    // Reset form and close dialog
-    resetForm();
-    setOpen(false);
+    startTransition(async () => {
+      try {       
+        const emailData = {
+          subject: subject,
+          receiver: engineerEmail,
+          orderDetails: orderDetails,
+          content: body,
+        };
+
+        await sendEmailToEngineerAction(emailData);
+
+        // Show success toast
+        toast({
+          title: "Success",
+          description: "Email sent successfully!",
+          variant: "success",
+        });
+
+        // Reset form and close dialog
+        resetForm();
+        setOpen(false);
+      } catch (error) {
+        console.error("Error sending email:", error);
+
+        // Show error toast
+        toast({
+          title: "Error",
+          description: "Failed to send email. Please try again later.",
+          variant: "destructive",
+        });
+      }
+    });
   };
 
   const resetForm = () => {
@@ -68,9 +104,10 @@ export default function SendEmailDialog() {
                 </Label>
                 <Input
                   id="from"
-                  value={from}
+                  value={EMAIL_ADDRESS}
                   onChange={(e) => setFrom(e.target.value)}
                   className="col-span-3"
+                  disabled
                   placeholder="your-email@example.com"
                 />
               </div>
@@ -80,8 +117,9 @@ export default function SendEmailDialog() {
                 </Label>
                 <Input
                   id="to"
-                  value={to}
+                  value={engineerEmail}
                   onChange={(e) => setTo(e.target.value)}
+                  disabled
                   className="col-span-3"
                   placeholder="recipient@example.com"
                 />

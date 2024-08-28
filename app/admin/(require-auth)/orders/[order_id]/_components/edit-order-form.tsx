@@ -63,7 +63,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { updateOrder, updateOrderStatus } from "../actions";
 import PackageTableRow from "./service-table-row";
 import generateInvoice from "../../actions";
@@ -81,6 +81,16 @@ export default function EditOrderForm({
   const [selectedEngineer, setSelectedEngineer] = useState(
     orderDetails?.assignedEngineerId ?? ""
   );
+  const [selectedEngineerEmail, setSelectedEngineerEmail] = useState("");
+  useEffect(() => {
+    if (orderDetails?.assignedEngineerId) {
+      engineers?.find(
+        (engineer) =>
+          engineer.id === selectedEngineer &&
+          setSelectedEngineerEmail(engineer.email)
+      );
+    }
+  }, [orderDetails?.assignedEngineerId, engineers, selectedEngineer]);
   const [status, setStatus] = useState(orderDetails?.status ?? "");
   const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -156,7 +166,10 @@ export default function EditOrderForm({
       }
     });
   };
-
+  const handleSelectEngineerEmail = (engineerEmail: string) => {
+    setSelectedEngineerEmail(engineerEmail);
+  };
+  console.log(`selectedEngineer`, selectedEngineerEmail);
   return (
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
@@ -231,6 +244,9 @@ export default function EditOrderForm({
                               value={engineer.id}
                               key={engineer.id}
                               onSelect={() => handleSelectEngineer(engineer.id)}
+                              onChange={() =>
+                                handleSelectEngineerEmail(engineer.email)
+                              }
                             >
                               <Check
                                 className={cn(
@@ -248,8 +264,8 @@ export default function EditOrderForm({
                     </Command>
                   </PopoverContent>
                 </Popover>
-
-                <SendEmailDialog />
+                {/*  */}
+                <SendEmailDialog engineerEmail={selectedEngineerEmail} orderDetails={orderDetails}  />
               </div>
             </CardContent>
           </Card>
