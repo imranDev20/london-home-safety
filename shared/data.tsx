@@ -10,6 +10,7 @@ import LowerPriceIcon from "@/components/icons/lower-price-icon";
 import PatIcon from "@/components/icons/pat";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { NavItem, NavLeafItem } from "@/types/misc";
+import { Clock4, Mail, MapPin } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 
 export const NAV_ITEMS: NavItem[] = [
@@ -1202,5 +1203,26 @@ export const ADVANTAGES = [
     advantageName: "Flexible Scheduling",
     advantageDetail: "Book appointments at your convenience.",
     Icon: BookingIcon,
+  },
+];
+
+export const CONTACT = [
+  {
+    id: 1,
+    title: "Address:",
+    info: <>43 Felton Road, Barking, London IG11 7YA</>,
+    Icon: <MapPin />
+  },
+  {
+    id: 2,
+    title: "Work Hours:",
+    info: <>Mon-Fri 08:00 AM - 05:00 PM Sat-Sun: Emergency only</>,
+    Icon: <Clock4 />
+  },
+  {
+    id: 3,
+    title: "Contact Info:",
+    info: <>020 8146 6698 info@londonhomesafety.co.uk</>,
+    Icon: <Mail />
   },
 ];
