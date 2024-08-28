@@ -47,7 +47,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { CustomerWithRelation } from "@/types/customer";
 import { StaffWithRelations } from "@/types/engineers";
-import { ServiceWithRelation } from "@/types/services";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
@@ -66,6 +65,7 @@ import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { createOrder } from "../../actions";
 import { CreateOrderFormInput, createOrderSchema } from "../schema";
 import CreateUser from "./create-user";
+import { Package } from "@prisma/client";
 
 export default function CreateOrderForm({
   customers,
@@ -75,7 +75,7 @@ export default function CreateOrderForm({
 }: {
   customers: CustomerWithRelation[];
   engineers: StaffWithRelations[];
-  services: ServiceWithRelation[];
+  services: Package[];
   invoiceId: string;
 }) {
   const { toast } = useToast();

@@ -32,7 +32,11 @@ import { CalendarIcon, Clock, Plus } from "lucide-react";
 
 export type SettingsWithRelation = Prisma.SiteSettingsGetPayload<{
   include: {
-    address: true;
+    user: {
+      include: {
+        address: true;
+      };
+    };
     openingDateTime: true;
   };
 }>;
@@ -70,8 +74,6 @@ export default function SettingsForm({
     name: "openingDateTime",
   });
 
-  console.log(form.formState.errors);
-
   useEffect(() => {
     if (settings) {
       form.reset({
@@ -84,9 +86,9 @@ export default function SettingsForm({
         twitterUrl: settings.twitterUrl || "",
         instagramUrl: settings.instagramUrl || "",
         address: {
-          street: settings.address?.street || "",
-          city: settings.address?.city || "",
-          postcode: settings.address?.postcode || "",
+          street: settings.user?.address?.street || "",
+          city: settings.user?.address?.city || "",
+          postcode: settings.user?.address?.postcode || "",
         },
         openingDateTime: settings.openingDateTime || [],
       });

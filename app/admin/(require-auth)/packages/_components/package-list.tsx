@@ -10,12 +10,12 @@ import ServiceTableRow from "./package-table-row";
 import TableEmpty from "@/components/table-empty";
 import { Pagination } from "@/types/order";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ServiceWithRelation } from "@/types/services";
+import { Package } from "@prisma/client";
 
 export default async function ServiceList({
   services: services,
 }: {
-  services: ServiceWithRelation[];
+  services: Package[];
   pagination: Pagination;
 }) {
   return (
@@ -46,7 +46,7 @@ export default async function ServiceList({
             {services.length > 0 ? (
               <TableBody>
                 {services.map((service) => (
-                  <ServiceTableRow key={service.id} service={service} />
+                  <ServiceTableRow key={service.id} pack={service} />
                 ))}
               </TableBody>
             ) : (

@@ -65,7 +65,7 @@ import {
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { updateOrder, updateOrderStatus } from "../actions";
-import ServiceTableRow from "./service-table-row";
+import PackageTableRow from "./service-table-row";
 import generateInvoice from "../../actions";
 import SendEmailDialog from "./send-email-dialog";
 
@@ -89,8 +89,8 @@ export default function EditOrderForm({
     { label: "Dashboard", href: "/admin" },
     { label: "Orders", href: "/admin/orders" },
     {
-      label: `Edit ${orderDetails?.invoiceId}`,
-      href: `/admin/orders/${orderDetails?.invoiceId}`,
+      label: `Edit ${orderDetails?.invoice}`,
+      href: `/admin/orders/${orderDetails?.invoice}`,
       isCurrentPage: true,
     },
   ];
@@ -105,7 +105,7 @@ export default function EditOrderForm({
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `invoice_${orderDetails.invoiceId}.pdf`;
+          a.download = `invoice_${orderDetails.invoice}.pdf`;
           a.click();
           window.URL.revokeObjectURL(url);
         } else {
@@ -170,7 +170,7 @@ export default function EditOrderForm({
             </Button>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">
-            {`Edit ${orderDetails?.invoiceId}`}
+            {`Edit ${orderDetails?.invoice}`}
           </h1>
           <Badge variant="outline">{orderDetails?.status || status}</Badge>
         </div>
@@ -257,7 +257,7 @@ export default function EditOrderForm({
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Items</h2>
-              {orderDetails?.services && orderDetails.services.length > 0 ? (
+              {orderDetails?.packages && orderDetails.packages.length > 0 ? (
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -268,8 +268,8 @@ export default function EditOrderForm({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {orderDetails.services.map((service) => (
-                      <ServiceTableRow service={service} key={service?.id} />
+                    {orderDetails.packages.map((pack) => (
+                      <PackageTableRow pack={pack} key={pack?.id} />
                     ))}
                   </TableBody>
                 </Table>

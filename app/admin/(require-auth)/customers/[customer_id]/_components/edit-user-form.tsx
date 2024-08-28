@@ -130,7 +130,7 @@ export default function EditCustomerForm({
                 <TableBody>
                   {orders.map((order) => (
                     <TableRow key={order.id}>
-                      <TableCell>{order.invoiceId}</TableCell>
+                      <TableCell>{order.invoice}</TableCell>
                       <TableCell>
                         {format(new Date(order.date), "dd/MM/yyyy")}
                       </TableCell>

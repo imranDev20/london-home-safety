@@ -176,7 +176,7 @@ export const getOrdersByUsers = async (userId: string) => {
         userId: userId,
       },
       include: {
-        services: true,
+        packages: true,
       },
     });
     return orders;
