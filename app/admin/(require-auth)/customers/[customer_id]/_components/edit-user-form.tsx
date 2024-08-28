@@ -13,9 +13,15 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { Order, Prisma } from "@prisma/client";
-import { AlertCircle, Calendar, Mail, MapPin, Phone } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Prisma } from "@prisma/client";
+import {
+  AlertCircle,
+  Calendar,
+  Mail,
+  MapPin,
+  Phone,
+  Wrench,
+} from "lucide-react";
 
 export type CustomerWithOrders = Prisma.UserGetPayload<{
   include: {
@@ -83,6 +89,15 @@ export default function EditCustomerForm({
     },
   ];
 
+  // Add Expertise for Engineers
+  if (user.role === "STAFF") {
+    infoItems.push({
+      icon: Wrench,
+      label: "Expertise",
+      value: (user as EngineerWithAssignedOrders).expertise || "N/A",
+    });
+  }
+
   return (
     <ContentLayout
       title={`${user.role === "STAFF" ? "Engineer" : "Customer"}: ${user.name}`}
@@ -102,30 +117,34 @@ export default function EditCustomerForm({
             <CardTitle>Order History</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell>{order.invoiceId}</TableCell>
-                    <TableCell>
-                      {format(new Date(order.date), "dd/MM/yyyy")}
-                    </TableCell>
-                    <TableCell>
-                      <OrderStatusBadge status={order.status} />
-                    </TableCell>
-                    <TableCell>£{order.totalPrice.toFixed(2)}</TableCell>
+            {orders.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Total</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {orders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell>{order.invoiceId}</TableCell>
+                      <TableCell>
+                        {format(new Date(order.date), "dd/MM/yyyy")}
+                      </TableCell>
+                      <TableCell>
+                        <OrderStatusBadge status={order.status} />
+                      </TableCell>
+                      <TableCell>£{order.totalPrice.toFixed(2)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <EmptyStateUI />
+            )}
           </CardContent>
         </Card>
 
@@ -156,82 +175,7 @@ export default function EditCustomerForm({
   );
 }
 
-function LoadingState({ breadcrumbItems }: any) {
-  return (
-    <ContentLayout title="Loading Customer Details...">
-      <DynamicBreadcrumb items={breadcrumbItems} />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        {[...Array(4)].map((_, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <Skeleton className="h-4 w-[100px]" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-8 w-[60px]" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <Skeleton className="h-6 w-[150px]" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-[300px] w-full" />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-[180px]" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[...Array(5)].map((_, index) => (
-                <div key={index}>
-                  <Skeleton className="h-4 w-[100px] mb-1" />
-                  <Skeleton className="h-4 w-full" />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </ContentLayout>
-  );
-}
-
-function ErrorState({ breadcrumbItems, error }: any) {
-  return (
-    <ContentLayout title="Error Loading Customer Details">
-      <DynamicBreadcrumb items={breadcrumbItems} />
-
-      <Card className="mt-6">
-        <CardContent className="flex flex-col items-center justify-center p-6">
-          <AlertCircle className="h-16 w-16 text-red-500 mb-4" />
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-            Oops! Something went wrong
-          </h2>
-          <p className="text-gray-600 text-center mb-4">
-            {error ||
-              "We couldn't load the customer details. Please try again later."}
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Retry
-          </button>
-        </CardContent>
-      </Card>
-    </ContentLayout>
-  );
-}
-
-function StatCard({ title, value }: any) {
+function StatCard({ title, value }: { title: string; value: string | number }) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -244,18 +188,34 @@ function StatCard({ title, value }: any) {
   );
 }
 
-function OrderStatusBadge({ status }: any) {
+function OrderStatusBadge({ status }: { status: string }) {
   const statusColors = {
     PENDING: "bg-yellow-100 text-yellow-800",
     CONFIRMED: "bg-blue-100 text-blue-800",
     IN_PROGRESS: "bg-purple-100 text-purple-800",
     COMPLETED: "bg-green-100 text-green-800",
     CANCELLED: "bg-red-100 text-red-800",
-  } as any;
+  } as const;
 
   return (
-    <Badge className={`${statusColors[status]} px-2 py-1 text-xs font-medium`}>
+    <Badge
+      className={`${
+        statusColors[status as keyof typeof statusColors]
+      } px-2 py-1 text-xs font-medium`}
+    >
       {status.replace("_", " ")}
     </Badge>
+  );
+}
+
+function EmptyStateUI() {
+  return (
+    <div className="text-center py-12">
+      <AlertCircle className="mx-auto h-12 w-12 text-gray-400" />
+      <h3 className="mt-2 text-sm font-semibold text-gray-900">No orders</h3>
+      <p className="mt-1 text-sm text-gray-500">
+        This user hasn&apos;t placed any orders yet.
+      </p>
+    </div>
   );
 }

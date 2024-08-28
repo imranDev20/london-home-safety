@@ -8,31 +8,30 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  email          String   @unique
+  id             String        @id @default(cuid())
+  email          String        @unique
   password       String
   name           String?
   phone          String?
-  role           Role     @default(CUSTOMER)
+  role           Role          @default(CUSTOMER)
   expertise      String?
   address        Address?
-  assignedOrders Order[]  @relation("AssignedOrders")
-  orders         Order[]  @relation("UserOrders")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  assignedOrders Order[]       @relation("AssignedOrders")
+  orders         Order[]       @relation("UserOrders")
+  siteSettings   SiteSettings?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model Address {
-  id             String        @id @default(cuid())
-  street         String
-  city           String
-  postcode       String
-  userId         String?       @unique
-  user           User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  siteSettingsId String?       @unique
-  siteSettings   SiteSettings? @relation(fields: [siteSettingsId], references: [id])
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id        String   @id @default(cuid())
+  street    String
+  city      String
+  postcode  String
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Order {
@@ -50,11 +49,11 @@ model Order {
   date               DateTime
   orderNotes         String?
   totalPrice         Float
-  invoiceId          String           @unique
+  invoice            String           @unique
   propertyType       PropertyType
   residentialType    ResidentialType?
   commercialType     CommercialType?
-  services           Service[]
+  packages           Package[]
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 }
@@ -69,35 +68,21 @@ model Review {
   updatedAt DateTime @updatedAt
 }
 
-model Service {
+model Package {
   id              String           @id @default(cuid())
-  name            String           @unique
-  type            ServiceType
-  category        ServiceCategory
-  description     String?
+  name            String
+  category        PackageCategory //ELECTRICAL, GAS
+  serviceName     String
+  type            PackageType? //CERTIFICATE,INSPECTION
   propertyType    PropertyType
   residentialType ResidentialType?
   commercialType  CommercialType?
   unitType        String?
-  issuedDate      DateTime?
-  expiryDate      DateTime?
+  price           Float
   orderId         String?
   order           Order?           @relation(fields: [orderId], references: [id])
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  packages        Package[]        @relation("ServicePackages")
-}
-
-model Package {
-  id          String   @id @default(cuid())
-  serviceId   String
-  service     Service  @relation("ServicePackages", fields: [serviceId], references: [id], onDelete: Cascade)
-  name        String
-  description String?
-  unitCount   Int
-  price       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model SiteSettings {
@@ -110,7 +95,8 @@ model SiteSettings {
   facebookUrl     String?
   twitterUrl      String?
   instagramUrl    String?
-  address         Address?
+  userId          String?           @unique
+  user            User?             @relation(fields: [userId], references: [id])
   openingDateTime OpeningDateTime[]
   updatedAt       DateTime          @updatedAt
 }
@@ -132,14 +118,6 @@ enum DayOfWeek {
   FRIDAY
   SATURDAY
   SUNDAY
-}
-
-enum ServiceType {
-  CERTIFICATE
-  REPAIR
-  INSTALLATION
-  INSPECTION
-  OTHER
 }
 
 enum Role {
@@ -205,9 +183,17 @@ enum InspectionTime {
   EVENING
 }
 
-enum ServiceCategory {
+enum PackageCategory {
   ELECTRICAL
   FIRE
   GAS
   HEALTH_SAFETY
+}
+
+enum PackageType {
+  CERTIFICATE
+  REPAIR
+  INSTALLATION
+  INSPECTION
+  OTHER
 }

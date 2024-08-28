@@ -1177,7 +1177,6 @@ export const FAQ_HOME = [
   },
 ];
 
-
 export const ADVANTAGES = [
   {
     id: 1,

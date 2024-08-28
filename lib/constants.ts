@@ -1,4 +1,11 @@
-import { CommercialType, OrderStatus, PropertyType, ResidentialType, ServiceCategory, ServiceType } from "@prisma/client";
+import {
+  CommercialType,
+  OrderStatus,
+  PackageCategory,
+  PackageType,
+  PropertyType,
+  ResidentialType,
+} from "@prisma/client";
 
 export const ORDER_STATUS_OPTIONS: OrderStatus[] = [
   "CANCELLED",
@@ -8,7 +15,7 @@ export const ORDER_STATUS_OPTIONS: OrderStatus[] = [
   "CONFIRMED",
 ];
 
-export const SERVICE_TYPE_OPTIONS: ServiceType[] = [
+export const SERVICE_TYPE_OPTIONS: PackageType[] = [
   "CERTIFICATE",
   "REPAIR",
   "INSTALLATION",
@@ -16,16 +23,19 @@ export const SERVICE_TYPE_OPTIONS: ServiceType[] = [
   "OTHER",
 ];
 
-export const SERVICE_CATEGORY_OPTION: ServiceCategory[] = [
+export const SERVICE_CATEGORY_OPTION: PackageCategory[] = [
   "ELECTRICAL",
   "FIRE",
   "GAS",
   "HEALTH_SAFETY",
 ];
 
-export const PROPERTY_TYPE_OPTIONS:PropertyType[] = ["RESIDENTIAL", "COMMERCIAL"];
+export const PROPERTY_TYPE_OPTIONS: PropertyType[] = [
+  "RESIDENTIAL",
+  "COMMERCIAL",
+];
 
-export const RESIDENTIAL_TYPE_OPTIONS:ResidentialType[] = [
+export const RESIDENTIAL_TYPE_OPTIONS: ResidentialType[] = [
   "BUNGALOW",
   "MID_TERRACED_HOUSE",
   "DETACHED_HOUSE",
@@ -35,7 +45,7 @@ export const RESIDENTIAL_TYPE_OPTIONS:ResidentialType[] = [
   "OTHER",
 ];
 
-export const COMMERCIAL_TYPE_OPTIONS:CommercialType[] = [
+export const COMMERCIAL_TYPE_OPTIONS: CommercialType[] = [
   "PUB",
   "STORE",
   "OFFICE",

@@ -6,6 +6,11 @@ import { Button } from "./ui/button";
 const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
+const startsWithVowel = (str: string) => /^[aeiou]/i.test(str);
+
+const getIndefiniteArticle = (word: string) =>
+  startsWithVowel(word) ? "an" : "a";
+
 export default function SingleEntryNotFound({
   entryId,
   name,
@@ -18,6 +23,7 @@ export default function SingleEntryNotFound({
   const pluralName = lowercaseName.endsWith("s")
     ? lowercaseName
     : `${lowercaseName}s`;
+  const indefiniteArticle = getIndefiniteArticle(lowercaseName);
 
   return (
     <div className="flex flex-col items-center justify-center p-8 bg-gray-100 rounded-lg h-screen">
@@ -26,7 +32,7 @@ export default function SingleEntryNotFound({
         {capitalizedName} Not Found
       </h2>
       <p className="text-gray-600 text-center mb-4">
-        We couldn&apos;t find a {lowercaseName} with the ID:{" "}
+        We couldn&apos;t find {indefiniteArticle} {lowercaseName} with the ID:{" "}
         <span className="font-semibold">{entryId}</span>
       </p>
       <p className="text-gray-600 text-center">

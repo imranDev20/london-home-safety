@@ -16,11 +16,20 @@ import useQueryString from "@/hooks/use-query-string";
 import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
 import { kebabToNormal } from "@/lib/utils";
 import dayjs from "dayjs";
-import { ShoppingBag } from "lucide-react";
+import {
+  Download,
+  Filter,
+  Plus,
+  Search,
+  ShoppingBag,
+  SortAsc,
+  SortDesc,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { getExportOrders } from "../actions";
+import { FaCartShopping } from "react-icons/fa6";
 
 export default function OrderTableHeader() {
   const router = useRouter();
@@ -73,7 +82,7 @@ export default function OrderTableHeader() {
           title: "Orders  Downloaded",
           description: result.message,
           variant: "success",
-        });      
+        });
       } else {
         toast({
           title: "Orders download failed",
@@ -87,9 +96,9 @@ export default function OrderTableHeader() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-5 mt-7">
-        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 flex items-center">
-          <ShoppingBag className="mr-3 text-primary" />
+      <div className="flex items-center gap-4 mb-4 mt-7">
+        <h1 className="text-2xl font-bold mb-2 flex items-center">
+          <FaCartShopping className="mr-2 text-primary" />
           Order List
         </h1>
 
@@ -97,16 +106,21 @@ export default function OrderTableHeader() {
           <LoadingButton
             type="button"
             disabled={isPending}
-            size="sm"
             loading={isPending}
-            className="text-xs font-semibold h-8"
+            className="text-sm h-9 font-medium flex items-center"
             onClick={handleExportOrders}
             variant="outline"
           >
+            {!isPending && <Download className="mr-2 h-4 w-4" />}
             Download Excel
           </LoadingButton>
-          <Link href="orders/new">
-            <Button size="sm" className="whitespace-nowrap">
+
+          <Link href="/admin/orders/new">
+            <Button
+              size="sm"
+              className="h-9 w-full text-sm font-medium flex items-center"
+            >
+              <Plus className="mr-2 h-4 w-4" />
               Add New Order
             </Button>
           </Link>
@@ -114,13 +128,16 @@ export default function OrderTableHeader() {
       </div>
 
       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto mb-5">
-        <Input
-          type="search"
-          placeholder="Search orders..."
-          className="w-full sm:w-auto flex-1"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <div className="relative flex-1">
+          <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            type="search"
+            placeholder="Search orders..."
+            className="pl-10 w-full"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
         <Select
           value={sortBy}
           onValueChange={(value) => {
@@ -133,7 +150,8 @@ export default function OrderTableHeader() {
             }
           }}
         >
-          <SelectTrigger className="w-full sm:w-auto">
+          <SelectTrigger className="w-[160px]">
+            <SortAsc className="mr-2 h-4 w-4" />
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
 
@@ -157,7 +175,12 @@ export default function OrderTableHeader() {
             }
           }}
         >
-          <SelectTrigger className="w-full sm:w-auto">
+          <SelectTrigger className="w-[160px]">
+            {sortOrder === "asc" ? (
+              <SortAsc className="mr-2 h-4 w-4" />
+            ) : (
+              <SortDesc className="mr-2 h-4 w-4" />
+            )}
             <SelectValue placeholder="Sort Order" />
           </SelectTrigger>
           <SelectContent>
@@ -178,8 +201,9 @@ export default function OrderTableHeader() {
             }
           }}
         >
-          <SelectTrigger className="w-full sm:w-auto">
-            <SelectValue placeholder="Filter by status" />
+          <SelectTrigger className="w-[160px]">
+            <Filter className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Filter by Status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">ALL</SelectItem>

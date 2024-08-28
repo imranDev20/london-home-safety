@@ -32,7 +32,7 @@ export default async function OrderList({
   return (
     <Card className="flex flex-col justify-between">
       <CardContent className="p-0">
-        <div className="overflow-auto h-[calc(100vh-320px)]">
+        <div className="overflow-auto h-[calc(100vh-323px)]">
           <Table>
             <TableHeader>
               <TableRow>

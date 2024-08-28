@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import CreateUser from "../../orders/new/_components/create-user";
 import { LoadingButton } from "@/components/ui/loading-button";
+import { FaHelmetSafety } from "react-icons/fa6";
 
 export default function EngineersTableHeader() {
   const router = useRouter();
@@ -40,15 +41,12 @@ export default function EngineersTableHeader() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-5 mt-7">
-        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 flex items-center">
-          <Users className="mr-3 text-primary" />
+      <div className="flex items-center gap-4 mb-4 mt-7 justify-between">
+        <h1 className="text-2xl font-bold mb-2 flex items-center">
+          <FaHelmetSafety className="text-primary mr-2" />
           Engineer List
         </h1>
-
-        <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <CreateUser userType="STAFF" />
-        </div>
+        <CreateUser userType="STAFF" />
       </div>
 
       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto mb-5">

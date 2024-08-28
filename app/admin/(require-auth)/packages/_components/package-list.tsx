@@ -6,15 +6,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ServiceTableRow from "./service-table-row";
+import ServiceTableRow from "./package-table-row";
 import TableEmpty from "@/components/table-empty";
-import {Pagination } from "@/types/order";
+import { Pagination } from "@/types/order";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ServiceWithRelation } from "@/types/services";
 
 export default async function ServiceList({
   services: services,
-  pagination,
 }: {
   services: ServiceWithRelation[];
   pagination: Pagination;
@@ -22,7 +21,7 @@ export default async function ServiceList({
   return (
     <Card className="flex flex-col justify-between">
       <CardContent className="p-0">
-        <div className="overflow-auto h-[calc(100vh-320px)]">
+        <div className="overflow-auto h-[calc(100vh-325px)]">
           <Table>
             <TableHeader>
               <TableRow>
@@ -34,8 +33,10 @@ export default async function ServiceList({
                 <TableHead className="w-[25%]">Name</TableHead>
                 <TableHead className="hidden md:table-cell">Category</TableHead>
                 <TableHead>Type</TableHead>
-                <TableHead className="hidden md:table-cell">Unit</TableHead>                             
-                <TableHead className="hidden md:table-cell">Property Type</TableHead>                             
+                <TableHead className="hidden md:table-cell">Unit</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Property Type
+                </TableHead>
                 <TableHead className="w-10">
                   <span className="sr-only">Actions</span>
                 </TableHead>

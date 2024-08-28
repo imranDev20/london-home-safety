@@ -25,7 +25,7 @@ export const getOrders = async (
         search
           ? {
               OR: [
-                { invoiceId: { contains: search, mode: "insensitive" } },
+                { invoice: { contains: search, mode: "insensitive" } },
                 { user: { email: { contains: search, mode: "insensitive" } } },
                 { user: { name: { contains: search, mode: "insensitive" } } },
               ],
@@ -104,7 +104,7 @@ export const getOrderById = async (orderId: string) => {
             address: true,
           },
         },
-        services: true,
+        packages: true,
       },
     });
 
@@ -164,7 +164,7 @@ export const getExportOrders = async () => {
 
     orders.forEach((order) => {
       worksheet.addRow({
-        invoice_id: order.invoiceId,
+        invoice_id: order.invoice,
         name: order.user?.name,
         email: order.user?.email,
         // phone: order.user?.phone,
@@ -210,7 +210,7 @@ export default async function generateInvoice(orderId: string) {
             address: true,
           },
         },
-        services: true,
+        packages: true,
       },
     });
     const browser = await puppeteer.launch();
@@ -226,7 +226,7 @@ export default async function generateInvoice(orderId: string) {
         <p>Email: info@londonhomesafety.co.uk</p>
         <p>Phone: 020 8146 6698</p>
         <h2>INVOICE</h2>
-        <p>Invoice Number: ${orderDetails?.invoiceId}</p>
+        <p>Invoice Number: ${orderDetails?.invoice}</p>
         <p>Date: ${orderDetails?.date}</p>
         <h3>Billing Address:</h3>
         <p>${orderDetails?.user.name}</p>
@@ -236,13 +236,13 @@ export default async function generateInvoice(orderId: string) {
     }</p>
         <table>
           <tr><th>Service</th><th>Quantity</th><th>Total</th></tr>
-          ${orderDetails?.services
+          ${orderDetails?.packages
             .map(
-              (service) => `
+              (pack) => `
             <tr>
-              <td>${service?.name}</td>
-              <td>${service.category}</td>
-              <td>£${service.propertyType}</td>
+              <td>${pack?.name}</td>
+              <td>${pack.category}</td>
+              <td>£${pack.propertyType}</td>
             </tr>
           `
             )
@@ -281,15 +281,6 @@ export default async function generateInvoice(orderId: string) {
 
 export async function createOrder(data: CreateOrderFormInput) {
   try {
-    const services = await prisma.service.findMany({
-      where: {
-        id: {
-          in: data.services.map((service) => service.serviceId),
-        },
-      },
-    });
-
-    // Create the order with the associated services
     const createdOrder = await prisma.order.create({
       data: {
         userId: data.userId,
@@ -301,11 +292,11 @@ export async function createOrder(data: CreateOrderFormInput) {
         date: data.date,
         inspectionTime: data.inspectionTime,
         totalPrice: 500,
-        invoiceId: data.invoiceId,
+        invoice: data.invoiceId,
         status: "CONFIRMED",
         paymentStatus: "UNPAID",
         paymentMethod: data.PaymentMethod,
-        services: {
+        packages: {
           connect: data.services.map((service) => ({ id: service.serviceId })),
         },
       },

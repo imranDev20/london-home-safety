@@ -154,34 +154,37 @@ export default function CreateOrderForm({
           onSubmit={handleSubmit(onCreateOrderSubmit)}
           className="space-y-8 mt-7"
         >
-          <div className="mb-8 flex justify-between">
-            <div className="">
+          <div>
+            <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold mb-2">Create New Order</h1>
-              <p className="text-gray-600">
-                Please fill out the details below to create a new inspection
-                order.
-              </p>
-            </div>
 
-            <div className="flex justify-end gap-3">
-              <Link href="/admin/orders">
-                <Button type="button" variant="outline" size="sm">
-                  <X className="mr-2 h-4 w-4" />
-                  Cancel
-                </Button>
-              </Link>
+              <div className="flex justify-end gap-3">
+                <Link href="/admin/orders">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-9 w-full text-sm font-medium flex"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Cancel
+                  </Button>
+                </Link>
 
-              <LoadingButton
-                onClick={() => handleSubmit(onCreateOrderSubmit)()}
-                disabled={isPending}
-                loading={isPending}
-                className="py-2 text-xs h-8"
-                size="sm"
-              >
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Create Order
-              </LoadingButton>
+                <LoadingButton
+                  onClick={() => handleSubmit(onCreateOrderSubmit)()}
+                  disabled={isPending}
+                  loading={isPending}
+                  className="h-9 w-full text-sm font-medium flex"
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  Create Order
+                </LoadingButton>
+              </div>
             </div>
+            <p className="text-gray-600">
+              Please fill out the details below to create a new inspection
+              order.
+            </p>
           </div>
 
           <Card>

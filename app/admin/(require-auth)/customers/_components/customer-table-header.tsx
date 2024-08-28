@@ -20,6 +20,7 @@ import { getExportCustomers } from "../actions";
 import { toast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
 import CreateUser from "../../orders/new/_components/create-user";
+import { FaHelmetSafety, FaUser, FaUserGroup } from "react-icons/fa6";
 
 export default function CustomerTableHeader() {
   const router = useRouter();
@@ -85,9 +86,9 @@ export default function CustomerTableHeader() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-5 mt-7">
-        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 flex items-center">
-          <Users className="mr-3 text-primary" />
+      <div className="flex items-center gap-4 mb-4 mt-7">
+        <h1 className="text-2xl font-bold mb-2 flex items-center">
+          <FaUserGroup className="text-primary mr-2" />
           Customer List
         </h1>
 

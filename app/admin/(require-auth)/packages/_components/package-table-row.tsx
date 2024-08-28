@@ -57,7 +57,7 @@ export default function ServiceTableRow({
 
   return (
     <TableRow
-      onClick={() => router.push(`/admin/services/${service.id}`)}
+      onClick={() => router.push(`/admin/packages/${service.id}`)}
       className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
       <TableCell>
@@ -76,7 +76,7 @@ export default function ServiceTableRow({
       </TableCell>
       <TableCell className="hidden md:table-cell">
         {service.propertyType || "N/A"}
-      </TableCell>     
+      </TableCell>
       <TableCell className="w-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
