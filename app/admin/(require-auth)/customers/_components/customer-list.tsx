@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 
 import TableEmpty from "@/components/table-empty";
-import {  Pagination } from "@/types/order";
+import { Pagination } from "@/types/order";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CustomerWithRelation } from "@/types/customer";
 import CustomerTableRow from "./customer-table-row";
@@ -23,7 +23,7 @@ export default async function CustomerList({
   return (
     <Card className="flex flex-col justify-between">
       <CardContent className="p-0">
-        <div className="overflow-auto h-[calc(100vh-320px)]">
+        <div className="overflow-auto h-[calc(100vh-325px)]">
           <Table>
             <TableHeader>
               <TableRow>
@@ -32,7 +32,7 @@ export default async function CustomerList({
                     <Checkbox />
                   </div>
                 </TableHead>
-                <TableHead className="w-[25%]">User</TableHead>                               
+                <TableHead className="w-[25%]">User</TableHead>
                 <TableHead className="hidden md:table-cell ">Phone</TableHead>
                 <TableHead className="hidden md:table-cell ">Address</TableHead>
                 <TableHead className="hidden md:table-cell w-[17%]">

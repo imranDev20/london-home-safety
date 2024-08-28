@@ -47,15 +47,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { CustomerWithRelation } from "@/types/customer";
 import { StaffWithRelations } from "@/types/engineers";
-import { ServiceWithRelation } from "@/types/services";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
   CalendarIcon,
   Check,
-  ChevronLeft,
   ChevronsUpDown,
+  Plus,
+  PlusCircle,
   Trash,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -63,19 +64,23 @@ import { useState, useTransition } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { createOrder } from "../../actions";
 import { CreateOrderFormInput, createOrderSchema } from "../schema";
-import CreateUserForOrder from "./create-user";
+import CreateUser from "./create-user";
+import { Package } from "@prisma/client";
 
 export default function CreateOrderForm({
-  users,
+  customers,
   engineers,
   services,
   invoiceId,
 }: {
-  users: CustomerWithRelation[];
+  customers: CustomerWithRelation[];
   engineers: StaffWithRelations[];
-  services: ServiceWithRelation[];
+  services: Package[];
   invoiceId: string;
 }) {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
     { label: "Orders", href: "/admin/orders" },
@@ -85,6 +90,7 @@ export default function CreateOrderForm({
   const form = useForm<CreateOrderFormInput>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
+      propertyType: "RESIDENTIAL",
       services: [
         {
           serviceId: "",
@@ -109,29 +115,37 @@ export default function CreateOrderForm({
     name: "services",
   });
 
-  const { toast } = useToast();
-  const router = useRouter();
   const onCreateOrderSubmit: SubmitHandler<CreateOrderFormInput> = async (
     data
   ) => {
     startTransition(async () => {
-      const result = await createOrder(data);
-      if (result.success) {
-        toast({
-          title: "Success",
-          description: result.message,
-          variant: "success",
-        });
-        router.push("/admin/orders");
-      } else {
+      try {
+        const result = await createOrder(data);
+
+        if (result.success) {
+          toast({
+            title: "Success",
+            description: result.message,
+            variant: "success",
+          });
+          router.push("/admin/orders");
+        } else {
+          toast({
+            title: "Error",
+            description: result.message,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
         toast({
           title: "Error",
-          description: result.message,
+          description: "An unknown error occurred",
           variant: "destructive",
         });
       }
     });
   };
+
   return (
     <ContentLayout title="Create Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
@@ -140,34 +154,37 @@ export default function CreateOrderForm({
           onSubmit={handleSubmit(onCreateOrderSubmit)}
           className="space-y-8 mt-7"
         >
-          <div className="mb-8 flex justify-between">
-            <div className="">
-              <h1 className="text-2xl font-bold mb-2">
-                Create New Inspection Order
-              </h1>
-              <p className="text-gray-600">
-                Please fill out the details below to create a new inspection
-                order.
-              </p>
-            </div>
+          <div>
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold mb-2">Create New Order</h1>
 
-            <div className="flex justify-end gap-3">
-              <Link href="/admin/orders">
-                <Button type="button" variant="outline" size="sm">
-                  Cancel
-                </Button>
-              </Link>
+              <div className="flex justify-end gap-3">
+                <Link href="/admin/orders">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-9 w-full text-sm font-medium flex"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Cancel
+                  </Button>
+                </Link>
 
-              <LoadingButton
-                onClick={() => handleSubmit(onCreateOrderSubmit)()}
-                disabled={isPending}
-                loading={isPending}
-                className="py-2 text-xs h-8"
-                size="sm"
-              >
-                Create Order
-              </LoadingButton>
+                <LoadingButton
+                  onClick={() => handleSubmit(onCreateOrderSubmit)()}
+                  disabled={isPending}
+                  loading={isPending}
+                  className="h-9 w-full text-sm font-medium flex"
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  Create Order
+                </LoadingButton>
+              </div>
             </div>
+            <p className="text-gray-600">
+              Please fill out the details below to create a new inspection
+              order.
+            </p>
           </div>
 
           <Card>
@@ -200,8 +217,9 @@ export default function CreateOrderForm({
                                 className="w-full justify-between"
                               >
                                 {field.value ? (
-                                  users?.find((user) => user.id === field.value)
-                                    ?.email
+                                  customers?.find(
+                                    (customer) => customer.id === field.value
+                                  )?.email
                                 ) : (
                                   <span className="text-muted-foreground">
                                     Select a customer
@@ -218,24 +236,24 @@ export default function CreateOrderForm({
                                     No customers found.
                                   </CommandEmpty>
                                   <CommandGroup>
-                                    {users?.map((user) => (
+                                    {customers?.map((customer) => (
                                       <CommandItem
-                                        key={user.id}
-                                        value={user.email}
+                                        key={customer.id}
+                                        value={customer.email}
                                         onSelect={() => {
-                                          field.onChange(user.id);
+                                          field.onChange(customer.id);
                                           setOpenUserComboBox(false);
                                         }}
                                       >
                                         <Check
                                           className={cn(
                                             "mr-2 h-4 w-4",
-                                            field.value === user.id
+                                            field.value === customer.id
                                               ? "opacity-100"
                                               : "opacity-0"
                                           )}
                                         />
-                                        {user.email}
+                                        {customer.email}
                                       </CommandItem>
                                     ))}
                                   </CommandGroup>
@@ -251,7 +269,7 @@ export default function CreateOrderForm({
                 </div>
 
                 <div className="col-span-2 mt-8">
-                  <CreateUserForOrder />
+                  <CreateUser userType="CUSTOMER" />
                 </div>
               </div>
             </CardContent>
@@ -299,8 +317,7 @@ export default function CreateOrderForm({
                               selected={field.value}
                               onSelect={field.onChange}
                               disabled={(date) =>
-                                date > new Date() ||
-                                date < new Date("1900-01-01")
+                                date < new Date(new Date().setHours(0, 0, 0, 0))
                               }
                               initialFocus
                             />
@@ -346,7 +363,7 @@ export default function CreateOrderForm({
                   />
                 </div>
 
-                <div className="col-span-6"></div>
+                <div className="col-span-6 sm:block hidden"></div>
 
                 <div className="col-span-3">
                   <FormField
@@ -431,7 +448,44 @@ export default function CreateOrderForm({
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 sm:grid-cols-12">
-                <div className="col-span-3">
+                <div className="col-span-4">
+                  <FormField
+                    control={form.control}
+                    name="propertyType"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <FormLabel>Property Type</FormLabel>
+                        <FormControl>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            className="flex flex-col space-y-1"
+                          >
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="RESIDENTIAL" />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                Residential
+                              </FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem value="COMMERCIAL" />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                Commercial
+                              </FormLabel>
+                            </FormItem>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="col-span-4">
                   <FormField
                     control={form.control}
                     name="parkingOptions"
@@ -440,13 +494,13 @@ export default function CreateOrderForm({
                         <FormLabel>Is Parking Available?</FormLabel>
                         <FormControl>
                           <RadioGroup
-                            onValueChange={(value) => field.onChange(value)}
+                            onValueChange={field.onChange}
                             value={field.value}
                             className="flex flex-col space-y-1"
                           >
                             <FormItem className="flex items-center space-x-3 space-y-0">
                               <FormControl>
-                                <RadioGroupItem value="YES" />
+                                <RadioGroupItem value="FREE" />
                               </FormControl>
                               <FormLabel className="font-normal">Yes</FormLabel>
                             </FormItem>
@@ -456,7 +510,6 @@ export default function CreateOrderForm({
                               </FormControl>
                               <FormLabel className="font-normal">No</FormLabel>
                             </FormItem>
-
                             <FormItem className="flex items-center space-x-3 space-y-0">
                               <FormControl>
                                 <RadioGroupItem value="PAID" />
@@ -473,9 +526,9 @@ export default function CreateOrderForm({
                   />
                 </div>
 
-                <div className="col-span-3">
+                <div className="col-span-4">
                   <FormField
-                    control={control}
+                    control={form.control}
                     name="isCongestionZone"
                     render={({ field }) => (
                       <FormItem className="space-y-3">
@@ -507,6 +560,85 @@ export default function CreateOrderForm({
                     )}
                   />
                 </div>
+
+                {form.watch("propertyType") === "RESIDENTIAL" && (
+                  <div className="col-span-4">
+                    <FormField
+                      control={form.control}
+                      name="residentialType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Residential Type (Optional)</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select residential type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="BUNGALOW">Bungalow</SelectItem>
+                              <SelectItem value="MID_TERRACED_HOUSE">
+                                Mid Terraced House
+                              </SelectItem>
+                              <SelectItem value="DETACHED_HOUSE">
+                                Detached House
+                              </SelectItem>
+                              <SelectItem value="SEMI_DETACHED_HOUSE">
+                                Semi-detached House
+                              </SelectItem>
+                              <SelectItem value="FLAT">Flat</SelectItem>
+                              <SelectItem value="APARTMENT">
+                                Apartment
+                              </SelectItem>
+                              <SelectItem value="OTHER">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+
+                {form.watch("propertyType") === "COMMERCIAL" && (
+                  <div className="col-span-4">
+                    <FormField
+                      control={form.control}
+                      name="commercialType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Commercial Type (Optional)</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select commercial type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="PUB">Pub</SelectItem>
+                              <SelectItem value="STORE">Store</SelectItem>
+                              <SelectItem value="OFFICE">Office</SelectItem>
+                              <SelectItem value="RESTAURANT">
+                                Restaurant
+                              </SelectItem>
+                              <SelectItem value="WAREHOUSE">
+                                Warehouse
+                              </SelectItem>
+                              <SelectItem value="OTHER">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -554,24 +686,25 @@ export default function CreateOrderForm({
                   <div className="col-span-1">
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="destructive"
                       size="icon"
                       onClick={() => removeService(index)}
                       disabled={serviceFields.length === 1}
                       className="mt-8"
                     >
-                      <Trash className="h-4 w-4 " />
+                      <Trash className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
               ))}
               <Button
                 type="button"
-                variant="outline"
+                variant="default"
                 size="sm"
                 className="mt-2"
                 onClick={() => appendService({ serviceId: "" })}
               >
+                <Plus className="mr-2 h-4 w-4" />
                 Add Service
               </Button>
             </CardContent>
@@ -585,7 +718,7 @@ export default function CreateOrderForm({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-12">
+              <div className="sm:grid grid-cols-12">
                 <div className="col-span-3">
                   <FormField
                     control={control}

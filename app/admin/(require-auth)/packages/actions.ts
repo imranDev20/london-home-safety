@@ -1,21 +1,21 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ServiceType, Prisma } from "@prisma/client";
+import { PackageType, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { ServiceFormInputType } from "./schema";
+import { PackageFormInputType } from "./schema";
 
 export const getServices = async (
   page: number = 1,
   pageSize: number = 10,
   search: string = "",
-  filterType: ServiceType | "" = ""
+  filterType: PackageType | "" = ""
 ) => {
   try {
     const skip = (page - 1) * pageSize;
 
     // Build the where clause for filtering by type and search
-    const whereClause: Prisma.ServiceWhereInput = {
+    const whereClause: Prisma.PackageWhereInput = {
       AND: [
         search
           ? {
@@ -31,7 +31,7 @@ export const getServices = async (
 
     // Fetch the services and the total count
     const [services, totalCount] = await Promise.all([
-      prisma.service.findMany({
+      prisma.package.findMany({
         where: whereClause,
         skip,
         take: pageSize,
@@ -39,7 +39,7 @@ export const getServices = async (
           order: true,
         },
       }),
-      prisma.service.count({ where: whereClause }),
+      prisma.package.count({ where: whereClause }),
     ]);
 
     return {
@@ -59,13 +59,13 @@ export const getServices = async (
 
 export async function deleteService(serviceId: string) {
   try {
-    const deletedService = await prisma.service.delete({
+    const deletedService = await prisma.package.delete({
       where: {
         id: serviceId,
       },
     });
 
-    revalidatePath("/services");
+    revalidatePath("/packages");
 
     return {
       message: "Service deleted successfully!",
@@ -81,45 +81,34 @@ export async function deleteService(serviceId: string) {
   }
 }
 
-export async function createService(data: ServiceFormInputType) {
+export async function createPackage(data: PackageFormInputType) {
   try {
     // Create the service with the associated packages
-    const createdService = await prisma.service.create({
+    const createdPackage = await prisma.package.create({
       data: {
         name: data.name,
         type: data.type,
+        price:
+          typeof data.price === "number" ? data.price : parseFloat(data.price),
+
+        serviceName: data.serviceName,
         category: data.category,
-        description: data.description,
         propertyType: data.propertyType,
         residentialType:
-          data.propertyType === "RESIDENTIAL"
-            ? data.residentialType
-            : null,
+          data.propertyType === "RESIDENTIAL" ? data.residentialType : null,
         commercialType:
-          data.propertyType === "COMMERCIAL"
-            ? data.commercialType
-            : null,
+          data.propertyType === "COMMERCIAL" ? data.commercialType : null,
         unitType: data.unitType,
-        issuedDate: data.issuedDate,
-        expiryDate: data.expiryDate,
-        packages: {
-          create: data.packages.map((pkg) => ({
-            name: pkg.name,
-            description: pkg.description,
-            unitCount: pkg.unitCount,
-            price: pkg.price,
-          })),
-        },
       },
     });
 
     // Revalidate paths if needed
-    revalidatePath("/admin/services");
-    revalidatePath("/admin/services/new");
+    revalidatePath("/admin/packages");
+    revalidatePath("/admin/packages/new");
 
     return {
-      message: "Service created successfully!",
-      data: createdService,
+      message: "Package created successfully!",
+      data: createdPackage,
       success: true,
     };
   } catch (error) {

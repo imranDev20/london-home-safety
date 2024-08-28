@@ -1,11 +1,13 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus, Prisma } from "@prisma/client";
+import { OrderStatus, Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
+import { CreateOrderFormInput } from "./new/schema";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const getOrders = async (
   page: number = 1,
@@ -23,7 +25,7 @@ export const getOrders = async (
         search
           ? {
               OR: [
-                { invoiceId: { contains: search, mode: "insensitive" } },
+                { invoice: { contains: search, mode: "insensitive" } },
                 { user: { email: { contains: search, mode: "insensitive" } } },
                 { user: { name: { contains: search, mode: "insensitive" } } },
               ],
@@ -85,7 +87,7 @@ export const getOrders = async (
   }
 };
 
-export const getOrdersById = async (orderId: string) => {
+export const getOrderById = async (orderId: string) => {
   try {
     if (!orderId) {
       console.error("No product ID available");
@@ -102,20 +104,14 @@ export const getOrdersById = async (orderId: string) => {
             address: true,
           },
         },
-        services: true,
-      },
-    });
-
-    const engineer = await prisma.user.findMany({
-      where: {
-        role: "STAFF",
+        packages: true,
       },
     });
 
     return order;
   } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw new Error("Failed to fetch orders");
+    console.error("Error fetching order:", error);
+    throw new Error("Failed to fetch order");
   }
 };
 
@@ -168,7 +164,7 @@ export const getExportOrders = async () => {
 
     orders.forEach((order) => {
       worksheet.addRow({
-        invoice_id: order.invoiceId,
+        invoice_id: order.invoice,
         name: order.user?.name,
         email: order.user?.email,
         // phone: order.user?.phone,
@@ -197,8 +193,6 @@ export const getExportOrders = async () => {
   }
 };
 
-import { CreateOrderFormInput } from "./new/schema";
-
 export default async function generateInvoice(orderId: string) {
   try {
     if (!orderId) {
@@ -216,7 +210,7 @@ export default async function generateInvoice(orderId: string) {
             address: true,
           },
         },
-        services: true,
+        packages: true,
       },
     });
     const browser = await puppeteer.launch();
@@ -232,7 +226,7 @@ export default async function generateInvoice(orderId: string) {
         <p>Email: info@londonhomesafety.co.uk</p>
         <p>Phone: 020 8146 6698</p>
         <h2>INVOICE</h2>
-        <p>Invoice Number: ${orderDetails?.invoiceId}</p>
+        <p>Invoice Number: ${orderDetails?.invoice}</p>
         <p>Date: ${orderDetails?.date}</p>
         <h3>Billing Address:</h3>
         <p>${orderDetails?.user.name}</p>
@@ -242,13 +236,13 @@ export default async function generateInvoice(orderId: string) {
     }</p>
         <table>
           <tr><th>Service</th><th>Quantity</th><th>Total</th></tr>
-          ${orderDetails?.services
+          ${orderDetails?.packages
             .map(
-              (service) => `
+              (pack) => `
             <tr>
-              <td>${service?.name}</td>
-              <td>${service.category}</td>
-              <td>£${service.propertyType}</td>
+              <td>${pack?.name}</td>
+              <td>${pack.category}</td>
+              <td>£${pack.propertyType}</td>
             </tr>
           `
             )
@@ -287,30 +281,22 @@ export default async function generateInvoice(orderId: string) {
 
 export async function createOrder(data: CreateOrderFormInput) {
   try {
-    // Calculate the total price based on the selected services
-    const services = await prisma.service.findMany({
-      where: {
-        id: {
-          in: data.services.map((service) => service.serviceId),
-        },
-      },
-    });
-
-    // Create the order with the associated services
     const createdOrder = await prisma.order.create({
       data: {
         userId: data.userId,
         assignedEngineerId: data.assignedEngineer,
+        propertyType: data.propertyType,
+        residentialType: data.residentialType,
         isCongestionZone: data.isCongestionZone,
         parkingOptions: data.parkingOptions,
         date: data.date,
         inspectionTime: data.inspectionTime,
         totalPrice: 500,
-        invoiceId: data.invoiceId,
-        status: "CONFIRMED", // Assuming default status is PENDING, adjust as needed
-        paymentStatus: "UNPAID", // Default as per the schema
-        paymentMethod: data.PaymentMethod, // Default as per the schema
-        services: {
+        invoice: data.invoiceId,
+        status: "CONFIRMED",
+        paymentStatus: "UNPAID",
+        paymentMethod: data.PaymentMethod,
+        packages: {
           connect: data.services.map((service) => ({ id: service.serviceId })),
         },
       },
@@ -343,14 +329,19 @@ interface CreateUserInput {
     street: string | "";
     postcode: string | "";
   };
+  expertise?: string;
 }
-export async function createUser(data: CreateUserInput) {
+
+export async function createUser(data: CreateUserInput, userType: Role) {
   try {
     const newUser = await prisma.user.create({
       data: {
         email: data.email,
-        name: data.name, // Set name to null if not provided
+        name: data.name,
         password: "123456",
+        role: userType,
+        phone: data.phone,
+        ...(userType === "STAFF" && { expertise: data.expertise }),
         address: data.address
           ? {
               create: {
@@ -362,22 +353,65 @@ export async function createUser(data: CreateUserInput) {
           : undefined,
       },
       include: {
-        address: true, // Include the address in the returned data
+        address: true,
       },
     });
 
     revalidatePath("/admin/orders");
     revalidatePath("/admin/orders/new");
+    revalidatePath("/admin/customers");
+    revalidatePath("/admin/engineers");
+
     return {
       message: "User created successfully!",
       data: newUser,
       success: true,
     };
   } catch (error) {
-    console.error("Error creating user:", error);
-    return {
-      message: "An error occurred while creating the user.",
-      success: false,
-    };
+    if (error instanceof PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case "P2002":
+          return {
+            message: `A user with this ${error.meta?.target} already exists.`,
+            success: false,
+          };
+        case "P2003":
+          return {
+            message: `Foreign key constraint failed on the field: ${error.meta?.field_name}`,
+            success: false,
+          };
+        case "P2005":
+          return {
+            message: `Invalid value provided for ${error.meta?.field_name}.`,
+            success: false,
+          };
+        case "P2006":
+          return {
+            message: `The value provided is too long for the field: ${error.meta?.field_name}.`,
+            success: false,
+          };
+        case "P2011":
+          return {
+            message: `Missing required field: ${error.meta?.field_name}.`,
+            success: false,
+          };
+        case "P2025":
+          return {
+            message: `Record does not exist.`,
+            success: false,
+          };
+        default:
+          return {
+            message: "An unknown error occurred.",
+            success: false,
+          };
+      }
+    } else {
+      console.error("Unhandled error:", error);
+      return {
+        message: "An unexpected error occurred.",
+        success: false,
+      };
+    }
   }
 }

@@ -65,9 +65,9 @@ export function getMenuList(pathname: string): Group[] {
           submenus: [],
         },
         {
-          href: "/services",
-          label: "Services",
-          active: pathname.includes("/services"),
+          href: "/packages",
+          label: "Packages",
+          active: pathname.includes("/packages"),
           icon: Plug,
           submenus: [],
         },
