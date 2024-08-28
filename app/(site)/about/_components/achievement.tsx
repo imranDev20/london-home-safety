@@ -1,85 +1,67 @@
 "use client";
+
 import achievementImage from "@/images/why-us.jpeg";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import Counter from "./counter";
 
 export default function Achievement() {
-  const [counter, setCounter] = useState(0);
-
-  useEffect(() => {
-    if (counter < 100) {
-      const intervalId = setInterval(() => {
-        setCounter((prevCounter) => {
-          const newCounter = prevCounter + 5;
-          if (newCounter >= 100) {
-            clearInterval(intervalId);
-          }
-          return newCounter;
-        });
-      }, 50);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [counter]);
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white py-20 my-20">
       <div className="max-w-6xl mx-auto px-4 lg:flex lg:items-center lg:justify-between">
-        <div className="lg:w-1/2">
-          <h3 className="text-lg text-primary font-bold">Why choose us</h3>
-          <h2 className="text-4xl font-bold   mb-4">
-            Reliable & Professional Maintenance Work
-          </h2>
-          <p className="text-body mb-8 w-4/5">
-            Mauris ac risus sed quam semper auctor. Nam tempus volutpat ipsum,
-            non viverra odio mollis mollis. Integer lacus ligula, imperdiet vel
-            massa in, maximus suscipit turpis. Mauris ac risus sed quam semper
-            auctor. Nam tempus volutpat ipsum, non viverra.
-          </p>
+        <div className="lg:w-1/2 p-10">
+          <h2 className="text-4xl font-bold mb-10 text-[#32383E]">Our Proud Achievements</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[1, 2, 3, 4].map((item, index) => (
-              <div key={index} className=" ">
-                <h3 className="text-4xl font-bold text-blue-600">
-                  {" "}
-                  {counter}+
-                </h3>
-                <h4 className="text-xl font-semibold   mt-2">
-                  Years Experience
-                </h4>
-                <p className="text-body">
-                  The standard chunk of <br /> Lorem Ipsum used since <br /> the
-                  1500s below.
-                </p>
-              </div>
-            ))}
+            <Counter
+              end={2000}
+              duration={2000}
+              title="Satisfied Customers"
+              description="Proudly served over 2,000 happy customers across London."
+            />
+            <Counter
+              end={500}
+              duration={2000}
+              title="Successful Projects"
+              description="Completed more than 500 successful safety projects."
+            />
+            <Counter
+              end={100}
+              duration={2000}
+              title="Annual Inspections"
+              description="We conduct over 500 safety inspections annually, helping to maintain the highest safety standards for our clients."
+            />
+            <Counter
+              end={20}
+              duration={2000}
+              title="Certified Engineers"
+              description="Our team consists of over 20 certified engineers dedicated to providing the highest quality safety services."
+            />
           </div>
         </div>
 
-        <div className="relative w-full max-w-sm   mx-auto">
-          <div className="rounded-lg overflow-hidden mr-6 shadow-md">
-            <Image
-              src={achievementImage}
-              alt="Electrician working on a circuit board"
-              width={300}
-              height={200}
-              layout="responsive"
-              className="object-cover"
-              loading="lazy"
-            />
-          </div>
+        <div className="lg:w-1/2 relative">
+          <div className="sticky top-32">
+            <div className="relative max-w-[350px]">
+              <Image
+                src={achievementImage}
+                alt="serviceImage"
+                width={350}
+                height={350}
+                className="w-full h-full object-cover rounded-2xl"
+              />
+            </div>
 
-          <div className="absolute -bottom-4 -right-4 w-2/3 rounded-lg overflow-hidden shadow-lg">
-            <Image
-              src={achievementImage}
-              alt="Close-up of electrician's hands"
-              width={200}
-              height={133}
-              layout="responsive"
-              className="object-cover"
-              loading="lazy"
-            />
-          </div>
+            <div className="absolute max-w-[400px] top-[60%] left-[60%] transform -translate-x-1/2 -translate-y-1/2 p-2.5 bg-white rounded-2xl flex justify-center items-center">
+              <Image
+                src={achievementImage}
+                alt="serviceImage"
+                width={400}
+                height={400}
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
 
-          <div className="absolute -bottom-2 -right-2 w-2/3 h-full bg-yellow-300 rounded-lg -z-10"></div>
+            <div className="absolute w-[400px] h-[600px] -top-10 right-0 rounded-xl border-[10px] border-yellow-300/40 -z-10"></div>
+          </div>
         </div>
       </div>
     </section>

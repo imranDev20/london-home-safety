@@ -1,8 +1,12 @@
+import BookingIcon from "@/components/icons/booking-icon";
 import EicrIcon from "@/components/icons/eicr";
 import ElectricalRepairs from "@/components/icons/electrical-repairs";
+import EngineerIcon from "@/components/icons/engineer";
 import EpcIcon from "@/components/icons/epc";
 import EvCrarger from "@/components/icons/ev-charger";
+import FastResponseIcon from "@/components/icons/fast-response-icon";
 import FuseBoxIcon from "@/components/icons/fuse-box";
+import LowerPriceIcon from "@/components/icons/lower-price-icon";
 import PatIcon from "@/components/icons/pat";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { NavItem, NavLeafItem } from "@/types/misc";
@@ -1208,5 +1212,32 @@ export const FAQ_HOME = [
     title: "How can I benefit from installing an EV charging station at home?",
     content:
       "Installing an EV charging station at home offers convenience and cost savings for electric vehicle owners. It ensures your vehicle is always ready to go and can increase the value of your property.",
+  },
+];
+
+export const ADVANTAGES = [
+  {
+    id: 1,
+    advantageName: "Certified Experts",
+    advantageDetail: "Highly trained and accredited professionals.",
+    Icon: EngineerIcon,
+  },
+  {
+    id: 2,
+    advantageName: "Price Match Guarantee",
+    advantageDetail: "We promise unbeatable pricing.",
+    Icon: LowerPriceIcon,
+  },
+  {
+    id: 3,
+    advantageName: "Rapid Response",
+    advantageDetail: "Appointments available as early as tomorrow.",
+    Icon: FastResponseIcon,
+  },
+  {
+    id: 4,
+    advantageName: "Flexible Scheduling",
+    advantageDetail: "Book appointments at your convenience.",
+    Icon: BookingIcon,
   },
 ];

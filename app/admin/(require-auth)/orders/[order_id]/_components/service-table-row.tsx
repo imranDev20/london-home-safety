@@ -1,18 +1,14 @@
 import { TableCell, TableRow } from "@/components/ui/table";
-import { ServiceWithRelation } from "@/types/services";
+import { Package } from "@prisma/client";
 import React from "react";
 
-export default function ServiceTableRow({
-  service,
-}: {
-  service: ServiceWithRelation;
-}) {
+export default function PackageTableRow({ pack }: { pack: Package }) {
   return (
     <TableRow>
-      <TableCell className="font-medium">{service.name}</TableCell>
-      <TableCell>{service.category}</TableCell>
-      <TableCell>{service.unitType}</TableCell>
-      <TableCell >{service.propertyType}</TableCell>
+      <TableCell className="font-medium">{pack.name}</TableCell>
+      <TableCell>{pack.category}</TableCell>
+      <TableCell>{pack.unitType}</TableCell>
+      <TableCell>{pack.propertyType}</TableCell>
     </TableRow>
   );
 }

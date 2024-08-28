@@ -78,7 +78,7 @@ export default function OrderTableRow({
           </div>
         </div>
       </TableCell>
-      <TableCell className="">{order.invoiceId || "N/A"}</TableCell>
+      <TableCell className="">{order.invoice || "N/A"}</TableCell>
       <TableCell className="">
         <Badge variant="outline">{kebabToNormal(order.status) || "N/A"}</Badge>
       </TableCell>

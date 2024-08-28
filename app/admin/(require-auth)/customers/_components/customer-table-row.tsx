@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal } from "lucide-react";
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -76,7 +76,9 @@ export default function CustomerTableRow({
           </div>
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell"></TableCell>
+      <TableCell className="hidden md:table-cell">
+        {customer.phone ?? "N/A"}
+      </TableCell>
       <TableCell className="hidden md:table-cell">
         {customer.address ? (
           <>
@@ -101,12 +103,16 @@ export default function CustomerTableRow({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Edit className="mr-2 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
                 handleDelete(e);
               }}
             >
+              <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
