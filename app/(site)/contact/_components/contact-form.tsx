@@ -2,9 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { SOCIALS } from "@/shared/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import SocialIcon from "./social-icon";
 const formSchema = z.object({
   name: z.string().min(1, { message: "Please enter your name" }),
   email: z.string().email({ message: "Please enter a valid email" }),
@@ -34,6 +36,11 @@ export default function ContactForm() {
           If you have any questions about our services or need assistance,
           don&apos;t hesitate to reach out. Our team is here to help you.
         </p>
+        <div className="flex flex-wrap gap-6 my-6">
+          {SOCIALS.map((social) => (
+            <SocialIcon key={social.id} item={social} />
+          ))}
+        </div>
       </div>
 
       <div className="  h-[450px] w-[60%] mx-auto   rounded-r-xl  ">
