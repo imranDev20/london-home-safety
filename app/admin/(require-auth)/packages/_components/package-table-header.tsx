@@ -58,7 +58,7 @@ export default function ServiceTableHeader() {
         <Link href="/admin/packages/new">
           <Button className="h-9 w-full text-sm font-medium flex">
             <Plus className="mr-2 h-4 w-4" />
-            Create Package
+            Add New Package
           </Button>
         </Link>
       </div>

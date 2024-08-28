@@ -61,7 +61,6 @@ export const NAV_ITEMS: NavItem[] = [
                   },
                   {
                     id: uuidv4(),
-
                     name: "EICR for 1-2 bedrooms",
                     price: 90,
                     propertyType: "RESIDENTIAL",

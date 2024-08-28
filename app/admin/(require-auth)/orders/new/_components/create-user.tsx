@@ -47,7 +47,7 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
   const form = useForm<CreateUserFormInput>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      city: "",
+      city: "London",
       email: "",
       name: "",
       phone: "",

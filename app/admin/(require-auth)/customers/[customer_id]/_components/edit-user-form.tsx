@@ -26,14 +26,22 @@ import {
 export type CustomerWithOrders = Prisma.UserGetPayload<{
   include: {
     address: true;
-    orders: true;
+    orders: {
+      include: {
+        packages: true;
+      };
+    };
   };
 }>;
 
 export type EngineerWithAssignedOrders = Prisma.UserGetPayload<{
   include: {
     address: true;
-    assignedOrders: true;
+    assignedOrders: {
+      include: {
+        packages: true;
+      };
+    };
   };
 }>;
 
@@ -67,7 +75,12 @@ export default function EditCustomerForm({
   const completedOrders = orders.filter(
     (order) => order.status === "COMPLETED"
   );
-  const pendingOrders = orders.filter((order) => order.status === "PENDING");
+  const pendingOrders = orders.filter(
+    (order) =>
+      order.status === "PENDING" ||
+      order.status === "IN_PROGRESS" ||
+      order.status === "CONFIRMED"
+  );
   const cancelledOrders = orders.filter(
     (order) => order.status === "CANCELLED"
   );
@@ -105,7 +118,10 @@ export default function EditCustomerForm({
       <DynamicBreadcrumb items={breadcrumbItems} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        <StatCard title="Total Spent" value={`£${totalSpent.toFixed(2)}`} />
+        <StatCard
+          title={user.role === "CUSTOMER" ? "Total Spent" : "Total Earned"}
+          value={`£${totalSpent.toFixed(2)}`}
+        />
         <StatCard title="Completed Orders" value={completedOrders.length} />
         <StatCard title="Pending Orders" value={pendingOrders.length} />
         <StatCard title="Cancelled Orders" value={cancelledOrders.length} />

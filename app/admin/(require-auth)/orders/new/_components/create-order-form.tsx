@@ -54,13 +54,12 @@ import {
   Check,
   ChevronsUpDown,
   Plus,
-  PlusCircle,
   Trash,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { createOrder } from "../../actions";
 import { CreateOrderFormInput, createOrderSchema } from "../schema";
@@ -70,12 +69,12 @@ import { Package } from "@prisma/client";
 export default function CreateOrderForm({
   customers,
   engineers,
-  services,
+  packages,
   invoiceId,
 }: {
   customers: CustomerWithRelation[];
   engineers: StaffWithRelations[];
-  services: Package[];
+  packages: Package[];
   invoiceId: string;
 }) {
   const { toast } = useToast();
@@ -91,16 +90,20 @@ export default function CreateOrderForm({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
       propertyType: "RESIDENTIAL",
-      services: [
+      packages: [
         {
-          serviceId: "",
+          packageId: "",
         },
       ],
       invoiceId: invoiceId,
     },
   });
 
-  const { control, handleSubmit } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = form;
   const [isPending, startTransition] = useTransition();
   const [openUserComboBox, setOpenUserComboBox] = useState<boolean>(false);
   const [openEngineerComboBox, setOpenEngineerComboBox] =
@@ -112,8 +115,25 @@ export default function CreateOrderForm({
     remove: removeService,
   } = useFieldArray<CreateOrderFormInput>({
     control,
-    name: "services",
+    name: "packages",
   });
+
+  const selectedPackages = form.watch("packages");
+  const isCongestionZone = form.watch("isCongestionZone");
+  const parkingOptions = form.watch("parkingOptions");
+
+  const priceSummary = () => {
+    const subtotal = selectedPackages.reduce((total, pkg) => {
+      const selectedPackage = packages.find((p) => p.id === pkg.packageId);
+      return total + (selectedPackage?.price || 0);
+    }, 0);
+
+    const congestionCharge = isCongestionZone ? 5 : 0;
+    const parkingCharge = parkingOptions !== "FREE" ? 5 : 0;
+    const total = subtotal + congestionCharge + parkingCharge;
+
+    return { subtotal, congestionCharge, parkingCharge, total };
+  };
 
   const onCreateOrderSubmit: SubmitHandler<CreateOrderFormInput> = async (
     data
@@ -146,13 +166,23 @@ export default function CreateOrderForm({
     });
   };
 
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      toast({
+        title: "Validation Error",
+        description: "Please check the form for errors and try again.",
+        variant: "destructive",
+      });
+    }
+  }, [errors]);
+
   return (
     <ContentLayout title="Create Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
       <Form {...form}>
         <form
           onSubmit={handleSubmit(onCreateOrderSubmit)}
-          className="space-y-8 mt-7"
+          className="space-y-8 mt-7 mb-20"
         >
           <div>
             <div className="flex justify-between items-center">
@@ -176,7 +206,7 @@ export default function CreateOrderForm({
                   loading={isPending}
                   className="h-9 w-full text-sm font-medium flex"
                 >
-                  <Check className="mr-2 h-4 w-4" />
+                  {!isPending && <Check className="mr-2 h-4 w-4" />}
                   Create Order
                 </LoadingButton>
               </div>
@@ -502,7 +532,9 @@ export default function CreateOrderForm({
                               <FormControl>
                                 <RadioGroupItem value="FREE" />
                               </FormControl>
-                              <FormLabel className="font-normal">Yes</FormLabel>
+                              <FormLabel className="font-normal">
+                                Free
+                              </FormLabel>
                             </FormItem>
                             <FormItem className="flex items-center space-x-3 space-y-0">
                               <FormControl>
@@ -656,7 +688,7 @@ export default function CreateOrderForm({
                   <div className="col-span-3">
                     <FormField
                       control={control}
-                      name={`services.${index}.serviceId`}
+                      name={`packages.${index}.packageId`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Service {index + 1}</FormLabel>
@@ -670,7 +702,7 @@ export default function CreateOrderForm({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {services?.map((service) => (
+                              {packages?.map((service) => (
                                 <SelectItem key={service.id} value={service.id}>
                                   {service.name}
                                 </SelectItem>
@@ -702,7 +734,7 @@ export default function CreateOrderForm({
                 variant="default"
                 size="sm"
                 className="mt-2"
-                onClick={() => appendService({ serviceId: "" })}
+                onClick={() => appendService({ packageId: "" })}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Service
@@ -714,37 +746,84 @@ export default function CreateOrderForm({
             <CardHeader>
               <CardTitle>Payment Information</CardTitle>
               <CardDescription>
-                Choose the preferred payment method for this order.
+                Review the pricing details and choose the preferred payment
+                method for this order.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="sm:grid grid-cols-12">
-                <div className="col-span-3">
-                  <FormField
-                    control={control}
-                    name="PaymentMethod"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Payment Method</FormLabel>
-                        <Select onValueChange={field.onChange}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select payment method" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="CASH_TO_ENGINEER">
-                              Cash To Engineer
-                            </SelectItem>
-                            <SelectItem value="BANK_TRANSFER">
-                              Bank Transfer
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <div className="space-y-6">
+                <div className="sm:grid grid-cols-12 gap-4">
+                  <div className="col-span-9">
+                    <div className="bg-gray-50 p-4 rounded-md border">
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">
+                        Price Summary
+                      </h4>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-500">Subtotal:</span>
+                          <span className="text-gray-900">
+                            £{priceSummary().subtotal.toFixed(2)}
+                          </span>
+                        </div>
+                        {priceSummary().congestionCharge > 0 && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">
+                              Congestion Zone Charge:
+                            </span>
+                            <span className="text-gray-900">
+                              £{priceSummary().congestionCharge.toFixed(2)}
+                            </span>
+                          </div>
+                        )}
+                        {priceSummary().parkingCharge > 0 && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">
+                              Parking Charge:
+                            </span>
+                            <span className="text-gray-900">
+                              £{priceSummary().parkingCharge.toFixed(2)}
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex justify-between text-sm font-medium pt-1 border-t border-gray-200">
+                          <span className="text-gray-900">Total:</span>
+                          <span className="text-gray-900">
+                            £{priceSummary().total.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-span-3 hidden sm:block"></div>
+
+                  <div className="col-span-3">
+                    <FormField
+                      control={control}
+                      name="PaymentMethod"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Payment Method</FormLabel>
+                          <Select onValueChange={field.onChange}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select payment method" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="CASH_TO_ENGINEER">
+                                Cash To Engineer
+                              </SelectItem>
+                              <SelectItem value="BANK_TRANSFER">
+                                Bank Transfer
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>

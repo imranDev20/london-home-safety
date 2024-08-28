@@ -8,7 +8,7 @@ export default function PackageTableRow({ pack }: { pack: Package }) {
       <TableCell className="font-medium">{pack.name}</TableCell>
       <TableCell>{pack.category}</TableCell>
       <TableCell>{pack.unitType}</TableCell>
-      <TableCell>{pack.propertyType}</TableCell>
+      <TableCell>£{pack.price}</TableCell>
     </TableRow>
   );
 }
