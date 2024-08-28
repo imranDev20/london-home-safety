@@ -119,3 +119,84 @@ export async function createPackage(data: PackageFormInputType) {
     };
   }
 }
+
+export async function updatePackage(
+  packageId: string,
+  data: Partial<PackageFormInputType>
+) {
+  try {
+    const updatedPackage = await prisma.package.update({
+      where: {
+        id: packageId,
+      },
+      data: {
+        name: data.name ?? undefined,
+        type: data.type ?? undefined,
+        price:
+          data.price !== undefined
+            ? typeof data.price === "number"
+              ? data.price
+              : parseFloat(data.price)
+            : undefined,
+        serviceName: data.serviceName ?? undefined,
+        category: data.category ?? undefined,
+        propertyType: data.propertyType ?? undefined,
+        residentialType:
+          data.propertyType === "RESIDENTIAL"
+            ? data.residentialType ?? undefined
+            : null,
+        commercialType:
+          data.propertyType === "COMMERCIAL"
+            ? data.commercialType ?? undefined
+            : null,
+        unitType: data.unitType ?? undefined,
+      },
+    });
+
+    revalidatePath("/admin/packages");
+    revalidatePath(`/admin/packages/${packageId}`);
+
+    return {
+      message: "Package updated successfully!",
+      data: updatedPackage,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error updating package:", error);
+    return {
+      message: "An error occurred while updating the package.",
+      success: false,
+    };
+  }
+}
+
+export async function getPackageById(packageId: string) {
+  try {
+    const packageData = await prisma.package.findUnique({
+      where: {
+        id: packageId,
+      },
+    });
+
+    if (!packageData) {
+      return {
+        message: "Package not found",
+        success: false,
+        data: null,
+      };
+    }
+
+    return {
+      message: "Package fetched successfully!",
+      data: packageData,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error fetching package by ID:", error);
+    return {
+      message: "An error occurred while fetching the package.",
+      success: false,
+      data: null,
+    };
+  }
+}
