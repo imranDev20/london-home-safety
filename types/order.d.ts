@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 
 export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
-    services: true;
+    packages: true;
     user: {
       include: {
         address: true;

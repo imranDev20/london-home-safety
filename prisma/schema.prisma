@@ -8,51 +8,54 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  email          String   @unique
+  id             String        @id @default(cuid())
+  email          String        @unique
   password       String
   name           String?
   phone          String?
-  role           Role     @default(CUSTOMER)
+  role           Role          @default(CUSTOMER)
+  expertise      String?
   address        Address?
-  assignedOrders Order[]  @relation("AssignedOrders")
-  orders         Order[]  @relation("UserOrders")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
-model Address {
-  id             String        @id @default(cuid())
-  street         String
-  city           String
-  postcode       String
-  userId         String?       @unique
-  user           User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  siteSettingsId String?       @unique
-  siteSettings   SiteSettings? @relation(fields: [siteSettingsId], references: [id])
+  assignedOrders Order[]       @relation("AssignedOrders")
+  orders         Order[]       @relation("UserOrders")
+  siteSettings   SiteSettings?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 }
 
+model Address {
+  id        String   @id @default(cuid())
+  street    String
+  city      String
+  postcode  String
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Order {
-  id                 String         @id @default(cuid())
+  id                 String           @id @default(cuid())
   userId             String
-  user               User           @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  user               User             @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
   assignedEngineerId String?
-  assignedEngineer   User?          @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
-  status             OrderStatus    @default(PENDING)
-  paymentStatus      PaymentStatus  @default(UNPAID)
-  paymentMethod      PaymentMethod  @default(CREDIT_CARD)
-  parkingOptions     ParkingOptions @default(NO)
+  assignedEngineer   User?            @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
+  status             OrderStatus      @default(PENDING)
+  paymentStatus      PaymentStatus    @default(UNPAID)
+  paymentMethod      PaymentMethod    @default(CREDIT_CARD)
+  parkingOptions     ParkingOptions   @default(NO)
   isCongestionZone   Boolean
   inspectionTime     InspectionTime
   date               DateTime
   orderNotes         String?
   totalPrice         Float
-  invoiceId          String         @unique
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  services           Service[]
+  invoice            String           @unique
+  propertyType       PropertyType
+  residentialType    ResidentialType?
+  commercialType     CommercialType?
+  packages           Package[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 }
 
 model Review {
@@ -65,35 +68,21 @@ model Review {
   updatedAt DateTime @updatedAt
 }
 
-model Service {
+model Package {
   id              String           @id @default(cuid())
-  name            String           @unique
-  type            ServiceType
-  category        ServiceCategory
-  description     String?
+  name            String
+  category        PackageCategory //ELECTRICAL, GAS
+  serviceName     String
+  type            PackageType? //CERTIFICATE,INSPECTION
   propertyType    PropertyType
   residentialType ResidentialType?
   commercialType  CommercialType?
   unitType        String?
-  issuedDate      DateTime?
-  expiryDate      DateTime?
+  price           Float
   orderId         String?
   order           Order?           @relation(fields: [orderId], references: [id])
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  packages        Package[]        @relation("ServicePackages")
-}
-
-model Package {
-  id          String   @id @default(cuid())
-  serviceId   String
-  service     Service  @relation("ServicePackages", fields: [serviceId], references: [id], onDelete: Cascade)
-  name        String
-  description String?
-  unitCount   Int
-  price       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model SiteSettings {
@@ -106,7 +95,8 @@ model SiteSettings {
   facebookUrl     String?
   twitterUrl      String?
   instagramUrl    String?
-  address         Address?
+  userId          String?           @unique
+  user            User?             @relation(fields: [userId], references: [id])
   openingDateTime OpeningDateTime[]
   updatedAt       DateTime          @updatedAt
 }
@@ -128,14 +118,6 @@ enum DayOfWeek {
   FRIDAY
   SATURDAY
   SUNDAY
-}
-
-enum ServiceType {
-  CERTIFICATE
-  REPAIR
-  INSTALLATION
-  INSPECTION
-  OTHER
 }
 
 enum Role {
@@ -201,9 +183,17 @@ enum InspectionTime {
   EVENING
 }
 
-enum ServiceCategory {
+enum PackageCategory {
   ELECTRICAL
   FIRE
   GAS
   HEALTH_SAFETY
+}
+
+enum PackageType {
+  CERTIFICATE
+  REPAIR
+  INSTALLATION
+  INSPECTION
+  OTHER
 }

@@ -13,21 +13,14 @@ import {
 import { TableCell, TableRow } from "@/components/ui/table";
 
 import { useRouter } from "next/navigation";
-
-import dayjs from "dayjs";
 import { useTransition } from "react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-
-import { ServiceWithRelation } from "@/types/services";
 import { deleteService } from "../actions";
+import { Package } from "@prisma/client";
 
-export default function ServiceTableRow({
-  service: service,
-}: {
-  service: ServiceWithRelation;
-}) {
+export default function ServiceTableRow({ pack }: { pack: Package }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -36,7 +29,7 @@ export default function ServiceTableRow({
     e.stopPropagation(); // Stop the propagation to prevent routing
 
     startTransition(async () => {
-      const result = await deleteService(service.id);
+      const result = await deleteService(pack.id);
 
       if (result.success) {
         toast({
@@ -57,7 +50,7 @@ export default function ServiceTableRow({
 
   return (
     <TableRow
-      onClick={() => router.push(`/admin/services/${service.id}`)}
+      onClick={() => router.push(`/admin/packages/${pack.id}`)}
       className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
       <TableCell>
@@ -66,17 +59,17 @@ export default function ServiceTableRow({
         </div>
       </TableCell>
 
-      <TableCell className="w-[25%]">{service.name}</TableCell>
+      <TableCell className="w-[25%]">{pack.name}</TableCell>
       <TableCell className="">
-        <Badge variant="outline">{service.category || "N/A"}</Badge>
+        <Badge variant="outline">{pack.category || "N/A"}</Badge>
       </TableCell>
-      <TableCell className="">{service.type || "N/A"}</TableCell>
+      <TableCell className="">{pack.type || "N/A"}</TableCell>
       <TableCell className="hidden md:table-cell">
-        {service.unitType || "N/A"}
+        {pack.unitType || "N/A"}
       </TableCell>
       <TableCell className="hidden md:table-cell">
-        {service.propertyType || "N/A"}
-      </TableCell>     
+        {pack.propertyType || "N/A"}
+      </TableCell>
       <TableCell className="w-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

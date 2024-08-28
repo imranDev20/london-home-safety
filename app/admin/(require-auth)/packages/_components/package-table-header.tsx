@@ -17,7 +17,15 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { SERVICE_TYPE_OPTIONS } from "@/lib/constants";
 import { kebabToNormal } from "@/lib/utils";
-import { HandPlatter } from "lucide-react";
+import {
+  Download,
+  Filter,
+  HandPlatter,
+  Plug,
+  Plus,
+  Search,
+} from "lucide-react";
+import { FaPlug } from "react-icons/fa6";
 
 export default function ServiceTableHeader() {
   const router = useRouter();
@@ -25,7 +33,7 @@ export default function ServiceTableHeader() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const initialSearchValue = searchParams.get("search") ?? ""; 
+  const initialSearchValue = searchParams.get("search") ?? "";
   const filterStatus = searchParams.get("filter_status") ?? "";
 
   const [searchValue, setSearchValue] = useState(initialSearchValue);
@@ -41,34 +49,31 @@ export default function ServiceTableHeader() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-5 mt-7">
-        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 flex items-center">
-        <HandPlatter className="mr-3 text-primary" />         
-          Service List
+      <div className="flex justify-between items-center mb-4 mt-7">
+        <h1 className="text-2xl font-bold mb-2 flex items-center">
+          <FaPlug className="text-primary mr-2" />
+          Package List
         </h1>
 
-        <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <Button variant="outline" size="sm">
-            Download Excel
+        <Link href="/admin/packages/new">
+          <Button className="h-9 w-full text-sm font-medium flex">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Package
           </Button>
-          <Link href="services/new">
-            <Button size="sm" className="whitespace-nowrap">
-              Add New Service
-            </Button>
-          </Link>
-        </div>
+        </Link>
       </div>
 
       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto mb-5">
-        <Input
-          type="search"
-          placeholder="Search services..."
-          className="w-full sm:w-auto flex-1"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-       
-          
+        <div className="relative flex-1">
+          <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            type="search"
+            placeholder="Search services..."
+            className="pl-10 w-full"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
 
         <Select
           value={filterStatus}
@@ -82,8 +87,9 @@ export default function ServiceTableHeader() {
             }
           }}
         >
-          <SelectTrigger className="w-full sm:w-auto">
-            <SelectValue placeholder="Filter by status" />
+          <SelectTrigger className="w-[180px]">
+            <Filter className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Filter by Status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">ALL</SelectItem>

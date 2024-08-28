@@ -12,6 +12,37 @@ export const createOrderSchema = z.object({
     })
     .optional()
     .nullable(),
+
+  propertyType: z.enum(["RESIDENTIAL", "COMMERCIAL"], {
+    required_error: "Please select a property type",
+    invalid_type_error: "Invalid property type selected",
+  }),
+
+  residentialType: z
+    .enum(
+      [
+        "BUNGALOW",
+        "MID_TERRACED_HOUSE",
+        "DETACHED_HOUSE",
+        "SEMI_DETACHED_HOUSE",
+        "FLAT",
+        "APARTMENT",
+        "OTHER",
+      ],
+      {
+        required_error: "Please select a resident type",
+        invalid_type_error: "Invalid resident type selected",
+      }
+    )
+    .optional(),
+
+  commercialType: z
+    .enum(["PUB", "STORE", "OFFICE", "RESTAURANT", "WAREHOUSE", "OTHER"], {
+      required_error: "Please select a commercial property type",
+      invalid_type_error: "Invalid commercial property selected",
+    })
+    .optional(),
+
   services: z
     .array(
       z.object({
@@ -30,6 +61,7 @@ export const createOrderSchema = z.object({
   isCongestionZone: z.boolean({
     required_error: "Please indicate if the property is in a congestion zone",
   }),
+
   inspectionTime: z.enum(["MORNING", "AFTERNOON", "EVENING"], {
     required_error: "Please select an inspection time slot",
     invalid_type_error: "Invalid time slot selected",
@@ -39,9 +71,10 @@ export const createOrderSchema = z.object({
       required_error: "Please select a valid date",
       invalid_type_error: "Invalid date format",
     })
-    .min(new Date(), {
-      message: "Inspection date must be in the future",
+    .min(new Date(new Date().setHours(0, 0, 0, 0)), {
+      message: "Inspection date must be today or in the future",
     }),
+
   invoiceId: z.string({
     required_error: "Invoice ID is required",
   }),
@@ -71,6 +104,8 @@ export const createUserSchema = z.object({
   phone: z.string({
     required_error: "Phone number is required",
   }),
+
+  expertise: z.string().optional(),
 
   street: z
     .string({

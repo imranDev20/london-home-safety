@@ -8,7 +8,11 @@ export const getSettings = async () => {
   try {
     const settings = await prisma.siteSettings.findFirst({
       include: {
-        address: true,
+        user: {
+          include: {
+            address: true,
+          },
+        },
         openingDateTime: true,
       },
     });
@@ -30,7 +34,6 @@ export async function updateSiteSettings(input: SiteSettingsFormValues) {
           .findFirst()
           .then((settings) => settings?.id),
       },
-
       update: {
         email: validatedData.email,
         phone1: validatedData.phone1,
@@ -40,11 +43,15 @@ export async function updateSiteSettings(input: SiteSettingsFormValues) {
         facebookUrl: validatedData.facebookUrl,
         twitterUrl: validatedData.twitterUrl,
         instagramUrl: validatedData.instagramUrl,
-        address: {
-          upsert: {
-            create: validatedData.address,
-            update: validatedData.address,
-          },
+        openingDateTime: {
+          deleteMany: {},
+          create: validatedData.openingDateTime.map(
+            ({ dayOfWeek, openingTime, closingTime }) => ({
+              dayOfWeek,
+              openingTime,
+              closingTime,
+            })
+          ),
         },
       },
       create: {
@@ -56,13 +63,19 @@ export async function updateSiteSettings(input: SiteSettingsFormValues) {
         facebookUrl: validatedData.facebookUrl,
         twitterUrl: validatedData.twitterUrl,
         instagramUrl: validatedData.instagramUrl,
-        address: {
-          create: validatedData.address,
+        openingDateTime: {
+          create: validatedData.openingDateTime.map(
+            ({ dayOfWeek, openingTime, closingTime }) => ({
+              dayOfWeek,
+              openingTime,
+              closingTime,
+            })
+          ),
         },
       },
     });
 
-    revalidatePath("/admin/site-settings");
+    revalidatePath("/admin/settings");
     return {
       success: true,
       data: updatedSettings,

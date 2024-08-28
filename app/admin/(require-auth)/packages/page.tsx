@@ -1,18 +1,16 @@
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { ContentLayout } from "../_components/content-layout";
-
 import { Suspense } from "react";
-
-import {  ServiceType } from "@prisma/client";
 import { getServices } from "./actions";
-import ServiceTableHeader from "./_components/service-table-header";
-import ServiceLoading from "./_components/service-loading";
-import { ServicePagination } from "./_components/service-pagination";
-import ServiceList from "./_components/service-list";
+import ServiceTableHeader from "./_components/package-table-header";
+import ServiceLoading from "./_components/package-loading";
+import { ServicePagination } from "./_components/package-pagination";
+import ServiceList from "./_components/package-list";
+import { PackageType } from "@prisma/client";
 
 const breadcrumbItems = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Services", href: "/admin/services", isCurrentPage: true },
+  { label: "Packages", href: "/admin/packages", isCurrentPage: true },
 ];
 
 export default async function AdminOrdersPage({
@@ -20,15 +18,15 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: {
     search: string;
-    page: string;  
-    filter_status: ServiceType;
+    page: string;
+    filter_status: PackageType;
   };
 }) {
   const { search, page, filter_status } = searchParams;
   const { services, pagination } = await getServices(
     parseInt(page) || 1,
     10,
-    search,   
+    search,
     filter_status
   );
 

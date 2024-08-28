@@ -5,8 +5,7 @@ import { CustomerPagination } from "./_components/customer-pagination";
 import { Suspense } from "react";
 import CustomersLoading from "./_components/customers-loading";
 
-
-import { getCustomers } from "./actions";
+import { getUsers } from "./actions";
 import CustomerTableHeader from "./_components/customer-table-header";
 import CustomerList from "./_components/customer-list";
 import { OrderStatus } from "@prisma/client";
@@ -20,18 +19,20 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: {
     search: string;
-    page: string;    
-    sort_order: "asc" | "desc";  
-    sort_by:OrderStatus
+    page: string;
+    sort_order: "asc" | "desc";
+    sort_by: OrderStatus;
   };
 }) {
-  const { search, page, sort_order, sort_by} = searchParams;
-  const { users: customers, pagination, } = await getCustomers(
+  const { search, page, sort_order, sort_by } = searchParams;
+
+  const { users: customers, pagination } = await getUsers(
+    "CUSTOMER",
     parseInt(page) || 1,
     10,
-    search,   
+    search,
     sort_by,
-    sort_order,    
+    sort_order
   );
 
   return (
