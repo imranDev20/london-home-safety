@@ -1,15 +1,15 @@
 import Image from "next/image";
 
-import NapitImage from "@/images/partner-logos/napit.png";
-import GasSafeRegister from "@/images/partner-logos/gas-safe-register.svg";
-import Nebosh from "@/images/partner-logos/nebosh.svg";
-import TrustMark from "@/images/partner-logos/trustmark.jpeg";
-import IFSM from "@/images/partner-logos/ifsm.png";
-import NICEIC from "@/images/partner-logos/niceic.svg";
 import CityGuilds from "@/images/partner-logos/city-guilds.svg";
-import ElmhurstEnergy from "@/images/partner-logos/elmhurst-energy.jpeg";
 import EalRecognised from "@/images/partner-logos/eal.png";
+import ElmhurstEnergy from "@/images/partner-logos/elmhurst-energy.jpeg";
+import GasSafeRegister from "@/images/partner-logos/gas-safe-register.svg";
+import IFSM from "@/images/partner-logos/ifsm.png";
+import NapitImage from "@/images/partner-logos/napit.png";
+import Nebosh from "@/images/partner-logos/nebosh.svg";
+import NICEIC from "@/images/partner-logos/niceic.svg";
 import PartP from "@/images/partner-logos/part-p.png";
+import TrustMark from "@/images/partner-logos/trustmark.jpeg";
 
 import styles from "@/styles/Partners.module.css";
 
@@ -28,12 +28,18 @@ const SPONSER_PARTNER = [
 
 export default function Partners() {
   return (
-    <div className="container mx-auto mt-20 mb-20" id="partners">
-      <h2 className="text-3xl font-bold mb-16 text-center">
-        Proudly <span className="text-blue-600">Certified</span> &{" "}
-        <span className="text-blue-600">Accredited</span> <br /> by Leading
-        Authorities
-      </h2>
+    <div className="container max-w-6xl mx-auto mt-20 mb-20" id="partners">
+      <div className="flex items-center justify-center mb-6 space-x-4 py-8">
+        <hr className="flex-grow border-t border-gray-300" />
+        <h1 className="text-center text-3xl font-bold">
+          Proudly <span className="text-primary font-bold">Certified</span>{" "}
+          &amp;
+          <span className="text-primary font-bold">Accredited</span>
+          <br />
+          by Leading Authorities
+        </h1>
+        <hr className="flex-grow border-t border-gray-300" />
+      </div>
 
       <div className={styles.carouselContainer}>
         <div className={styles.carouselTrack}>
