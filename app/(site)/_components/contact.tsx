@@ -6,14 +6,15 @@ import Link from "next/link";
 
 export default function Contact() {
   return (
-    <div className=" bg-slate-200 py-24 ">
-      <h2 className="text-center text-4xl font-bold mb-16">
+    <div className="bg-slate-200 py-12 md:py-24">
+      <h2 className="text-center text-3xl md:text-4xl font-bold mb-8 md:mb-16">
         Get in Touch with London&apos;s Home Safety Experts
       </h2>
-      <div className=" grid grid-cols-12 max-w-7xl mx-auto  ">
-        <div className="col-span-3">
+      <div className="grid grid-cols-12 max-w-7xl mx-auto gap-y-8 md:gap-y-0">
+        {/* Image Section */}
+        <div className="col-span-12 md:col-span-3">
           <Image
-            className="h-full rounded-l-xl"
+            className="h-full w-full rounded-t-xl md:rounded-l-xl md:rounded-tr-none"
             src={ContactUsImage}
             alt="ContactUsImage"
             loading="lazy"
@@ -22,9 +23,11 @@ export default function Contact() {
             }}
           />
         </div>
-        <div className="col-span-4 p-6    bg-white  pl-6 ">
+
+        {/* Working Hours Section */}
+        <div className="col-span-12 md:col-span-4 p-6 bg-white pl-6 rounded-b-xl md:rounded-none">
           <h2 className="text-lg font-semibold mb-6">Working Hours:</h2>
-          <ul className="space-y-7  ">
+          <ul className="space-y-7">
             {[
               { day: "Monday", time: "09:00 - 17:00" },
               { day: "Tuesday", time: "09:00 - 17:00" },
@@ -44,15 +47,17 @@ export default function Contact() {
             ))}
           </ul>
           <div className="mt-6 flex items-center space-x-2">
-            <span className="text-primary font-medium ">Need Help?</span>
+            <span className="text-primary font-medium">Need Help?</span>
             <Link href="tel:+020 8146 6698">
-              <Button className=" bg-white text-black shadow-none hover:bg-white font-semibold hover:underline">
+              <Button className="bg-white text-black shadow-none hover:bg-white font-semibold hover:underline">
                 020 8146 6698
               </Button>
             </Link>
           </div>
         </div>
-        <div className="col-span-5">
+
+        {/* Contact Us Form Section */}
+        <div className="col-span-12 md:col-span-5">
           <ContactUsForm />
         </div>
       </div>
