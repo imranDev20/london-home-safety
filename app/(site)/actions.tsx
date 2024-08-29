@@ -1,6 +1,11 @@
 "use server";
 
+import { contactAdminNotificationEmailHtml } from "@/lib/contact-admin-email";
+import { contactCustomerNotificationEmailHtml, customerEmailSubject } from "@/lib/contact-customer-email";
 import prisma from "@/lib/prisma";
+import { sendEmail } from "@/lib/send-email";
+import { EMAIL_ADDRESS } from "@/shared/data";
+import { UserEmailDataType } from "@/types/misc";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { reviewSchema } from "./schema";
@@ -59,3 +64,49 @@ export async function createReview(data: unknown) {
     throw new Error("An unexpected error occurred");
   }
 }
+
+export async function sendEmailToAdminAndCustomerAction(
+  emailData: UserEmailDataType
+) {
+  try {
+    const { name, email, subject, message, phone } = emailData;
+    const adminEmailSubject = `${name} wants to contact you`;
+    await sendEmail({
+      fromEmail: "info@londonhomesafety.co.uk",
+      fromName: "London Home Safety",
+      to: EMAIL_ADDRESS,
+      subject: adminEmailSubject,
+      html: contactAdminNotificationEmailHtml(
+        name,
+        email,
+        subject,
+        message,
+        phone
+      ),
+    });
+
+    // Send email to customer
+    await sendEmail({
+      fromName: "London Home Safety",
+      fromEmail: EMAIL_ADDRESS,
+      to: email,
+      subject: customerEmailSubject,
+      html: contactCustomerNotificationEmailHtml(name, subject, message),
+    });
+    // Revalidate the necessary paths if applicable (example paths)
+    revalidatePath(`/contact`);
+
+    return {
+      message: "Email sent successfully!",
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Error sending email:", error);
+    return {
+      message:
+        "An error occurred while sending the email. Please try again later.",
+      success: false,
+    };
+  }
+}
+

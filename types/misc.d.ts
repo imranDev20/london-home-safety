@@ -47,9 +47,17 @@ export type NavLeafItem = Omit<NavItem, "children"> & {
   categoryPath?: string;
 };
 
-export type SendEmailToEngineerData = {
+export type SendEmailDataType = {
   subject: string;
   content: string;
   receiver: string;
-  orderDetails:  OrderWithRelation | null;
+  orderDetails: OrderWithRelation | null;
+};
+
+export type UserEmailDataType = {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  phone: string;
 };

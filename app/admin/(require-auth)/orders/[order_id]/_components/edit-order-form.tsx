@@ -24,9 +24,8 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 
 import {
@@ -46,7 +45,6 @@ import dayjs from "dayjs";
 import {
   Bed,
   Building,
-  Building2,
   CalendarDays,
   CarFront,
   Check,
@@ -55,19 +53,21 @@ import {
   Clock,
   Copyright,
   Home,
-  House,
-  Mail,
   Map,
   Package,
   Phone,
-  ShoppingBag,
+  ShoppingBag
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
-import { updateOrder, updateOrderStatus } from "../actions";
-import PackageTableRow from "./service-table-row";
+import {
+  sendEmailToCustomerOrderCancelled,
+  sendEmailToCustomerOrderConfirmation,
+} from "../../../customers/actions";
 import generateInvoice from "../../actions";
+import { updateOrder, updateOrderStatus } from "../actions";
 import SendEmailDialog from "./send-email-dialog";
+import PackageTableRow from "./service-table-row";
 
 export default function EditOrderForm({
   orderDetails,
@@ -148,6 +148,36 @@ export default function EditOrderForm({
           description: result.message,
           variant: result.success ? "success" : "destructive",
         });
+        if (value === "CONFIRMED") {
+          const emailData = {
+            receiver: orderDetails?.user.email,
+            subject: "Order Confirmation",
+            content: `Dear ${orderDetails?.user.name},\n\nThank you for your order. Your order has been confirmed. Your order number is ${orderDetails?.invoice}.`,
+            orderDetails: orderDetails,
+          };
+          const response = await sendEmailToCustomerOrderConfirmation(
+            emailData
+          );
+          toast({
+            title: response.success ? "Success" : "Error",
+            description: response.message,
+            variant: response.success ? "success" : "destructive",
+          });
+        }
+        if (value === "CANCELLED") {
+          const emailData = {
+            receiver: orderDetails?.user.email,
+            subject: "Order Cancelled",
+            content: `Dear ${orderDetails?.user.name},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
+            orderDetails: orderDetails,
+          };
+          const response = await sendEmailToCustomerOrderCancelled(emailData);
+          toast({
+            title: response.success ? "Success" : "Error",
+            description: response.message,
+            variant: response.success ? "success" : "destructive",
+          });
+        }
       }
     });
   };
@@ -265,7 +295,10 @@ export default function EditOrderForm({
                   </PopoverContent>
                 </Popover>
                 {/*  */}
-                <SendEmailDialog engineerEmail={selectedEngineerEmail} orderDetails={orderDetails}  />
+                <SendEmailDialog
+                  engineerEmail={selectedEngineerEmail}
+                  orderDetails={orderDetails}
+                />
               </div>
             </CardContent>
           </Card>
