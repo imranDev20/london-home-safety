@@ -1,6 +1,5 @@
 "use client";
 
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,14 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
-import { useToast } from "@/components/ui/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { deleteService } from "../actions";
+import { useToast } from "@/components/ui/use-toast";
 import { Package } from "@prisma/client";
+import { deleteService } from "../actions";
 
 export default function ServiceTableRow({ pack }: { pack: Package }) {
   const router = useRouter();
@@ -59,7 +59,8 @@ export default function ServiceTableRow({ pack }: { pack: Package }) {
         </div>
       </TableCell>
 
-      <TableCell className="w-[25%]">{pack.name}</TableCell>
+      <TableCell className="w-[15%]">{pack.name}</TableCell>
+      <TableCell className="w-[15%]">£{pack.price}</TableCell>
       <TableCell className="">
         <Badge variant="outline">{pack.category || "N/A"}</Badge>
       </TableCell>
