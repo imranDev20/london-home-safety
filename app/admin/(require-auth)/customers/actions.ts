@@ -2,79 +2,81 @@
 
 import prisma from "@/lib/prisma";
 import { Prisma, Role } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
+import { unstable_cache as cache, revalidatePath } from "next/cache";
 
-export const getUsers = async (
-  type: Role,
-  page: number = 1,
-  pageSize: number = 10,
-  search: string = "",
-  sortBy: string = "createdAt",
-  sortOrder: "asc" | "desc" = "desc"
-) => {
-  try {
-    const skip = (page - 1) * pageSize;
+export const getUsers = cache(
+  async (
+    type: Role,
+    page: number = 1,
+    pageSize: number = 10,
+    search: string = "",
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc"
+  ) => {
+    try {
+      const skip = (page - 1) * pageSize;
 
-    const whereClause: Prisma.UserWhereInput = {
-      AND: [
-        { role: type },
-        search
-          ? {
-              OR: [
-                { email: { contains: search, mode: "insensitive" } },
-                { name: { contains: search, mode: "insensitive" } },
-              ],
-            }
-          : {},
-      ],
-    };
+      const whereClause: Prisma.UserWhereInput = {
+        AND: [
+          { role: type },
+          search
+            ? {
+                OR: [
+                  { email: { contains: search, mode: "insensitive" } },
+                  { name: { contains: search, mode: "insensitive" } },
+                ],
+              }
+            : {},
+        ],
+      };
 
-    // Create orderBy clause for sorting users
-    const orderByClause: Prisma.UserOrderByWithRelationInput = {};
-    switch (sortBy) {
-      case "name":
-        orderByClause.name = sortOrder;
-        break;
-      case "email":
-        orderByClause.email = sortOrder;
-        break;
-      case "createdAt":
-        orderByClause.createdAt = sortOrder;
-        break;
-      default:
-        orderByClause.createdAt = "desc";
-    }
+      // Create orderBy clause for sorting users
+      const orderByClause: Prisma.UserOrderByWithRelationInput = {};
+      switch (sortBy) {
+        case "name":
+          orderByClause.name = sortOrder;
+          break;
+        case "email":
+          orderByClause.email = sortOrder;
+          break;
+        case "createdAt":
+          orderByClause.createdAt = sortOrder;
+          break;
+        default:
+          orderByClause.createdAt = "desc";
+      }
 
-    // Fetch users and the total count
-    const [users, totalCount] = await Promise.all([
-      prisma.user.findMany({
-        where: whereClause,
-        skip,
-        take: pageSize,
-        include: {
-          address: true, // Include address if needed
+      // Fetch users and the total count
+      const [users, totalCount] = await Promise.all([
+        prisma.user.findMany({
+          where: whereClause,
+          skip,
+          take: pageSize,
+          include: {
+            address: true, // Include address if needed
+          },
+          orderBy: orderByClause,
+        }),
+        prisma.user.count({ where: whereClause }),
+      ]);
+
+      return {
+        users,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalCount,
+          totalPages: Math.ceil(totalCount / pageSize),
         },
-        orderBy: orderByClause,
-      }),
-      prisma.user.count({ where: whereClause }),
-    ]);
-
-    return {
-      users,
-      pagination: {
-        currentPage: page,
-        pageSize,
-        totalCount,
-        totalPages: Math.ceil(totalCount / pageSize),
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    throw new Error("Failed to fetch users");
+      };
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      throw new Error("Failed to fetch users");
+    }
   }
-};
+);
 
 export async function deleteCustomer(customerId: string) {
   try {
@@ -100,7 +102,7 @@ export async function deleteCustomer(customerId: string) {
   }
 }
 
-export const getExportCustomers = async () => {
+export const getExportCustomers = cache(async () => {
   try {
     const users = await prisma.user.findMany({
       where: { role: "CUSTOMER" },
@@ -146,9 +148,9 @@ export const getExportCustomers = async () => {
       success: false,
     };
   }
-};
+});
 
-export const getCustomerById = async (customerId: string) => {
+export const getCustomerById = cache(async (customerId: string) => {
   try {
     const customer = await prisma.user.findUnique({
       where: { id: customerId },
@@ -171,9 +173,9 @@ export const getCustomerById = async (customerId: string) => {
     console.error("Error fetching customer:", error);
     throw new Error("Failed to fetch customer");
   }
-};
+});
 
-export const getOrdersByUsers = async (userId: string) => {
+export const getOrdersByUsers = cache(async (userId: string) => {
   try {
     const orders = await prisma.order.findMany({
       where: {
@@ -188,4 +190,4 @@ export const getOrdersByUsers = async (userId: string) => {
     console.error("Error fetching orders:", error);
     throw new Error("Failed to fetch orders");
   }
-};
+});

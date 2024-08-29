@@ -2,60 +2,62 @@
 
 import prisma from "@/lib/prisma";
 import { PackageType, Prisma } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { unstable_cache as cache, revalidatePath } from "next/cache";
 import { PackageFormInputType } from "./schema";
 
-export const getServices = async (
-  page: number = 1,
-  pageSize: number = 10,
-  search: string = "",
-  filterType: PackageType | "" = ""
-) => {
-  try {
-    const skip = (page - 1) * pageSize;
+export const getServices = cache(
+  async (
+    page: number = 1,
+    pageSize: number = 10,
+    search: string = "",
+    filterType: PackageType | "" = ""
+  ) => {
+    try {
+      const skip = (page - 1) * pageSize;
 
-    // Build the where clause for filtering by type and search
-    const whereClause: Prisma.PackageWhereInput = {
-      AND: [
-        search
-          ? {
-              OR: [
-                { name: { contains: search, mode: "insensitive" } },
-                { unitType: { contains: search, mode: "insensitive" } },
-              ],
-            }
-          : {},
-        filterType ? { type: filterType } : {},
-      ],
-    };
+      // Build the where clause for filtering by type and search
+      const whereClause: Prisma.PackageWhereInput = {
+        AND: [
+          search
+            ? {
+                OR: [
+                  { name: { contains: search, mode: "insensitive" } },
+                  { unitType: { contains: search, mode: "insensitive" } },
+                ],
+              }
+            : {},
+          filterType ? { type: filterType } : {},
+        ],
+      };
 
-    // Fetch the services and the total count
-    const [services, totalCount] = await Promise.all([
-      prisma.package.findMany({
-        where: whereClause,
-        skip,
-        take: pageSize,
-        include: {
-          order: true,
+      // Fetch the services and the total count
+      const [services, totalCount] = await Promise.all([
+        prisma.package.findMany({
+          where: whereClause,
+          skip,
+          take: pageSize,
+          include: {
+            order: true,
+          },
+        }),
+        prisma.package.count({ where: whereClause }),
+      ]);
+
+      return {
+        services,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalCount,
+          totalPages: Math.ceil(totalCount / pageSize),
         },
-      }),
-      prisma.package.count({ where: whereClause }),
-    ]);
-
-    return {
-      services,
-      pagination: {
-        currentPage: page,
-        pageSize,
-        totalCount,
-        totalPages: Math.ceil(totalCount / pageSize),
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching services:", error);
-    throw new Error("Failed to fetch services");
+      };
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      throw new Error("Failed to fetch services");
+    }
   }
-};
+);
 
 export async function deleteService(serviceId: string) {
   try {
@@ -170,7 +172,7 @@ export async function updatePackage(
   }
 }
 
-export async function getPackageById(packageId: string) {
+export const getPackageById = cache(async (packageId: string) => {
   try {
     const packageData = await prisma.package.findUnique({
       where: {
@@ -199,4 +201,4 @@ export async function getPackageById(packageId: string) {
       data: null,
     };
   }
-}
+});

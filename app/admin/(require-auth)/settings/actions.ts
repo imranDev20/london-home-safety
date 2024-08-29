@@ -1,10 +1,10 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { unstable_cache as cache, revalidatePath } from "next/cache";
 import { SiteSettingsFormValues, siteSettingsSchema } from "./schema";
 
-export const getSettings = async () => {
+export const getSettings = cache(async () => {
   try {
     const settings = await prisma.siteSettings.findFirst({
       include: {
@@ -21,7 +21,7 @@ export const getSettings = async () => {
     console.error("Error fetching site settings:", error);
     throw new Error("Failed to fetch site settings");
   }
-};
+});
 
 export async function updateSiteSettings(input: SiteSettingsFormValues) {
   try {
