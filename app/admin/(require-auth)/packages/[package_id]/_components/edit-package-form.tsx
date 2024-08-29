@@ -110,6 +110,8 @@ export default function EditPackageForm({
     }
   }, [packageDetails, form]);
 
+  console.log(packageDetails);
+
   const onUpdatePackage: SubmitHandler<PackageFormInputType> = async (data) => {
     startTransition(async () => {
       const result = await updatePackage(packageDetails?.id, data);
@@ -224,7 +226,14 @@ export default function EditPackageForm({
                   <FormLabel className="text-sm font-medium">
                     Service Name
                   </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    value={field.value}
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select package category" />
