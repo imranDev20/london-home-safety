@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
-import { CreateOrderFormInput } from "./new/schema";
+import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const getOrders = async (
@@ -281,6 +281,28 @@ export default async function generateInvoice(orderId: string) {
 
 export async function createOrder(data: CreateOrderFormInput) {
   try {
+    const validatedData = createOrderSchema.parse(data);
+
+    const packageIds = validatedData.packages.map((pkg) => pkg.packageId);
+
+    const packages = await prisma.package.findMany({
+      where: {
+        id: {
+          in: packageIds,
+        },
+      },
+      select: {
+        price: true,
+      },
+    });
+
+    const packageTotal = packages.reduce((total, pkg) => total + pkg.price, 0);
+
+    const totalPrice =
+      packageTotal +
+      (data.isCongestionZone ? 5 : 0) +
+      (data.parkingOptions === "NO" || data.parkingOptions === "PAID" ? 5 : 0);
+
     const createdOrder = await prisma.order.create({
       data: {
         userId: data.userId,
@@ -291,13 +313,13 @@ export async function createOrder(data: CreateOrderFormInput) {
         parkingOptions: data.parkingOptions,
         date: data.date,
         inspectionTime: data.inspectionTime,
-        totalPrice: 500,
+        totalPrice: totalPrice,
         invoice: data.invoiceId,
         status: "CONFIRMED",
         paymentStatus: "UNPAID",
         paymentMethod: data.PaymentMethod,
         packages: {
-          connect: data.services.map((service) => ({ id: service.serviceId })),
+          connect: data.packages.map((pack) => ({ id: pack.packageId })),
         },
       },
     });

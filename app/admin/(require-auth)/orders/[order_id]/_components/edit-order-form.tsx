@@ -38,7 +38,12 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
-import { cn, kebabToNormal } from "@/lib/utils";
+import {
+  calculateSubtotal,
+  calculateTotal,
+  cn,
+  kebabToNormal,
+} from "@/lib/utils";
 import { StaffWithRelations } from "@/types/engineers";
 import { OrderWithRelation } from "@/types/order";
 
@@ -46,7 +51,6 @@ import dayjs from "dayjs";
 import {
   Bed,
   Building,
-  Building2,
   CalendarDays,
   CarFront,
   Check,
@@ -54,9 +58,8 @@ import {
   ChevronsUpDown,
   Clock,
   Copyright,
+  Download,
   Home,
-  House,
-  Mail,
   Map,
   Package,
   Phone,
@@ -68,6 +71,7 @@ import { updateOrder, updateOrderStatus } from "../actions";
 import PackageTableRow from "./service-table-row";
 import generateInvoice from "../../actions";
 import SendEmailDialog from "./send-email-dialog";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export default function EditOrderForm({
   orderDetails,
@@ -161,7 +165,7 @@ export default function EditOrderForm({
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 mt-6">
+      {/* <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 mt-6">
         <div className="flex items-center gap-4 mb-4 md:mb-0">
           <Link href="/admin/orders">
             <Button variant="outline" size="icon" className="h-10 w-10">
@@ -192,6 +196,46 @@ export default function EditOrderForm({
           <Button onClick={downloadInvoice} disabled={loading || isPending}>
             {loading ? "Generating..." : "Download Invoice"}
           </Button>
+        </div>
+      </div> */}
+
+      <div className="flex items-center gap-4 mb-4 mt-7">
+        <h1 className="text-2xl font-bold mb-2 flex items-center">
+          <Link href="/admin/orders">
+            <Button variant="outline" size="icon" className="h-7 w-7 mr-2">
+              <ChevronLeft className="h-5 w-5" />
+              <span className="sr-only">Back</span>
+            </Button>
+          </Link>
+          {`Edit ${orderDetails?.invoice}`}
+        </h1>
+
+        <div className="hidden items-center gap-2 md:ml-auto md:flex">
+          <Select value={status} onValueChange={handleUpdateOrderStatus}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Update Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {ORDER_STATUS_OPTIONS.map((option) => (
+                  <SelectItem value={option} key={option}>
+                    {kebabToNormal(option)}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <LoadingButton
+            type="button"
+            disabled={isPending}
+            loading={isPending}
+            className="text-sm h-9 font-medium flex items-center"
+            onClick={downloadInvoice}
+            variant="default"
+          >
+            {!isPending && <Download className="mr-2 h-4 w-4" />}
+            Download Excel
+          </LoadingButton>
         </div>
       </div>
 
@@ -258,21 +302,48 @@ export default function EditOrderForm({
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Items</h2>
               {orderDetails?.packages && orderDetails.packages.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Unit</TableHead>
-                      <TableHead>Property Type</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {orderDetails.packages.map((pack) => (
-                      <PackageTableRow pack={pack} key={pack?.id} />
-                    ))}
-                  </TableBody>
-                </Table>
+                <>
+                  <div className="border rounded-md">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Category</TableHead>
+                          <TableHead>Unit</TableHead>
+                          <TableHead>Price</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {orderDetails.packages.map((pack) => (
+                          <PackageTableRow pack={pack} key={pack?.id} />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+                    <div className="flex justify-between">
+                      <span>Subtotal:</span>
+                      <span>£{calculateSubtotal(orderDetails.packages)}</span>
+                    </div>
+                    {orderDetails.isCongestionZone && (
+                      <div className="flex justify-between">
+                        <span>Congestion Zone Fee:</span>
+                        <span>£5.00</span>
+                      </div>
+                    )}
+                    {orderDetails.parkingOptions !== "FREE" && (
+                      <div className="flex justify-between">
+                        <span>Parking Fee:</span>
+                        <span>£5.00</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between font-semibold">
+                      <span>Total:</span>
+                      <span>£{calculateTotal(orderDetails)}</span>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <div className="text-center py-8">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
@@ -417,85 +488,3 @@ export default function EditOrderForm({
     </ContentLayout>
   );
 }
-
-// <Card>
-//   <CardContent className="p-6">
-//     <h2 className="text-xl font-semibold mb-4">Assigned Engineer</h2>
-//     <div className="space-y-4">
-//       <div className="flex items-center space-x-3">
-//         <Avatar className="h-10 w-10">
-//           <AvatarFallback>
-//             {selectedEngineer
-//               ? engineers?.find(e => e.id === selectedEngineer)?.name.charAt(0)
-//               : 'E'}
-//           </AvatarFallback>
-//         </Avatar>
-//         <div>
-//           <p className="text-sm font-medium">
-//             {selectedEngineer
-//               ? engineers?.find(e => e.id === selectedEngineer)?.name
-//               : 'No engineer assigned'}
-//           </p>
-//           {selectedEngineer && (
-//             <p className="text-xs text-gray-500">
-//               {engineers?.find(e => e.id === selectedEngineer)?.email}
-//             </p>
-//           )}
-//         </div>
-//       </div>
-
-//       <Popover open={openAssignedEngineers} onOpenChange={setOpenAssignedEngineers}>
-//         <PopoverTrigger asChild>
-//           <Button
-//             variant="outline"
-//             role="combobox"
-//             aria-expanded={openAssignedEngineers}
-//             className="w-full justify-between"
-//           >
-//             {selectedEngineer
-//               ? "Change Engineer"
-//               : "Assign Engineer"}
-//             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-//           </Button>
-//         </PopoverTrigger>
-//         <PopoverContent className="w-[300px] p-0">
-//           <Command>
-//             <CommandInput placeholder="Search engineers..." />
-//             <CommandList>
-//               <CommandEmpty>No engineer found.</CommandEmpty>
-//               <CommandGroup>
-//                 {engineers?.map((engineer) => (
-//                   <CommandItem
-//                     key={engineer.id}
-//                     value={engineer.id}
-//                     onSelect={() => handleSelectEngineer(engineer.id)}
-//                   >
-//                     <Check
-//                       className={cn(
-//                         "mr-2 h-4 w-4",
-//                         engineer.id === selectedEngineer ? "opacity-100" : "opacity-0"
-//                       )}
-//                     />
-//                     {engineer.name}
-//                   </CommandItem>
-//                 ))}
-//               </CommandGroup>
-//             </CommandList>
-//           </Command>
-//         </PopoverContent>
-//       </Popover>
-
-//       {selectedEngineer && (
-//         <Button variant="outline" className="w-full" onClick={() => handleSelectEngineer("")}>
-//           <UserMinus className="mr-2 h-4 w-4" />
-//           Remove Assignment
-//         </Button>
-//       )}
-
-//       <Button variant="outline" className="w-full">
-//         <Mail className="mr-2 h-4 w-4" />
-//         Send Email to Engineer
-//       </Button>
-//     </div>
-//   </CardContent>
-// </Card>

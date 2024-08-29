@@ -2,9 +2,14 @@ import { PaymentMethod } from "@prisma/client";
 import { z } from "zod";
 
 export const createOrderSchema = z.object({
-  userId: z.string().cuid({
-    message: "Please select a valid customer",
-  }),
+  userId: z
+    .string({
+      required_error: "User ID is required",
+    })
+    .cuid({
+      message: "Please select a valid customer",
+    }),
+
   assignedEngineer: z
     .string()
     .cuid({
@@ -43,11 +48,11 @@ export const createOrderSchema = z.object({
     })
     .optional(),
 
-  services: z
+  packages: z
     .array(
       z.object({
-        serviceId: z.string().cuid({
-          message: "Please select a valid service",
+        packageId: z.string().cuid({
+          message: "Please select a valid package",
         }),
       })
     )
