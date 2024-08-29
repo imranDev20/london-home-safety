@@ -3,7 +3,6 @@
 import { ContentLayout } from "@/app/admin/(require-auth)/_components/content-layout";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -25,7 +24,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 
 import {
@@ -62,7 +61,7 @@ import {
   Map,
   Package,
   Phone,
-  ShoppingBag
+  ShoppingBag,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
@@ -72,11 +71,11 @@ import {
 } from "../../../customers/actions";
 import generateInvoice from "../../actions";
 import { updateOrder, updateOrderStatus } from "../actions";
-import SendEmailDialog from "./send-email-dialog";
+
 import PackageTableRow from "./service-table-row";
-import generateInvoice from "../../actions";
-import SendEmailDialog from "./send-email-dialog";
+
 import { LoadingButton } from "@/components/ui/loading-button";
+import SendEmailDialog from "./send-email-dialog";
 
 export default function EditOrderForm({
   orderDetails,
