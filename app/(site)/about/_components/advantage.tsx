@@ -14,7 +14,7 @@ export default function Advantage() {
           response times, and flexible scheduling make us the trusted choice for
           all your home safety needs.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt">
+        <div className="grid px-10 md:px-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt">
           {ADVANTAGES?.map((advantage) => (
             <Card
               key={advantage.id}

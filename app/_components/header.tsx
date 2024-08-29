@@ -28,8 +28,12 @@ export default function Header() {
 
   return (
     <>
-      {/* Mobile header - always visible */}
-      <header className="md:hidden bg-white fixed top-0 left-0 w-full z-50 shadow-md">
+      {/* Mobile header - scrollable */}
+      <header
+        className={`md:hidden bg-white fixed top-0 left-0 w-full z-50 shadow-md transition-transform duration-300 ${
+          isVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="container mx-auto px-4 py-2 flex justify-between items-center w-full">
           <div className="text-lg font-semibold">LoGo</div>
           <button

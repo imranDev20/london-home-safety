@@ -8,7 +8,7 @@ export default function Achievement() {
   return (
     <section className="bg-white py-20 my-20">
       <div className="max-w-6xl mx-auto px-4 lg:flex lg:items-center lg:justify-between">
-        <div className="lg:w-1/2 p-10">
+        <div className="lg:w-1/2 p-10 mb-5">
           <h2 className="text-4xl font-bold mb-10 text-[#32383E]">Our Proud Achievements</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <Counter
