@@ -4,7 +4,7 @@ import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
-import { SendEmailToEngineerData } from "@/types/misc";
+import { SendEmailDataType } from "@/types/misc";
 import { Prisma } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
 
@@ -134,9 +134,7 @@ export const getEngineerById = cache(async (engineerId: string) => {
   }
 });
 
-export async function sendEmailToEngineerAction(
-  emailData: SendEmailToEngineerData
-) {
+export async function sendEmailToEngineerAction(emailData: SendEmailDataType) {
   try {
     await sendEmail({
       fromEmail: EMAIL_ADDRESS,

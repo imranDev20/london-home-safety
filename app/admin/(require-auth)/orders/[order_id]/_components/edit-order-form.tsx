@@ -3,7 +3,6 @@
 import { ContentLayout } from "@/app/admin/(require-auth)/_components/content-layout";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -24,7 +23,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -67,11 +65,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
-import { updateOrder, updateOrderStatus } from "../actions";
-import PackageTableRow from "./service-table-row";
+import {
+  sendEmailToCustomerOrderCancelled,
+  sendEmailToCustomerOrderConfirmation,
+} from "../../../customers/actions";
 import generateInvoice from "../../actions";
-import SendEmailDialog from "./send-email-dialog";
+import { updateOrder, updateOrderStatus } from "../actions";
+
+import PackageTableRow from "./service-table-row";
+
 import { LoadingButton } from "@/components/ui/loading-button";
+import SendEmailDialog from "./send-email-dialog";
 
 export default function EditOrderForm({
   orderDetails,
@@ -152,6 +156,36 @@ export default function EditOrderForm({
           description: result.message,
           variant: result.success ? "success" : "destructive",
         });
+        if (value === "CONFIRMED") {
+          const emailData = {
+            receiver: orderDetails?.user.email,
+            subject: "Order Confirmation",
+            content: `Dear ${orderDetails?.user.name},\n\nThank you for your order. Your order has been confirmed. Your order number is ${orderDetails?.invoice}.`,
+            orderDetails: orderDetails,
+          };
+          const response = await sendEmailToCustomerOrderConfirmation(
+            emailData
+          );
+          toast({
+            title: response.success ? "Success" : "Error",
+            description: response.message,
+            variant: response.success ? "success" : "destructive",
+          });
+        }
+        if (value === "CANCELLED") {
+          const emailData = {
+            receiver: orderDetails?.user.email,
+            subject: "Order Cancelled",
+            content: `Dear ${orderDetails?.user.name},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
+            orderDetails: orderDetails,
+          };
+          const response = await sendEmailToCustomerOrderCancelled(emailData);
+          toast({
+            title: response.success ? "Success" : "Error",
+            description: response.message,
+            variant: response.success ? "success" : "destructive",
+          });
+        }
       }
     });
   };
@@ -309,7 +343,10 @@ export default function EditOrderForm({
                   </PopoverContent>
                 </Popover>
                 {/*  */}
-                <SendEmailDialog engineerEmail={selectedEngineerEmail} orderDetails={orderDetails}  />
+                <SendEmailDialog
+                  engineerEmail={selectedEngineerEmail}
+                  orderDetails={orderDetails}
+                />
               </div>
             </CardContent>
           </Card>
