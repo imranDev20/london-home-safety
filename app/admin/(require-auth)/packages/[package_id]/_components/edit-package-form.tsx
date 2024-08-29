@@ -73,19 +73,19 @@ export default function EditPackageForm({
       isCurrentPage: true,
     },
   ];
-
+  console.log(packageDetails);
   const form = useForm<PackageFormInputType>({
     resolver: zodResolver(packageSchema),
     defaultValues: {
-      name: packageDetails?.name || "",
-      type: packageDetails?.type || undefined,
-      category: packageDetails?.category || undefined,
-      price: packageDetails?.price ? String(packageDetails.price) : "",
-      serviceName: packageDetails?.serviceName || "",
-      propertyType: packageDetails?.propertyType || "RESIDENTIAL",
-      residentialType: packageDetails?.residentialType || undefined,
-      commercialType: packageDetails?.commercialType || undefined,
-      unitType: packageDetails?.unitType || "",
+      name: "",
+      type: undefined,
+      category: undefined,
+      price: "",
+      serviceName: "",
+      propertyType: "RESIDENTIAL",
+      residentialType: undefined,
+      commercialType: undefined,
+      unitType: "",
     },
   });
   const { control, handleSubmit, watch } = form;
@@ -224,10 +224,7 @@ export default function EditPackageForm({
                   <FormLabel className="text-sm font-medium">
                     Service Name
                   </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select package category" />
