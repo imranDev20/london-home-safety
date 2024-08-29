@@ -108,10 +108,10 @@ export const getEngineers = async () => {
   }
 };
 
-export const getServices = async () => {
+export const getPackages = async () => {
   try {
-    const services = await prisma.package.findMany({});
-    return services;
+    const packages = await prisma.package.findMany({});
+    return packages;
   } catch (error) {
     console.error("Error fetching services:", error);
     throw new Error("Failed to fetch services");

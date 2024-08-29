@@ -102,11 +102,7 @@ export async function deleteEngineer(engineersId: string) {
   }
 }
 
-export const getEngineerById = async (
-  engineerId: string
-): Promise<Prisma.UserGetPayload<{
-  include: { address: true; assignedOrders: true };
-}> | null> => {
+export const getEngineerById = async (engineerId: string) => {
   if (!engineerId || typeof engineerId !== "string") {
     throw new Error("Invalid engineer ID provided");
   }
@@ -116,11 +112,15 @@ export const getEngineerById = async (
       where: { id: engineerId },
       include: {
         address: true,
-        assignedOrders: true,
+        assignedOrders: {
+          include: {
+            packages: true,
+          },
+        },
       },
     });
 
-    return engineer; // This will be null if no engineer is found
+    return engineer;
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       // Handle known Prisma errors

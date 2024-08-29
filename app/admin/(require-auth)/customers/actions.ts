@@ -159,7 +159,11 @@ export const getCustomerById = async (customerId: string) => {
       where: { id: customerId },
       include: {
         address: true,
-        orders: true,
+        orders: {
+          include: {
+            packages: true,
+          },
+        },
       },
     });
 
