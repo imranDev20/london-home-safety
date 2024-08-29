@@ -6,11 +6,17 @@ import EpcIcon from "@/components/icons/epc";
 import EvCrarger from "@/components/icons/ev-charger";
 import FastResponseIcon from "@/components/icons/fast-response-icon";
 import FuseBoxIcon from "@/components/icons/fuse-box";
+import LocationIcon from "@/components/icons/location-icon";
 import LowerPriceIcon from "@/components/icons/lower-price-icon";
 import PatIcon from "@/components/icons/pat";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { NavItem, NavLeafItem } from "@/types/misc";
+import { FaClock } from "react-icons/fa";
+import { FaXTwitter, FaYoutube } from "react-icons/fa6";
+import { IoMail } from "react-icons/io5";
+import { RiFacebookBoxFill } from "react-icons/ri";
 import { v4 as uuidv4 } from "uuid";
+import { CiInstagram } from "react-icons/ci";
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", path: "/" },
@@ -1200,5 +1206,55 @@ export const ADVANTAGES = [
     advantageName: "Flexible Scheduling",
     advantageDetail: "Book appointments at your convenience.",
     Icon: BookingIcon,
+  },
+];
+
+export const CONTACT= [
+  {
+    id: 1,
+    title: "Address:",
+    info: `43 Felton Road, Barking,  London IG11 7YA`,
+    icons: <LocationIcon size={45} className="fill-primary" />,
+  },
+
+  {
+    id: 2,
+    title: "Work Hours:",
+    info: "Mon-Fri 08:00 AM - 05:00 PM Sat-Sun: Emergency only",
+    icons: <FaClock size={45} className="fill-primary" />,
+  },
+  {
+    id: 3,
+    title: "Contact Info:",
+    info: "020 8146 6698 info@londonhomesafety.co.uk",
+    icons: <IoMail size={45} className="fill-primary" />,
+  },
+
+];
+
+export const SOCIALS = [
+  {
+    id: 1,
+    href: "Facebook",
+    label: "Facebook",
+    icons: <RiFacebookBoxFill size={24} className="fill-primary" />,
+  },
+  {
+    id:2,
+    href: "Facebook",
+    label: "X",
+    icons: <FaXTwitter size={24} className="fill-primary" />,
+  },
+  {
+    id:3,
+    href: "YouTube",
+    label: "YouTube",
+    icons: <FaYoutube size={24}  className="fill-primary"/>,
+  },
+  {
+    id:4,
+    href: "Instagram",
+    label: "Instagram",
+    icons: <CiInstagram size={24} className="fill-primary" />,
   },
 ];
