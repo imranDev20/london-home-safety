@@ -1,10 +1,15 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { SOCIALS } from "@/shared/data";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useTransition } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
+import { sendEmailToAdminAndCustomerAction } from "../../actions";
+import SocialIcon from "./social-icon";
 const formSchema = z.object({
   name: z.string().min(1, { message: "Please enter your name" }),
   email: z.string().email({ message: "Please enter a valid email" }),
@@ -12,17 +17,29 @@ const formSchema = z.object({
   subject: z.string().min(1, { message: "Please provide a subject" }),
   message: z.string().min(1, { message: "Message is required" }),
 });
+export type UserFormInputType = z.infer<typeof formSchema>
 export default function ContactForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<UserFormInputType>({
     resolver: zodResolver(formSchema),
   });
+const [isPending, startTransition] = useTransition();
+const {toast} = useToast();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit:SubmitHandler<UserFormInputType> = async(data) => {
+    startTransition(async () => {
+          const response = await sendEmailToAdminAndCustomerAction(
+            data
+          );
+          toast({
+            title: response.success ? "Success" : "Error",
+            description: response.message,
+            variant: response.success ? "success" : "destructive",
+          });
+    });
   };
   return (
     <div className="max-w-6xl mx-auto flex mt-16">
@@ -34,6 +51,11 @@ export default function ContactForm() {
           If you have any questions about our services or need assistance,
           don&apos;t hesitate to reach out. Our team is here to help you.
         </p>
+        <div className="flex flex-wrap gap-6 my-6">
+          {SOCIALS.map((social) => (
+            <SocialIcon key={social.id} item={social} />
+          ))}
+        </div>
       </div>
 
       <div className="  h-[450px] w-[60%] mx-auto   rounded-r-xl  ">
@@ -94,12 +116,14 @@ export default function ContactForm() {
               <p className="text-red-500">{errors.message.message as string}</p>
             )}
           </div>
-          <Button
+          <LoadingButton
+            loading={isPending}
+            disabled={isPending}
             type="submit"
             className="w-full bg-yellow-400 text-black font-bold hover:bg-yellow-300"
           >
             Submit
-          </Button>
+          </LoadingButton>
         </form>
       </div>
     </div>

@@ -1,8 +1,13 @@
 "use server";
 
+import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 import prisma from "@/lib/prisma";
+import { sendEmail } from "@/lib/send-email";
+import { EMAIL_ADDRESS } from "@/shared/data";
+import { SendEmailDataType } from "@/types/misc";
 import { Prisma } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
+
 
 export const getEngineers = async (
   page: number = 1,
@@ -127,3 +132,37 @@ export const getEngineerById = async (engineerId: string) => {
     throw new Error("An unexpected error occurred while fetching the engineer");
   }
 };
+
+
+
+
+export async function sendEmailToEngineerAction(
+  emailData: SendEmailDataType
+) {
+  try {
+
+    await sendEmail({
+      fromEmail: EMAIL_ADDRESS,
+      fromName: "London Home Safety",
+      to: emailData.receiver,
+      subject: emailData.subject,
+      html: notifyEngineerEmailHtml(emailData.orderDetails, emailData.content),
+    });
+
+    // Revalidate the necessary paths if applicable (example paths)
+    revalidatePath(`/admin/orders`);
+    revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
+
+    return {
+      message: "Email sent successfully!",
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Error sending email:", error);
+    return {
+      message: "An error occurred while sending the email. Please try again later.",
+      success: false,
+    };
+  }
+}
+
