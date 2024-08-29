@@ -1058,6 +1058,44 @@ export const NAV_ITEMS: NavItem[] = [
                   "Professional gas safety services and repairs for businesses.",
               },
             ],
+            pageContent: {
+              title:
+                "Securing Gas Safety with Professional Gas Certificate & Repair",
+              html: `
+                <div class="max-w-4xl mx-auto"> <p class="text-lg mb-6">A Gas Safety Certificate is a crucial document that ensures the safety and compliance of gas appliances within your property. At London Home Safety Limited, we provide comprehensive Gas Certificate & Repairs services, ensuring that your gas installations are safe, efficient, and meet all legal requirements. Our certified engineers are experienced in conducting thorough inspections and repairs, offering peace of mind for both residential and commercial property owners.</p> <div class="mb-8"> <h2 class="text-2xl font-bold mb-4">Why Do You Need a Gas Safety Certificate?</h2> <p class="mb-4">A Gas Safety Certificate, also known as a CP12, is essential for demonstrating that your gas appliances are safe to use. Regular inspections help prevent dangerous situations such as gas leaks or carbon monoxide poisoning.</p> <p class="font-bold mb-2">Benefits of a Gas Safety Certificate:</p> <ul class="space-y-2"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Safety:</span> Confirms that gas appliances are functioning correctly and safely, reducing the risk of accidents.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Compliance:</span> Ensures your property meets legal requirements, particularly for landlords and businesses.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Peace of Mind:</span> Provides assurance that your gas installations are secure and reliable.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Insurance:</span> Many insurance policies require an up-to-date Gas Safety Certificate for coverage to remain valid.</span> </li> </ul> </div> <blockquote class="bg-blue-50 text-lg p-6 rounded-lg mb-8"> <p>Did you know that failing to obtain a Gas Safety Certificate can result in legal penalties and endanger the safety of your property’s occupants? Regular gas inspections are vital to ensure safety and compliance with the law.</p> </blockquote> <h2 class="text-2xl font-bold mb-4">Who Needs a Gas Safety Certificate?</h2> <p class="mb-4">Gas Safety Certificates are required by law for rented properties, but they are also highly recommended for homeowners and businesses.</p> <p class="font-bold mb-2">Legal Requirements:</p> <ul class="space-y-2 mb-6"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Landlords:</span> Must have a Gas Safety Certificate for every rental property, renewed annually.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Businesses:</span> Required to ensure that gas appliances are safe and inspected regularly to comply with health and safety regulations.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Homeowners:</span> Though not legally required, it’s advisable to have gas installations inspected regularly for safety.</span> </li> </ul> <h2 class="text-2xl font-bold mb-4">What Does the Inspection Include?</h2> <p class="mb-4">During a gas safety inspection, our qualified engineers will check all gas appliances, fittings, and flues to ensure they are safe and efficient.</p> <p class="font-bold mb-2">Inspection Process:</p> <ul class="space-y-2 mb-6"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Visual Inspection:</span> Examines the condition of gas appliances and pipes for any visible signs of wear or damage.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Functionality Testing:</span> Tests the operation of each gas appliance to ensure they are working correctly and safely.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Flue Gas Analysis:</span> Checks the emissions from gas appliances to ensure they are within safe limits.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Documentation:</span> Provides a detailed report, including any defects or areas requiring attention.</span> </li> </ul> <h2 class="text-2xl font-bold mb-4">What Happens After the Inspection?</h2> <p class="mb-4">Following the inspection, you will receive a Gas Safety Certificate if your installations are compliant. If repairs are needed, we offer expert services to rectify any issues.</p> <p class="font-bold mb-2">Post-Inspection Steps:</p> <ul class="space-y-2 mb-6"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Review Report:</span> Discuss the findings with our engineer to understand the condition of your gas systems.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Address Repairs:</span> Schedule necessary repairs to ensure all gas installations meet safety standards.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Certification:</span> Upon successful repairs, you will receive a Gas Safety Certificate, ensuring compliance and safety.</span> </li> </ul> <p class="mb-4">Ensuring that your gas installations are safe and compliant is a vital responsibility. Our Gas Certificate & Repairs service provides comprehensive inspections and reliable repairs, helping you maintain a safe and secure environment for all occupants.</p> </div>
+
+              `,
+            },
+            faqs: [
+              {
+                ques: "What is a Gas Safety Certificate?",
+                ans: "A Gas Safety Certificate is an official document issued by a qualified Gas Safe registered engineer after inspecting and confirming that all gas appliances, fittings, and installations in a property meet legal safety standards.",
+              },
+              {
+                ques: "Why do I need a Gas Safety Certificate?",
+                ans: "A Gas Safety Certificate is essential for ensuring the safety of gas appliances and installations in your property. It is legally required for landlords to protect tenants from potential gas-related hazards such as leaks or carbon monoxide poisoning.",
+              },
+              {
+                ques: "How often should a Gas Safety Certificate be renewed?",
+                ans: "A Gas Safety Certificate must be renewed annually. For landlords, it is a legal requirement to provide a valid certificate to tenants every year to confirm that the property’s gas appliances are safe to use.",
+              },
+              {
+                ques: "What does a Gas Safety inspection involve?",
+                ans: "During a Gas Safety inspection, a qualified engineer will check the condition of gas appliances, ensure they are properly installed, and verify that they are operating safely and efficiently. The engineer will also inspect the ventilation, flues, and gas pressure.",
+              },
+              {
+                ques: "What should I do if my Gas Safety Certificate inspection identifies issues?",
+                ans: "If the inspection identifies any issues, it’s crucial to have the recommended repairs or maintenance carried out as soon as possible by a qualified engineer. Once the issues are resolved, a new Gas Safety Certificate can be issued.",
+              },
+              {
+                ques: "Is a Gas Safety Certificate mandatory for landlords?",
+                ans: "Yes, it is a legal requirement for landlords to obtain a Gas Safety Certificate for each rental property annually. Landlords must ensure that all gas appliances, flues, and related systems are safe and compliant with regulations.",
+              },
+              {
+                ques: "How long does a Gas Safety inspection take?",
+                ans: "The duration of a Gas Safety inspection can vary depending on the number and type of gas appliances in the property, but it typically takes between 30 minutes to an hour.",
+              },
+            ],
           },
           {
             label: "Boiler Service & Repair",
@@ -1074,6 +1112,148 @@ export const NAV_ITEMS: NavItem[] = [
                 description: "",
 
                 packages: [],
+              },
+            ],
+            pageContent: {
+              title:
+                "Maintaining Efficiency and Safety with Expert Boiler Service & Repair",
+              html: `
+<div class="max-w-4xl mx-auto">
+  <p class="text-lg mb-6">
+    A well-maintained boiler is crucial for ensuring the safety, efficiency, and longevity of your heating system. At London Home Safety Limited, we offer comprehensive Boiler Service & Repair solutions, ensuring that your boiler operates at peak performance, reducing the risk of breakdowns and extending its lifespan. Our certified engineers are equipped with the expertise to handle all types of boiler issues, providing peace of mind for both residential and commercial property owners.
+  </p>
+
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Why Do You Need Boiler Service & Repair?</h2>
+    <p class="mb-4">
+      Regular boiler servicing and prompt repairs are essential for maintaining the efficiency and safety of your heating system. A well-serviced boiler operates more efficiently, helps prevent unexpected breakdowns, and ensures that your home or business remains warm and safe throughout the year.
+    </p>
+    <p class="font-bold mb-2">Benefits of Boiler Service & Repair:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Efficiency:</span> Regular servicing keeps your boiler running efficiently, reducing energy consumption and lowering utility bills.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Safety:</span> Ensures that your boiler is operating safely, reducing the risk of dangerous malfunctions such as gas leaks or carbon monoxide emissions.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Longevity:</span> Regular maintenance extends the lifespan of your boiler, helping you avoid costly replacements.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Compliance:</span> Ensures your boiler meets safety standards, especially important for landlords and businesses.</span>
+      </li>
+    </ul>
+  </div>
+
+  <blockquote class="bg-blue-50 text-lg p-6 rounded-lg mb-8">
+    <p>
+      Did you know that neglecting boiler maintenance can lead to unexpected breakdowns and costly repairs? Regular servicing is key to ensuring your boiler remains safe, efficient, and reliable.
+    </p>
+  </blockquote>
+
+  <h2 class="text-2xl font-bold mb-4">Who Needs Boiler Service & Repair?</h2>
+  <p class="mb-4">
+    Boiler service and repair are essential for all property owners, but they are particularly crucial for landlords, businesses, and homeowners with older heating systems.
+  </p>
+  <p class="font-bold mb-2">Who Should Consider Boiler Service & Repair:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> Legally required to ensure boilers in rental properties are regularly serviced and safe for tenants.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Businesses:</span> Required to maintain boilers to comply with health and safety regulations, ensuring a safe environment for employees and customers.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> Regular servicing is recommended to ensure the efficiency and safety of the home heating system.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Does Boiler Service & Repair Include?</h2>
+  <p class="mb-4">
+    During a boiler service, our qualified engineers will perform a thorough inspection and cleaning of your boiler, ensuring it operates efficiently and safely. If any issues are detected, we offer prompt and reliable repair services.
+  </p>
+  <p class="font-bold mb-2">Service & Repair Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Visual Inspection:</span> A detailed check of the boiler’s components for signs of wear, corrosion, or damage.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Efficiency Testing:</span> Assessment of the boiler’s performance to ensure it is operating efficiently and safely.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Cleaning & Maintenance:</span> Cleaning of key components such as burners and heat exchangers to improve performance.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Repairs:</span> Prompt repairs to address any issues identified during the service, ensuring the boiler is safe and reliable.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens After the Service?</h2>
+  <p class="mb-4">
+    After the service, you will receive a detailed report on the condition of your boiler. If repairs were necessary, our engineers will explain the work that was carried out and provide advice on maintaining your boiler for optimal performance.
+  </p>
+  <p class="font-bold mb-2">Post-Service Steps:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Review Report:</span> Discuss the findings with our engineer and understand the current state of your boiler.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Schedule Future Maintenance:</span> Plan regular servicing to keep your boiler in top condition and avoid unexpected breakdowns.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Follow-up Support:</span> Our team is available for any follow-up questions or additional support you may need after the service.</span>
+    </li>
+  </ul>
+
+  <p class="mb-4">
+    Keeping your boiler in optimal condition is essential for a warm and safe property. Our Boiler Service & Repair solutions offer thorough inspections, efficient repairs, and expert advice, helping you maintain a reliable heating system.
+  </p>
+</div>
+
+              `,
+            },
+            faqs: [
+              {
+                ques: "What is a Boiler Service & Repair?",
+                ans: "Boiler Service & Repair involves a thorough inspection, maintenance, and repair of your boiler system to ensure it operates efficiently and safely. This includes checking for any potential issues, performing necessary repairs, and replacing worn-out parts to keep the boiler functioning optimally.",
+              },
+              {
+                ques: "Why is regular boiler servicing important?",
+                ans: "Regular boiler servicing is crucial for maintaining the efficiency and safety of your heating system. It helps prevent breakdowns, extends the lifespan of your boiler, ensures compliance with safety regulations, and improves energy efficiency, reducing your overall heating costs.",
+              },
+              {
+                ques: "How often should a boiler be serviced?",
+                ans: "A boiler should be serviced annually to ensure it remains in good working condition. Regular servicing helps identify and address potential issues before they become major problems, ensuring reliable performance throughout the year.",
+              },
+              {
+                ques: "What does a boiler service include?",
+                ans: "A boiler service typically includes a thorough inspection of the boiler and its components, cleaning of key parts, checking for leaks, testing the pressure and functionality, and ensuring compliance with safety standards. The service may also include a detailed report on the boiler's condition and any recommended repairs.",
+              },
+              {
+                ques: "What should I do if my boiler needs repair?",
+                ans: "If your boiler needs repair, contact a qualified technician as soon as possible to diagnose and fix the issue. Delaying repairs can lead to more significant problems and potentially increase repair costs. Ensure that repairs are conducted by a certified professional to maintain safety and efficiency.",
+              },
+              {
+                ques: "How long does a boiler service take?",
+                ans: "A typical boiler service takes between 30 minutes to 1 hour, depending on the type and condition of the boiler. More complex systems or issues may require additional time.",
+              },
+              {
+                ques: "Can I perform boiler repairs myself?",
+                ans: "No, boiler repairs should only be performed by a qualified and certified technician. Attempting DIY repairs can be dangerous and may result in further damage or safety hazards. Always seek professional help for boiler repairs.",
               },
             ],
           },
@@ -1093,6 +1273,172 @@ export const NAV_ITEMS: NavItem[] = [
             image: backgroundImage,
             description:
               "Identify and mitigate fire hazards in your home with our comprehensive fire risk assessments.",
+            pageContent: {
+              title:
+                "Mitigating Risks with Comprehensive Fire Risk Assessments",
+              html: `
+  <div class="max-w-4xl mx-auto">
+  <p class="text-lg mb-6">
+    Ensuring the safety of your property and its occupants is paramount. At London Home Safety Limited, we provide comprehensive Fire Risk Assessment services designed to identify potential fire hazards, evaluate risks, and implement preventive measures. Our certified professionals are equipped with the knowledge and experience to assess both residential and commercial properties, helping you to comply with legal obligations and maintain a safe environment.
+  </p>
+
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">What is a Fire Risk Assessment?</h2>
+    <p class="mb-4">
+      A Fire Risk Assessment is a systematic evaluation of your property to identify fire hazards, assess the risk to people, and recommend measures to minimize or eliminate those risks. This process is crucial for ensuring the safety of your property and compliance with fire safety regulations.
+    </p>
+    <p class="font-bold mb-2">Key Elements of a Fire Risk Assessment:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Hazard Identification:</span> Pinpointing sources of ignition, fuel, and oxygen that could contribute to a fire.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Risk Evaluation:</span> Assessing the likelihood of a fire occurring and its potential impact on occupants and property.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Preventive Measures:</span> Recommending actions to reduce or eliminate identified risks, such as improving fire detection systems or implementing safety protocols.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Emergency Planning:</span> Developing or reviewing fire evacuation plans and ensuring clear communication channels during emergencies.</span>
+      </li>
+    </ul>
+  </div>
+
+  <blockquote class="bg-red-50 text-lg p-6 rounded-lg mb-8">
+    <p>
+      Remember, a thorough Fire Risk Assessment is not just a legal requirement; it’s a critical step in protecting lives and property. Don’t wait until it’s too late—ensure your property is fire-safe today.
+    </p>
+  </blockquote>
+
+  <h2 class="text-2xl font-bold mb-4">Why is a Fire Risk Assessment Essential?</h2>
+  <p class="mb-4">
+    Conducting a Fire Risk Assessment is a legal obligation for most businesses and landlords. Beyond legal compliance, it plays a vital role in protecting lives and property by identifying and mitigating fire hazards before they escalate into emergencies.
+  </p>
+  <p class="font-bold mb-2">Reasons to Conduct a Fire Risk Assessment:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Legal Compliance:</span> Fulfills your legal duty under fire safety regulations, reducing the risk of penalties and legal action.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Life Safety:</span> Helps protect occupants by identifying risks and implementing necessary safety measures.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Property Protection:</span> Minimizes potential damage to property by preventing fire incidents through proactive risk management.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Peace of Mind:</span> Knowing that your property is safe and compliant provides reassurance to you, your employees, and your tenants.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Who Needs a Fire Risk Assessment?</h2>
+  <p class="mb-4">
+    Fire Risk Assessments are essential for a wide range of properties, including residential, commercial, and industrial buildings. Landlords, business owners, and property managers are particularly responsible for ensuring these assessments are conducted regularly.
+  </p>
+  <p class="font-bold mb-2">Who Should Get a Fire Risk Assessment:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> Legally required to ensure rental properties meet fire safety standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Businesses:</span> Obligated to protect employees and customers by maintaining a fire-safe environment.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Property Managers:</span> Responsible for ensuring multi-occupancy buildings comply with fire safety regulations.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> While not always legally required, a Fire Risk Assessment can provide peace of mind and improve home safety.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Does a Fire Risk Assessment Include?</h2>
+  <p class="mb-4">
+    Our Fire Risk Assessment service covers a comprehensive evaluation of your property, from identifying fire hazards to recommending and implementing preventive measures. Our goal is to ensure your property is fully compliant with safety regulations and that you have a robust fire safety plan in place.
+  </p>
+  <p class="font-bold mb-2">Fire Risk Assessment Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Site Inspection:</span> A thorough examination of your property to identify potential fire hazards and assess existing fire safety measures.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Risk Analysis:</span> Evaluation of the likelihood of a fire occurring and the potential impact on property and occupants.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Recommendations:</span> Detailed advice on how to reduce or eliminate identified risks, including upgrades to fire safety systems or changes to safety protocols.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Fire Safety Plan:</span> Development or review of an existing fire safety plan, ensuring clear evacuation routes and procedures.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens After the Assessment?</h2>
+  <p class="mb-4">
+    After the assessment, you will receive a comprehensive report detailing the findings, along with actionable recommendations to improve fire safety. Our team will work with you to implement these measures, ensuring your property is fully compliant and as safe as possible.
+  </p>
+  <p class="font-bold mb-2">Post-Assessment Steps:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Review Report:</span> Our experts will walk you through the assessment report, explaining each finding and recommendation in detail.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Implement Recommendations:</span> We will assist you in carrying out the recommended safety improvements, ensuring they are completed to the highest standard.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Ongoing Support:</span> Our team remains available for follow-up assessments, support, and any additional guidance you may need.</span>
+    </li>
+ 
+
+  
+                `,
+            },
+            faqs: [
+              {
+                ques: "What is a Fire Risk Assessment?",
+                ans: "A Fire Risk Assessment is a systematic evaluation of a property to identify potential fire hazards, assess the risks associated with those hazards, and determine appropriate measures to minimize or eliminate the risk. This assessment helps ensure that a property is compliant with fire safety regulations and that adequate precautions are in place.",
+              },
+              {
+                ques: "Why is a Fire Risk Assessment necessary?",
+                ans: "A Fire Risk Assessment is necessary to protect lives and property by identifying fire hazards and assessing the risk of fire. It helps ensure that appropriate fire safety measures are in place, meeting legal requirements, and reducing the likelihood of fire-related incidents.",
+              },
+              {
+                ques: "How often should a Fire Risk Assessment be conducted?",
+                ans: "Fire Risk Assessments should be conducted annually or whenever there are significant changes to the property or its use. Regular assessments help maintain up-to-date fire safety measures and ensure ongoing compliance with regulations.",
+              },
+              {
+                ques: "What does a Fire Risk Assessment include?",
+                ans: "A Fire Risk Assessment includes identifying potential fire hazards, assessing the risk of those hazards, evaluating existing fire safety measures, and recommending improvements. The assessment results in a detailed report outlining the findings and necessary actions to enhance fire safety.",
+              },
+              {
+                ques: "What should I do if my Fire Risk Assessment identifies issues?",
+                ans: "If your Fire Risk Assessment identifies issues, address them promptly by implementing the recommended changes or improvements. This may include installing additional fire safety equipment, enhancing fire evacuation plans, or conducting staff training.",
+              },
+              {
+                ques: "Is a Fire Risk Assessment required by law?",
+                ans: "Yes, a Fire Risk Assessment is required by law for all non-domestic properties. It ensures that the property complies with fire safety regulations and that adequate measures are in place to protect occupants and property from fire hazards.",
+              },
+              {
+                ques: "How long does a Fire Risk Assessment take?",
+                ans: "The duration of a Fire Risk Assessment varies depending on the size and complexity of the property. It typically takes a few hours to a full day to complete, including the evaluation and preparation of the detailed report.",
+              },
+            ],
           },
           {
             label: "Fire Alarm Certificate",
@@ -1101,6 +1447,172 @@ export const NAV_ITEMS: NavItem[] = [
             image: backgroundImage,
             description:
               "Certify your fire alarm system to ensure it meets all safety regulations.",
+
+            pageContent: {
+              title:
+                "Ensuring Safety Compliance with Professional Fire Alarm Certification",
+              html: `
+    <div class="max-w-4xl mx-auto">
+  <p class="text-lg mb-6">
+    At London Home Safety Limited, we understand the importance of a reliable fire alarm system in protecting lives and property. Our Fire Alarm Certificate service ensures that your fire alarm systems are compliant with the latest regulations and are fully operational, providing you with the assurance that your property is safeguarded against fire risks.
+  </p>
+
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">What is a Fire Alarm Certificate?</h2>
+    <p class="mb-4">
+      A Fire Alarm Certificate is an official document that confirms your fire alarm system has been installed, tested, and maintained in accordance with the relevant fire safety standards. It serves as proof that your property is equipped with a functional and compliant fire alarm system, which is a critical component of your overall fire safety strategy.
+    </p>
+    <p class="font-bold mb-2">Key Components of a Fire Alarm Certificate:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">System Installation Verification:</span> Confirmation that the fire alarm system has been correctly installed following the necessary codes and regulations.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Testing and Commissioning:</span> Detailed testing to ensure that all components of the fire alarm system are functioning as intended.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Maintenance Records:</span> Documentation of regular maintenance checks, which are essential for the ongoing reliability of the system.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Compliance Confirmation:</span> Assurance that the fire alarm system meets all relevant fire safety regulations and standards.</span>
+      </li>
+    </ul>
+  </div>
+
+  <blockquote class="bg-red-50 text-lg p-6 rounded-lg mb-8">
+    <p>
+      A Fire Alarm Certificate is more than just a piece of paper—it's your peace of mind. Ensure your property is protected with a certified fire alarm system that you can rely on in an emergency.
+    </p>
+  </blockquote>
+
+  <h2 class="text-2xl font-bold mb-4">Why is a Fire Alarm Certificate Important?</h2>
+  <p class="mb-4">
+    A Fire Alarm Certificate is not only a legal requirement for many properties but also a crucial aspect of your fire safety strategy. It provides evidence that your fire alarm system is in working order and capable of alerting occupants in the event of a fire, thereby helping to prevent loss of life and property damage.
+  </p>
+  <p class="font-bold mb-2">Reasons to Obtain a Fire Alarm Certificate:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Legal Compliance:</span> Fulfills your legal obligation under fire safety regulations, reducing the risk of penalties and legal issues.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Life Safety:</span> Ensures your fire alarm system is capable of providing early warning in case of a fire, helping to save lives.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Insurance Requirements:</span> Many insurance policies require a valid Fire Alarm Certificate as part of their terms and conditions.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Peace of Mind:</span> Knowing your fire alarm system is certified and fully functional offers reassurance to you, your employees, and your tenants.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Who Needs a Fire Alarm Certificate?</h2>
+  <p class="mb-4">
+    Fire Alarm Certificates are essential for a variety of properties, particularly those that are required by law to have a working fire alarm system. This includes commercial buildings, residential complexes, and any property where people live or work.
+  </p>
+  <p class="font-bold mb-2">Who Should Obtain a Fire Alarm Certificate:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> Required to ensure that rental properties are equipped with functional and certified fire alarm systems.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Business Owners:</span> Must ensure their premises comply with fire safety regulations, including having a certified fire alarm system.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Property Managers:</span> Responsible for maintaining fire alarm systems in multi-occupancy buildings and ensuring they are certified.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> While not always legally required, obtaining a Fire Alarm Certificate can enhance the safety of your home.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Does a Fire Alarm Certification Process Involve?</h2>
+  <p class="mb-4">
+    Our Fire Alarm Certification process involves a thorough examination of your fire alarm system to ensure it meets all regulatory requirements. This process includes system installation verification, comprehensive testing, and the issuance of a Fire Alarm Certificate that confirms your system's compliance.
+  </p>
+  <p class="font-bold mb-2">Fire Alarm Certification Steps:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">System Inspection:</span> Our experts will inspect the fire alarm system to verify that it has been installed correctly and in accordance with the relevant standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Functional Testing:</span> Comprehensive testing of the system's components to ensure they are working properly and can effectively alert occupants in case of a fire.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Certification:</span> After successful testing, a Fire Alarm Certificate is issued, confirming that the system complies with all necessary regulations and standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Maintenance Scheduling:</span> We will set up a maintenance schedule to ensure that your fire alarm system remains fully operational and compliant.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens After Certification?</h2>
+  <p class="mb-4">
+    Once your fire alarm system has been certified, it’s important to maintain its functionality through regular inspections and testing. We provide ongoing support to help you keep your system in top condition, ensuring continuous compliance and safety.
+  </p>
+  <p class="font-bold mb-2">Post-Certification Steps:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Regular Maintenance:</span> Scheduled checks and testing to keep your fire alarm system fully operational and compliant with regulations.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> Keeping detailed records of all maintenance activities and updates to ensure ongoing compliance.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+       <span><span class="font-semibold">Support and Assistance:</span> Our team is always available to provide advice, support, and any necessary updates to your fire alarm system.</span>
+    </li>
+  </ul>
+</div>
+               `,
+            },
+            faqs: [
+              {
+                ques: "What is a Fire Alarm Certificate?",
+                ans: "A Fire Alarm Certificate is an official document issued after a fire alarm system has been inspected, tested, and confirmed to meet legal safety standards. It verifies that the system is functioning correctly and complies with fire safety regulations.",
+              },
+              {
+                ques: "Why do I need a Fire Alarm Certificate?",
+                ans: "A Fire Alarm Certificate is essential for ensuring that your fire alarm system is operational and compliant with safety standards. It provides proof that the system has been properly installed and maintained, offering protection for occupants and meeting legal requirements.",
+              },
+              {
+                ques: "How often should a Fire Alarm Certificate be renewed?",
+                ans: "A Fire Alarm Certificate should be renewed annually or after significant modifications to the fire alarm system. Regular inspections and certifications ensure ongoing compliance with safety standards and reliable performance of the fire alarm system.",
+              },
+              {
+                ques: "What does the Fire Alarm certification process involve?",
+                ans: "The Fire Alarm certification process involves a comprehensive inspection and testing of the fire alarm system by a qualified technician. This includes checking the functionality of alarms, detectors, control panels, and ensuring compliance with relevant safety regulations.",
+              },
+              {
+                ques: "What should I do if my Fire Alarm Certificate identifies issues?",
+                ans: "If issues are identified during the certification process, address them promptly by arranging for necessary repairs or upgrades. Once the issues are resolved, a new Fire Alarm Certificate can be issued to confirm that the system meets all safety standards.",
+              },
+              {
+                ques: "Is a Fire Alarm Certificate mandatory for all buildings?",
+                ans: "Yes, a Fire Alarm Certificate is mandatory for all buildings, particularly those used for commercial purposes or multi-occupancy residential buildings. It ensures that fire alarm systems are installed and maintained according to safety regulations.",
+              },
+              {
+                ques: "How long does it take to get a Fire Alarm Certificate?",
+                ans: "The time to obtain a Fire Alarm Certificate depends on the complexity of the fire alarm system and any issues that may need to be addressed. The inspection and certification process typically take a few hours, with additional time required for issuing the certificate after successful completion.",
+              },
+            ],
           },
           {
             label: "Fire Alarm Installation",
@@ -1109,6 +1621,152 @@ export const NAV_ITEMS: NavItem[] = [
             image: backgroundImage,
             description:
               "Install a reliable fire alarm system to protect your home and loved ones.",
+            pageContent: {
+              title:
+                "Protecting Lives with Reliable Fire Alarm Installation Services",
+              html: `
+                 <div class="max-w-4xl mx-auto">
+  <p class="text-lg mb-6">
+    At London Home Safety Limited, we specialize in providing top-notch Fire Alarm Installation services to ensure your property is equipped with the best fire safety solutions. Our expert team is committed to designing, installing, and maintaining fire alarm systems that comply with the highest safety standards, offering you peace of mind and protection for your property and its occupants.
+  </p>
+
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Why is Professional Fire Alarm Installation Essential?</h2>
+    <p class="mb-4">
+      Professional fire alarm installation is critical for ensuring that your fire alarm system operates efficiently and effectively. Proper installation not only maximizes the system's reliability but also ensures compliance with fire safety regulations, providing early warning in the event of a fire and minimizing potential risks.
+    </p>
+    <p class="font-bold mb-2">Benefits of Professional Fire Alarm Installation:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Enhanced Safety:</span> Ensures that your fire alarm system is installed correctly to provide early detection and warning, helping to safeguard lives and property.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Regulatory Compliance:</span> Guarantees that your fire alarm system meets all relevant fire safety standards and regulations, avoiding potential legal issues.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Optimized Performance:</span> Ensures that all components of the fire alarm system are installed and configured for optimal performance.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Peace of Mind:</span> Provides confidence that your fire alarm system is reliable and capable of responding effectively in an emergency.</span>
+      </li>
+    </ul>
+  </div>
+
+  <blockquote class="bg-red-50 text-lg p-6 rounded-lg mb-8">
+    <p>
+      A professionally installed fire alarm system is your first line of defense against fire hazards. Ensure your property is protected with an expertly installed fire alarm system from London Home Safety Limited.
+    </p>
+  </blockquote>
+
+  <h2 class="text-2xl font-bold mb-4">What Does Our Fire Alarm Installation Service Include?</h2>
+  <p class="mb-4">
+    Our comprehensive fire alarm installation service covers everything from the initial consultation to the final testing of your system. We work closely with you to design a system that meets your specific needs and ensures complete coverage of your property.
+  </p>
+  <p class="font-bold mb-2">Installation Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Consultation:</span> We assess your property and discuss your fire safety requirements to design a tailored fire alarm system.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">System Design:</span> Our experts create a detailed plan for the installation, including the placement of sensors, alarms, and control panels.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Installation:</span> Professional installation of all system components, ensuring proper placement and secure fitting.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Testing and Commissioning:</span> Thorough testing of the entire system to ensure it operates correctly and meets all safety standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Training:</span> We provide training on how to operate and maintain your new fire alarm system effectively.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Why Choose Us for Your Fire Alarm Installation?</h2>
+  <p class="mb-4">
+    London Home Safety Limited is committed to delivering exceptional fire alarm installation services with a focus on quality, reliability, and compliance. Our experienced team uses the latest technology and best practices to ensure your fire alarm system provides optimal protection for your property.
+  </p>
+  <p class="font-bold mb-2">Reasons to Choose Our Service:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Experienced Professionals:</span> Our team consists of qualified and experienced engineers who are experts in fire alarm systems.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Custom Solutions:</span> We provide tailored solutions that meet your specific fire safety needs and requirements.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Compliance Assurance:</span> We ensure that all installations comply with the latest fire safety regulations and standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Reliable Support:</span> Our team offers ongoing support and maintenance to keep your fire alarm system in top condition.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What to Expect After Installation?</h2>
+  <p class="mb-4">
+    After the installation of your fire alarm system, we provide a detailed handover including all necessary documentation and training. Our commitment to your safety continues with regular maintenance and support to ensure that your system remains effective and compliant.
+  </p>
+  <p class="font-bold mb-2">Post-Installation Services:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> You will receive comprehensive documentation including system specifications, testing reports, and maintenance schedules.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Training:</span> Our team will provide training on how to use and maintain the system effectively.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Ongoing Support:</span> We offer ongoing support and maintenance services to ensure your fire alarm system remains in optimal working order.</span>
+    </li>
+  </ul>
+</div>
+
+                `,
+            },
+            faqs: [
+              {
+                ques: "What is Fire Alarm Installation?",
+                ans: "Fire Alarm Installation involves setting up a fire alarm system within a property to detect and alert occupants of a fire. This process includes selecting the appropriate alarm components, installing detectors and alarms, and ensuring the system is integrated with other fire safety measures.",
+              },
+              {
+                ques: "Why is professional Fire Alarm Installation important?",
+                ans: "Professional Fire Alarm Installation is crucial to ensure that the system is installed correctly, meets safety regulations, and functions effectively in the event of a fire. Proper installation ensures reliable detection and alerting, providing essential protection for occupants and property.",
+              },
+              {
+                ques: "What does the Fire Alarm Installation process involve?",
+                ans: "The Fire Alarm Installation process includes assessing the property to determine the best placement for alarms and detectors, installing the necessary equipment, integrating the system with existing safety measures, and conducting tests to ensure everything operates correctly.",
+              },
+              {
+                ques: "How long does Fire Alarm Installation take?",
+                ans: "The duration of Fire Alarm Installation depends on the size and complexity of the property. It typically takes between one day to several days to complete, including assessment, installation, and testing of the system.",
+              },
+              {
+                ques: "Can I install a fire alarm system myself?",
+                ans: "While it is possible to install a fire alarm system yourself, it is highly recommended to hire a professional to ensure proper installation and compliance with safety regulations. Professionals have the expertise to handle complex installations and ensure the system functions effectively.",
+              },
+              {
+                ques: "What types of fire alarm systems are available?",
+                ans: "Fire alarm systems vary in type, including conventional systems, addressable systems, and wireless systems. Each type has specific features and benefits depending on the property's size, layout, and fire safety needs. A professional can help determine the best system for your requirements.",
+              },
+              {
+                ques: "What should I do after the fire alarm system is installed?",
+                ans: "After installation, ensure that the fire alarm system is tested and inspected to confirm it operates correctly. Schedule regular maintenance and testing to keep the system in optimal condition and ensure ongoing compliance with safety standards.",
+              },
+            ],
           },
         ],
       },
@@ -1136,6 +1794,168 @@ export const NAV_ITEMS: NavItem[] = [
                 "Mandatory for selling or renting properties",
               ],
             },
+            pageContent: {
+              title:
+                "Enhancing Efficiency with Expert Energy Performance Certification",
+              html: `
+               <div class="max-w-4xl mx-auto">
+  <p class="text-lg mb-6">
+    At London Home Safety Limited, we offer expert Energy Performance Certificate (EPC) services to help you understand and improve the energy efficiency of your property. Our certified assessors provide detailed evaluations that not only ensure compliance with legal requirements but also offer valuable insights to enhance your property's energy performance, reduce utility costs, and contribute to a more sustainable environment.
+  </p>
+
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Why is an Energy Performance Certificate Important?</h2>
+    <p class="mb-4">
+      An Energy Performance Certificate (EPC) is essential for assessing the energy efficiency of a property. It provides a clear rating on how energy-efficient your property is and highlights areas where improvements can be made. This certificate is crucial for property sales, rentals, and compliance with energy efficiency regulations.
+    </p>
+    <p class="font-bold mb-2">Benefits of an Energy Performance Certificate:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Compliance:</span> Ensures that your property meets legal requirements for energy efficiency, especially for sales or rental transactions.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Cost Savings:</span> Identifies opportunities to reduce energy consumption and lower utility bills through recommended improvements.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Increased Property Value:</span> Enhances the attractiveness of your property to potential buyers or tenants by demonstrating energy efficiency.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Environmental Impact:</span> Contributes to a reduction in your carbon footprint and supports sustainability efforts.</span>
+      </li>
+    </ul>
+  </div>
+
+  <blockquote class="bg-green-50 text-lg p-6 rounded-lg mb-8">
+    <p>
+      Obtaining an Energy Performance Certificate is a proactive step towards improving your property's energy efficiency and ensuring compliance with regulations. Let us help you make informed decisions for a more energy-efficient future.
+    </p>
+  </blockquote>
+
+  <h2 class="text-2xl font-bold mb-4">What Does an Energy Performance Certificate Include?</h2>
+  <p class="mb-4">
+    An Energy Performance Certificate provides a comprehensive assessment of your property's energy efficiency. It includes a rating from A (most efficient) to G (least efficient) and offers practical recommendations for improving energy performance.
+  </p>
+  <p class="font-bold mb-2">EPC Contents:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Energy Rating:</span> A letter rating indicating the overall energy efficiency of the property.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Estimated Energy Costs:</span> Information on the likely cost of energy for the property based on current performance.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Recommendations:</span> Practical suggestions for improving energy efficiency, such as insulation upgrades or energy-efficient appliances.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Environmental Impact:</span> Assessment of the property's impact on the environment, including CO2 emissions.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">How is the Energy Performance Certificate Issued?</h2>
+  <p class="mb-4">
+    The process of obtaining an Energy Performance Certificate involves a thorough assessment of your property by a qualified energy assessor. The assessor will evaluate various aspects of the property's energy usage and efficiency to provide an accurate and reliable certificate.
+  </p>
+  <p class="font-bold mb-2">EPC Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Assessment:</span> An energy assessor will visit your property to conduct a detailed evaluation.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Report Generation:</span> The assessor will compile their findings into a comprehensive report, including the energy rating and recommendations.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Certification:</span> You will receive an official Energy Performance Certificate, which can be used for property transactions or regulatory compliance.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Why Choose Us for Your Energy Performance Certificate?</h2>
+  <p class="mb-4">
+    London Home Safety Limited provides reliable and professional Energy Performance Certificate services, ensuring that your property meets all required standards and offering valuable insights into energy efficiency improvements. Our team of certified assessors is dedicated to delivering accurate and actionable results for your property.
+  </p>
+  <p class="font-bold mb-2">Reasons to Choose Our Service:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Qualified Assessors:</span> Our team consists of experienced and certified energy assessors who provide accurate and thorough evaluations.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Comprehensive Reports:</span> We deliver detailed reports with practical recommendations for improving energy efficiency.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Regulatory Compliance:</span> Ensures that your property meets all legal requirements and energy efficiency standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Customer Focused:</span> We offer personalized service and support, addressing all your queries and providing guidance throughout the process.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens After You Receive Your EPC?</h2>
+  <p class="mb-4">
+    After receiving your Energy Performance Certificate, you can use it for property sales, rentals, or to make informed decisions about energy efficiency improvements. We also offer ongoing support and advice to help you implement the recommendations and enhance your property's performance.
+  </p>
+  <p class="font-bold mb-2">Post-Certificate Support:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Review Recommendations:</span> Discuss the recommendations with our team to plan any necessary improvements.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Implementation Advice:</span> Get guidance on how to implement recommended improvements effectively.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Ongoing Support:</span> We offer continued support and advice to ensure your property remains energy efficient and compliant.</span>
+    </li>
+  </ul>
+</div>
+
+              `,
+            },
+            faqs: [
+              {
+                ques: "What is an Energy Performance Certificate (EPC)?",
+                ans: "An Energy Performance Certificate (EPC) provides an assessment of a property's energy efficiency, including recommendations for improving its energy performance. It rates the property on a scale from A (most efficient) to G (least efficient) and helps inform potential buyers or tenants about energy costs and efficiency.",
+              },
+              {
+                ques: "Why do I need an Energy Performance Certificate?",
+                ans: "An Energy Performance Certificate is required by law for properties being sold or rented. It provides valuable information about the property's energy efficiency, helping buyers and tenants make informed decisions and encouraging improvements to reduce energy consumption and costs.",
+              },
+              {
+                ques: "How often should an Energy Performance Certificate be renewed?",
+                ans: "An Energy Performance Certificate should be renewed every 10 years. However, if significant changes are made to the property that could affect its energy performance, it is advisable to obtain a new certificate to reflect the updated efficiency rating.",
+              },
+              {
+                ques: "What does an EPC assessment involve?",
+                ans: "An EPC assessment involves evaluating the property's energy efficiency by analyzing factors such as insulation, heating systems, windows, and lighting. The assessor will also review the property's energy usage and recommend improvements to enhance efficiency and reduce energy costs.",
+              },
+              {
+                ques: "What should I do if my EPC report recommends improvements?",
+                ans: "If your EPC report recommends improvements, consider implementing the suggested measures to enhance the property's energy efficiency. This may include upgrading insulation, installing energy-efficient windows or heating systems, and improving overall energy use to reduce costs and increase the property's value.",
+              },
+              {
+                ques: "Is an Energy Performance Certificate mandatory for all properties?",
+                ans: "Yes, an Energy Performance Certificate is mandatory for all properties that are being sold or rented. It ensures transparency about the property's energy efficiency and encourages improvements to reduce energy consumption and environmental impact.",
+              },
+              {
+                ques: "How long does it take to get an Energy Performance Certificate?",
+                ans: "The time to obtain an Energy Performance Certificate depends on the size and complexity of the property. The assessment typically takes a few hours, with the certificate being issued within a few days after the assessment is completed.",
+              },
+            ],
           },
         ],
       },

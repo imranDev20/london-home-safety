@@ -6,6 +6,7 @@ import Hero from "./_components/hero";
 import Reviews from "./_components/reviews";
 import ServiceCategories from "./_components/service-categories";
 import Services from "./_components/services";
+import Partners from "./about/_components/partners";
 import { getReviews } from "./actions";
 
 export default async function Home() {
@@ -19,6 +20,7 @@ export default async function Home() {
       <ServiceCategories />
       <CallToAction />
       <Reviews reviews={reviews} />
+      <Partners />
       <Faq />
       <Contact />
     </>

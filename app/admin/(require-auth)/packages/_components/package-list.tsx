@@ -1,4 +1,6 @@
+import TableEmpty from "@/components/table-empty";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -6,11 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ServiceTableRow from "./package-table-row";
-import TableEmpty from "@/components/table-empty";
 import { Pagination } from "@/types/order";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Package } from "@prisma/client";
+import ServiceTableRow from "./package-table-row";
 
 export default async function ServiceList({
   services: services,
@@ -30,7 +30,8 @@ export default async function ServiceList({
                     <Checkbox />
                   </div>
                 </TableHead>
-                <TableHead className="w-[25%]">Name</TableHead>
+                <TableHead className="w-[15%]">Name</TableHead>
+                <TableHead className="w-[15%]">Price</TableHead>
                 <TableHead className="hidden md:table-cell">Category</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead className="hidden md:table-cell">Unit</TableHead>
