@@ -8,7 +8,7 @@ export default function ServiceCard({ service }: { service: NavLeafItem }) {
   const { description, image, path, label, categoryPath } = service;
 
   return (
-    <Card className="relative bg-blue-50 rounded-lg shadow-lg  w-96">
+    <Card className="relative bg-blue-50 rounded-lg shadow-lg  w-96 mx-auto">
       <Image
         src={image}
         alt="Electrical Repairs"
