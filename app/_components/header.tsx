@@ -47,11 +47,11 @@ export default function Header() {
 
       {/* Desktop header */}
       <header
-        className={`bg-white fixed top-0 left-0 w-full z-50 transition-all duration-300 hidden md:block ${
+        className={`bg-white fixed top-0 left-0 w-[100vw] z-50 transition-all duration-300 hidden md:block ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         } ${prevScrollPos > 0 ? "shadow-md" : ""}`}
       >
-        <div className="container mx-auto max-w-full px-4 md:px-8 lg:px-16 flex justify-between items-center">
+        <div className="container mx-auto max-w-[100vw] px-4 md:px-8 lg:px-16 flex justify-between items-center">
           <div className="text-lg font-semibold">LoGo</div>
 
           <div className="flex items-center relative z-20">

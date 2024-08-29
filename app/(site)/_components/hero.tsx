@@ -46,7 +46,7 @@ export default function Hero() {
           </Link>
         </div>
 
-        <div className="col-span-12 lg:col-span-4">
+        <div className="col-span-12 w-[80vw] md:w-full lg:col-span-4">
           <BookNow />
         </div>
       </div>

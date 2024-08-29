@@ -22,7 +22,7 @@ const buttonData = [
 
 export default function BookNow() {
   return (
-    <Card className="text-white text-center border-none rounded-xl bg-primary">
+    <Card className="text-white text-center border-none rounded-xl bg-primary ">
       <CardHeader className="pb-0"></CardHeader>
       <CardContent>
         <h3 className="text-3xl font-bold mb-2">Book Now</h3>
