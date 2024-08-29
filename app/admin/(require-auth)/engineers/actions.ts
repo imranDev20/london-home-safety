@@ -1,8 +1,13 @@
 "use server";
 
+import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 import prisma from "@/lib/prisma";
+import { sendEmail } from "@/lib/send-email";
+import { EMAIL_ADDRESS } from "@/shared/data";
+import { SendEmailToEngineerData } from "@/types/misc";
 import { Prisma } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
+
 
 export const getEngineers = async (
   page: number = 1,
@@ -97,11 +102,7 @@ export async function deleteEngineer(engineersId: string) {
   }
 }
 
-export const getEngineerById = async (
-  engineerId: string
-): Promise<Prisma.UserGetPayload<{
-  include: { address: true; assignedOrders: true };
-}> | null> => {
+export const getEngineerById = async (engineerId: string) => {
   if (!engineerId || typeof engineerId !== "string") {
     throw new Error("Invalid engineer ID provided");
   }
@@ -111,11 +112,15 @@ export const getEngineerById = async (
       where: { id: engineerId },
       include: {
         address: true,
-        assignedOrders: true,
+        assignedOrders: {
+          include: {
+            packages: true,
+          },
+        },
       },
     });
 
-    return engineer; // This will be null if no engineer is found
+    return engineer;
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       // Handle known Prisma errors
@@ -127,3 +132,37 @@ export const getEngineerById = async (
     throw new Error("An unexpected error occurred while fetching the engineer");
   }
 };
+
+
+
+
+export async function sendEmailToEngineerAction(
+  emailData: SendEmailToEngineerData
+) {
+  try {
+    
+    await sendEmail({
+      fromEmail: EMAIL_ADDRESS,
+      fromName: "London Home Safety",
+      to: emailData.receiver,
+      subject: emailData.subject,
+      html: notifyEngineerEmailHtml(emailData.orderDetails, emailData.content),
+    });
+
+    // Revalidate the necessary paths if applicable (example paths)
+    revalidatePath(`/admin/orders`);
+    revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
+
+    return {
+      message: "Email sent successfully!",
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Error sending email:", error);
+    return {
+      message: "An error occurred while sending the email. Please try again later.",
+      success: false,
+    };
+  }
+}
+

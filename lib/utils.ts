@@ -1,3 +1,5 @@
+import { OrderWithRelation } from "@/types/order";
+import { Package } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -215,3 +217,15 @@ export function display12HourValue(hours: number) {
   if (hours % 12 > 9) return `${hours}`;
   return `0${hours % 12}`;
 }
+
+export const calculateSubtotal = (packages: Package[]) => {
+  return packages
+    .reduce((total, pack) => total + (pack.price || 0), 0)
+    .toFixed(2);
+};
+export const calculateTotal = (orderDetails: OrderWithRelation) => {
+  let total = parseFloat(calculateSubtotal(orderDetails.packages));
+  if (orderDetails.isCongestionZone) total += 5;
+  if (orderDetails.parkingOptions !== "FREE") total += 5;
+  return total.toFixed(2);
+};

@@ -1,4 +1,5 @@
 import { PropertyType } from "@prisma/client";
+import { OrderWithRelation } from "./order";
 
 export type ChildrenProp = {
   children: React.ReactNode;
@@ -44,4 +45,11 @@ export type NavItem = {
 
 export type NavLeafItem = Omit<NavItem, "children"> & {
   categoryPath?: string;
+};
+
+export type SendEmailToEngineerData = {
+  subject: string;
+  content: string;
+  receiver: string;
+  orderDetails:  OrderWithRelation | null;
 };
