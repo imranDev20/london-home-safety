@@ -430,7 +430,7 @@ export default function CheckoutPage() {
             </Card>
 
             <Button type="submit" className="w-full">
-              Confirm and Pay
+              Confirm & Pay
             </Button>
           </div>
         </form>

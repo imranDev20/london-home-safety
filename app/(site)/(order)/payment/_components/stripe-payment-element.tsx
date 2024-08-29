@@ -103,7 +103,7 @@ export default function StripePaymentElement() {
 
       <div className="mt-5 flex justify-between">
         <Button type="submit" disabled={loading || !stripe || !elements}>
-          Confirm and Pay
+          Complete Payment
         </Button>
       </div>
     </form>

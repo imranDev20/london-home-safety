@@ -9,8 +9,10 @@ import { Switch } from "@/components/ui/switch";
 import useCartStore from "@/hooks/use-cart-store";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { ALL_SERVICES } from "@/shared/data";
-import { PropertyType } from "@prisma/client";
+import { NavItem } from "@/types/misc";
+import { Package, PropertyType } from "@prisma/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const breadCrumbOptions = [
@@ -19,6 +21,22 @@ const breadCrumbOptions = [
     isCurrentPage: true,
   },
 ];
+
+function mergeArrays(
+  arr1: NavItem[],
+  arr2: Package[],
+  prop1: keyof NavItem,
+  prop2: keyof Package
+) {
+  return arr1.map((item1) => {
+    const matchingItems = arr2.filter((item2) => item2[prop2] === item1[prop1]);
+
+    return {
+      ...item1,
+      packages: matchingItems,
+    };
+  });
+}
 
 const smoothScroll = (
   e: React.MouseEvent<HTMLAnchorElement>,
@@ -33,11 +51,14 @@ const smoothScroll = (
 
 export default function BookNowCompo({
   propertyType,
+  packages,
 }: {
   propertyType: PropertyType | null;
+  packages: Package[];
 }) {
   const [isCommercial, setIsCommercial] = useState<boolean>(false);
   const { items, addItem } = useCartStore();
+  const router = useRouter();
 
   const handleAddToCart = (cartItem: {
     name: string;
@@ -59,6 +80,13 @@ export default function BookNowCompo({
     }
   }, [propertyType]);
 
+  const mergedData = mergeArrays(
+    ALL_SERVICES,
+    packages,
+    "label",
+    "serviceName"
+  );
+
   return (
     <div className="bg-section-background">
       <PageHeader
@@ -79,7 +107,19 @@ export default function BookNowCompo({
             id="property-type"
             className=" scale-125"
             checked={isCommercial}
-            onCheckedChange={(e) => setIsCommercial(e)}
+            onCheckedChange={(e) => {
+              setIsCommercial(e);
+
+              if (e) {
+                router.push("/book-now?property_type=COMMERCIAL", {
+                  scroll: false,
+                });
+              } else {
+                router.push("/book-now?property_type=RESIDENTIAL", {
+                  scroll: false,
+                });
+              }
+            }}
           />
           <Label htmlFor="property-type" className="text-2xl">
             Commercial
@@ -88,14 +128,8 @@ export default function BookNowCompo({
 
         <div className="grid grid-cols-12 gap-7 mt-20 relative">
           <div className="col-span-9">
-            {ALL_SERVICES.map((service) => {
-              const pricingArray = service.pricingDetails
-                ? isCommercial
-                  ? service?.pricingDetails[1]
-                  : service?.pricingDetails[0]
-                : null;
-
-              if (pricingArray?.packages && pricingArray.packages.length > 0) {
+            {mergedData.map((service) => {
+              if (service?.packages && service.packages.length > 0) {
                 return (
                   <div
                     key={service.label}
@@ -107,53 +141,49 @@ export default function BookNowCompo({
                     </h2>
 
                     <div className="grid grid-cols-3 gap-5 auto-rows-fr">
-                      {pricingArray &&
-                        pricingArray.packages?.map((pack) => {
-                          const productInCart = isProductInCart(pack.id);
-                          return (
-                            <Card
-                              key={pack.id}
-                              className={`p-5 flex flex-col justify-between items-center hover:shadow-lg transition-all`}
-                            >
-                              <div className="flex flex-col items-center">
-                                <h3 className="text-xl font-semibold text-body-dark mb-2 mt-3 text-center">
-                                  {`${
+                      {service.packages?.map((pack) => {
+                        const productInCart = isProductInCart(pack.id);
+
+                        return (
+                          <Card
+                            key={pack.id}
+                            className={`p-5 flex flex-col justify-between items-center hover:shadow-lg transition-all`}
+                          >
+                            <div className="flex flex-col items-center">
+                              <h3 className="text-xl font-semibold text-body-dark mb-2 mt-3 text-center">
+                                {pack.name}
+                              </h3>
+
+                              {pack.price ? (
+                                <p className="text-body text-sm mt-2">
+                                  Starts From
+                                </p>
+                              ) : null}
+
+                              {pack.price ? (
+                                <p className="text-primary font-bold text-2xl mb-4">
+                                  £{pack.price}
+                                </p>
+                              ) : null}
+                            </div>
+                            <Button
+                              className="w-full mt-4 bg-secondary text-black font-semibold hover:bg-primary hover:text-white transition-colors duration-300"
+                              onClick={() => {
+                                handleAddToCart({
+                                  id: pack.id,
+                                  name: `${
                                     isCommercial ? "Commercial" : "Residential"
-                                  } ${pack.name}`}
-                                </h3>
-
-                                {pack.price ? (
-                                  <p className="text-body text-sm mt-2">
-                                    Starts From
-                                  </p>
-                                ) : null}
-
-                                {pack.price ? (
-                                  <p className="text-primary font-bold text-2xl mb-4">
-                                    £{pack.price}
-                                  </p>
-                                ) : null}
-                              </div>
-                              <Button
-                                className="w-full mt-4 bg-secondary text-black font-semibold hover:bg-primary hover:text-white transition-colors duration-300"
-                                onClick={() => {
-                                  handleAddToCart({
-                                    id: pack.id,
-                                    name: `${
-                                      isCommercial
-                                        ? "Commercial"
-                                        : "Residential"
-                                    } ${pack.name}`,
-                                    price: pack.price,
-                                  });
-                                }}
-                                disabled={productInCart}
-                              >
-                                {productInCart ? "Added to Cart" : "Order Now"}
-                              </Button>
-                            </Card>
-                          );
-                        })}
+                                  } ${pack.name}`,
+                                  price: pack.price,
+                                });
+                              }}
+                              disabled={productInCart}
+                            >
+                              {productInCart ? "Added to Cart" : "Order Now"}
+                            </Button>
+                          </Card>
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -168,31 +198,24 @@ export default function BookNowCompo({
               </CardHeader>
               <Separator />
 
-              {ALL_SERVICES.map((item) => {
-                const pricingArray = item.pricingDetails
-                  ? isCommercial
-                    ? item?.pricingDetails[1]
-                    : item?.pricingDetails[0]
-                  : null;
-
-                if (
-                  pricingArray?.packages &&
-                  pricingArray.packages?.length > 0
-                ) {
+              {mergedData.map((service) => {
+                if (service?.packages && service.packages?.length > 0) {
                   return (
                     <Link
-                      href={`/book-now/#${item.path.toString().slice(1)}`}
+                      href={`/book-now/#${service.path.toString().slice(1)}`}
                       scroll
                       shallow
-                      key={item.label}
+                      key={service.label}
                       onClick={(e) =>
-                        smoothScroll(e, item.path.toString().slice(1))
+                        smoothScroll(e, service.path.toString().slice(1))
                       }
                     >
                       <div className={`flex items-center my-3 px-5`}>
-                        {item.Icon && <item.Icon height={24} width={24} />}
+                        {service.Icon && (
+                          <service.Icon height={24} width={24} />
+                        )}
                         <h4 className={`font-medium ml-3 text-sm `}>
-                          {item.label}
+                          {service.label}
                         </h4>
                       </div>
                       <Separator />

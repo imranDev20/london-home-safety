@@ -105,6 +105,8 @@ export async function createPackage(data: PackageFormInputType) {
     // Revalidate paths if needed
     revalidatePath("/admin/packages");
     revalidatePath("/admin/packages/new");
+    revalidatePath("/book-now");
+    revalidatePath("/");
 
     return {
       message: "Package created successfully!",

@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, PropertyType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export const getEngineersForOrder = async () => {
@@ -108,9 +108,13 @@ export const getEngineers = async () => {
   }
 };
 
-export const getPackages = async () => {
+export const getPackages = async (propertyType: PropertyType) => {
   try {
-    const packages = await prisma.package.findMany({});
+    const packages = await prisma.package.findMany({
+      where: {
+        propertyType,
+      },
+    });
     return packages;
   } catch (error) {
     console.error("Error fetching services:", error);
