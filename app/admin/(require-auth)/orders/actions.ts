@@ -2,92 +2,96 @@
 
 import prisma from "@/lib/prisma";
 import { OrderStatus, Prisma, Role } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
-import { revalidatePath } from "next/cache";
+import { unstable_cache as cache, revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
-export const getOrders = async (
-  page: number = 1,
-  pageSize: number = 10,
-  search: string = "",
-  sortBy: string = "createdAt",
-  sortOrder: "asc" | "desc" = "desc",
-  filterStatus: OrderStatus | "" = ""
-) => {
-  try {
-    const skip = (page - 1) * pageSize;
+export const getOrders = cache(
+  async (
+    page: number = 1,
+    pageSize: number = 10,
+    search: string = "",
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc",
+    filterStatus: OrderStatus | "" = ""
+  ) => {
+    try {
+      const skip = (page - 1) * pageSize;
 
-    const whereClause: Prisma.OrderWhereInput = {
-      AND: [
-        search
-          ? {
-              OR: [
-                { invoice: { contains: search, mode: "insensitive" } },
-                { user: { email: { contains: search, mode: "insensitive" } } },
-                { user: { name: { contains: search, mode: "insensitive" } } },
-              ],
-            }
-          : {},
-        filterStatus ? { status: filterStatus } : {},
-      ],
-    };
+      const whereClause: Prisma.OrderWhereInput = {
+        AND: [
+          search
+            ? {
+                OR: [
+                  { invoice: { contains: search, mode: "insensitive" } },
+                  {
+                    user: { email: { contains: search, mode: "insensitive" } },
+                  },
+                  { user: { name: { contains: search, mode: "insensitive" } } },
+                ],
+              }
+            : {},
+          filterStatus ? { status: filterStatus } : {},
+        ],
+      };
 
-    // Create orderBy clause
-    const orderByClause: Prisma.OrderOrderByWithRelationInput = {};
-    switch (sortBy) {
-      case "name":
-        orderByClause.user = { name: sortOrder };
-        break;
-      case "email":
-        orderByClause.user = { email: sortOrder };
-        break;
-      case "price":
-        orderByClause.totalPrice = sortOrder;
-        break;
-      case "createdAt":
-        orderByClause.createdAt = sortOrder;
-        break;
-      default:
-        orderByClause.createdAt = "desc";
-    }
+      // Create orderBy clause
+      const orderByClause: Prisma.OrderOrderByWithRelationInput = {};
+      switch (sortBy) {
+        case "name":
+          orderByClause.user = { name: sortOrder };
+          break;
+        case "email":
+          orderByClause.user = { email: sortOrder };
+          break;
+        case "price":
+          orderByClause.totalPrice = sortOrder;
+          break;
+        case "createdAt":
+          orderByClause.createdAt = sortOrder;
+          break;
+        default:
+          orderByClause.createdAt = "desc";
+      }
 
-    const [orders, totalCount] = await Promise.all([
-      prisma.order.findMany({
-        where: whereClause,
-        skip,
-        take: pageSize,
-        include: {
-          user: {
-            include: {
-              address: true,
+      const [orders, totalCount] = await Promise.all([
+        prisma.order.findMany({
+          where: whereClause,
+          skip,
+          take: pageSize,
+          include: {
+            user: {
+              include: {
+                address: true,
+              },
             },
           },
+          orderBy: orderByClause,
+        }),
+        prisma.order.count({ where: whereClause }),
+      ]);
+      // Generate Excel file
+
+      return {
+        orders,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalCount,
+          totalPages: Math.ceil(totalCount / pageSize),
         },
-        orderBy: orderByClause,
-      }),
-      prisma.order.count({ where: whereClause }),
-    ]);
-    // Generate Excel file
-
-    return {
-      orders,
-      pagination: {
-        currentPage: page,
-        pageSize,
-        totalCount,
-        totalPages: Math.ceil(totalCount / pageSize),
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw new Error("Failed to fetch orders");
+      };
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw new Error("Failed to fetch orders");
+    }
   }
-};
+);
 
-export const getOrderById = async (orderId: string) => {
+export const getOrderById = cache(async (orderId: string) => {
   try {
     if (!orderId) {
       console.error("No product ID available");
@@ -113,7 +117,7 @@ export const getOrderById = async (orderId: string) => {
     console.error("Error fetching order:", error);
     throw new Error("Failed to fetch order");
   }
-};
+});
 
 export async function deleteOrder(orderId: string) {
   try {
@@ -139,7 +143,7 @@ export async function deleteOrder(orderId: string) {
   }
 }
 
-export const getExportOrders = async () => {
+export const getExportOrders = cache(async () => {
   try {
     const orders = await prisma.order.findMany({
       include: {
@@ -191,7 +195,7 @@ export const getExportOrders = async () => {
       success: false,
     };
   }
-};
+});
 
 export default async function generateInvoice(orderId: string) {
   try {
