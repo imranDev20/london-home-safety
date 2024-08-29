@@ -112,7 +112,7 @@ export const notifyEngineerEmailHtml = (
         <ul style="margin-left: 20px;">
           ${orderDetails?.packages
             .map(
-              (item) => `<li>${item.name} - ${item.unitType} ${item.price}</li>`
+              (item) => `<li>${item.name} - ${item.category} ${item.price}</li>`
             )
             .join("")}
         </ul>

@@ -1,4 +1,3 @@
-import { OrderWithRelation } from '@/types/order';
 "use server";
 
 import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
@@ -7,7 +6,7 @@ import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { SendEmailToEngineerData } from "@/types/misc";
 import { Prisma } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 
 export const getEngineers = async (
@@ -141,9 +140,7 @@ export async function sendEmailToEngineerAction(
   emailData: SendEmailToEngineerData
 ) {
   try {
-
-   
-
+    
     await sendEmail({
       fromEmail: EMAIL_ADDRESS,
       fromName: "London Home Safety",
@@ -169,17 +166,3 @@ export async function sendEmailToEngineerAction(
   }
 }
 
-// // 
-// import { sendEmailToEngineerAction } from "@/actions/sendEmailToEngineerAction";
-
-// const handleEmailSend = async () => {
-//   const emailData = {
-//     subject: "Your Subject",
-//     content: "Your Content",
-//     orderDetails: { orderId: "12345", ...otherDetails },
-//     receiver: "engineer@example.com",
-//   };
-
-//   const result = await sendEmailToEngineerAction(emailData);
-//   console.log(result.message);
-// };
