@@ -5,7 +5,7 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
     packages: true;
     user: {
       include: {
-        address: true;
+        address: true;        
       };
     };
   };
