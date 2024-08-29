@@ -260,8 +260,12 @@ export default function EditPackageForm({
                     Package Category
                   </FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -289,8 +293,12 @@ export default function EditPackageForm({
                     Package Type
                   </FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -321,8 +329,12 @@ export default function EditPackageForm({
                     Property Type
                   </FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -348,8 +360,12 @@ export default function EditPackageForm({
                       Residential Type (Optional)
                     </FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value);
+                        }
+                      }}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -379,8 +395,12 @@ export default function EditPackageForm({
                       Commercial Type (Optional)
                     </FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value);
+                        }
+                      }}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
