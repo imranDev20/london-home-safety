@@ -174,7 +174,7 @@ export default function CreateOrderForm({
         variant: "destructive",
       });
     }
-  }, [errors]);
+  }, [errors, toast]);
 
   return (
     <ContentLayout title="Create Order">
