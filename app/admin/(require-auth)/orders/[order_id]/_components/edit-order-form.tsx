@@ -76,15 +76,17 @@ import PackageTableRow from "./service-table-row";
 
 import { LoadingButton } from "@/components/ui/loading-button";
 import SendEmailDialog from "./send-email-dialog";
+import { OrderStatus } from "@prisma/client";
 
 export default function EditOrderForm({
   orderDetails,
   engineers,
 }: {
-  orderDetails: OrderWithRelation | null;
+  orderDetails: OrderWithRelation;
   engineers: StaffWithRelations[] | null;
 }) {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [openAssignedEngineers, setOpenAssignedEngineers] = useState(false);
   const [selectedEngineer, setSelectedEngineer] = useState(
     orderDetails?.assignedEngineerId ?? ""
@@ -99,8 +101,8 @@ export default function EditOrderForm({
       );
     }
   }, [orderDetails?.assignedEngineerId, engineers, selectedEngineer]);
-  const [status, setStatus] = useState(orderDetails?.status ?? "");
-  const [loading, setLoading] = useState(false);
+
+  const [status, setStatus] = useState<OrderStatus>(orderDetails.status);
   const [isPending, startTransition] = useTransition();
 
   const breadcrumbItems = [
@@ -113,40 +115,7 @@ export default function EditOrderForm({
     },
   ];
 
-  const downloadInvoice = async () => {
-    setLoading(true);
-    try {
-      if (orderDetails?.id) {
-        const response = await generateInvoice(orderDetails.id);
-        if (response?.success && response.data) {
-          const blob = new Blob([response.data], { type: "application/pdf" });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `invoice_${orderDetails.invoice}.pdf`;
-          a.click();
-          window.URL.revokeObjectURL(url);
-        } else {
-          toast({
-            title: "Error",
-            description: "Failed to download invoice",
-            variant: "destructive",
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error downloading invoice:", error);
-      toast({
-        title: "Error",
-        description: "Failed to download invoice",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpdateOrderStatus = (value: string) => {
+  const handleUpdateOrderStatus = (value: OrderStatus) => {
     startTransition(async () => {
       if (orderDetails?.id) {
         setStatus(value);
@@ -207,44 +176,43 @@ export default function EditOrderForm({
   const handleSelectEngineerEmail = (engineerEmail: string) => {
     setSelectedEngineerEmail(engineerEmail);
   };
-  console.log(`selectedEngineer`, selectedEngineerEmail);
+
+  const handleDownload = async () => {
+    try {
+      setIsLoading(true);
+      const response = await generateInvoice(orderDetails.id);
+
+      if (!response?.data) {
+        throw new Error();
+      }
+
+      const binaryString = atob(response.data);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      // Create a Blob from the binary data
+      const blob = new Blob([bytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+
+      // Trigger download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Invoice_${orderDetails.invoice}`;
+      a.click();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
-
-      {/* <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 mt-6">
-        <div className="flex items-center gap-4 mb-4 md:mb-0">
-          <Link href="/admin/orders">
-            <Button variant="outline" size="icon" className="h-10 w-10">
-              <ChevronLeft className="h-5 w-5" />
-              <span className="sr-only">Back</span>
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {`Edit ${orderDetails?.invoice}`}
-          </h1>
-          <Badge variant="outline">{orderDetails?.status || status}</Badge>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Select value={status} onValueChange={handleUpdateOrderStatus}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Update Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {ORDER_STATUS_OPTIONS.map((option) => (
-                  <SelectItem value={option} key={option}>
-                    {kebabToNormal(option)}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Button onClick={downloadInvoice} disabled={loading || isPending}>
-            {loading ? "Generating..." : "Download Invoice"}
-          </Button>
-        </div>
-      </div> */}
 
       <div className="flex items-center gap-4 mb-4 mt-7">
         <h1 className="text-2xl font-bold mb-2 flex items-center">
@@ -258,7 +226,14 @@ export default function EditOrderForm({
         </h1>
 
         <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <Select value={status} onValueChange={handleUpdateOrderStatus}>
+          <Select
+            value={status as OrderStatus}
+            onValueChange={(value) => {
+              if (value) {
+                handleUpdateOrderStatus(value as OrderStatus);
+              }
+            }}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Update Status" />
             </SelectTrigger>
@@ -274,14 +249,14 @@ export default function EditOrderForm({
           </Select>
           <LoadingButton
             type="button"
-            disabled={isPending}
-            loading={isPending}
+            disabled={isLoading}
+            loading={isLoading}
             className="text-sm h-9 font-medium flex items-center"
-            onClick={downloadInvoice}
+            onClick={handleDownload}
             variant="default"
           >
-            {!isPending && <Download className="mr-2 h-4 w-4" />}
-            Download Excel
+            {!isLoading && <Download className="mr-2 h-4 w-4" />}
+            Download Invoice
           </LoadingButton>
         </div>
       </div>

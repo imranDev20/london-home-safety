@@ -1,9 +1,13 @@
 "use server";
 
+import generateInvoice from "@/app/admin/(require-auth)/orders/actions";
 import { CartItem, CustomerDetails } from "@/hooks/use-order-store";
 import { generateInvoiceId } from "@/lib/generate-invoice";
+import { placedOrderEmailHtml } from "@/lib/placed-order-html";
 import prisma from "@/lib/prisma";
-import { PaymentMethod, PaymentStatus } from "@prisma/client";
+import { sendEmail } from "@/lib/send-email";
+import { EMAIL_ADDRESS } from "@/shared/data";
+import { Order, PaymentMethod, PaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function upsertUser(userData: CustomerDetails) {
@@ -89,22 +93,31 @@ type OrderData = {
   };
 };
 
-export async function createOrder(orderData: OrderData) {
+export async function createOrder(orderData: OrderData): Promise<{
+  success: boolean;
+  data: Order | null;
+  message: string;
+}> {
   const { customerDetails, cartItems, userId, paymentDetails } = orderData;
 
-  const packageIds = cartItems.map((pkg) => pkg.id);
-  const packages = await prisma.package.findMany({
-    where: { id: { in: packageIds } },
-  });
-
-  const parkingFee = customerDetails.parkingOptions === "FREE" ? 0 : 5;
-  const congestionFee = customerDetails.isCongestionZone ? 5 : 0;
-  const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-  const totalPrice = cartTotal + parkingFee + congestionFee;
-
-  const invoiceNumber = await generateInvoiceId();
-
   try {
+    const packageIds = cartItems.map((pkg) => pkg.id);
+    const packages = await prisma.package.findMany({
+      where: { id: { in: packageIds } },
+    });
+
+    if (packages.length !== packageIds.length) {
+      throw new Error("One or more packages not found");
+    }
+
+    const parkingFee = customerDetails.parkingOptions === "FREE" ? 0 : 5;
+    const congestionFee = customerDetails.isCongestionZone ? 5 : 0;
+
+    const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+    const totalPrice = cartTotal + parkingFee + congestionFee;
+
+    const invoiceNumber = await generateInvoiceId();
+
     const order = await prisma.order.create({
       data: {
         userId,
@@ -117,12 +130,42 @@ export async function createOrder(orderData: OrderData) {
         totalPrice,
         invoice: invoiceNumber,
         paymentMethod: paymentDetails.method,
-        paymentStatus: "PAID",
+        paymentStatus: paymentDetails.status,
         status: "PENDING",
         packages: {
           connect: packageIds.map((id) => ({ id })),
         },
       },
+      include: {
+        user: true,
+      },
+    });
+
+    if (!order || !order.user?.name) {
+      throw new Error("Order creation failed or user details are missing");
+    }
+
+    const invoice = await generateInvoice(order.id);
+
+    if (!invoice?.data) {
+      throw new Error("Invoice creation failed");
+    }
+
+    const attachments = [
+      {
+        ContentType: "application/pdf",
+        Filename: `Invoice_${order.invoice}.pdf`,
+        Base64Content: invoice?.data,
+      },
+    ];
+
+    await sendEmail({
+      fromEmail: EMAIL_ADDRESS,
+      fromName: "London Home Safety",
+      to: customerDetails.email,
+      subject: "Your Order Confirmation",
+      html: placedOrderEmailHtml(order.user.name, order.invoice),
+      attachments: attachments,
     });
 
     revalidatePath("/admin/orders");
@@ -133,14 +176,13 @@ export async function createOrder(orderData: OrderData) {
       message: "Order created successfully!",
     };
   } catch (error) {
-    console.error("Failed to create order:", error);
     return {
       success: false,
       data: null,
       message:
         error instanceof Error
-          ? error.message
-          : "An unknown error occurred while creating order.",
+          ? `Failed to create order: ${error.message}`
+          : "An unknown error occurred while creating the order.",
     };
   }
 }

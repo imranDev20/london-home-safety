@@ -19,7 +19,7 @@ export default function StripePaymentElement() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { customerDetails, cartItems } = useOrderStore();
+  const { customerDetails, cartItems, resetOrder, clearCart } = useOrderStore();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,7 +68,10 @@ export default function StripePaymentElement() {
 
       if (response.paymentIntent) {
         const status = response.paymentIntent.status;
-        // const { message, type } = getPaymentStatusInfo(status);
+        const { message, type } = getPaymentStatusInfo(status);
+
+        resetOrder();
+        clearCart();
 
         router.push(
           `${pathname}?active_step=4&payment_intent=${response.paymentIntent.id}&payment_intent_client_secret=${response.paymentIntent.client_secret}&redirect_status=${status}`
@@ -115,4 +118,31 @@ export default function StripePaymentElement() {
   );
 }
 
-// ... rest of the code remains the same
+type Variant = "success" | "info" | "warning" | "danger";
+
+function getPaymentStatusInfo(status: string): {
+  message: string;
+  type: Variant;
+} {
+  switch (status) {
+    case "requires_payment_method":
+      return { message: "Your payment method was not provided.", type: "info" };
+    case "requires_confirmation":
+      return { message: "Your payment requires confirmation.", type: "info" };
+    case "requires_action":
+      return {
+        message: "Additional action is required to complete your payment.",
+        type: "info",
+      };
+    case "processing":
+      return { message: "Your payment is being processed.", type: "info" };
+    case "requires_capture":
+      return { message: "Your payment needs to be captured.", type: "info" };
+    case "canceled":
+      return { message: "Your payment was cancelled.", type: "danger" };
+    case "succeeded":
+      return { message: "Your payment was successful.", type: "success" };
+    default:
+      return { message: "An unknown error occurred.", type: "danger" };
+  }
+}
