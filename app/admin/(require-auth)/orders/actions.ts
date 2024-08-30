@@ -127,7 +127,7 @@ export async function deleteOrder(orderId: string) {
       },
     });
 
-    revalidatePath("/orders");
+    revalidatePath("/admin/orders");
 
     return {
       message: "Order deleted successfully!",

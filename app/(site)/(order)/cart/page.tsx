@@ -1,25 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import useCartStore from "@/hooks/use-cart-store";
+import useOrderStore from "@/hooks/use-order-store";
 import { X } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 export default function CartPage() {
-  const { items, removeItem } = useCartStore();
+  const { cartItems, removeItem } = useOrderStore();
 
-  const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <div className="container mx-auto max-w-screen-xl grid grid-cols-12 px-16 gap-5 pt-5 pb-20">
       <div className="col-span-8">
-        {items.length > 0 ? (
+        {cartItems.length > 0 ? (
           <div className="space-y-5">
-            {items.map((item) => (
+            {cartItems.map((item) => (
               <Card
                 key={item.id}
                 className="p-5 flex justify-between items-start"

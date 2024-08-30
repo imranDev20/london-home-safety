@@ -8,93 +8,98 @@ import {
 } from "@stripe/react-stripe-js";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import useOrderStore from "@/hooks/use-order-store";
+import { createOrder, upsertUser } from "../../actions";
 
 export default function StripePaymentElement() {
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
   const pathname = usePathname();
 
+  const { customerDetails, cartItems } = useOrderStore();
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    setErrorMessage(null);
+
     if (!stripe || !elements) {
+      setErrorMessage("Stripe has not been properly initialized.");
       return;
     }
 
     try {
       setLoading(true);
 
-      // Hardcoded payment data
-      const payload = {
-        service_info: {
-          serviceName: "Gas Safety Check",
-          serviceDetails: "Annual gas safety check for residential property.",
-        },
-        personal_info: {
-          customer: "12345", // Hardcoded customer ID
-          name: "John Doe",
-          email: "john.doe@example.com",
-          phone: "+44 1234 567890",
-          address: {
-            country: "GB",
-            city: "London",
-            postal_code: "W1A 1AA",
-            line1: "221B Baker Street",
-          },
-        },
-        payment_info: {
-          payment_method: "credit_card",
-        },
-        status: "payment",
-      };
+      const userResponse = await upsertUser(customerDetails);
 
-      await fetch("/api/create-pre-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      if (!userResponse.data?.id) {
+        throw new Error("There wass error creating the customer");
+      }
+
+      const orderResponse = await createOrder({
+        cartItems,
+        customerDetails,
+        userId: userResponse.data?.id,
+        paymentDetails: {
+          method: "CREDIT_CARD",
+          status: "PAID",
         },
-        body: JSON.stringify(payload),
       });
+
+      if (!orderResponse) {
+        throw new Error("There was error creating the order");
+      }
 
       const response = await stripe.confirmPayment({
         elements,
-        redirect: "if_required",
         confirmParams: {
-          return_url: `${window.location.origin}${window.location.pathname}?active_step=5`,
+          return_url: `${window.location.origin}/payment-confirmation`,
         },
+        redirect: "if_required",
       });
 
-      setLoading(false);
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
 
       if (response.paymentIntent) {
         const status = response.paymentIntent.status;
-        const { message, type } = getPaymentStatusInfo(status);
+        // const { message, type } = getPaymentStatusInfo(status);
 
-        router.replace(
+        router.push(
           `${pathname}?active_step=4&payment_intent=${response.paymentIntent.id}&payment_intent_client_secret=${response.paymentIntent.client_secret}&redirect_status=${status}`
         );
       }
     } catch (error: any) {
+      console.error("Payment error:", error);
+      setErrorMessage(
+        error.message || "An error occurred during payment processing."
+      );
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-5">
+    <form className="mt-5" onSubmit={handleSubmit}>
+      {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
+
       <PaymentElement
         options={{
           defaultValues: {
             billingDetails: {
-              email: "john.doe@example.com", // Hardcoded email
-              name: "John Doe", // Hardcoded name
-              phone: "+44 1234 567890", // Hardcoded phone number
+              email: customerDetails.email,
+              name: customerDetails.customerName,
+              phone: customerDetails.phoneNumber,
               address: {
                 country: "GB",
-                city: "London",
-                postal_code: "W1A 1AA",
-                line1: "221B Baker Street",
+                city: customerDetails.address.city,
+                postal_code: customerDetails.address.postcode,
+                line1: customerDetails.address.street,
               },
             },
           },
@@ -103,38 +108,11 @@ export default function StripePaymentElement() {
 
       <div className="mt-5 flex justify-between">
         <Button type="submit" disabled={loading || !stripe || !elements}>
-          Complete Payment
+          {loading ? "Processing..." : "Complete Payment"}
         </Button>
       </div>
     </form>
   );
 }
 
-type Variant = "success" | "info" | "warning" | "danger";
-
-function getPaymentStatusInfo(status: string): {
-  message: string;
-  type: Variant;
-} {
-  switch (status) {
-    case "requires_payment_method":
-      return { message: "Your payment method was not provided.", type: "info" };
-    case "requires_confirmation":
-      return { message: "Your payment requires confirmation.", type: "info" };
-    case "requires_action":
-      return {
-        message: "Additional action is required to complete your payment.",
-        type: "info",
-      };
-    case "processing":
-      return { message: "Your payment is being processed.", type: "info" };
-    case "requires_capture":
-      return { message: "Your payment needs to be captured.", type: "info" };
-    case "canceled":
-      return { message: "Your payment was cancelled.", type: "danger" };
-    case "succeeded":
-      return { message: "Your payment was successful.", type: "success" };
-    default:
-      return { message: "An unknown error occurred.", type: "danger" };
-  }
-}
+// ... rest of the code remains the same

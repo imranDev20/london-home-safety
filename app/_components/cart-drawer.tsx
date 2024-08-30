@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import useCartStore from "@/hooks/use-cart-store";
+import useOrderStore from "@/hooks/use-order-store";
 import { ShoppingBasket, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,7 +18,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import { MdShoppingCart } from "react-icons/md";
 
 export default function CartDrawer() {
-  const { items, removeItem } = useCartStore();
+  const { cartItems, removeItem } = useOrderStore();
   const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
@@ -26,7 +26,7 @@ export default function CartDrawer() {
       <SheetTrigger asChild>
         <button className="p-3 relative">
           <div className="rounded-full text-sm bg-secondary w-5 h-5 flex justify-center items-center absolute right-0 top-0 ">
-            {items.length || 0}
+            {cartItems.length || 0}
           </div>
           <FaCartShopping className="text-2xl text-body" />
         </button>
@@ -34,16 +34,16 @@ export default function CartDrawer() {
       <SheetContent className="p-0">
         <SheetHeader className="p-5">
           <SheetTitle className="font-medium flex items-center">
-            <ShoppingBasket className="mr-2" /> {items.length} items
+            <ShoppingBasket className="mr-2" /> {cartItems.length} items
           </SheetTitle>
         </SheetHeader>
         <Separator />
 
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="p-5">
-            {items.length > 0 ? (
+            {cartItems.length > 0 ? (
               <>
-                {items.map((item, index) => (
+                {cartItems.map((item, index) => (
                   <div key={item?.id}>
                     <div className="flex justify-between items-start py-2">
                       <div>
@@ -59,7 +59,9 @@ export default function CartDrawer() {
                         <X size={16} />
                       </button>
                     </div>
-                    {index < items.length - 1 && <Separator className="mt-2" />}
+                    {index < cartItems.length - 1 && (
+                      <Separator className="mt-2" />
+                    )}
                   </div>
                 ))}
               </>
@@ -84,12 +86,15 @@ export default function CartDrawer() {
 
         <Separator />
 
-        {items.length > 0 && (
+        {cartItems.length > 0 && (
           <div className="p-5">
             <div className="flex justify-between items-center mb-4">
               <span className="font-medium">Total:</span>
               <span className="font-bold">
-                £{items.reduce((sum, item) => sum + item?.price, 0).toFixed(2)}
+                £
+                {cartItems
+                  .reduce((sum, item) => sum + item?.price, 0)
+                  .toFixed(2)}
               </span>
             </div>
 

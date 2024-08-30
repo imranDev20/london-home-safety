@@ -108,7 +108,7 @@ export const getEngineers = async () => {
   }
 };
 
-export const getPackages = async (propertyType: PropertyType) => {
+export const getPackages = async (propertyType?: PropertyType) => {
   try {
     const packages = await prisma.package.findMany({
       where: {

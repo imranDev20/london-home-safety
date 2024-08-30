@@ -7,11 +7,19 @@ import StripePaymentElement from "./_components/stripe-payment-element";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import useOrderStore from "@/hooks/use-order-store";
 
 export default function PaymentPage() {
   const [stripePromise, setStripePromise] = useState<Stripe | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
+
+  const { cartItems, customerDetails } = useOrderStore();
+
+  const parkingFee = customerDetails.parkingOptions !== "FREE" ? 5 : 0;
+  const congestionFee = customerDetails.isCongestionZone ? 5 : 0;
+  const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cartTotal + parkingFee + congestionFee;
 
   useEffect(() => {
     const fetchKey = async () => {
@@ -32,7 +40,9 @@ export default function PaymentPage() {
     const fetchClientSecret = async () => {
       try {
         const orderPayload = {
-          // Add your order details here, e.g. items, total amount, etc.
+          cartItems,
+          customerDetails,
+          totalPrice,
         };
 
         const response = await fetch("/api/create-payment-intent", {
@@ -50,13 +60,10 @@ export default function PaymentPage() {
       }
     };
 
-    fetchClientSecret();
-  }, []);
-
-  // Assuming the service price, parking fee, and congestion fee are the same as in the CheckoutPage
-  const parkingFee = 5; // Adjust according to your logic
-  const congestionFee = 5; // Adjust according to your logic
-  const totalPrice = 460 + parkingFee + congestionFee;
+    if (customerDetails) {
+      fetchClientSecret();
+    }
+  }, [cartItems, customerDetails, totalPrice]);
 
   const handlePaymentMethodChange = (value: string) => {
     setPaymentMethod(value);
@@ -73,10 +80,7 @@ export default function PaymentPage() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="container max-w-screen-xl mx-auto pt-5 pb-20"
-    >
+    <div className="container max-w-screen-xl mx-auto pt-5 pb-20">
       <div className="grid grid-cols-12 gap-5">
         {/* Payment Options */}
         <div className="col-span-8">
@@ -156,16 +160,16 @@ export default function PaymentPage() {
         <div className="col-span-4 space-y-5">
           <Card className="p-5">
             <h2 className="text-lg font-semibold mb-4">Summary</h2>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-700">Service Price:</span>
-              <span className="text-gray-900">£460.00</span>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-gray-600">Service Price:</span>
+              <span className="text-gray-900">£{cartTotal}.00</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-700">Parking Fee:</span>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-gray-600">Parking Fee:</span>
               <span className="text-gray-900">£{parkingFee}.00</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-700">Congestion Zone Fee:</span>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-gray-600">Congestion Zone Fee:</span>
               <span className="text-gray-900">£{congestionFee}.00</span>
             </div>
             <Separator className="my-4" />
@@ -182,7 +186,7 @@ export default function PaymentPage() {
           )}
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 

@@ -6,7 +6,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import useCartStore from "@/hooks/use-cart-store";
+import useOrderStore from "@/hooks/use-order-store";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { ALL_SERVICES } from "@/shared/data";
 import { NavItem } from "@/types/misc";
@@ -57,7 +57,7 @@ export default function BookNowCompo({
   packages: Package[];
 }) {
   const [isCommercial, setIsCommercial] = useState<boolean>(false);
-  const { items, addItem } = useCartStore();
+  const { cartItems, addItem } = useOrderStore();
   const router = useRouter();
 
   const handleAddToCart = (cartItem: {
@@ -69,7 +69,7 @@ export default function BookNowCompo({
   };
 
   const isProductInCart = (id: string) => {
-    return items.some((item) => item.id === id);
+    return cartItems.some((item) => item.id === id);
   };
 
   useEffect(() => {

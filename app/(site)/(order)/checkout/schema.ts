@@ -24,12 +24,17 @@ export const checkoutFormSchema = z.object({
       required_error: "Please select a date",
       invalid_type_error: "That's not a valid date",
     })
-    .min(new Date(), "Please select a future date"),
-  time: z.enum(["morning", "afternoon", "evening"], {
+    .min(
+      new Date(new Date().setHours(0, 0, 0, 0)),
+      "Please select today or a future date"
+    ),
+
+  time: z.enum(["MORNING", "AFTERNOON", "EVENING"], {
     required_error: "Please select a time slot",
     invalid_type_error: "Please select a valid time slot",
   }),
-  parkingOption: z.enum(["free", "no", "paid"], {
+
+  parkingOption: z.enum(["FREE", "NO", "PAID"], {
     required_error: "Please select a parking option",
     invalid_type_error: "Please select a valid parking option",
   }),

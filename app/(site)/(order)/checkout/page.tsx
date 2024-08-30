@@ -26,16 +26,76 @@ import {
   SelectGroup,
 } from "@/components/ui/select";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import {
+  AlertTriangle,
+  CalendarIcon,
+  CheckCircle,
+  Coins,
+  ParkingCircleOff,
+  ParkingSquare,
+} from "lucide-react";
+import { format, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { CheckoutFormInput, checkoutFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import useOrderStore from "@/hooks/use-order-store";
+import { useEffect } from "react";
+import { ParkingOptions } from "@prisma/client";
+import { useToast } from "@/components/ui/use-toast";
+
+const parkingOptions = [
+  {
+    id: "FREE",
+    label: "Free Parking",
+    price: "+£0.00",
+    icon: ParkingSquare,
+    color: "text-green-600",
+  },
+  {
+    id: "NO",
+    label: "No Parking Available",
+    price: "+£5.00",
+    icon: ParkingCircleOff,
+    color: "text-red-600",
+  },
+  {
+    id: "PAID",
+    label: "Paid Parking Available",
+    price: "+£5.00",
+    icon: Coins,
+    color: "text-amber-600",
+  },
+];
+
+const congestionZoneOptions = [
+  {
+    id: "yes",
+    label: "Yes",
+    price: "+£5.00",
+    icon: AlertTriangle,
+    color: "text-amber-600",
+  },
+  {
+    id: "no",
+    label: "No",
+    price: "+£0.00",
+    icon: CheckCircle,
+    color: "text-green-600",
+  },
+];
+
+const today = startOfDay(new Date());
+
+const disabledDays = (date: Date): boolean => {
+  return isBefore(date, today);
+};
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { toast } = useToast();
+  const { customerDetails, setCustomerDetails, cartItems } = useOrderStore();
 
   const form = useForm<CheckoutFormInput>({
     resolver: zodResolver(checkoutFormSchema),
@@ -48,31 +108,83 @@ export default function CheckoutPage() {
       postcode: "",
       date: new Date(),
       time: undefined,
-      parkingOption: "free",
+      parkingOption: "FREE",
       isInCongestionZone: false,
     },
   });
 
+  const {
+    reset,
+    formState: { errors },
+  } = form;
+
+  useEffect(() => {
+    if (customerDetails) {
+      reset({
+        name: customerDetails.customerName ?? "",
+        email: customerDetails.email ?? "",
+        phone: customerDetails.phoneNumber ?? "",
+        street: customerDetails.address.street ?? "",
+        city: customerDetails.address.city ?? "",
+        postcode: customerDetails.address.postcode ?? "",
+        date: new Date(customerDetails.orderDate) ?? new Date(),
+        time: customerDetails.inspectionTime ?? "MORNING",
+        parkingOption: customerDetails.parkingOptions ?? "FREE",
+        isInCongestionZone: customerDetails.isCongestionZone ?? false,
+      });
+    }
+  }, [reset, customerDetails]);
+
   const parkingOption = form.watch("parkingOption");
   const isInCongestionZone = form.watch("isInCongestionZone");
 
-  const handleParkingChange = (value: string) => {
-    form.setValue("parkingOption", value as "free" | "no" | "paid");
+  const handleParkingChange = (value: ParkingOptions) => {
+    form.setValue("parkingOption", value);
   };
 
   const handleCongestionChange = (value: string) => {
     form.setValue("isInCongestionZone", value === "yes");
   };
 
-  const parkingFee = parkingOption === "free" ? 0 : 5;
+  const parkingFee = parkingOption === "FREE" ? 0 : 5;
   const congestionFee = isInCongestionZone ? 5 : 0;
-  const totalPrice = 460 + parkingFee + congestionFee;
+  const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cartTotal + parkingFee + congestionFee;
 
   const onCheckoutSubmit: SubmitHandler<CheckoutFormInput> = async (data) => {
-    console.log(data);
+    setCustomerDetails({
+      address: {
+        street: data.street,
+        city: data.city,
+        postcode: data.postcode,
+      },
+      customerName: data.name,
+      email: data.email,
+      phoneNumber: data.phone,
+      orderDate: data.date,
+      inspectionTime: data.time,
+      parkingOptions: data.parkingOption,
+      isCongestionZone: data.isInCongestionZone,
+    });
+
+    toast({
+      title: "Success",
+      description: "Your checkout information has been successfully submitted.",
+      variant: "success",
+    });
 
     router.push("/payment");
   };
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      toast({
+        title: "Validation Error",
+        description: "Please check the form for errors and try again.",
+        variant: "destructive",
+      });
+    }
+  }, [errors, toast]);
 
   return (
     <div className="container max-w-screen-xl mx-auto pt-5 pb-20">
@@ -173,146 +285,90 @@ export default function CheckoutPage() {
             </Card>
 
             {/* Congestion Zone */}
-            <Card className="p-5">
-              <h2 className="text-lg font-semibold mb-4">Congestion Zone</h2>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="congestionYes"
-                    className={cn(
-                      "block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200",
-                      isInCongestionZone &&
-                        "border-blue-500 ring-1 ring-blue-500"
-                    )}
-                  >
-                    <div>
-                      <p className="text-gray-700">Yes</p>
-                      <p className="mt-1 text-gray-900">+£5.00</p>
-                    </div>
-
-                    <input
-                      type="radio"
-                      name="congestionOption"
-                      value="yes"
-                      id="congestionYes"
-                      className="sr-only"
-                      checked={isInCongestionZone}
-                      onChange={() => handleCongestionChange("yes")}
-                    />
-                  </label>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="congestionNo"
-                    className={cn(
-                      "block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200",
-                      !isInCongestionZone &&
-                        "border-blue-500 ring-1 ring-blue-500"
-                    )}
-                  >
-                    <div>
-                      <p className="text-gray-700">No</p>
-                      <p className="mt-1 text-gray-900">+£0.00</p>
-                    </div>
-
-                    <input
-                      type="radio"
-                      name="congestionOption"
-                      value="no"
-                      id="congestionNo"
-                      className="sr-only"
-                      checked={!isInCongestionZone}
-                      onChange={() => handleCongestionChange("no")}
-                    />
-                  </label>
-                </div>
+            <Card className="p-6 shadow-lg">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                Congestion Zone
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {congestionZoneOptions.map((option) => (
+                  <div key={option.id}>
+                    <label
+                      htmlFor={`congestion${option.id}`}
+                      className={cn(
+                        "block cursor-pointer rounded-lg border-2 bg-white p-4 transition-all duration-200 ease-in-out",
+                        isInCongestionZone === (option.id === "yes")
+                          ? "border-blue-500"
+                          : "border-gray-200 hover:border-blue-300"
+                      )}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <option.icon className={cn("w-6 h-6", option.color)} />
+                        <div
+                          className={cn("text-sm font-medium", option.color)}
+                        >
+                          {option.price}
+                        </div>
+                      </div>
+                      <p className="text-gray-800 font-medium">
+                        {option.label}
+                      </p>
+                      <input
+                        type="radio"
+                        name="congestionOption"
+                        value={option.id}
+                        id={`congestion${option.id}`}
+                        className="sr-only"
+                        checked={isInCongestionZone === (option.id === "yes")}
+                        onChange={() => handleCongestionChange(option.id)}
+                      />
+                    </label>
+                  </div>
+                ))}
               </div>
             </Card>
 
             {/* Parking Options */}
-            <Card className="p-5">
-              <h2 className="text-lg font-semibold mb-4">Parking Options</h2>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label
-                    htmlFor="freeParking"
-                    className={cn(
-                      "block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200",
-                      parkingOption === "free" &&
-                        "border-blue-500 ring-1 ring-blue-500"
-                    )}
-                  >
-                    <div>
-                      <p className="text-gray-700">Free Parking</p>
-                      <p className="mt-1 text-gray-900">+£0.00</p>
-                    </div>
-
-                    <input
-                      type="radio"
-                      name="parkingOption"
-                      value="free"
-                      id="freeParking"
-                      className="sr-only"
-                      checked={parkingOption === "free"}
-                      onChange={() => handleParkingChange("free")}
-                    />
-                  </label>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="noParking"
-                    className={cn(
-                      "block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200",
-                      parkingOption === "no" &&
-                        "border-blue-500 ring-1 ring-blue-500"
-                    )}
-                  >
-                    <div>
-                      <p className="text-gray-700">No Parking Available</p>
-                      <p className="mt-1 text-gray-900">+£5.00</p>
-                    </div>
-
-                    <input
-                      type="radio"
-                      name="parkingOption"
-                      value="no"
-                      id="noParking"
-                      className="sr-only"
-                      checked={parkingOption === "no"}
-                      onChange={() => handleParkingChange("no")}
-                    />
-                  </label>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="paidParking"
-                    className={cn(
-                      "block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200",
-                      parkingOption === "paid" &&
-                        "border-blue-500 ring-1 ring-blue-500"
-                    )}
-                  >
-                    <div>
-                      <p className="text-gray-700">Paid Parking Available</p>
-                      <p className="mt-1 text-gray-900">+£5.00</p>
-                    </div>
-
-                    <input
-                      type="radio"
-                      name="parkingOption"
-                      value="paid"
-                      id="paidParking"
-                      className="sr-only"
-                      checked={parkingOption === "paid"}
-                      onChange={() => handleParkingChange("paid")}
-                    />
-                  </label>
-                </div>
+            <Card className="p-6 shadow-lg">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                Parking Options
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {parkingOptions.map((option) => (
+                  <div key={option.id}>
+                    <label
+                      htmlFor={option.id}
+                      className={cn(
+                        "block cursor-pointer rounded-lg border-2 bg-white p-4 transition-all duration-200 ease-in-out",
+                        parkingOption === option.id
+                          ? "border-blue-500"
+                          : "border-gray-200 hover:border-blue-300"
+                      )}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <option.icon className={cn("w-6 h-6", option.color)} />
+                        <div
+                          className={cn("text-sm font-medium", option.color)}
+                        >
+                          {option.price}
+                        </div>
+                      </div>
+                      <p className="text-gray-800 font-medium">
+                        {option.label}
+                      </p>
+                      <input
+                        type="radio"
+                        name="parkingOption"
+                        value={option.id}
+                        id={option.id}
+                        className="sr-only"
+                        checked={parkingOption === option.id}
+                        onChange={() =>
+                          handleParkingChange(option.id as ParkingOptions)
+                        }
+                      />
+                    </label>
+                  </div>
+                ))}
               </div>
             </Card>
 
@@ -354,10 +410,12 @@ export default function CheckoutPage() {
                             >
                               <Calendar
                                 mode="single"
-                                selected={field.value}
-                                onSelect={(date) => {
+                                selected={field.value as Date | undefined}
+                                onSelect={(date: Date | undefined) => {
+                                  console.log(date);
                                   field.onChange(date);
                                 }}
+                                disabled={disabledDays}
                                 initialFocus
                               />
                             </PopoverContent>
@@ -377,21 +435,23 @@ export default function CheckoutPage() {
                       <FormItem>
                         <FormLabel>Select Time</FormLabel>
                         <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          onValueChange={(value) => {
+                            if (value) field.onChange(value);
+                          }}
+                          value={field.value}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select time" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectItem value="morning">
+                              <SelectItem value="MORNING">
                                 8 AM - 12 PM
                               </SelectItem>
-                              <SelectItem value="afternoon">
+                              <SelectItem value="AFTERNOON">
                                 12 PM - 4 PM
                               </SelectItem>
-                              <SelectItem value="evening">
+                              <SelectItem value="EVENING">
                                 4 PM - 8 PM
                               </SelectItem>
                             </SelectGroup>
@@ -410,16 +470,16 @@ export default function CheckoutPage() {
           <div className="col-span-4 space-y-5">
             <Card className="p-5">
               <h2 className="text-lg font-semibold mb-4">Summary</h2>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-700">Service Price:</span>
-                <span className="text-gray-900">£460.00</span>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-gray-600">Service Price:</span>
+                <span className="text-gray-900">£{cartTotal}.00</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-700">Parking Fee:</span>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-gray-600">Parking Fee:</span>
                 <span className="text-gray-900">£{parkingFee}.00</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-700">Congestion Zone Fee:</span>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-gray-600">Congestion Zone Fee:</span>
                 <span className="text-gray-900">£{congestionFee}.00</span>
               </div>
               <Separator className="my-4" />
@@ -430,7 +490,7 @@ export default function CheckoutPage() {
             </Card>
 
             <Button type="submit" className="w-full">
-              Confirm & Pay
+              Proceed to Payment
             </Button>
           </div>
         </form>
