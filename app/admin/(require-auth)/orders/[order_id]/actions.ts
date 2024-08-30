@@ -23,6 +23,22 @@ export const getEngineersForOrder = async () => {
 
 export async function updateOrder(orderId: string, assignedEngineerId: string) {
   try {
+    const currentOrder = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+      select: {
+        assignedEngineerId: true,
+      },
+    });
+
+    if (currentOrder?.assignedEngineerId === assignedEngineerId) {
+      return {
+        message: "No changes detected. Order update skipped.",
+        success: false,
+      };
+    }
+
     const updatedOrder = await prisma.order.update({
       where: {
         id: orderId,
@@ -49,6 +65,7 @@ export async function updateOrder(orderId: string, assignedEngineerId: string) {
     };
   }
 }
+
 export async function updateOrderStatus(orderId: string, orderStatus: string) {
   try {
     const updatedOrder = await prisma.order.update({
