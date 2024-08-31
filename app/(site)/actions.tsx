@@ -42,7 +42,7 @@ export async function createReview(data: unknown) {
       },
     });
 
-    revalidatePath("/reviews");
+    revalidatePath("/");
 
     return {
       message: "Review created successfully!",

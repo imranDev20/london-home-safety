@@ -20,8 +20,8 @@ export default async function Home() {
       <ServiceCategories />
       <CallToAction />
       <Reviews reviews={reviews} />
-      <Partners />
       <Faq />
+      <Partners />
       <Contact />
     </>
   );

@@ -1,5 +1,18 @@
 "use client";
 
+import React, { useCallback, useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useEmblaCarousel from "embla-carousel-react";
+import { Review } from "@prisma/client";
+import {
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  Quote,
+  User,
+  MessageSquare,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -21,18 +34,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Review } from "@prisma/client";
-import { StarFilledIcon } from "@radix-ui/react-icons";
-import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { useCallback, useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { ImQuotesRight } from "react-icons/im";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { createReview } from "../actions";
 import { ReviewFormValues, reviewSchema } from "../schema";
-import { LoadingSpinner } from "@/components/loading-spinner";
-import { LoadingButton } from "@/components/ui/loading-button";
+import { motion } from "framer-motion";
 
 export default function Reviews({ reviews }: { reviews: Review[] }) {
   const { toast } = useToast();
@@ -77,11 +82,10 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
             description: response.message,
             variant: "success",
           });
-
           setIsDialogOpen(false);
         } else {
           toast({
-            title: "Review submitted failed",
+            title: "Review submission failed",
             description: response.message,
             variant: "destructive",
           });
@@ -94,7 +98,6 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
 
   useEffect(() => {
     if (emblaApi) {
-      // Optional: Add any additional carousel configuration here
       emblaApi.on("select", () => {
         // You can add logic here to update UI based on the current slide
       });
@@ -102,41 +105,45 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
   }, [emblaApi]);
 
   return (
-    <section className="py-20 bg-section-background">
-      <div className="max-w-screen-xl mx-auto px-16 grid grid-cols-12">
-        <div className="col-span-4">
-          <h2 className="text-4xl font-bold mb-5 leading-normal">
-            Hear from Our Satisfied Customers
+    <section className="py-20 bg-gray-50">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-4">
+          <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
+            Voices of <span className="text-primary">Satisfaction</span>
           </h2>
-          <p className="text-body leading-loose text-lg">
-            Our commitment to excellence and customer satisfaction shines
-            through in their words.
+          <p className="text-xl text-gray-700 leading-relaxed mb-8">
+            Discover why our customers can't stop talking about their
+            experiences. Real stories, real impact.
           </p>
+          <div className="mb-8">
+            <span className="text-3xl font-bold text-primary">4.9</span>
+            <span className="text-xl text-gray-600 ml-2">out of 5 stars</span>
+          </div>
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
-                variant="outline"
+                variant="default"
                 size="lg"
-                className="text-white bg-primary hover:bg-secondary hover:text-black py-6 text-md mt-10"
+                className="w-full sm:w-auto text-white bg-primary hover:bg-primary/90 py-6 text-lg font-semibold"
               >
                 Leave a Review
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle className="text-xl">
+                <DialogTitle className="text-2xl font-bold">
                   Share Your Experience
                 </DialogTitle>
-                <DialogDescription>
-                  We&apos;d love to hear about your experience with our service.
-                  Your feedback helps us improve and serve you better.
+                <DialogDescription className="text-gray-600">
+                  We'd love to hear about your experience with our service. Your
+                  feedback helps us improve and serve you better.
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-5"
+                  className="space-y-6"
                 >
                   <FormField
                     control={form.control}
@@ -173,11 +180,11 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
                       <FormItem>
                         <FormLabel>Rating</FormLabel>
                         <FormControl>
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-1">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star
                                 key={star}
-                                className={`cursor-pointer ${
+                                className={`cursor-pointer w-6 h-6 ${
                                   star <= field.value
                                     ? "text-yellow-400 fill-yellow-400"
                                     : "text-gray-300"
@@ -211,7 +218,11 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
                     )}
                   />
 
-                  <LoadingButton type="submit" loading={isPending}>
+                  <LoadingButton
+                    type="submit"
+                    loading={isPending}
+                    className="w-full"
+                  >
                     Submit Review
                   </LoadingButton>
                 </form>
@@ -220,60 +231,91 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
           </Dialog>
         </div>
 
-        <div className="col-span-8">
+        <div className="lg:col-span-8">
           <div className="relative">
-            <div className="overflow-hidden px-3" ref={emblaRef}>
-              <div className="flex pb-5 gap-4">
+            <div className="overflow-hidden py-2 px-2" ref={emblaRef}>
+              <div className="flex -ml-4">
                 {reviews.map((review) => (
                   <div
                     key={review.id}
-                    className="md:flex-[0_0_49%] flex-[0_0_100%] "
+                    className="flex-[0_0_100%] sm:flex-[0_0_50%] pl-4"
                   >
-                    <Card className="p-5 flex justify-center flex-col items-center shadow-md hover:shadow-lg">
-                      <ImQuotesRight className="text-primary text-5xl mb-4" />
-                      <h3 className="text-xl font-semibold text-body-dark mb-5 text-center">
-                        {review.title}
-                      </h3>
-                      <p className="text-body mb-4 flex-grow text-center leading-relaxed">
-                        {review.comment}
-                      </p>
-                      <div className="flex flex-col justify-between items-center mt-4">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <StarFilledIcon
-                              key={i}
-                              className={`h-5 w-5 ${
-                                i < review.rating
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
-                            />
-                          ))}
+                    <motion.div
+                      className="bg-white rounded-lg shadow-md overflow-hidden"
+                      whileHover={{ y: -5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <div className="p-6">
+                        <div className="flex items-center mb-4">
+                          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                            <User className="w-6 h-6 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900">
+                              {review.userName}
+                            </h3>
+                            <div className="flex items-center mt-1">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < review.rating
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
                         </div>
-
-                        <span className="font-medium text-lg text-gray-900 mt-2">
-                          {review.userName}
-                        </span>
+                        <div className="flex-grow">
+                          <h4 className="text-lg font-medium text-gray-900 mb-2">
+                            {review.title}
+                          </h4>
+                          <div className="relative">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full"></div>
+                            <p className="text-gray-600 leading-relaxed pl-4">
+                              {review.comment}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <MessageSquare className="w-4 h-4 mr-2" />
+                          <span>Verified Review</span>
+                        </div>
                       </div>
-                    </Card>
+                      <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                        <motion.button
+                          className="text-primary font-medium hover:underline focus:outline-none"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          Read full review
+                        </motion.button>
+                      </div>
+                    </motion.div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="flex items-center gap-3 justify-center">
-              <button
+            <div className="flex items-center justify-center mt-6 space-x-4">
+              <Button
                 onClick={scrollPrev}
-                className="border-2 border-body rounded-full flex justify-center p-1"
+                variant="outline"
+                size="icon"
+                className="rounded-full"
               >
-                <ChevronLeft className="h-6 w-6 text-gray-600" />
-              </button>
-              <button
+                <ChevronLeft className="h-6 w-6" />
+              </Button>
+              <Button
                 onClick={scrollNext}
-                className="border-2 border-body rounded-full flex justify-center p-1"
+                variant="outline"
+                size="icon"
+                className="rounded-full"
               >
-                <ChevronRight className="h-6 w-6 text-gray-600" />
-              </button>
+                <ChevronRight className="h-6 w-6" />
+              </Button>
             </div>
           </div>
         </div>
