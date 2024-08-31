@@ -25,10 +25,10 @@ export default function CartDrawer() {
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger asChild>
         <button className="p-3 relative">
-          <div className="rounded-full text-sm bg-secondary w-5 h-5 flex justify-center items-center absolute right-0 top-0 ">
+          <div className="rounded-full text-sm bg-secondary w-5 h-5 flex justify-center items-center absolute right-0 top-0 text-body-dark">
             {cartItems.length || 0}
           </div>
-          <FaCartShopping className="text-2xl text-body" />
+          <FaCartShopping className="text-2xl text-white" />
         </button>
       </SheetTrigger>
       <SheetContent className="p-0">

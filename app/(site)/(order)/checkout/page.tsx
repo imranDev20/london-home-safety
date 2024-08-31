@@ -235,108 +235,110 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="container max-w-screen-xl mx-auto pt-5 pb-20">
+    <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Form {...form}>
         <form
-          className="grid grid-cols-12 gap-5"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
           onSubmit={form.handleSubmit(onCheckoutSubmit)}
         >
-          <div className="col-span-8 space-y-5">
+          <div className="lg:col-span-8 space-y-8">
             {/* User Information */}
-            <Card className="p-5">
-              <h2 className="text-lg font-semibold mb-4">User Information</h2>
-
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="mt-4">
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem className="mt-4">
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your phone number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-6">User Information</h2>
+              <div className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your phone number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </Card>
 
             {/* Address */}
-            <Card className="p-5">
-              <h2 className="text-lg font-semibold mb-4">Address</h2>
-
-              <FormField
-                control={form.control}
-                name="street"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Street</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Street address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem className="mt-4">
-                    <FormLabel>City</FormLabel>
-                    <FormControl>
-                      <Input placeholder="City" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="postcode"
-                render={({ field }) => (
-                  <FormItem className="mt-4">
-                    <FormLabel>Postcode</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Postcode" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Address</h2>
+              <div className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="street"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Street</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Street address" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City</FormLabel>
+                        <FormControl>
+                          <Input placeholder="City" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="postcode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Postcode</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Postcode" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
             </Card>
 
             {/* Congestion Zone */}
-            <Card className="p-6 shadow-lg">
-              <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                Congestion Zone
-              </h2>
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Congestion Zone</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {congestionZoneOptions.map((option) => (
                   <div key={option.id}>
@@ -376,11 +378,9 @@ export default function CheckoutPage() {
             </Card>
 
             {/* Parking Options */}
-            <Card className="p-6 shadow-lg">
-              <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                Parking Options
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Parking Options</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {parkingOptions.map((option) => (
                   <div key={option.id}>
                     <label
@@ -420,126 +420,107 @@ export default function CheckoutPage() {
               </div>
             </Card>
 
-            <Card className="p-5">
-              <h2 className="text-lg font-semibold mb-4">
+            {/* Date and Time */}
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-6">
                 Select Date and Time
               </h2>
-
-              <div className="grid grid-cols-2 gap-5">
-                <div className="col-span-1">
-                  <FormField
-                    control={form.control}
-                    name="date"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Date</FormLabel>
-
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={disabledDays}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="time"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select Time</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <FormControl>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "flex w-full justify-start text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value as Date | undefined}
-                                onSelect={(date: Date | undefined) => {
-                                  console.log(date);
-                                  field.onChange(date);
-                                }}
-                                disabled={disabledDays}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-1">
-                  <FormField
-                    control={form.control}
-                    name="time"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Time</FormLabel>
-                        <Select
-                          onValueChange={(value) => {
-                            if (value) field.onChange(value);
-                          }}
-                          value={field.value}
-                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select time" />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectItem value="MORNING">
-                                8 AM - 12 PM
-                              </SelectItem>
-                              <SelectItem value="AFTERNOON">
-                                12 PM - 4 PM
-                              </SelectItem>
-                              <SelectItem value="EVENING">
-                                4 PM - 8 PM
-                              </SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="MORNING">8 AM - 12 PM</SelectItem>
+                          <SelectItem value="AFTERNOON">
+                            12 PM - 4 PM
+                          </SelectItem>
+                          <SelectItem value="EVENING">4 PM - 8 PM</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </Card>
           </div>
 
           {/* Summary */}
-          <div className="col-span-4 space-y-5">
-            <Card className="p-5">
-              <h2 className="text-lg font-semibold mb-4">Summary</h2>
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-gray-600">Service Price:</span>
-                <span className="text-gray-900">£{cartTotal}.00</span>
+          <div className="lg:col-span-4 space-y-6">
+            <Card className="p-6 sticky top-6">
+              <h2 className="text-xl font-semibold mb-6">Summary</h2>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Service Price:</span>
+                  <span className="text-gray-900">£{cartTotal}.00</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Parking Fee:</span>
+                  <span className="text-gray-900">£{parkingFee}.00</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Congestion Zone Fee:</span>
+                  <span className="text-gray-900">£{congestionFee}.00</span>
+                </div>
+                <Separator className="my-4" />
+                <div className="flex justify-between items-center text-xl font-semibold">
+                  <span>Total Price:</span>
+                  <span>£{totalPrice}.00</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-gray-600">Parking Fee:</span>
-                <span className="text-gray-900">£{parkingFee}.00</span>
-              </div>
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-gray-600">Congestion Zone Fee:</span>
-                <span className="text-gray-900">£{congestionFee}.00</span>
-              </div>
-              <Separator className="my-4" />
-              <div className="flex justify-between items-center text-xl font-semibold">
-                <span>Total Price:</span>
-                <span>£{totalPrice}.00</span>
-              </div>
+              <Button type="submit" className="w-full mt-6">
+                Proceed to Payment
+              </Button>
             </Card>
-
-            <Button type="submit" className="w-full">
-              Proceed to Payment
-            </Button>
           </div>
         </form>
       </Form>

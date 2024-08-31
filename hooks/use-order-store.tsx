@@ -11,6 +11,7 @@ export type CartItem = {
   id: string;
   name: string;
   price: number;
+  description: string;
 };
 
 type AddressType = Omit<Address, "userId" | "createdAt" | "updatedAt" | "id">;

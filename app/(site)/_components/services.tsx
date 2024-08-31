@@ -5,12 +5,12 @@ import Link from "next/link";
 
 export default function Services() {
   return (
-    <section className="py-20 bg-section-background">
-      <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-center mb-10 text-3xl sm:text-4xl font-bold">
+    <section className="py-16 sm:py-20 bg-section-background">
+      <div className="container mx-auto max-w-screen-xl px-4 sm:px-8 lg:px-16">
+        <h2 className="text-center mb-8 sm:mb-10 text-2xl sm:text-3xl lg:text-4xl font-bold">
           Discover Our Wide Range of Safety Solutions
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 auto-rows-fr">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {ALL_SERVICES.slice(0, 5).map((item) => (
             <ServiceCard
               key={item.label}
@@ -22,9 +22,9 @@ export default function Services() {
           ))}
         </div>
 
-        <div className="flex justify-center mt-10">
+        <div className="flex justify-center mt-8 sm:mt-10">
           <Button
-            className="bg-primary hover:bg-secondary hover:text-black py-6 text-md"
+            className="bg-primary hover:bg-secondary hover:text-black py-4 sm:py-6 text-base sm:text-lg"
             size="lg"
             asChild
           >

@@ -10,6 +10,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import useOrderStore from "@/hooks/use-order-store";
 import { createOrder, upsertUser } from "../../actions";
+import { LoadingButton } from "@/components/ui/loading-button";
+import { CreditCard } from "lucide-react";
 
 export default function StripePaymentElement() {
   const [loading, setLoading] = useState(false);
@@ -110,9 +112,10 @@ export default function StripePaymentElement() {
       />
 
       <div className="mt-5 flex justify-between">
-        <Button type="submit" disabled={loading || !stripe || !elements}>
+        <LoadingButton type="submit" loading={loading || !stripe || !elements}>
+          {!loading && <CreditCard className="w-5 h-5 mr-2" />}
           {loading ? "Processing..." : "Complete Payment"}
-        </Button>
+        </LoadingButton>
       </div>
     </form>
   );

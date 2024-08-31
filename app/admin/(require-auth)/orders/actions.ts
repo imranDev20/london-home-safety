@@ -143,7 +143,7 @@ export async function deleteOrder(orderId: string) {
   }
 }
 
-export const getExportOrders = cache(async () => {
+export async function exportOrders() {
   try {
     const orders = await prisma.order.findMany({
       include: {
@@ -195,7 +195,7 @@ export const getExportOrders = cache(async () => {
       success: false,
     };
   }
-});
+}
 
 export default async function generateInvoice(orderId: string) {
   try {

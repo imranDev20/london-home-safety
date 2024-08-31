@@ -2,9 +2,9 @@
 
 import prisma from "@/lib/prisma";
 import { OrderStatus, PropertyType } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache as cache } from "next/cache";
 
-export const getEngineersForOrder = async () => {
+export const getEngineersForOrder = cache(async () => {
   try {
     const engineers = await prisma.user.findMany({
       where: {
@@ -19,7 +19,7 @@ export const getEngineersForOrder = async () => {
     console.error("Error fetching engineers:", error);
     throw new Error("Failed to fetch engineers");
   }
-};
+});
 
 export async function updateOrder(orderId: string, assignedEngineerId: string) {
   try {
@@ -78,7 +78,7 @@ export async function updateOrderStatus(orderId: string, orderStatus: string) {
   }
 }
 
-export const getCustomers = async () => {
+export const getCustomers = cache(async () => {
   try {
     const users = await prisma.user.findMany({
       where: { role: "CUSTOMER" },
@@ -91,9 +91,9 @@ export const getCustomers = async () => {
     console.error("Error fetching users:", error);
     throw new Error("Failed to fetch users");
   }
-};
+});
 
-export const getEngineers = async () => {
+export const getEngineers = cache(async () => {
   try {
     const engineers = await prisma.user.findMany({
       where: { role: "STAFF" },
@@ -106,9 +106,9 @@ export const getEngineers = async () => {
     console.error("Error fetching engineer:", error);
     throw new Error("Failed to fetch engineer");
   }
-};
+});
 
-export const getPackages = async (propertyType?: PropertyType) => {
+export const getPackages = cache(async (propertyType?: PropertyType) => {
   try {
     const packages = await prisma.package.findMany({
       where: {
@@ -120,4 +120,4 @@ export const getPackages = async (propertyType?: PropertyType) => {
     console.error("Error fetching services:", error);
     throw new Error("Failed to fetch services");
   }
-};
+});

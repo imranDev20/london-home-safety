@@ -20,7 +20,7 @@ export default function ServiceCard({
       <div className="flex flex-col items-center">
         {Icon ? <Icon /> : <EpcIcon />}
 
-        <h3 className="text-xl font-semibold text-body-dark mb-2 mt-3 text-center">
+        <h3 className="text-lg font-semibold text-body-dark mb-2 mt-3 text-center">
           {title}
         </h3>
         <p className="text-body text-sm mt-2">Starts From</p>

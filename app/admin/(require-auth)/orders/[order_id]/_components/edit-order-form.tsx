@@ -161,6 +161,11 @@ export default function EditOrderForm({
 
   const handleSelectEngineer = (engineerId: string) => {
     setSelectedEngineer(engineerId);
+
+    if (engineerId === orderDetails?.assignedEngineerId) {
+      return;
+    }
+
     startTransition(async () => {
       if (orderDetails?.id) {
         const result = await updateOrder(orderDetails.id, engineerId);
