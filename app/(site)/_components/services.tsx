@@ -25,7 +25,7 @@ const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.3 }}
     >
       <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white">
         <CardContent className="p-6 flex flex-col items-center h-full">
@@ -72,7 +72,7 @@ export default function Services() {
         }
       },
       {
-        threshold: 0.3,
+        threshold: 0.1,
       }
     );
 
@@ -93,7 +93,7 @@ export default function Services() {
           className="text-center mb-16 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9 }}
+          transition={{ duration: 0.5 }}
         >
           Discover Our Wide Range of
           <span className="text-primary block mt-2">Safety Solutions</span>
@@ -102,18 +102,18 @@ export default function Services() {
           {ALL_SERVICES.slice(0, 5).map((service, index) => (
             <motion.div
               key={service.label}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.5 }}
               animate={controls}
               variants={{
                 visible: {
                   opacity: 1,
                   scale: 1,
-                  transition: { duration: 0.6, delay: index * 0.1 },
+                  transition: { duration: 0.3, delay: index * 0.1 },
                 },
               }}
             >
               <Link
-                href={`/services/${service.label
+                href={`/services${service.categoryPath}/${service.label
                   .toLowerCase()
                   .replace(/\s+/g, "-")}`}
                 className="block h-full"

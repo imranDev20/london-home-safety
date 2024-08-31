@@ -53,7 +53,7 @@ export default function ServiceCategories() {
           className="text-center mb-16 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9 }}
+          transition={{ duration: 0.5 }}
         >
           Discover Our Wide Range of
           <span className="text-primary block mt-2">Safety Solutions</span>
@@ -70,7 +70,7 @@ export default function ServiceCategories() {
                   visible: {
                     opacity: 1,
                     scale: 1,
-                    transition: { duration: 0.6, delay: index * 0.1 },
+                    transition: { duration: 0.3, delay: index * 0.1 },
                   },
                 }}
               >

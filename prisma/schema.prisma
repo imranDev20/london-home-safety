@@ -71,6 +71,7 @@ model Review {
 model Package {
   id              String           @id @default(cuid())
   name            String
+  description     String?
   category        PackageCategory
   serviceName     String
   type            PackageType?

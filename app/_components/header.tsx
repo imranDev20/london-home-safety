@@ -12,18 +12,11 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
 
-  const nonInvertedRoutes = [
-    "/login",
-    "/register",
-    "/profile",
-    "/profile/property",
-    "/profile/orders",
-    "/profile/testimonials",
-    "/profile/orders",
-    "/forgot-password",
-  ];
+  const nonInvertedRoutes = ["/services/[category_id]/[service_id]"];
 
-  const isTransparent = !nonInvertedRoutes.includes(pathname);
+  const isTransparent = !nonInvertedRoutes.some((route) =>
+    new RegExp(`^${route.replace(/\[.*?\]/g, "[^/]+")}$`).test(pathname)
+  );
 
   return (
     <>
@@ -35,7 +28,9 @@ export default function Header() {
         }`}
       >
         <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-2 md:py-0">
-          <div className="text-lg font-medium">LoGo</div>
+          <div className="text-lg font-medium test-white relative z-20">
+            LOGO
+          </div>
 
           <div className="flex items-center relative z-20">
             <nav className="hidden md:block">
@@ -46,20 +41,24 @@ export default function Header() {
                       <li key={navItem.path} className="group/first relative">
                         <Link
                           href={navItem.path}
-                          className={`py-5 px-3 block w-full text-white font-medium ${
+                          className={`py-5 px-3 block w-full  font-medium ${
                             isTransparent
-                              ? "hover:text-secondary"
-                              : "hover:text-primary"
+                              ? "hover:text-secondary text-white"
+                              : "hover:text-primary text-body-dark"
                           }`}
                         >
                           {navItem.label}
                         </Link>
 
-                        <ul className="hidden group-hover/first:block absolute bg-white shadow-md rounded-md z-20 top-full left-1/2 -translate-x-1/2 min-w-56">
+                        <ul
+                          className={`hidden group-hover/first:block absolute ${
+                            isTransparent ? "bg-white" : "bg-white"
+                          } shadow-lg rounded-md z-20 top-full left-1/2 -translate-x-1/2 min-w-56`}
+                        >
                           {navItem.children?.map((navFChild) => (
                             <li
                               key={navFChild.path}
-                              className="group/second relative px-5 py-1 last-of-type:pb-3"
+                              className="group/second relative px-5 py-1 last-of-type:pb-3 hover:bg-gray-100 over"
                             >
                               <Link
                                 href={`/services${navFChild.path}`}
@@ -68,7 +67,7 @@ export default function Header() {
                                 {navFChild.label}
                               </Link>
 
-                              <ul className="hidden group-hover/second:block absolute top-0 left-[98%] bg-white z-20 min-w-72 shadow-md rounded-md">
+                              <ul className="hidden group-hover/second:block absolute top-0 left-[98%] bg-white z-20 min-w-72 shadow-lg rounded-md">
                                 {navFChild.children?.map((navSChild) => (
                                   <li
                                     key={navSChild.path}
@@ -94,10 +93,10 @@ export default function Header() {
                     <li key={navItem.label}>
                       <Link
                         href={navItem.path}
-                        className={`py-5 inline-block px-3 text-white font-medium ${
+                        className={`py-5 inline-block px-3 font-medium ${
                           isTransparent
-                            ? "hover:text-secondary"
-                            : "hover:text-primary"
+                            ? "hover:text-secondary text-white"
+                            : "hover:text-primary text-body-dark"
                         }`}
                       >
                         {navItem.label}

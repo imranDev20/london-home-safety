@@ -112,7 +112,7 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
             Voices of <span className="text-primary">Satisfaction</span>
           </h2>
           <p className="text-xl text-gray-700 leading-relaxed mb-8">
-            Discover why our customers can't stop talking about their
+            Discover why our customers can&lsquo;t stop talking about their
             experiences. Real stories, real impact.
           </p>
           <div className="mb-8">
@@ -136,8 +136,8 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
                   Share Your Experience
                 </DialogTitle>
                 <DialogDescription className="text-gray-600">
-                  We'd love to hear about your experience with our service. Your
-                  feedback helps us improve and serve you better.
+                  We&lsquo;d love to hear about your experience with our
+                  service. Your feedback helps us improve and serve you better.
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>

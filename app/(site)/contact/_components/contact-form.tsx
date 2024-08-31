@@ -22,7 +22,7 @@ const formSchema = z.object({
 
 export type UserFormInputType = z.infer<typeof formSchema>;
 
-export default function ContactForm() {
+export default function ContactSection() {
   const {
     register,
     handleSubmit,

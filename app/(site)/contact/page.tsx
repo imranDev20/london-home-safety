@@ -1,7 +1,7 @@
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import ContactAddress from "./_components/contact-address";
-import ContactForm from "./_components/contact-form";
+import ContactSection from "./_components/contact-form";
 import ContactMap from "./_components/contact-map";
 
 const breadCrumbOptions = [
@@ -19,7 +19,7 @@ export default function Contact() {
       />
 
       <ContactAddress />
-      <ContactForm />
+      <ContactSection />
       <ContactMap />
     </>
   );
