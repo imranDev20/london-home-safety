@@ -125,7 +125,7 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
               <Button
                 variant="default"
                 size="lg"
-                className="w-full sm:w-auto text-white bg-primary hover:bg-primary/90 py-6 text-lg font-semibold"
+                className="w-full sm:w-auto text-white bg-primary hover:bg-primary/90 py-4 text-sm font-medium"
               >
                 Leave a Review
               </Button>
@@ -274,12 +274,12 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
                           </h4>
                           <div className="relative">
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full"></div>
-                            <p className="text-gray-600 leading-relaxed pl-4">
+                            <p className="text-gray-600 leading-relaxed pl-4 mt-5">
                               {review.comment}
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center text-sm text-gray-500">
+                        <div className="flex items-center text-sm text-gray-500 mt-5">
                           <MessageSquare className="w-4 h-4 mr-2" />
                           <span>Verified Review</span>
                         </div>

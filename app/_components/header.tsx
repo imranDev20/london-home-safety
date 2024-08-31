@@ -34,7 +34,7 @@ export default function Header() {
           isTransparent ? "text-white" : "text-black"
         }`}
       >
-        <div className="container mx-auto max-w-full px-4 md:px-8 lg:px-16 flex justify-between items-center py-2 md:py-0">
+        <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-2 md:py-0">
           <div className="text-lg font-medium">LoGo</div>
 
           <div className="flex items-center relative z-20">

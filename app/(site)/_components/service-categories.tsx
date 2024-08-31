@@ -32,7 +32,7 @@ export default function ServiceCategories() {
         }
       },
       {
-        threshold: 0.5, // Adjust the threshold to trigger the animation earlier or later
+        threshold: 0.3, // Adjust the threshold to trigger the animation earlier or later
       }
     );
 
