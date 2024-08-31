@@ -18,7 +18,7 @@ import { useTransition } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { Package } from "@prisma/client";
-import { deleteService } from "../actions";
+import { deletePackage } from "../actions";
 
 export default function ServiceTableRow({ pack }: { pack: Package }) {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function ServiceTableRow({ pack }: { pack: Package }) {
     e.stopPropagation(); // Stop the propagation to prevent routing
 
     startTransition(async () => {
-      const result = await deleteService(pack.id);
+      const result = await deletePackage(pack.id);
 
       if (result.success) {
         toast({

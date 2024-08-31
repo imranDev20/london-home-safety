@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState, useTransition } from "react";
+import { FormEvent, useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +20,7 @@ import { OrderWithRelation } from "@/types/order";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { sendEmailToEngineerAction } from "../../../engineers/actions";
 import { useToast } from "@/components/ui/use-toast";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export default function SendEmailDialog({
   engineerEmail,
@@ -35,10 +36,15 @@ export default function SendEmailDialog({
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (engineerEmail) setTo(engineerEmail);
+  }, [engineerEmail]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     startTransition(async () => {
-      try {       
+      try {
         const emailData = {
           subject: subject,
           receiver: engineerEmail,
@@ -81,9 +87,13 @@ export default function SendEmailDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" onClick={() => setOpen(true)}>
+        <Button
+          variant="outline"
+          onClick={() => setOpen(true)}
+          disabled={!engineerEmail}
+        >
           <Mail className="mr-2 h-4 w-4" />
-          Compose Email
+          Send Email
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[550px]">
@@ -117,9 +127,8 @@ export default function SendEmailDialog({
                 </Label>
                 <Input
                   id="to"
-                  value={engineerEmail}
+                  value={to}
                   onChange={(e) => setTo(e.target.value)}
-                  disabled
                   className="col-span-3"
                   placeholder="recipient@example.com"
                 />
@@ -164,10 +173,10 @@ export default function SendEmailDialog({
               <X className="mr-2 h-4 w-4" />
               Cancel
             </Button>
-            <Button type="submit">
-              <Send className="mr-2 h-4 w-4" />
+            <LoadingButton type="submit" loading={isPending}>
+              {!isPending && <Send className="mr-2 h-4 w-4" />}
               Send Email
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1,3 +1,4 @@
+import { NavItem } from "@/types/misc";
 import { OrderWithRelation } from "@/types/order";
 import { Package } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
@@ -228,4 +229,16 @@ export const calculateTotal = (orderDetails: OrderWithRelation) => {
   if (orderDetails.isCongestionZone) total += 5;
   if (orderDetails.parkingOptions !== "FREE") total += 5;
   return total.toFixed(2);
+};
+
+export const mergeArrays = (
+  arr1: NavItem[],
+  arr2: Package[],
+  prop1: keyof NavItem,
+  prop2: keyof Package
+) => {
+  return arr1.map((item1) => ({
+    ...item1,
+    packages: arr2.filter((item2) => item2[prop2] === item1[prop1]),
+  }));
 };

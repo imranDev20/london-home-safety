@@ -16,7 +16,7 @@ import useQueryString from "@/hooks/use-query-string";
 import { useEffect, useState, useTransition } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import dayjs from "dayjs";
-import { getExportCustomers } from "../actions";
+import { exportCustomers } from "../actions";
 import { toast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
 import CreateUser from "../../orders/new/_components/create-user";
@@ -45,7 +45,7 @@ export default function CustomerTableHeader() {
 
   const handleExportCustomers = async () => {
     startTransition(async () => {
-      const result = await getExportCustomers();
+      const result = await exportCustomers();
       if (result.success) {
         // Handle successful deletion (e.g., show a success message, update UI)
         const excelData = result.data as string;

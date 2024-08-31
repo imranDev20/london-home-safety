@@ -26,7 +26,6 @@ export default function CategoryDetailsPage({
   ];
   return (
     <div>
-      {" "}
       <PageHeader
         backgroundImage={BackgroundImage}
         breadCrumbOptions={breadCrumbOptions}

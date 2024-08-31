@@ -1805,7 +1805,7 @@ export const NAV_ITEMS: NavItem[] = [
 
   <div class="mb-8">
     <h2 class="text-2xl font-bold mb-4">Why is an Energy Performance Certificate Important?</h2>
-    <p class="mb-4">
+    <p class="mb-4 text-body">
       An Energy Performance Certificate (EPC) is essential for assessing the energy efficiency of a property. It provides a clear rating on how energy-efficient your property is and highlights areas where improvements can be made. This certificate is crucial for property sales, rentals, and compliance with energy efficiency regulations.
     </p>
     <p class="font-bold mb-2">Benefits of an Energy Performance Certificate:</p>
@@ -2029,7 +2029,7 @@ export const ADVANTAGES = [
   },
 ];
 
-export const CONTACT= [
+export const CONTACT = [
   {
     id: 1,
     title: "Address:",
@@ -2049,7 +2049,6 @@ export const CONTACT= [
     info: "020 8146 6698 info@londonhomesafety.co.uk",
     icons: <IoMail size={45} className="fill-primary" />,
   },
-
 ];
 
 export const SOCIALS = [
@@ -2060,19 +2059,19 @@ export const SOCIALS = [
     icons: <RiFacebookBoxFill size={24} className="fill-primary" />,
   },
   {
-    id:2,
+    id: 2,
     href: "Facebook",
     label: "X",
     icons: <FaXTwitter size={24} className="fill-primary" />,
   },
   {
-    id:3,
+    id: 3,
     href: "YouTube",
     label: "YouTube",
-    icons: <FaYoutube size={24}  className="fill-primary"/>,
+    icons: <FaYoutube size={24} className="fill-primary" />,
   },
   {
-    id:4,
+    id: 4,
     href: "Instagram",
     label: "Instagram",
     icons: <CiInstagram size={24} className="fill-primary" />,

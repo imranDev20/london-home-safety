@@ -1,7 +1,7 @@
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { ContentLayout } from "../_components/content-layout";
 import { Suspense } from "react";
-import { getServices } from "./actions";
+import { getPackages } from "./actions";
 import ServiceTableHeader from "./_components/package-table-header";
 import ServiceLoading from "./_components/package-loading";
 import { ServicePagination } from "./_components/package-pagination";
@@ -23,7 +23,7 @@ export default async function AdminOrdersPage({
   };
 }) {
   const { search, page, filter_status } = searchParams;
-  const { services, pagination } = await getServices(
+  const { services, pagination } = await getPackages(
     parseInt(page) || 1,
     10,
     search,

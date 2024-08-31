@@ -28,7 +28,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { getExportOrders } from "../actions";
+import { exportOrders } from "../actions";
 import { FaCartShopping } from "react-icons/fa6";
 
 export default function OrderTableHeader() {
@@ -55,7 +55,7 @@ export default function OrderTableHeader() {
 
   const handleExportOrders = async () => {
     startTransition(async () => {
-      const result = await getExportOrders();
+      const result = await exportOrders();
       if (result.success) {
         // Handle successful deletion (e.g., show a success message, update UI)
         const excelData = result.data as string;

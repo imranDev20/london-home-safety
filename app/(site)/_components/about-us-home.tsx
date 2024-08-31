@@ -28,8 +28,8 @@ const DotIcon = () => (
 
 export default function AboutUsHome() {
   return (
-    <section className="container max-w-screen-xl mx-auto grid grid-cols-12 gap-20 my-20 px-16">
-      <div className="col-span-12 lg:col-span-6 flex items-center gap-3 max-h-[500px]">
+    <section className="container max-w-screen-xl grid grid-cols-12 lg:px-16 py-20 lg:gap-20">
+      <div className="col-span-12 lg:col-span-6 flex items-center gap-3 min-h-[500px]">
         <div className="relative flex-1 h-5/6">
           <Image
             src={BackgroundImage}
@@ -76,7 +76,7 @@ export default function AboutUsHome() {
         </div>
       </div>
 
-      <div className="col-span-6">
+      <div className="col-span-12 lg:col-span-6">
         <h2 className="text-4xl font-bold mb-7 leading-normal">
           About London Home Safety Limited
         </h2>
