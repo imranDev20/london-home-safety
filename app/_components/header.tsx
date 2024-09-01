@@ -1,20 +1,17 @@
 "use client";
 
-import React from "react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { NAV_ITEMS } from "@/shared/data";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaCalendarCheck } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
-import { NAV_ITEMS } from "@/shared/data";
-import { Separator } from "@/components/ui/separator";
-import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
 
   const nonInvertedRoutes = [""];
-  // /services/[category_id]/[service_id]
-
   const isTransparent = !nonInvertedRoutes.some((route) =>
     new RegExp(`^${route.replace(/\[.*?\]/g, "[^/]+")}$`).test(pathname)
   );
@@ -37,13 +34,19 @@ export default function Header() {
             <nav className="hidden md:block">
               <ul className="flex gap-3 md:gap-5 lg:gap-7">
                 {NAV_ITEMS.map((navItem) => {
+                  const isActive = pathname === navItem.path;
+
                   if (navItem.path === "/services") {
                     return (
                       <li key={navItem.path} className="group/first relative">
                         <Link
                           href={navItem.path}
-                          className={`py-5 px-3 block w-full  font-medium ${
-                            isTransparent
+                          className={`py-5 px-3 block w-full font-medium ${
+                            isActive
+                              ? isTransparent
+                                ? "text-secondary"
+                                : "text-primary"
+                              : isTransparent
                               ? "hover:text-secondary text-white"
                               : "hover:text-primary text-body-dark"
                           }`}
@@ -95,7 +98,11 @@ export default function Header() {
                       <Link
                         href={navItem.path}
                         className={`py-5 inline-block px-3 font-medium ${
-                          isTransparent
+                          isActive
+                            ? isTransparent
+                              ? "text-secondary"
+                              : "text-primary"
+                            : isTransparent
                             ? "hover:text-secondary text-white"
                             : "hover:text-primary text-body-dark"
                         }`}
