@@ -3,10 +3,11 @@
 import Stepper from "@/components/stepper";
 import { usePathname } from "next/navigation";
 import React from "react";
+import useOrderStore from "@/hooks/use-order-store";
 
 export default function StepperController() {
   const pathname = usePathname();
-  const steps = ["Cart", "Details", "Payment"];
+  const { cartItems, customerDetails } = useOrderStore();
 
   let activeStep = 1;
 
@@ -18,13 +19,21 @@ export default function StepperController() {
     activeStep = 3;
   }
 
+  const isCheckoutDisabled = cartItems.length === 0;
+  const isPaymentDisabled =
+    cartItems.length === 0 || !customerDetails.customerName;
+
   return (
     <>
       <Stepper
         steps={[
           { label: "Cart", link: "/cart" },
-          { label: "Checkout", link: "/checkout" },
-          { label: "Payment", link: "/payment" },
+          {
+            label: "Checkout",
+            link: "/checkout",
+            disabled: isCheckoutDisabled,
+          },
+          { label: "Payment", link: "/payment", disabled: isPaymentDisabled },
         ]}
         activeStep={activeStep}
       />

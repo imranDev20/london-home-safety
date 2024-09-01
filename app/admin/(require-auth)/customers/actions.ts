@@ -107,7 +107,7 @@ export async function deleteCustomer(customerId: string) {
   }
 }
 
-export const getExportCustomers = cache(async () => {
+export async function exportCustomers() {
   try {
     const users = await prisma.user.findMany({
       where: { role: "CUSTOMER" },
@@ -115,7 +115,7 @@ export const getExportCustomers = cache(async () => {
         address: true,
       },
     });
-    // Generate Excel file
+
     const workbook = new exceljs.Workbook();
     const worksheet = workbook.addWorksheet("Customers");
 
@@ -153,7 +153,7 @@ export const getExportCustomers = cache(async () => {
       success: false,
     };
   }
-});
+}
 
 export const getCustomerById = cache(async (customerId: string) => {
   try {

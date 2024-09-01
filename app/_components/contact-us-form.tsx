@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
 const formSchema = z.object({
   name: z.string().min(1, { message: "Please enter your name" }),
   email: z.string().email({ message: "Please enter a valid email" }),
@@ -25,8 +26,9 @@ export default function ContactUsForm() {
   const onSubmit = (data: any) => {
     console.log(data);
   };
+
   return (
-    <div className="p-8   h-full mx-auto bg-primary rounded-r-xl  ">
+    <div className="p-8 h-full mx-auto bg-primary rounded-b-xl lg:rounded-bl-none lg:rounded-r-xl">
       <h2 className="text-4xl font-bold text-white mb-8 text-center">
         Contact Us
       </h2>

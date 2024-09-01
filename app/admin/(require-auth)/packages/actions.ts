@@ -5,7 +5,7 @@ import { PackageType, Prisma } from "@prisma/client";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
 import { PackageFormInputType } from "./schema";
 
-export const getServices = cache(
+export const getPackages = cache(
   async (
     page: number = 1,
     pageSize: number = 10,
@@ -59,7 +59,7 @@ export const getServices = cache(
   }
 );
 
-export async function deleteService(serviceId: string) {
+export async function deletePackage(serviceId: string) {
   try {
     const deletedService = await prisma.package.delete({
       where: {
@@ -67,7 +67,7 @@ export async function deleteService(serviceId: string) {
       },
     });
 
-    revalidatePath("/packages");
+    revalidatePath("/admin/packages");
 
     return {
       message: "Service deleted successfully!",
@@ -107,6 +107,8 @@ export async function createPackage(data: PackageFormInputType) {
     // Revalidate paths if needed
     revalidatePath("/admin/packages");
     revalidatePath("/admin/packages/new");
+    revalidatePath("/book-now");
+    revalidatePath("/");
 
     return {
       message: "Package created successfully!",

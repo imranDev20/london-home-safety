@@ -34,7 +34,7 @@ export default function Partners() {
         <h1 className="text-center text-3xl font-bold">
           Proudly <span className="text-primary font-bold">Certified</span>{" "}
           &amp;
-          <span className="text-primary font-bold">Accredited</span>
+          <span className="text-primary font-bold"> Accredited</span>
           <br />
           by Leading Authorities
         </h1>

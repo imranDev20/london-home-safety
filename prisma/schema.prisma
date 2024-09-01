@@ -71,9 +71,10 @@ model Review {
 model Package {
   id              String           @id @default(cuid())
   name            String
-  category        PackageCategory //ELECTRICAL, GAS
+  description     String?
+  category        PackageCategory
   serviceName     String
-  type            PackageType? //CERTIFICATE,INSPECTION
+  type            PackageType?
   propertyType    PropertyType
   residentialType ResidentialType?
   commercialType  CommercialType?

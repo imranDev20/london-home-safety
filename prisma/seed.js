@@ -30,7 +30,7 @@ const load = async () => {
     //   );
     // }
 
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 50; i++) {
       // Adjust the number here for more or fewer entries
       const email = faker.internet.email();
 

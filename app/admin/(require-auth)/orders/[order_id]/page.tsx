@@ -12,5 +12,9 @@ export default async function AdminEditOrderPage({
   const order = await getOrderById(order_id);
   const engineers = await getEngineersForOrder();
 
+  if (!order) {
+    return <>No order</>;
+  }
+
   return <EditOrderForm orderDetails={order} engineers={engineers} />;
 }

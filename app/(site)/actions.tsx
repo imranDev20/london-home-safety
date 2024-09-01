@@ -1,22 +1,25 @@
 "use server";
 
 import { contactAdminNotificationEmailHtml } from "@/lib/contact-admin-email";
-import { contactCustomerNotificationEmailHtml, customerEmailSubject } from "@/lib/contact-customer-email";
+import {
+  contactCustomerNotificationEmailHtml,
+  customerEmailSubject,
+} from "@/lib/contact-customer-email";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { UserEmailDataType } from "@/types/misc";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache as cache } from "next/cache";
 import { z } from "zod";
 import { reviewSchema } from "./schema";
 
-export const getReviews = async () => {
+export const getReviews = cache(async () => {
   try {
     const reviews = await prisma.review.findMany({
       orderBy: {
         createdAt: "desc",
       },
-      take: 10, // Limit to 10 most recent reviews, adjust as needed
+      take: 10,
     });
 
     return reviews;
@@ -24,7 +27,7 @@ export const getReviews = async () => {
     console.error("Error fetching reviews:", error);
     return [];
   }
-};
+});
 
 export async function createReview(data: unknown) {
   try {
@@ -39,7 +42,7 @@ export async function createReview(data: unknown) {
       },
     });
 
-    revalidatePath("/reviews");
+    revalidatePath("/");
 
     return {
       message: "Review created successfully!",
@@ -109,4 +112,3 @@ export async function sendEmailToAdminAndCustomerAction(
     };
   }
 }
-
