@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { OrderStatus, PropertyType } from "@prisma/client";
-import { revalidatePath, unstable_cache as cache } from "next/cache";
+import { unstable_cache as cache, revalidatePath } from "next/cache";
 
 export const getEngineersForOrder = cache(async () => {
   try {
@@ -10,6 +10,7 @@ export const getEngineersForOrder = cache(async () => {
       where: {
         role: "STAFF",
       },
+      orderBy: { name: "asc" },
       include: {
         address: true,
       },
@@ -97,6 +98,7 @@ export const getEngineers = cache(async () => {
   try {
     const engineers = await prisma.user.findMany({
       where: { role: "STAFF" },
+      orderBy:{name:"asc"},
       include: {
         address: true,
       },

@@ -75,8 +75,8 @@ import { updateOrder, updateOrderStatus } from "../actions";
 import PackageTableRow from "./service-table-row";
 
 import { LoadingButton } from "@/components/ui/loading-button";
-import SendEmailDialog from "./send-email-dialog";
 import { OrderStatus } from "@prisma/client";
+import SendEmailDialog from "./send-email-dialog";
 
 export default function EditOrderForm({
   orderDetails,
@@ -299,7 +299,7 @@ export default function EditOrderForm({
                         <CommandGroup>
                           {engineers?.map((engineer) => (
                             <CommandItem
-                              value={engineer.id}
+                              value={engineer.name ?? ""}
                               key={engineer.id}
                               onSelect={() => handleSelectEngineer(engineer.id)}
                               onChange={() =>
