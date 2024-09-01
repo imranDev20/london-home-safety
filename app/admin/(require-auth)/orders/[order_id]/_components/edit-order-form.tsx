@@ -78,7 +78,6 @@ import PackageTableRow from "./service-table-row";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import SendEmailDialog from "./send-email-dialog";
-import { OrderStatus } from "@prisma/client";
 import { BUSINESS_NAME } from "@/shared/data";
 
 export default function EditOrderForm({
