@@ -3,6 +3,7 @@ import {
   OrderStatus,
   PackageCategory,
   PackageType,
+  PaymentStatus,
   PropertyType,
   ResidentialType,
 } from "@prisma/client";
@@ -13,6 +14,13 @@ export const ORDER_STATUS_OPTIONS: OrderStatus[] = [
   "IN_PROGRESS",
   "PENDING",
   "CONFIRMED",
+];
+
+export const PAYMENT_STATUS_OPTION: PaymentStatus[] = [
+  "UNPAID",
+  "PARTIALLY_PAID",
+  "PAID",
+  "REFUNDED",
 ];
 
 export const SERVICE_TYPE_OPTIONS: PackageType[] = [

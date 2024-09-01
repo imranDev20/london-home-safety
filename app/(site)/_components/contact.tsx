@@ -1,4 +1,4 @@
-import ContactUsForm from "@/app/_components/contact-us-form";
+import ContactUsForm from "@/app/_components/common/contact-us-form";
 import { Button } from "@/components/ui/button";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
 import Image from "next/image";
@@ -51,7 +51,18 @@ export default function Contact() {
         </div>
 
         <div className="md:col-span-5">
-          <ContactUsForm />
+          <div className="bg-blue-600 h-full p-8">
+            <h2 className="text-white text-center text-4xl font-bold mb-8">
+              Contact Us
+            </h2>
+            <ContactUsForm
+              formClass="space-y-6"
+              inputClass="bg-white border-yellow-400 text-black placeholder-black"
+              buttonClass="bg-secondary text-black  font-bold hover:bg-secondary/40"
+              textareaClass="bg-white border-secondary text-black"
+              errorTextClass="text-white"
+            />
+          </div>
         </div>
       </div>
     </div>

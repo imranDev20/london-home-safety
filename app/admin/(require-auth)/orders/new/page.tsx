@@ -1,5 +1,5 @@
 import { generateInvoiceId } from "@/lib/generate-invoice";
-import { getEngineers, getPackages, getCustomers } from "../[order_id]/actions";
+import { getCustomers, getEngineers, getPackages } from "../[order_id]/actions";
 import CreateOrderForm from "./_components/create-order-form";
 
 export default async function AdminCreateOrderPage() {
