@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
+
 interface ContactUsFormProps {
   formClass?: string;
   inputClass?: string;
@@ -17,7 +18,7 @@ interface ContactUsFormProps {
   errorTextClass?: string;
 }
 
-const formSchema = z.object({
+const contactFormSchema = z.object({
   name: z.string().min(1, { message: "Please enter your name" }),
   email: z.string().email({ message: "Please enter a valid email" }),
   phone: z.string().min(1, { message: "Please enter your phone number" }),
@@ -25,7 +26,7 @@ const formSchema = z.object({
   message: z.string().min(1, { message: "Message is required" }),
 });
 
-export type UserFormInputType = z.infer<typeof formSchema>;
+export type ContactUsFormInputType = z.infer<typeof contactFormSchema>;
 
 export default function ContactUsForm({
   errorTextClass = "text-red-600",
@@ -34,13 +35,13 @@ export default function ContactUsForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserFormInputType>({
-    resolver: zodResolver(formSchema),
+  } = useForm<ContactUsFormInputType>({
+    resolver: zodResolver(contactFormSchema),
   });
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const onSubmit: SubmitHandler<UserFormInputType> = async (data) => {
+  const onSubmit: SubmitHandler<ContactUsFormInputType> = async (data) => {
     startTransition(async () => {
       const response = await sendEmailToAdminAndCustomerAction(data);
       toast({
@@ -50,6 +51,7 @@ export default function ContactUsForm({
       });
     });
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

@@ -68,6 +68,8 @@ export async function deletePackage(serviceId: string) {
     });
 
     revalidatePath("/admin/packages");
+    revalidatePath("/admin/orders/new");
+    revalidatePath("/book-now");
 
     return {
       message: "Service deleted successfully!",
@@ -106,9 +108,8 @@ export async function createPackage(data: PackageFormInputType) {
 
     // Revalidate paths if needed
     revalidatePath("/admin/packages");
-    revalidatePath("/admin/packages/new");
     revalidatePath("/book-now");
-    revalidatePath("/");
+    revalidatePath("/admin/orders/new");
 
     return {
       message: "Package created successfully!",

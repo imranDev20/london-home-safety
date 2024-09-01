@@ -7,9 +7,13 @@ import Link from "next/link";
 export default function Contact() {
   return (
     <div className="bg-slate-200 py-12 sm:py-16 md:py-24">
-      <h2 className="text-center text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 md:mb-16 px-4">
-        Get in Touch with London&apos;s Home Safety Experts
+      <h2 className="mb-16 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight text-center">
+        Get in Touch with
+        <span className="text-primary block mt-2">
+          London&apos;s Home Safety Experts
+        </span>
       </h2>
+
       <div className="grid grid-cols-1 md:grid-cols-12 max-w-7xl mx-auto px-4">
         <div className="md:col-span-3 h-64 md:h-auto">
           <Image
@@ -51,7 +55,7 @@ export default function Contact() {
         </div>
 
         <div className="md:col-span-5">
-          <div className="bg-blue-600 h-full p-8">
+          <div className="bg-primary h-full p-8">
             <h2 className="text-white text-center text-4xl font-bold mb-8">
               Contact Us
             </h2>
@@ -60,7 +64,7 @@ export default function Contact() {
               inputClass="bg-white border-yellow-400 text-black placeholder-black"
               buttonClass="bg-secondary text-black  font-bold hover:bg-secondary/40"
               textareaClass="bg-white border-secondary text-black"
-              errorTextClass="text-white"
+              errorTextClass="text-red-800"
             />
           </div>
         </div>

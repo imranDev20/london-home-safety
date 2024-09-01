@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
-import BackgroundImage from "@/images/hero-image-new.jpeg";
+import AboutImage1 from "@/images/electrician-2.jpg";
+import AboutImage2 from "@/images/happy-family.jpg";
+import AboutImage3 from "@/images/electrician-3.jpg";
+
 import Image from "next/image";
 import Link from "next/link";
 import { HiPhone } from "react-icons/hi";
@@ -32,13 +35,14 @@ export default function AboutUsHome() {
       <div className="col-span-12 lg:col-span-6 flex items-center gap-3 min-h-[500px]">
         <div className="relative flex-1 h-5/6">
           <Image
-            src={BackgroundImage}
+            src={AboutImage1}
             alt="Large Image"
             fill
             loading="lazy"
             className="rounded-xl w-full h-full"
             style={{
               objectFit: "cover",
+              objectPosition: "80% 30%",
             }}
           />
         </div>
@@ -46,20 +50,21 @@ export default function AboutUsHome() {
         <div className="flex-1 flex flex-col gap-3 h-full">
           <div className="flex-1 relative">
             <Image
-              src={BackgroundImage}
+              src={AboutImage2}
               alt="Small Image 1"
               fill
               loading="lazy"
               className="rounded-xl w-full h-full"
               style={{
                 objectFit: "cover",
+                objectPosition: "10% 20%",
               }}
             />
           </div>
 
           <div className="flex-1 relative">
             <Image
-              src={BackgroundImage}
+              src={AboutImage3}
               alt="Small Image 2"
               fill
               loading="lazy"
