@@ -23,7 +23,7 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <Card
                   key={item.id}
-                  className="p-7 flex flex-col sm:flex-row items-center sm:items-start gap-4 hover:shadow-md transition-shadow duration-300"
+                  className="p-7 flex flex-row items-center gap-4 hover:shadow-md transition-shadow duration-300"
                 >
                   <div className="flex-grow">
                     <h3 className="font-semibold text-lg mb-1">{item.name}</h3>
@@ -43,7 +43,7 @@ export default function CartPage() {
                       onClick={() => removeItem(item.id)}
                       className="hover:bg-red-100 hover:text-red-600 transition-colors duration-300"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-5 w-5" />
                     </Button>
                   </div>
                 </Card>

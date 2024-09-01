@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ALL_SERVICES } from "@/shared/data";
-import { kebabCaseToNormalText } from "@/shared/function";
+import { kebabToNormal } from "@/lib/utils";
 import { mergeArrays } from "@/lib/utils";
 import ServiceDetailsCta from "./_components/service-details-cta";
 import { getPackagesByService } from "./actions";
@@ -60,10 +60,10 @@ export default async function ServiceDetailsPage({
   const breadCrumbOptions = [
     { label: "Services", href: "/services" },
     {
-      label: kebabCaseToNormalText(category_id),
+      label: kebabToNormal(category_id),
       href: `/services/${category_id}`,
     },
-    { label: kebabCaseToNormalText(service_id), isCurrentPage: true },
+    { label: kebabToNormal(service_id), isCurrentPage: true },
   ];
 
   return (

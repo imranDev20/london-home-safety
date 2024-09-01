@@ -22,10 +22,11 @@ export default function Faq() {
           />
         </div>
         <div className="w-full md:w-1/2">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Frequently Asked Questions
+          <h2 className="mb-8 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight">
+            Frequently Asked
+            <span className="text-primary block mt-2">Questions</span>
           </h2>
-          <p className="text-body mb-6 md:mb-8 leading-relaxed">
+          <p className="text-body mb-6 md:mb-8 leading-loose">
             Got questions? We&rsquo;ve got answers! Here are some of the most
             common questions we receive from our customers, along with clear and
             helpful answers to guide you through our services and processes.
@@ -36,7 +37,7 @@ export default function Faq() {
                 <AccordionTrigger className="text-base md:text-lg font-semibold text-start hover:no-underline">
                   {item.title}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm md:text-base text-body">
+                <AccordionContent className="text-sm md:text-base text-body leading-loose">
                   {item.content}
                 </AccordionContent>
               </AccordionItem>

@@ -111,7 +111,7 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
           <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
             Voices of <span className="text-primary">Satisfaction</span>
           </h2>
-          <p className="text-xl text-gray-700 leading-relaxed mb-8">
+          <p className="text-xl text-body-dark leading-relaxed mb-8">
             Discover why our customers can&lsquo;t stop talking about their
             experiences. Real stories, real impact.
           </p>

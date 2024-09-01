@@ -35,7 +35,7 @@ import {
   SERVICE_CATEGORY_OPTION,
   SERVICE_TYPE_OPTIONS,
 } from "@/lib/constants";
-import { kebabCaseToNormalText } from "@/shared/function";
+import { kebabToNormal } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import Link from "next/link";
@@ -251,7 +251,7 @@ export default function CreatePackageForm() {
                     <SelectContent>
                       {SERVICE_CATEGORY_OPTION.map((category, index) => (
                         <SelectItem key={index} value={category}>
-                          {kebabCaseToNormalText(category)}
+                          {kebabToNormal(category)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -280,7 +280,7 @@ export default function CreatePackageForm() {
                     <SelectContent>
                       {SERVICE_TYPE_OPTIONS.map((type, index) => (
                         <SelectItem key={index} value={type}>
-                          {kebabCaseToNormalText(type)}
+                          {kebabToNormal(type)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -339,7 +339,7 @@ export default function CreatePackageForm() {
                       <SelectContent>
                         {RESIDENTIAL_TYPE_OPTIONS.map((type) => (
                           <SelectItem key={type} value={type}>
-                            {kebabCaseToNormalText(type)}
+                            {kebabToNormal(type)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -370,7 +370,7 @@ export default function CreatePackageForm() {
                       <SelectContent>
                         {COMMERCIAL_TYPE_OPTIONS.map((type) => (
                           <SelectItem key={type} value={type}>
-                            {kebabCaseToNormalText(type)}
+                            {kebabToNormal(type)}
                           </SelectItem>
                         ))}
                       </SelectContent>

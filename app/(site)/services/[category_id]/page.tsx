@@ -1,10 +1,10 @@
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
-import { kebabCaseToNormalText } from "@/shared/function";
 import CallToAction from "../../_components/call-to-action";
 import Partners from "../../about/_components/partners";
 import AboutCategory from "./_components/about-category";
 import CategoryServices from "./_components/category-services";
+import { kebabToNormal } from "@/lib/utils";
 
 export default function CategoryDetailsPage({
   params,
@@ -20,7 +20,7 @@ export default function CategoryDetailsPage({
       path: "/services",
     },
     {
-      label: kebabCaseToNormalText(category_id),
+      label: kebabToNormal(category_id),
       isCurrentPage: true,
     },
   ];

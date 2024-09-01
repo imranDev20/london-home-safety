@@ -28,11 +28,11 @@ export default function ServiceCategories() {
         if (entries[0].isIntersecting) {
           setInView(true);
           controls.start("visible");
-          observer.disconnect(); // Stop observing after animation triggers
+          observer.disconnect();
         }
       },
       {
-        threshold: 0.3, // Adjust the threshold to trigger the animation earlier or later
+        threshold: 0.3,
       }
     );
 
@@ -55,8 +55,10 @@ export default function ServiceCategories() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          Discover Our Wide Range of
-          <span className="text-primary block mt-2">Safety Solutions</span>
+          Explore Our
+          <span className="text-primary block mt-2">
+            Safety Service Categories
+          </span>
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {serviceItems.map((service, index) => {

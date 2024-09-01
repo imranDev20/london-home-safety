@@ -13,7 +13,16 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { ShoppingCart, ChevronRight } from "lucide-react";
+import {
+  ShoppingCart,
+  ChevronRight,
+  Check,
+  Tag,
+  Home,
+  Building,
+  Briefcase,
+  Clock,
+} from "lucide-react";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { mergeArrays } from "@/lib/utils";
 
@@ -122,52 +131,69 @@ export default function BookNowComponent({
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       {service.packages?.map((pack) => {
                         const productInCart = isProductInCart(pack.id);
+
                         return (
                           <Card
                             key={pack.id}
-                            className="flex flex-col justify-between hover:shadow-lg transition-all"
+                            className="flex flex-col justify-between hover:shadow-lg transition-all overflow-hidden relative group"
                           >
                             <CardContent className="p-6">
-                              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                                {pack.name}
-                              </h3>
-                              {pack.price && (
-                                <>
-                                  <p className="text-sm text-gray-500 mt-2">
-                                    Starts From
-                                  </p>
-                                  <p className="text-2xl font-bold text-primary mb-4">
-                                    £{pack.price}
-                                  </p>
-                                </>
+                              <div className="absolute top-2 right-2">
+                                {pack.propertyType === "RESIDENTIAL" ? (
+                                  <Home className="h-5 w-5 text-blue-500" />
+                                ) : (
+                                  <Building className="h-5 w-5 text-orange-500" />
+                                )}
+                              </div>
+
+                              <div className="flex flex-col mb-4">
+                                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">
+                                  {pack.name}
+                                </h3>
+                              </div>
+
+                              <div className="mb-4 flex justify-between items-center">
+                                <p className="text-3xl font-bold text-primary">
+                                  £{pack.price}
+                                </p>
+                              </div>
+
+                              {pack.description && (
+                                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                                  {pack.description}
+                                </p>
                               )}
+
                               <Button
-                                className="w-full mt-4 bg-primary text-white font-semibold hover:bg-primary-dark transition-colors duration-300"
+                                className={`w-full mt-2 font-semibold transition-colors duration-300 ${
+                                  productInCart
+                                    ? "bg-green-500 hover:bg-green-600 text-white"
+                                    : "bg-primary hover:bg-primary-dark text-white"
+                                }`}
                                 onClick={() =>
                                   handleAddToCart({
                                     id: pack.id,
-                                    name: `${
-                                      isCommercial
-                                        ? "Commercial"
-                                        : "Residential"
-                                    } ${pack.name}`,
+                                    name: `${pack.propertyType} ${pack.name}`,
                                     price: pack.price,
-                                    description: "some description",
+                                    description:
+                                      pack.description || "Package description",
                                   })
                                 }
                                 disabled={productInCart}
                               >
-                                {productInCart ? (
-                                  <span className="flex items-center justify-center">
-                                    <ShoppingCart className="mr-2 h-5 w-5" />
-                                    Added to Cart
-                                  </span>
-                                ) : (
-                                  <span className="flex items-center justify-center">
-                                    <ShoppingCart className="mr-2 h-5 w-5" />
-                                    Order Now
-                                  </span>
-                                )}
+                                <span className="flex items-center justify-center">
+                                  {productInCart ? (
+                                    <>
+                                      <ShoppingCart className="mr-2 h-5 w-5" />
+                                      Added to Cart
+                                    </>
+                                  ) : (
+                                    <>
+                                      <ShoppingCart className="mr-2 h-5 w-5" />
+                                      Add to Cart
+                                    </>
+                                  )}
+                                </span>
                               </Button>
                             </CardContent>
                           </Card>

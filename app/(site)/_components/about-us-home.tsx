@@ -77,8 +77,9 @@ export default function AboutUsHome() {
       </div>
 
       <div className="col-span-12 lg:col-span-6">
-        <h2 className="text-4xl font-bold mb-7 leading-normal">
-          About London Home Safety Limited
+        <h2 className="mb-8 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight">
+          Get to Know
+          <span className="text-primary block mt-2">London Home Safety</span>
         </h2>
 
         <p className="text-body leading-loose">
