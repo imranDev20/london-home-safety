@@ -35,7 +35,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
-import { ORDER_STATUS_OPTIONS } from "@/lib/constants";
+import { ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTION } from "@/lib/constants";
 import {
   calculateSubtotal,
   calculateTotal,
@@ -70,13 +70,17 @@ import {
   sendEmailToCustomerOrderConfirmation,
 } from "../../../customers/actions";
 import generateInvoice from "../../actions";
-import { updateOrder, updateOrderStatus } from "../actions";
+import {
+  updateOrder,
+  updateOrderStatus,
+  updatePaymentStatus,
+} from "../actions";
 
 import PackageTableRow from "./service-table-row";
 
 import { Badge } from "@/components/ui/badge";
 import { LoadingButton } from "@/components/ui/loading-button";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, PaymentStatus } from "@prisma/client";
 import SendEmailDialog from "./send-email-dialog";
 
 export default function EditOrderForm({
@@ -104,6 +108,9 @@ export default function EditOrderForm({
   }, [orderDetails?.assignedEngineerId, engineers, selectedEngineer]);
 
   const [status, setStatus] = useState<OrderStatus>(orderDetails.status);
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(
+    orderDetails.paymentStatus
+  );
   const [isPending, startTransition] = useTransition();
 
   const breadcrumbItems = [
@@ -156,6 +163,19 @@ export default function EditOrderForm({
             variant: response.success ? "success" : "destructive",
           });
         }
+      }
+    });
+  };
+  const handleUpdatePaymentStatus = (value: PaymentStatus) => {
+    startTransition(async () => {
+      if (orderDetails?.id) {
+        setPaymentStatus(value);
+        const result = await updatePaymentStatus(orderDetails.id, value);
+        toast({
+          title: result.success ? "Success" : "Error",
+          description: result.message,
+          variant: result.success ? "success" : "destructive",
+        });
       }
     });
   };
@@ -253,6 +273,27 @@ export default function EditOrderForm({
               </SelectGroup>
             </SelectContent>
           </Select>
+          <Select
+            value={paymentStatus as PaymentStatus}
+            onValueChange={(value) => {
+              if (value) {
+                handleUpdatePaymentStatus(value as PaymentStatus);
+              }
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Update Payment Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {PAYMENT_STATUS_OPTION.map((option) => (
+                  <SelectItem value={option} key={option}>
+                    {kebabToNormal(option)}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
           <LoadingButton
             type="button"
             disabled={isLoading}
@@ -303,7 +344,7 @@ export default function EditOrderForm({
                         <CommandGroup>
                           {engineers?.map((engineer) => (
                             <CommandItem
-                              value={engineer.id}
+                              value={engineer.name ?? ""}
                               key={engineer.id}
                               onSelect={() => handleSelectEngineer(engineer.id)}
                               onChange={() =>
