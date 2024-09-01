@@ -74,9 +74,10 @@ import { updateOrder, updateOrderStatus } from "../actions";
 
 import PackageTableRow from "./service-table-row";
 
+import { Badge } from "@/components/ui/badge";
 import { LoadingButton } from "@/components/ui/loading-button";
-import SendEmailDialog from "./send-email-dialog";
 import { OrderStatus } from "@prisma/client";
+import SendEmailDialog from "./send-email-dialog";
 
 export default function EditOrderForm({
   orderDetails,
@@ -219,8 +220,8 @@ export default function EditOrderForm({
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
 
-      <div className="flex items-center gap-4 mb-4 mt-7">
-        <h1 className="text-2xl font-bold mb-2 flex items-center">
+      <div className="flex items-center gap-4 mt-7">
+        <h1 className="text-2xl font-bold flex items-center">
           <Link href="/admin/orders">
             <Button variant="outline" size="icon" className="h-7 w-7 mr-2">
               <ChevronLeft className="h-5 w-5" />
@@ -265,6 +266,9 @@ export default function EditOrderForm({
           </LoadingButton>
         </div>
       </div>
+      <Badge className="mb-5 ml-8" variant="outline">
+        {dayjs(new Date(orderDetails?.createdAt)).format("DD-MM-YYYY hh:mm A")}
+      </Badge>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
