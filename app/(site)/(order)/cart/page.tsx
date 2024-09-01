@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import useOrderStore from "@/hooks/use-order-store";
 import { X, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function CartPage() {
   const { cartItems, removeItem } = useOrderStore();
@@ -15,7 +14,7 @@ export default function CartPage() {
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto py-8 max-w-screen-xl px-4 md:px-8 lg:px-16">
       <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
@@ -24,7 +23,7 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <Card
                   key={item.id}
-                  className="p-7 flex flex-col sm:flex-row items-center sm:items-start gap-4 hover:shadow-md transition-shadow duration-300"
+                  className="p-7 flex flex-row items-center gap-4 hover:shadow-md transition-shadow duration-300"
                 >
                   <div className="flex-grow">
                     <h3 className="font-semibold text-lg mb-1">{item.name}</h3>
@@ -44,7 +43,7 @@ export default function CartPage() {
                       onClick={() => removeItem(item.id)}
                       className="hover:bg-red-100 hover:text-red-600 transition-colors duration-300"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-5 w-5" />
                     </Button>
                   </div>
                 </Card>

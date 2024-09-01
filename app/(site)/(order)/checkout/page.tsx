@@ -235,7 +235,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 py-8">
       <Form {...form}>
         <form
           className="grid grid-cols-1 lg:grid-cols-12 gap-8"

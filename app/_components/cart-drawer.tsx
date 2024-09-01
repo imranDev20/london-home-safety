@@ -44,23 +44,26 @@ export default function CartDrawer() {
             {cartItems.length > 0 ? (
               <>
                 {cartItems.map((item, index) => (
-                  <div key={item?.id}>
-                    <div className="flex justify-between items-start py-2">
-                      <div>
-                        <h3 className="font-medium">{item?.name}</h3>
-                        <p className="text-sm text-primary">
+                  <div key={item?.id} className="group">
+                    <div className="flex justify-between items-center py-3 px-2 transition-all duration-200">
+                      <div className="flex-grow">
+                        <h3 className="font-medium text-gray-800 transition-colors duration-200 min-h-[48px]">
+                          {item?.name}
+                        </h3>
+                        <p className="text-sm font-semibold text-primary mt-1">
                           £{item?.price.toFixed(2)}
                         </p>
                       </div>
                       <button
-                        className="text-gray-500 p-1 border border-transparent hover:border hover:border-primary rounded-full transition-all"
+                        className="text-gray-400 p-2 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
                         onClick={() => removeItem(item.id)}
+                        aria-label="Remove item"
                       >
-                        <X size={16} />
+                        <X size={18} />
                       </button>
                     </div>
                     {index < cartItems.length - 1 && (
-                      <Separator className="mt-2" />
+                      <Separator className="my-2 opacity-50" />
                     )}
                   </div>
                 ))}

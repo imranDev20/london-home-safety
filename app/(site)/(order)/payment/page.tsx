@@ -184,7 +184,7 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="container max-w-screen-xl mx-auto px-4 py-8">
+    <div className="container max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Payment Options */}
         <div className="w-full lg:w-2/3">
@@ -270,25 +270,30 @@ export default function PaymentPage() {
 
         {/* Summary Sidebar */}
         <div className="w-full lg:w-1/3 space-y-5">
-          <Card className="p-5">
-            <h2 className="text-lg font-semibold mb-4">Summary</h2>
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-gray-600">Service Price:</span>
-              <span className="text-gray-900">£{cartTotal}.00</span>
+          <Card className="p-6 sticky top-6">
+            <h2 className="text-xl font-semibold mb-6">Summary</h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Service Price:</span>
+                <span className="text-gray-900">£{cartTotal}.00</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Parking Fee:</span>
+                <span className="text-gray-900">£{parkingFee}.00</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Congestion Zone Fee:</span>
+                <span className="text-gray-900">£{congestionFee}.00</span>
+              </div>
+              <Separator className="my-4" />
+              <div className="flex justify-between items-center text-xl font-semibold">
+                <span>Total Price:</span>
+                <span>£{totalPrice}.00</span>
+              </div>
             </div>
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-gray-600">Parking Fee:</span>
-              <span className="text-gray-900">£{parkingFee}.00</span>
-            </div>
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-gray-600">Congestion Zone Fee:</span>
-              <span className="text-gray-900">£{congestionFee}.00</span>
-            </div>
-            <Separator className="my-4" />
-            <div className="flex justify-between items-center text-xl font-semibold">
-              <span>Total Price:</span>
-              <span>£{totalPrice}.00</span>
-            </div>
+            <Button type="submit" className="w-full mt-6">
+              Proceed to Payment
+            </Button>
           </Card>
 
           {paymentMethod !== "CREDIT_CARD" && (
