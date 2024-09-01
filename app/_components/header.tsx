@@ -12,7 +12,8 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
 
-  const nonInvertedRoutes = ["/services/[category_id]/[service_id]"];
+  const nonInvertedRoutes = [""];
+  // /services/[category_id]/[service_id]
 
   const isTransparent = !nonInvertedRoutes.some((route) =>
     new RegExp(`^${route.replace(/\[.*?\]/g, "[^/]+")}$`).test(pathname)
