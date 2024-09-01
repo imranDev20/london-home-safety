@@ -1,4 +1,4 @@
-import { ADDRESS, BUSINESS_NAME, WEBSITE_URL } from "@/shared/data";
+import { ADDRESS, BUSINESS_NAME, PHONE_NO, WEBSITE_URL } from "@/shared/data";
 
 export const placedOrderEmailHtml = (
   customerName: string,
@@ -93,7 +93,7 @@ export const placedOrderEmailHtml = (
           <p>Best regards,<br>${BUSINESS_NAME}</p>
         </div>
         <div class="footer">
-          <p>${BUSINESS_NAME} | ${ADDRESS}</p>
+         <p>${BUSINESS_NAME} | ${PHONE_NO} | ${ADDRESS}</p>
           <p><a href="https://${WEBSITE_URL}">${WEBSITE_URL}</a></p>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { ADDRESS, BUSINESS_NAME, PHONE_NO, WEBSITE_URL } from "@/shared/data";
 import { OrderWithRelation } from "@/types/order";
 import dayjs from "dayjs";
 
-export const notifyUserCompleteEmailHtml = (
+export const notifyUserOrderPlacedEmailHtml = (
   orderDetails: OrderWithRelation | null,
   content: string
 ) => `
@@ -11,7 +11,7 @@ export const notifyUserCompleteEmailHtml = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Completed</title>
+  <title>Order Placed</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,7 +31,7 @@ export const notifyUserCompleteEmailHtml = (
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .header {
-      background-color: #28a745;
+      background-color: #007BFF;
       color: white;
       padding: 20px;
       text-align: center;
@@ -65,7 +65,7 @@ export const notifyUserCompleteEmailHtml = (
       color: #666;
     }
     .footer a {
-      color: #28a745;
+      color: #007BFF;
       text-decoration: none;
     }
     .footer a:hover {
@@ -89,12 +89,12 @@ export const notifyUserCompleteEmailHtml = (
 <body>
   <div class="container">
     <div class="header">
-      <h2>Order Completed</h2>
+      <h2>Order Placed Successfully</h2>
     </div>
     <div class="content">
       <p>Dear ${orderDetails?.user.name},</p>
       <p>
-        We are pleased to inform you that your order has been successfully completed. Below are the details of your completed order:
+        Thank you for placing your order with us! We have received your request and are currently processing it. Below are the details of your order:
       </p>
       <div class="message-box">
         <p style="font-weight: bold;">Order Summary:</p>
@@ -105,16 +105,15 @@ export const notifyUserCompleteEmailHtml = (
 }, ${orderDetails?.user.address?.city}<br>
           <strong>Phone:</strong> ${orderDetails?.user.phone}<br>
           <strong>Email:</strong> ${orderDetails?.user.email}<br>
-          <strong>Completed on:</strong> ${dayjs(orderDetails?.date).format(
-            "DD MMMM YYYY"
-          )}
+          <strong>Scheduled:</strong> ${orderDetails?.inspectionTime}, ${dayjs(
+  orderDetails?.date
+).format("DD MMMM YYYY")}
         </p>
-        <p style="font-weight: bold;">Services Completed:</p>
+        <p style="font-weight: bold;">Services Ordered:</p>
         <ul style="margin-left: 20px;">
           ${orderDetails?.packages
             .map(
-              (item) =>
-                `<li>${item.name} - ${item.category}: ${item.price}</li>`
+              (item) => `<li>${item.name} - ${item.category} ${item.price}</li>`
             )
             .join("")}
         </ul>
@@ -122,7 +121,7 @@ export const notifyUserCompleteEmailHtml = (
         <p style="margin-left: 20px;">${content}</p>
       </div>
       <p style="margin-top: 20px;">
-        If you have any questions or need further assistance, please don't hesitate to contact us.
+        We will notify you once your order is complete. If you have any questions or need further assistance, please don't hesitate to contact us.
       </p>
       <p>
         Thank you for choosing ${BUSINESS_NAME}!<br/>
@@ -130,11 +129,10 @@ export const notifyUserCompleteEmailHtml = (
       </p>
     </div>
     <div class="footer">
-      <p>${BUSINESS_NAME} | ${PHONE_NO} | ${ADDRESS}</p>
+    <p>${BUSINESS_NAME} | ${PHONE_NO} | ${ADDRESS}</p>
       <p><a href="https://${WEBSITE_URL}">${WEBSITE_URL}</a></p>
     </div>
   </div>
 </body>
 </html>
 `;
-

@@ -48,6 +48,7 @@ import { cn } from "@/lib/utils";
 import { CustomerWithRelation } from "@/types/customer";
 import { StaffWithRelations } from "@/types/engineers";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Package } from "@prisma/client";
 import { format } from "date-fns";
 import {
   CalendarIcon,
@@ -64,7 +65,6 @@ import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { createOrder } from "../../actions";
 import { CreateOrderFormInput, createOrderSchema } from "../schema";
 import CreateUser from "./create-user";
-import { Package } from "@prisma/client";
 
 export default function CreateOrderForm({
   customers,
@@ -79,6 +79,8 @@ export default function CreateOrderForm({
 }) {
   const { toast } = useToast();
   const router = useRouter();
+  const [customerEmail, setCustomerEmail] = useState<string>("");
+  const [customerName, setCustomerName] = useState<string>("");
 
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
@@ -148,6 +150,15 @@ export default function CreateOrderForm({
             description: result.message,
             variant: "success",
           });
+          
+        
+         
+          toast({
+            title: result.emailSuccess ? "Success" : "Error",
+            description: result.emailMessage,
+            variant: result.emailSuccess ? "success" : "destructive",
+          });
+
           router.push("/admin/orders");
         } else {
           toast({
@@ -272,6 +283,8 @@ export default function CreateOrderForm({
                                         value={customer.email}
                                         onSelect={() => {
                                           field.onChange(customer.id);
+                                          setCustomerEmail(customer.email);
+                                          setCustomerName(customer.name ?? "");
                                           setOpenUserComboBox(false);
                                         }}
                                       >
