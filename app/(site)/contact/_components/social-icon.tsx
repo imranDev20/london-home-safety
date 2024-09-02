@@ -1,22 +1,29 @@
-import { ContactUs } from "@/types/contact";
+"use client";
+
 import React from "react";
+import Link from "next/link";
 
-export const SocialIcon = ({ item }: { item: ContactUs }) => {
+interface SocialItem {
+  id: number;
+  label: string;
+  href: string;
+  icons: JSX.Element;
+}
+
+interface SocialIconProps {
+  item: SocialItem;
+}
+
+export default function SocialIcon({ item }: SocialIconProps): JSX.Element {
   return (
-    <div className="relative group">
-      <a
-        href={item.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-3 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center"
-      >
-        {item.icons}
-      </a>
-      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-sm rounded-md px-2 py-1">
-        {item.label}
-      </div>
-    </div>
+    <Link
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-gray-600 hover:text-primary transition-colors duration-300"
+    >
+      {item.icons}
+      <span className="sr-only">{item.label}</span>
+    </Link>
   );
-};
-
-export default SocialIcon;
+}

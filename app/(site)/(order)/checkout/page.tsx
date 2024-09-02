@@ -430,7 +430,7 @@ export default function CheckoutPage() {
                   control={form.control}
                   name="date"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
+                    <FormItem className="space-y-2">
                       <FormLabel>Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -470,7 +470,9 @@ export default function CheckoutPage() {
                     <FormItem>
                       <FormLabel>Select Time</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          if (value) field.onChange(value);
+                        }}
                         value={field.value}
                       >
                         <FormControl>

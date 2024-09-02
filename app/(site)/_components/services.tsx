@@ -96,7 +96,19 @@ export default function Services() {
           transition={{ duration: 0.5 }}
         >
           Discover Our Wide Range of
-          <span className="text-primary block mt-2">Safety Solutions</span>
+          <span className="text-primary block mt-2 relative">
+            Safety Solutions
+            <svg
+              className="absolute w-full h-3 -bottom-2 left-0 text-primary opacity-30"
+              viewBox="0 0 200 9"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill="currentColor"
+                d="M0,7 C50,9 100,4 150,6 L200,7 L200,9 L0,9 Z"
+              />
+            </svg>
+          </span>
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
           {ALL_SERVICES.slice(0, 5).map((service, index) => (
@@ -136,7 +148,7 @@ export default function Services() {
           <Button
             asChild
             size="lg"
-            className="px-8 py-6 text-white bg-primary hover:bg-primary/90 text-base font-semibold"
+            className="px-8 py-6 text-white bg-primary hover:bg-primary/90 text-base font-semibold group"
           >
             <Link href="/book-now" className="inline-flex items-center">
               See All Services

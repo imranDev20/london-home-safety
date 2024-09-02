@@ -130,6 +130,7 @@ enum Role {
 enum PropertyType {
   RESIDENTIAL
   COMMERCIAL
+  NOT_APPLICABLE
 }
 
 enum ResidentialType {
