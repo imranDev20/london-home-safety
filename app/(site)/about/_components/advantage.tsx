@@ -1,35 +1,135 @@
-import EngineerIcon from "@/components/icons/engineer";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ADVANTAGES } from "@/shared/data";
-export default function Advantage() {
+import { motion } from "framer-motion";
+
+export default function Advantages() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1,
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <section className="bg-[#EAF3FB] py-20">
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-4">
-          Why Choose London Home Safety Limited
-        </h2>
-        <p className="text-center text-gray-500 mb-10 leading-relaxed md:text-md max-w-[918px] mx-auto">
-          We pride ourselves on delivering exceptional service and unparalleled
-          expertise. Our certified professionals, competitive pricing, rapid
-          response times, and flexible scheduling make us the trusted choice for
-          all your home safety needs.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt">
+    <section
+      ref={sectionRef}
+      className="bg-gradient-to-b from-blue-50 to-white py-24 overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={containerVariants}
+          className="text-center mb-20"
+        >
+          <motion.h2
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl font-extrabold text-body-dark leading-tight"
+          >
+            Why Choose
+            <span className="text-primary block mt-2 relative">
+              London Home Safety
+              <svg
+                className="absolute w-full h-3 -bottom-2 left-0 text-primary opacity-30"
+                viewBox="0 0 200 9"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill="currentColor"
+                  d="M0,7 C50,9 100,4 150,6 L200,7 L200,9 L0,9 Z"
+                />
+              </svg>
+            </span>
+          </motion.h2>
+          <motion.div
+            variants={itemVariants}
+            className="mt-6 max-w-3xl mx-auto"
+          >
+            <p className="text-xl text-gray-600 leading-relaxed">
+              We pride ourselves on delivering exceptional service and
+              unparalleled expertise. Our certified professionals, competitive
+              pricing, rapid response times, and flexible scheduling make us the
+              trusted choice for all your home safety needs.
+            </p>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={containerVariants}
+        >
           {ADVANTAGES?.map((advantage) => (
-            <Card
-              key={advantage.id}
-              className="bg-white p-6 rounded-2xl shadow-lg text-center"
-            >
-              <advantage.Icon width={50} height={50} className="fill-primary mx-auto mb-2" />
-              <h3 className="text-lg font-semibold mb-2">
-               {
-                advantage.advantageName
-               }
-              </h3>
-              <p className="text-body">{advantage.advantageDetail}</p>
-            </Card>
+            <motion.div key={advantage.id} variants={itemVariants}>
+              <Card className="bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2">
+                <div className="flex flex-col items-center">
+                  <div className="bg-primary/10 bg-opacity-10 p-4 rounded-full mb-6 transition-transform duration-300 ease-in-out transform hover:scale-110">
+                    <advantage.Icon
+                      width={40}
+                      height={40}
+                      className="text-primary fill-primary"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold mb-4 text-gray-900">
+                    {advantage.advantageName}
+                  </h3>
+                  <p className="text-gray-600 text-center">
+                    {advantage.advantageDetail}
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

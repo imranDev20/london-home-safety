@@ -63,7 +63,9 @@ export default function PropertyTypeCompo({
           icon={property.icon}
           label={property.label}
           onClick={() => {
-            router.push(`${pathname}?property_type=${property.type}`);
+            router.push(`${pathname}?property_type=${property.type}`, {
+              scroll: false,
+            });
           }}
           isActive={
             propertyType === property.type ||
