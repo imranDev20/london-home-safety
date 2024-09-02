@@ -8,6 +8,11 @@ import exceljs from "exceljs";
 import { unstable_cache as cache, revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
+import { sendEmail } from "@/lib/send-email";
+import { BUSINESS_NAME, EMAIL_ADDRESS } from "@/shared/data";
+import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
+import { getEngineerById } from "../engineers/actions";
+import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 
 export const getOrders = cache(
   async (
@@ -553,6 +558,31 @@ export async function createOrder(data: CreateOrderFormInput) {
         },
       },
     });
+    const orderDetails = await getOrderById(createdOrder.id);
+    const engineer = await getEngineerById(createdOrder?.assignedEngineerId ?? "");
+    let content = `Dear ${orderDetails?.user.name},\n\nThank you for placing your order with us! Your order number is ${createdOrder.invoice }. We have received your request and are currently processing it. You will receive another email once your order is complete.\n\nIf you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`
+   const response = await sendEmail({
+      fromEmail: EMAIL_ADDRESS,
+      fromName: "London Home Safety",
+      to: orderDetails?.user.email ?? "",
+      subject:"Order Placed Successfully",
+      html: notifyUserOrderPlacedEmailHtml(
+        orderDetails,
+        content
+      ),
+    });
+    if(engineer) {
+      content = `Dear ${engineer.name},\n\nYou have been assigned a new order. The order number is ${createdOrder.invoice}. Please review the details and proceed with the necessary steps to complete the assigned tasks. Ensure all protocols are followed, and keep the customer updated on the progress.\n\nIf you encounter any issues or need further assistance, feel free to reach out to the management team.\n\nThank you for your dedication and hard work.\n\nBest regards,\nThe ${BUSINESS_NAME} Management Team`
+
+      await sendEmail({
+        fromEmail: EMAIL_ADDRESS,
+        fromName: "London Home Safety",
+        to: engineer.email,
+        subject: "New Service Order",
+        html: notifyEngineerEmailHtml(orderDetails,content),
+      });
+    }
+
 
     // Revalidate paths if needed
     revalidatePath("/admin/orders");
@@ -560,14 +590,17 @@ export async function createOrder(data: CreateOrderFormInput) {
 
     return {
       message: "Order created successfully!",
+      emailMessage:"Email sent successrylly!",
       data: createdOrder,
       success: true,
+      emailSuccess: true,
     };
   } catch (error) {
     console.error(error);
     return {
       message: "An error occurred while creating the order.",
-      success: false,
+      emailMessage: "An error occoured while sending email",
+      emailSuccess: false,
     };
   }
 }

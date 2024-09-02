@@ -67,6 +67,7 @@ import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import {
   sendEmailToCustomerOrderCancelled,
+  sendEmailToCustomerOrderCompleted,
   sendEmailToCustomerOrderConfirmation,
 } from "../../../customers/actions";
 import generateInvoice from "../../actions";
@@ -82,6 +83,7 @@ import { Badge } from "@/components/ui/badge";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import SendEmailDialog from "./send-email-dialog";
+import { BUSINESS_NAME } from "@/shared/data";
 
 export default function EditOrderForm({
   orderDetails,
@@ -149,6 +151,23 @@ export default function EditOrderForm({
             variant: response.success ? "success" : "destructive",
           });
         }
+        if (value === "COMPLETED") {
+          const emailData = {
+            receiver: orderDetails?.user.email,
+            subject: "Order Completed",
+            content: `Dear ${orderDetails?.user.name},\n\nWe are pleased to inform you that your order has been successfully completed. Your order number is ${orderDetails?.invoice}. If you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`,
+            orderDetails: orderDetails,
+          };
+          
+          const response = await sendEmailToCustomerOrderCompleted(
+            emailData
+          );
+          toast({
+            title: response.success ? "Success" : "Error",
+            description: response.message,
+            variant: response.success ? "success" : "destructive",
+          });
+        }
         if (value === "CANCELLED") {
           const emailData = {
             receiver: orderDetails?.user.email,
@@ -156,6 +175,7 @@ export default function EditOrderForm({
             content: `Dear ${orderDetails?.user.name},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
             orderDetails: orderDetails,
           };
+       
           const response = await sendEmailToCustomerOrderCancelled(emailData);
           toast({
             title: response.success ? "Success" : "Error",
@@ -367,7 +387,7 @@ export default function EditOrderForm({
                     </Command>
                   </PopoverContent>
                 </Popover>
-                {/*  */}
+                
                 <SendEmailDialog
                   engineerEmail={selectedEngineerEmail}
                   orderDetails={orderDetails}

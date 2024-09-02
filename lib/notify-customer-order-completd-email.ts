@@ -2,7 +2,7 @@ import { ADDRESS, BUSINESS_NAME, PHONE_NO, WEBSITE_URL } from "@/shared/data";
 import { OrderWithRelation } from "@/types/order";
 import dayjs from "dayjs";
 
-export const notifyUserCancelEmailHtml = (
+export const notifyUserCompleteEmailHtml = (
   orderDetails: OrderWithRelation | null,
   content: string
 ) => `
@@ -11,7 +11,7 @@ export const notifyUserCancelEmailHtml = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Cancellation</title>
+  <title>Order Completed</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,7 +31,7 @@ export const notifyUserCancelEmailHtml = (
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .header {
-      background-color: #FF5733;
+      background-color: #28a745;
       color: white;
       padding: 20px;
       text-align: center;
@@ -65,7 +65,7 @@ export const notifyUserCancelEmailHtml = (
       color: #666;
     }
     .footer a {
-      color: #FF5733;
+      color: #28a745;
       text-decoration: none;
     }
     .footer a:hover {
@@ -89,12 +89,12 @@ export const notifyUserCancelEmailHtml = (
 <body>
   <div class="container">
     <div class="header">
-      <h2>Order Cancellation</h2>
+      <h2>Order Completed</h2>
     </div>
     <div class="content">
       <p>Dear ${orderDetails?.user.name},</p>
       <p>
-        We regret to inform you that your order has been cancelled. Below are the details of the cancelled order:
+        We are pleased to inform you that your order has been successfully completed. Below are the details of your completed order:
       </p>
       <div class="message-box">
         <p style="font-weight: bold;">Order Summary:</p>
@@ -105,27 +105,28 @@ export const notifyUserCancelEmailHtml = (
 }, ${orderDetails?.user.address?.city}<br>
           <strong>Phone:</strong> ${orderDetails?.user.phone}<br>
           <strong>Email:</strong> ${orderDetails?.user.email}<br>
-          <strong>Scheduled:</strong> ${orderDetails?.inspectionTime}, ${dayjs(
-  orderDetails?.date
-).format("DD MMMM YYYY")}
+          <strong>Completed on:</strong> ${dayjs(orderDetails?.date).format(
+            "DD MMMM YYYY"
+          )}
         </p>
-        <p style="font-weight: bold;">Services Cancelled:</p>
+        <p style="font-weight: bold;">Services Completed:</p>
         <ul style="margin-left: 20px;">
           ${orderDetails?.packages
             .map(
-              (item) => `<li>${item.name} - ${item.category} ${item.price}</li>`
+              (item) =>
+                `<li>${item.name} - ${item.category}: ${item.price}</li>`
             )
             .join("")}
         </ul>
-        <p style="font-weight: bold;">Reason for Cancellation:</p>
+        <p style="font-weight: bold;">Additional Notes:</p>
         <p style="margin-left: 20px;">${content}</p>
       </div>
       <p style="margin-top: 20px;">
-        We apologize for any inconvenience this may have caused. If you have any questions or would like to discuss this further, please feel free to reach out to us.
+        If you have any questions or need further assistance, please don't hesitate to contact us.
       </p>
       <p>
-        Best regards,<br/>
-        <strong>${BUSINESS_NAME} Team</strong>
+        Thank you for choosing ${BUSINESS_NAME}!<br/>
+        <strong>The ${BUSINESS_NAME} Team</strong>
       </p>
     </div>
     <div class="footer">
