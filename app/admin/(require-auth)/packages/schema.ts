@@ -15,9 +15,12 @@ export const PackageTypeSchema = z.enum(
   }
 );
 
-export const PropertyTypeSchema = z.enum(["RESIDENTIAL", "COMMERCIAL"], {
-  errorMap: () => ({ message: "Invalid property type selected" }),
-});
+export const PropertyTypeSchema = z.enum(
+  ["RESIDENTIAL", "COMMERCIAL", "NOT_APPLICABLE"],
+  {
+    errorMap: () => ({ message: "Invalid property type selected" }),
+  }
+);
 
 export const ResidentialTypeSchema = z.enum(
   [
