@@ -64,7 +64,7 @@ export default function Contact() {
               inputClass="bg-white border-yellow-400 text-black placeholder-black"
               buttonClass="bg-secondary text-black  font-bold hover:bg-secondary/40"
               textareaClass="bg-white border-secondary text-black"
-              errorTextClass="text-red-800"
+              errorTextClass="text-gray-100"
             />
           </div>
         </div>
