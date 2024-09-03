@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { NAV_ITEMS } from "@/shared/data";
 import Link from "next/link";
 import { FaCalendarCheck, FaChevronDown } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
-import { NAV_ITEMS } from "@/shared/data";
-import { Separator } from "@/components/ui/separator";
-import { usePathname } from "next/navigation";
+
 import { NON_INVERTED_ROUTES } from "@/lib/constants";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
@@ -35,6 +35,8 @@ export default function Header() {
             <nav className="hidden md:block">
               <ul className="flex gap-3 md:gap-5 lg:gap-7">
                 {NAV_ITEMS.map((navItem) => {
+                  const isActive = pathname === navItem.path;
+
                   if (navItem.path === "/services") {
                     return (
                       <li key={navItem.path} className="group/first relative">
@@ -94,7 +96,11 @@ export default function Header() {
                       <Link
                         href={navItem.path}
                         className={`py-5 inline-block px-3 font-medium ${
-                          isTransparent
+                          isActive
+                            ? isTransparent
+                              ? "text-secondary"
+                              : "text-primary"
+                            : isTransparent
                             ? "hover:text-secondary text-white"
                             : "hover:text-primary text-body-dark"
                         }`}
