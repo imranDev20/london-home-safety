@@ -64,6 +64,8 @@ export async function upsertUser(userData: CustomerDetails) {
     });
 
     revalidatePath("/admin/customers");
+    revalidatePath("/admin/orders/new");
+
     return {
       success: true,
       data: upsertedUser,

@@ -161,6 +161,7 @@ export async function updatePackage(
 
     // Revalidate paths if needed
     revalidatePath("/admin/packages");
+    revalidatePath("/");
     revalidatePath("/book-now");
     revalidatePath("/admin/orders/new");
     revalidatePath("/services/[category_id]/[service_id]", "page");
