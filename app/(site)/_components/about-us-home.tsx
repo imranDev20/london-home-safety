@@ -41,6 +41,7 @@ export default function AboutUsHome() {
               alt="Large Image"
               fill
               loading="lazy"
+              quality={20}
               placeholder="blur"
               className="w-full h-full transition-transform duration-300 group-hover:scale-110"
               style={{
@@ -57,6 +58,7 @@ export default function AboutUsHome() {
                 alt="Small Image 1"
                 fill
                 loading="lazy"
+                quality={20}
                 placeholder="blur"
                 className="w-full h-full transition-transform duration-300 group-hover:scale-110"
                 style={{
@@ -72,6 +74,7 @@ export default function AboutUsHome() {
                 alt="Small Image 2"
                 fill
                 loading="lazy"
+                quality={20}
                 placeholder="blur"
                 className="w-full h-full transition-transform duration-300 group-hover:scale-110"
                 style={{
