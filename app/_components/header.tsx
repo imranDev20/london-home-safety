@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { NAV_ITEMS } from "@/shared/data";
 import Link from "next/link";
 import { FaCalendarCheck, FaChevronDown } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
-import { NAV_ITEMS } from "@/shared/data";
-import { Separator } from "@/components/ui/separator";
-import { usePathname } from "next/navigation";
+
 import { NON_INVERTED_ROUTES } from "@/lib/constants";
 import Hamburger from "./hamburger";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
@@ -17,6 +17,16 @@ export default function Header() {
   const isTransparent = !NON_INVERTED_ROUTES.some((route) =>
     pathname.startsWith(`/${route}`)
   );
+
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    if (path === "/services") {
+      return pathname.startsWith("/services");
+    }
+    return pathname.startsWith(path);
+  };
 
   return (
     <>
@@ -42,7 +52,11 @@ export default function Header() {
                         <Link
                           href={navItem.path}
                           className={`py-5 px-3 block w-full font-medium ${
-                            isTransparent
+                            isActive(navItem.path)
+                              ? isTransparent
+                                ? "text-secondary"
+                                : "text-primary"
+                              : isTransparent
                               ? "hover:text-secondary text-white"
                               : "hover:text-primary text-body-dark"
                           } flex items-center`}
@@ -61,7 +75,11 @@ export default function Header() {
                             >
                               <Link
                                 href={`/services${navFChild.path}`}
-                                className=" py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium flex items-center justify-between"
+                                className={`py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium flex items-center justify-between ${
+                                  isActive(`/services${navFChild.path}`)
+                                    ? "text-primary"
+                                    : ""
+                                }`}
                               >
                                 {navFChild.label}
                                 {navFChild.children && (
@@ -75,7 +93,13 @@ export default function Header() {
                                     <li key={navSChild.path}>
                                       <Link
                                         href={`/services${navFChild.path}${navSChild.path}`}
-                                        className="block py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium"
+                                        className={`block py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium ${
+                                          isActive(
+                                            `/services${navFChild.path}${navSChild.path}`
+                                          )
+                                            ? "text-primary"
+                                            : ""
+                                        }`}
                                       >
                                         {navSChild.label}
                                       </Link>
@@ -95,7 +119,11 @@ export default function Header() {
                       <Link
                         href={navItem.path}
                         className={`py-5 inline-block px-3 font-medium ${
-                          isTransparent
+                          isActive(navItem.path)
+                            ? isTransparent
+                              ? "text-secondary"
+                              : "text-primary"
+                            : isTransparent
                             ? "hover:text-secondary text-white"
                             : "hover:text-primary text-body-dark"
                         }`}

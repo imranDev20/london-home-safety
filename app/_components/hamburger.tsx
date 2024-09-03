@@ -1,16 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { NAV_ITEMS } from "@/shared/data";
 import { FaCalendarCheck } from "react-icons/fa6";
 import { Menu, ChevronRight } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState<string[]>([]);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const openParentMenus = () => {
+      const newOpenMenus = new Set<string>();
+      NAV_ITEMS.forEach((item) => {
+        if (item.children) {
+          item.children.forEach((child) => {
+            if (child.children) {
+              child.children.forEach((grandChild) => {
+                if (
+                  pathname.startsWith(
+                    `/services${child.path}${grandChild.path}`
+                  )
+                ) {
+                  newOpenMenus.add(item.label);
+                  newOpenMenus.add(child.label);
+                }
+              });
+            } else if (pathname.startsWith(`/services${child.path}`)) {
+              newOpenMenus.add(item.label);
+            }
+          });
+        }
+      });
+      setOpenMenus(Array.from(newOpenMenus));
+    };
+
+    openParentMenus();
+  }, [pathname]);
 
   const toggleMenu = (label: string) => {
     setOpenMenus((prev) =>
@@ -22,22 +53,24 @@ export default function HamburgerMenu() {
 
   const closeMenu = () => {
     setIsOpen(false);
-    setOpenMenus([]);
+  };
+
+  const isActive = (path: string) => {
+    return pathname === path || pathname.startsWith(path + "/");
   };
 
   const renderMenuItems = (items: typeof NAV_ITEMS, level = 0) => {
     return items.map((item) => (
-      <li
-        key={item.path}
-        className={`${
-          level > 0 ? "ml-4" : ""
-        } transition-all duration-200 ease-in-out`}
-      >
+      <li key={item.path} className={`transition-all duration-200 ease-in-out`}>
         {item.children ? (
           <div>
             <button
               onClick={() => toggleMenu(item.label)}
-              className="flex items-center justify-between w-full py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-all duration-200 ease-in-out"
+              className={`flex items-center justify-between w-full py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
+                isActive(item.path)
+                  ? "bg-primary/20 text-primary"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
             >
               {item.label}
               <ChevronRight
@@ -56,13 +89,17 @@ export default function HamburgerMenu() {
               {item.children.map((child) => (
                 <li
                   key={child.path}
-                  className="transition-all duration-200 ease-in-out"
+                  className="transition-all duration-200 ease-in-out border-l-2 border-gray-200 ml-4"
                 >
                   {child.children ? (
                     <div>
                       <button
                         onClick={() => toggleMenu(child.label)}
-                        className="flex items-center justify-between w-full py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-all duration-200 ease-in-out ml-4"
+                        className={`flex items-center justify-between w-full py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
+                          isActive(`/services${child.path}`)
+                            ? "bg-primary/20 text-primary"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
                       >
                         {child.label}
                         <ChevronRight
@@ -81,11 +118,17 @@ export default function HamburgerMenu() {
                         {child.children.map((grandChild) => (
                           <li
                             key={grandChild.path}
-                            className="transition-all duration-200 ease-in-out"
+                            className="transition-all duration-200 ease-in-out border-l-2 border-gray-200 ml-4"
                           >
                             <Link
                               href={`/services${child.path}${grandChild.path}`}
-                              className="block py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary rounded-md transition-all duration-200 ease-in-out ml-8"
+                              className={`block py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
+                                isActive(
+                                  `/services${child.path}${grandChild.path}`
+                                )
+                                  ? "bg-primary/20 text-primary"
+                                  : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                              }`}
                               onClick={closeMenu}
                             >
                               {grandChild.label}
@@ -97,7 +140,11 @@ export default function HamburgerMenu() {
                   ) : (
                     <Link
                       href={`/services${child.path}`}
-                      className="block py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary rounded-md transition-all duration-200 ease-in-out ml-4"
+                      className={`block py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
+                        isActive(`/services${child.path}`)
+                          ? "bg-primary/20 text-primary"
+                          : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                      }`}
                       onClick={closeMenu}
                     >
                       {child.label}
@@ -110,7 +157,11 @@ export default function HamburgerMenu() {
         ) : (
           <Link
             href={item.path}
-            className="block py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary rounded-md transition-all duration-200 ease-in-out"
+            className={`block py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
+              isActive(item.path)
+                ? "bg-primary text-white"
+                : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+            }`}
             onClick={closeMenu}
           >
             {item.label}

@@ -11,11 +11,11 @@ import LowerPriceIcon from "@/components/icons/lower-price";
 import PatIcon from "@/components/icons/pat";
 import backgroundImage from "@/images/about-bg.jpeg";
 import { NavItem, NavLeafItem } from "@/types/misc";
+import { CiInstagram } from "react-icons/ci";
 import { FaClock } from "react-icons/fa";
 import { FaXTwitter, FaYoutube } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { RiFacebookBoxFill } from "react-icons/ri";
-import { CiInstagram } from "react-icons/ci";
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", path: "/" },
@@ -964,6 +964,16 @@ export const NAV_ITEMS: NavItem[] = [
             description:
               "Maintain and repair your boiler to ensure efficient and safe operation.",
 
+            detailedDesc: {
+              details:
+                "Our boiler service and repair solutions ensure your heating system operates safely and efficiently. We provide expert maintenance to prevent issues and extend your boiler’s lifespan. In case of a breakdown, our skilled engineers deliver quick and reliable repairs. Stay compliant with UK safety standards and enjoy uninterrupted warmth with our trusted services.",
+              points: [
+                "Expert boiler servicing and maintenance",
+                "Prompt and effective repairs for all boiler types",
+                "Guarantees safe and efficient boiler operation",
+              ],
+            },
+
             pricingDetails: [
               {
                 type: "RESIDENTIAL",
@@ -1132,6 +1142,16 @@ export const NAV_ITEMS: NavItem[] = [
             image: backgroundImage,
             description:
               "Identify and mitigate fire hazards in your home with our comprehensive fire risk assessments.",
+            detailedDesc: {
+              details:
+                "Our Fire Risk Assessment service ensures your property is fully compliant with UK fire safety regulations. We conduct thorough inspections to identify potential hazards and provide actionable recommendations to enhance safety. With our expert assessment, you can protect your property and occupants from fire risks, ensuring peace of mind.",
+
+              points: [
+                "Comprehensive fire safety inspections",
+                "Identification of potential fire hazards",
+                "Ensures compliance with UK fire safety regulations",
+              ],
+            },
             pageContent: {
               title:
                 "Mitigating Risks with Comprehensive Fire Risk Assessments",
@@ -1306,7 +1326,16 @@ export const NAV_ITEMS: NavItem[] = [
             image: backgroundImage,
             description:
               "Certify your fire alarm system to ensure it meets all safety regulations.",
+            detailedDesc: {
+              details:
+                "Our Fire Alarm Certificate service guarantees that your fire alarm system meets all necessary UK safety standards. We provide thorough testing and certification to ensure your alarm system is fully operational and compliant. With our expert service, you can be confident that your fire alarms will perform effectively in an emergency, protecting lives and property.",
 
+              points: [
+                "Detailed testing of fire alarm systems",
+                "Official certification of compliance",
+                "Ensures reliable and effective fire alarm performance",
+              ],
+            },
             pageContent: {
               title:
                 "Ensuring Safety Compliance with Professional Fire Alarm Certification",
@@ -1480,6 +1509,16 @@ export const NAV_ITEMS: NavItem[] = [
             image: backgroundImage,
             description:
               "Install a reliable fire alarm system to protect your home and loved ones.",
+            detailedDesc: {
+              details:
+                "Our Fire Alarm Installation service provides you with the latest fire detection technology, expertly installed to ensure maximum protection. We tailor each installation to meet the specific needs of your property, ensuring comprehensive coverage and compliance with UK regulations. Trust our experienced team to install a reliable fire alarm system that safeguards your premises and occupants.",
+
+              points: [
+                "Custom-designed fire alarm systems",
+                "Expert installation for optimal coverage",
+                "Compliance with UK fire safety standards",
+              ],
+            },
             pageContent: {
               title:
                 "Protecting Lives with Reliable Fire Alarm Installation Services",
