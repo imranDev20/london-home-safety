@@ -24,16 +24,17 @@ import { createOrder, upsertUser } from "../../actions";
 import StripePaymentElement from "./stripe-payment-element";
 import PaymentResult from "./payment-result";
 
-export default function PaymentCompo() {
+export default function PaymentCompo({
+  redirectStatus,
+}: {
+  redirectStatus?: string;
+}) {
   const [stripePromise, setStripePromise] =
     useState<Promise<Stripe | null> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethod>("CREDIT_CARD");
-  const router = useRouter();
   const { toast } = useToast();
-  const searchParams = useSearchParams();
-  const redirectStatus = searchParams.get("redirect_status");
 
   const [isPending, startTransition] = useTransition();
   const { cartItems, customerDetails, clearCart, resetOrder } = useOrderStore();
