@@ -5,9 +5,14 @@ import { useRouter } from "next/navigation";
 interface StepperProps {
   activeStep: number;
   steps: Array<{ label: string; link: string; disabled?: boolean }>;
+  paymentCompleted: boolean;
 }
 
-export default function Stepper({ activeStep, steps }: StepperProps) {
+export default function Stepper({
+  activeStep,
+  steps,
+  paymentCompleted,
+}: StepperProps) {
   const router = useRouter();
 
   const handleCircleClick = () => {
@@ -59,33 +64,35 @@ export default function Stepper({ activeStep, steps }: StepperProps) {
           </div>
           <div className="flex flex-col items-end">
             <span className="text-xl font-semibold text-gray-800">
-              {steps[activeStep - 1].label}
+              {steps[activeStep - 1]?.label}
             </span>
             {activeStep < steps.length ? (
               <Link
                 href={steps[activeStep].link}
                 className="text-sm text-primary hover:underline"
               >
-                Next: {steps[activeStep].label}
+                Next: {steps[activeStep]?.label}
               </Link>
             ) : (
-              <span className="text-sm text-gray-500">Next: Finish</span>
+              <span className="text-sm text-gray-500">Completed</span>
             )}
           </div>
         </div>
       </div>
 
-      {/* Desktop Stepper (Unchanged) */}
+      {/* Desktop Stepper */}
       <div className="hidden sm:flex items-center justify-center">
         <div className="flex w-full max-w-3xl items-center justify-between">
           {steps.map((step, index) => {
             const isActive = index + 1 === activeStep;
-            const isCompleted = index + 1 < activeStep;
+            const isCompleted =
+              index + 1 < activeStep ||
+              (index + 1 === activeStep && paymentCompleted);
             const isLastStep = index === steps.length - 1;
 
             return (
               <React.Fragment key={index}>
-                {step.disabled ? (
+                {step.disabled && !isCompleted ? (
                   <div className="flex flex-col items-center opacity-50 cursor-not-allowed">
                     <div
                       className={`relative flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-muted-foreground`}

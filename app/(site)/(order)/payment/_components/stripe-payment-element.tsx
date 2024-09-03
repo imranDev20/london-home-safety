@@ -7,7 +7,6 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { useRouter, usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import useOrderStore from "@/hooks/use-order-store";
 import { createOrder, upsertUser } from "../../actions";
 import { LoadingButton } from "@/components/ui/loading-button";
@@ -76,7 +75,7 @@ export default function StripePaymentElement() {
         clearCart();
 
         router.push(
-          `${pathname}?active_step=4&payment_intent=${response.paymentIntent.id}&payment_intent_client_secret=${response.paymentIntent.client_secret}&redirect_status=${status}`
+          `${pathname}?payment_intent=${response.paymentIntent.id}&payment_intent_client_secret=${response.paymentIntent.client_secret}&redirect_status=${status}`
         );
       }
     } catch (error: any) {
