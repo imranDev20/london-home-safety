@@ -9,6 +9,7 @@ import { NAV_ITEMS } from "@/shared/data";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
 import { NON_INVERTED_ROUTES } from "@/lib/constants";
+import Hamburger from "./hamburger";
 
 export default function Header() {
   const pathname = usePathname();
@@ -26,7 +27,7 @@ export default function Header() {
           isTransparent ? "text-white" : "text-black"
         }`}
       >
-        <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-2 md:py-0">
+        <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-3 md:py-0">
           <div className="text-lg font-medium test-white relative z-20">
             LOGO
           </div>
@@ -108,7 +109,7 @@ export default function Header() {
             </nav>
 
             <div className="ml-4 md:ml-8 lg:ml-16 flex items-center gap-3 md:gap-4 lg:gap-7">
-              <Link href="/book-now">
+              <Link href="/book-now" className="hidden md:block">
                 <Button
                   className={`py-2 md:py-3 lg:py-5 text-sm md:text-base bg-secondary hover:bg-body-dark text-body-dark hover:text-white flex items-center`}
                 >
@@ -118,6 +119,8 @@ export default function Header() {
               </Link>
 
               <CartDrawer />
+
+              <Hamburger />
             </div>
           </div>
         </div>
