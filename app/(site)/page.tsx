@@ -1,3 +1,4 @@
+import { getPackages } from "../admin/(require-auth)/orders/[order_id]/actions";
 import AboutUsHome from "./_components/about-us-home";
 import CallToAction from "./_components/call-to-action";
 import Contact from "./_components/contact";
@@ -11,11 +12,12 @@ import { getReviews } from "./actions";
 
 export default async function Home() {
   const reviews = await getReviews();
+  const packages = await getPackages();
 
   return (
     <>
       <Hero />
-      <Services />
+      <Services packages={packages} />
       <AboutUsHome />
       <ServiceCategories />
       <CallToAction />

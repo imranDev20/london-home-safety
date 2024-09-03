@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Package, PropertyType } from "@prisma/client";
-import { NavItem } from "@/types/misc";
 import { ALL_SERVICES } from "@/shared/data";
 import useOrderStore from "@/hooks/use-order-store";
 import PageHeader from "@/components/page-header";
