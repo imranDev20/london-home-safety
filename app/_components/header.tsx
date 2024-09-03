@@ -8,13 +8,12 @@ import CartDrawer from "./cart-drawer";
 import { NAV_ITEMS } from "@/shared/data";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
+import { NON_INVERTED_ROUTES } from "@/lib/constants";
 
 export default function Header() {
   const pathname = usePathname();
 
-  const nonInvertedRoutes = ["cart", "checkout", "admin/login", "payment"];
-
-  const isTransparent = !nonInvertedRoutes.some((route) =>
+  const isTransparent = !NON_INVERTED_ROUTES.some((route) =>
     pathname.startsWith(`/${route}`)
   );
 

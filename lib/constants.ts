@@ -61,3 +61,10 @@ export const COMMERCIAL_TYPE_OPTIONS: CommercialType[] = [
   "WAREHOUSE",
   "OTHER",
 ];
+
+export const NON_INVERTED_ROUTES = [
+  "cart",
+  "checkout",
+  "admin/login",
+  "payment",
+];
