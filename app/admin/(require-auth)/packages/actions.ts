@@ -106,7 +106,7 @@ export async function createPackage(data: PackageFormInputType) {
       },
     });
 
-    // Revalidate paths if needed
+    revalidatePath("/");
     revalidatePath("/admin/packages");
     revalidatePath("/book-now");
     revalidatePath("/admin/orders/new");

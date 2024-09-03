@@ -61,7 +61,7 @@ export default function HamburgerMenu() {
 
   const renderMenuItems = (items: typeof NAV_ITEMS, level = 0) => {
     return items.map((item) => (
-      <li key={item.path} className={`transition-all duration-200 ease-in-out`}>
+      <li key={item.path} className="transition-all duration-200 ease-in-out">
         {item.children ? (
           <div>
             <button
@@ -69,7 +69,7 @@ export default function HamburgerMenu() {
               className={`flex items-center justify-between w-full py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
                 isActive(item.path)
                   ? "bg-primary/20 text-primary"
-                  : "text-gray-700 hover:bg-gray-100"
+                  : "text-gray-700 hover:bg-primary/20 hover:text-primary"
               }`}
             >
               {item.label}
@@ -98,7 +98,7 @@ export default function HamburgerMenu() {
                         className={`flex items-center justify-between w-full py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
                           isActive(`/services${child.path}`)
                             ? "bg-primary/20 text-primary"
-                            : "text-gray-700 hover:bg-gray-100"
+                            : "text-gray-700 hover:bg-primary/20 hover:text-primary"
                         }`}
                       >
                         {child.label}
@@ -127,7 +127,7 @@ export default function HamburgerMenu() {
                                   `/services${child.path}${grandChild.path}`
                                 )
                                   ? "bg-primary/20 text-primary"
-                                  : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                                  : "text-gray-700 hover:bg-primary/20 hover:text-primary"
                               }`}
                               onClick={closeMenu}
                             >
@@ -143,7 +143,7 @@ export default function HamburgerMenu() {
                       className={`block py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
                         isActive(`/services${child.path}`)
                           ? "bg-primary/20 text-primary"
-                          : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                          : "text-gray-700 hover:bg-primary/20 hover:text-primary"
                       }`}
                       onClick={closeMenu}
                     >
@@ -159,8 +159,8 @@ export default function HamburgerMenu() {
             href={item.path}
             className={`block py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
               isActive(item.path)
-                ? "bg-primary text-white"
-                : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                ? "bg-primary/20 text-primary"
+                : "text-gray-700 hover:bg-primary/20 hover:text-primary"
             }`}
             onClick={closeMenu}
           >
