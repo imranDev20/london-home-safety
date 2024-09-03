@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import StepperController from "./_components/stepper-controller";
+import StepperLoader from "./_components/stepper-controller";
 
 export default function OrderLayout({
   children,
@@ -8,7 +9,7 @@ export default function OrderLayout({
 }) {
   return (
     <div className="bg-section-background">
-      <Suspense fallback="Loading...">
+      <Suspense fallback={<StepperLoader />}>
         <StepperController />
       </Suspense>
 
