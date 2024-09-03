@@ -123,7 +123,7 @@ export default function AboutUsHome() {
 
           <hr className="my-8" />
 
-          <div className="flex items-center gap-7">
+          <div className="flex flex-col lg:flex-row items-center gap-7">
             <Button
               className="bg-primary hover:bg-secondary hover:text-black py-6 text-md"
               size="lg"
