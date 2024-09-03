@@ -46,6 +46,7 @@
     "lucide-react": "^0.427.0",
     "motion": "^10.18.0",
     "next": "14.2.5",
+    "next-auth": "^5.0.0-beta.20",
     "next-themes": "^0.3.0",
     "node-mailjet": "^6.0.5",
     "popover": "^2.4.1",

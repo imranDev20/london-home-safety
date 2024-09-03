@@ -14,9 +14,8 @@ export default function Hero() {
         alt="London Home Safety Hero Background"
         fill
         style={{ objectFit: "cover" }}
-        quality={50}
+        quality={20}
         loading="eager"
-        placeholder="blur"
       />
 
       <div className="absolute inset-0 bg-[rgba(6,44,100,0.85)] mix-blend-multiply"></div>
