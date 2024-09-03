@@ -291,9 +291,12 @@ export default function PaymentPage() {
                 <span>£{totalPrice}.00</span>
               </div>
             </div>
-            <Button type="submit" className="w-full mt-6">
-              Proceed to Payment
-            </Button>
+
+            {paymentMethod !== "CREDIT_CARD" && (
+              <Button type="submit" className="w-full mt-6">
+                Proceed to Payment
+              </Button>
+            )}
           </Card>
 
           {paymentMethod !== "CREDIT_CARD" && (

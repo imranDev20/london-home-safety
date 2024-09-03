@@ -8,6 +8,7 @@ import { FaCalendarCheck, FaChevronDown } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
 
 import { NON_INVERTED_ROUTES } from "@/lib/constants";
+import Hamburger from "./hamburger";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
@@ -16,6 +17,16 @@ export default function Header() {
   const isTransparent = !NON_INVERTED_ROUTES.some((route) =>
     pathname.startsWith(`/${route}`)
   );
+
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    if (path === "/services") {
+      return pathname.startsWith("/services");
+    }
+    return pathname.startsWith(path);
+  };
 
   return (
     <>
@@ -26,7 +37,7 @@ export default function Header() {
           isTransparent ? "text-white" : "text-black"
         }`}
       >
-        <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-2 md:py-0">
+        <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-3 md:py-0">
           <div className="text-lg font-medium test-white relative z-20">
             LOGO
           </div>
@@ -35,15 +46,17 @@ export default function Header() {
             <nav className="hidden md:block">
               <ul className="flex gap-3 md:gap-5 lg:gap-7">
                 {NAV_ITEMS.map((navItem) => {
-                  const isActive = pathname === navItem.path;
-
                   if (navItem.path === "/services") {
                     return (
                       <li key={navItem.path} className="group/first relative">
                         <Link
                           href={navItem.path}
                           className={`py-5 px-3 block w-full font-medium ${
-                            isTransparent
+                            isActive(navItem.path)
+                              ? isTransparent
+                                ? "text-secondary"
+                                : "text-primary"
+                              : isTransparent
                               ? "hover:text-secondary text-white"
                               : "hover:text-primary text-body-dark"
                           } flex items-center`}
@@ -62,7 +75,11 @@ export default function Header() {
                             >
                               <Link
                                 href={`/services${navFChild.path}`}
-                                className=" py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium flex items-center justify-between"
+                                className={`py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium flex items-center justify-between ${
+                                  isActive(`/services${navFChild.path}`)
+                                    ? "text-primary"
+                                    : ""
+                                }`}
                               >
                                 {navFChild.label}
                                 {navFChild.children && (
@@ -76,7 +93,13 @@ export default function Header() {
                                     <li key={navSChild.path}>
                                       <Link
                                         href={`/services${navFChild.path}${navSChild.path}`}
-                                        className="block py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium"
+                                        className={`block py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium ${
+                                          isActive(
+                                            `/services${navFChild.path}${navSChild.path}`
+                                          )
+                                            ? "text-primary"
+                                            : ""
+                                        }`}
                                       >
                                         {navSChild.label}
                                       </Link>
@@ -96,7 +119,7 @@ export default function Header() {
                       <Link
                         href={navItem.path}
                         className={`py-5 inline-block px-3 font-medium ${
-                          isActive
+                          isActive(navItem.path)
                             ? isTransparent
                               ? "text-secondary"
                               : "text-primary"
@@ -114,7 +137,7 @@ export default function Header() {
             </nav>
 
             <div className="ml-4 md:ml-8 lg:ml-16 flex items-center gap-3 md:gap-4 lg:gap-7">
-              <Link href="/book-now">
+              <Link href="/book-now" className="hidden md:block">
                 <Button
                   className={`py-2 md:py-3 lg:py-5 text-sm md:text-base bg-secondary hover:bg-body-dark text-body-dark hover:text-white flex items-center`}
                 >
@@ -124,6 +147,8 @@ export default function Header() {
               </Link>
 
               <CartDrawer />
+
+              <Hamburger />
             </div>
           </div>
         </div>

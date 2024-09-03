@@ -16,7 +16,6 @@ import { FaClock } from "react-icons/fa";
 import { FaXTwitter, FaYoutube } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { RiFacebookBoxFill } from "react-icons/ri";
-import { v4 as uuidv4 } from "uuid";
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", path: "/" },
@@ -57,35 +56,6 @@ export const NAV_ITEMS: NavItem[] = [
 
                 description:
                   "Ensure your home's electrical installations are safe and compliant.",
-
-                packages: [
-                  {
-                    id: uuidv4(),
-                    name: "EICR for Studio Flat",
-                    price: 70,
-                    propertyType: "RESIDENTIAL",
-                  },
-                  {
-                    id: uuidv4(),
-                    name: "EICR for 1-2 bedrooms",
-                    price: 90,
-                    propertyType: "RESIDENTIAL",
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "EICR for 3-4 bedrooms",
-                    price: 110,
-                    propertyType: "RESIDENTIAL",
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "EICR for 5-6 bedrooms",
-                    price: 150,
-                    propertyType: "RESIDENTIAL",
-                  },
-                ],
               },
 
               {
@@ -94,30 +64,6 @@ export const NAV_ITEMS: NavItem[] = [
 
                 description:
                   "Comprehensive electrical safety reports for commercial properties.",
-
-                packages: [
-                  {
-                    id: uuidv4(),
-
-                    name: "EICR for 1-5 circuits",
-                    price: 120,
-                    propertyType: "COMMERCIAL",
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "EICR for 6-10 circuits",
-                    price: 160,
-                    propertyType: "COMMERCIAL",
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "EICR for 11-20 circuits",
-                    price: 250,
-                    propertyType: "COMMERCIAL",
-                  },
-                ],
               },
             ],
 
@@ -314,21 +260,6 @@ export const NAV_ITEMS: NavItem[] = [
 
                 description:
                   "Ensure your home's portable appliances are safe and compliant.",
-
-                packages: [
-                  {
-                    id: uuidv4(),
-
-                    name: "EPC Upto 10 Appliances",
-                    price: 59.99,
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "EPC Upto 20 Appliances",
-                    price: 69.99,
-                  },
-                ],
               },
               {
                 type: "COMMERCIAL",
@@ -336,21 +267,6 @@ export const NAV_ITEMS: NavItem[] = [
 
                 description:
                   "Comprehensive PAT testing for commercial properties.",
-
-                packages: [
-                  {
-                    id: uuidv4(),
-
-                    name: "EPC Upto 10 Appliances",
-                    price: 79.99,
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "EPC Upto 20 Appliances",
-                    price: 99.99,
-                  },
-                ],
               },
             ],
 
@@ -509,15 +425,6 @@ export const NAV_ITEMS: NavItem[] = [
 
                 description:
                   "Enhance your home's electrical safety with a new fuse box.",
-
-                packages: [
-                  {
-                    id: uuidv4(),
-
-                    name: "Domestic Fuse Box Installation",
-                    price: 299.99,
-                  },
-                ],
               },
               {
                 type: "COMMERCIAL",
@@ -525,15 +432,6 @@ export const NAV_ITEMS: NavItem[] = [
 
                 description:
                   "Ensure your business is compliant and safe with a new fuse box.",
-
-                packages: [
-                  {
-                    id: uuidv4(),
-
-                    name: "Commercial Fuse Box Installation",
-                    price: 799.99,
-                  },
-                ],
               },
             ],
             pageContent: {
@@ -682,45 +580,6 @@ export const NAV_ITEMS: NavItem[] = [
 
                 description:
                   "Comprehensive electrical repair services for your home.",
-
-                packages: [
-                  {
-                    id: uuidv4(),
-
-                    name: "Fuse box repairs",
-                    price: 0,
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "Earth Bonding",
-                    price: 0,
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "Electrical alters",
-                    price: 0,
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "Socket setup",
-                    price: 0,
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "Bath circuit",
-                    price: 0,
-                  },
-                  {
-                    id: uuidv4(),
-
-                    name: "Spotlight placement",
-                    price: 0,
-                  },
-                ],
               },
               {
                 type: "COMMERCIAL",

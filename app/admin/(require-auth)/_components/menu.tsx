@@ -23,11 +23,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 import { CollapseMenuButton } from "./collapse-menu-button";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -37,6 +37,10 @@ export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
   const menuList = getMenuList(pathname);
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
+
+  const handleLogout = async () => {
+    await signOut({ redirect: true });
+  };
 
   return (
     <>
@@ -168,7 +172,9 @@ export function Menu({ isOpen }: MenuProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Sign Out</AlertDialogAction>
+            <AlertDialogAction onClick={handleLogout}>
+              Sign Out
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
