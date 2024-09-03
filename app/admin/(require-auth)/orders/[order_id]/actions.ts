@@ -95,7 +95,10 @@ export async function updateOrderStatus(orderId: string, orderStatus: string) {
     };
   }
 }
-export async function updatePaymentStatus(orderId: string, paymentStatus: string) {
+export async function updatePaymentStatus(
+  orderId: string,
+  paymentStatus: string
+) {
   try {
     const updatedOrder = await prisma.order.update({
       where: {
@@ -143,7 +146,7 @@ export const getEngineers = cache(async () => {
   try {
     const engineers = await prisma.user.findMany({
       where: { role: "STAFF" },
-      orderBy:{name:"asc"},
+      orderBy: { name: "asc" },
       include: {
         address: true,
       },
@@ -160,6 +163,9 @@ export const getPackages = cache(async (propertyType?: PropertyType) => {
     const packages = await prisma.package.findMany({
       where: {
         propertyType,
+      },
+      orderBy: {
+        price: "asc",
       },
     });
     return packages;
