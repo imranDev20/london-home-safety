@@ -1,4 +1,4 @@
-import { NavItem } from "@/types/misc";
+import { NavItem, NavLeafItem } from "@/types/misc";
 import { OrderWithRelation } from "@/types/order";
 import { Package } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
@@ -232,9 +232,9 @@ export const calculateTotal = (orderDetails: OrderWithRelation) => {
 };
 
 export const mergeArrays = (
-  arr1: NavItem[],
+  arr1: NavLeafItem[],
   arr2: Package[],
-  prop1: keyof NavItem,
+  prop1: keyof NavLeafItem,
   prop2: keyof Package
 ) => {
   return arr1.map((item1) => ({

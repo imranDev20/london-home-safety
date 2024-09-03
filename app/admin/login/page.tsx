@@ -1,12 +1,16 @@
 import { Suspense } from "react";
 import LoginForm from "./_components/login-form";
 
-export default function AdminLoginPage() {
+export default function AdminLoginPage({
+  searchParams: { callbackUrl },
+}: {
+  searchParams: {
+    callbackUrl?: string;
+  };
+}) {
   return (
     <>
-      <Suspense fallback="Loading...">
-        <LoginForm />
-      </Suspense>
+      <LoginForm callbackUrl={callbackUrl} />
     </>
   );
 }

@@ -26,13 +26,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { LoginFormValues, loginSchema } from "../schema";
-import { useSearchParams } from "next/navigation";
 
-export default function LoginForm() {
+export default function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),

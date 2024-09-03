@@ -13,6 +13,8 @@ import Link from "next/link";
 import { ALL_SERVICES } from "@/shared/data";
 import { motion, useAnimation } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import { Package } from "@prisma/client";
+import { mergeArrays } from "@/lib/utils";
 
 interface ServiceCardProps {
   title: string;
@@ -40,7 +42,7 @@ const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
 
           <p className="text-body flex-grow text-sm">Starting from</p>
           <p className="text-2xl font-bold text-primary mt-1">
-            £{price.toFixed(2)}
+            £{typeof price === "number" ? price?.toFixed(2) : "N/A"}
           </p>
         </CardContent>
 
@@ -57,7 +59,7 @@ const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
 
 ServiceCard.displayName = "ServiceCard";
 
-export default function Services() {
+export default function Services({ packages }: { packages: Package[] }) {
   const [inView, setInView] = useState(false);
   const sectionRef = useRef(null);
   const controls = useAnimation();
@@ -82,6 +84,13 @@ export default function Services() {
 
     return () => observer.disconnect();
   }, [controls]);
+
+  const mergedData = mergeArrays(
+    ALL_SERVICES,
+    packages,
+    "label",
+    "serviceName"
+  );
 
   return (
     <section
@@ -111,7 +120,7 @@ export default function Services() {
           </span>
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
-          {ALL_SERVICES.slice(0, 5).map((service, index) => (
+          {mergedData.slice(0, 5).map((service, index) => (
             <motion.div
               key={service.label}
               initial={{ opacity: 0, scale: 0.5 }}
@@ -133,7 +142,10 @@ export default function Services() {
                 <ServiceCard
                   title={service.label}
                   Icon={service.Icon}
-                  price={79.99}
+                  price={
+                    service.packages.sort((a, b) => a.price - b.price)[0]
+                      ?.price ?? "N/A"
+                  }
                 />
               </Link>
             </motion.div>
