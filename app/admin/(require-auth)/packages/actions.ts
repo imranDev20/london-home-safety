@@ -110,6 +110,7 @@ export async function createPackage(data: PackageFormInputType) {
     revalidatePath("/admin/packages");
     revalidatePath("/book-now");
     revalidatePath("/admin/orders/new");
+    revalidatePath("/services/[category_id]/[service_id]", "page");
 
     return {
       message: "Package created successfully!",
@@ -158,8 +159,11 @@ export async function updatePackage(
       },
     });
 
+    // Revalidate paths if needed
     revalidatePath("/admin/packages");
-    revalidatePath(`/admin/packages/${packageId}`);
+    revalidatePath("/book-now");
+    revalidatePath("/admin/orders/new");
+    revalidatePath("/services/[category_id]/[service_id]", "page");
 
     return {
       message: "Package updated successfully!",

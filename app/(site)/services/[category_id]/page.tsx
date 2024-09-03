@@ -24,6 +24,7 @@ export default function CategoryDetailsPage({
       isCurrentPage: true,
     },
   ];
+
   return (
     <div>
       <PageHeader

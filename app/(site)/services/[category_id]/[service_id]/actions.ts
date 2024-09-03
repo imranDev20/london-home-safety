@@ -5,16 +5,19 @@ import { PropertyType, Package } from "@prisma/client";
 
 export async function getPackagesByService(
   serviceName: string,
-  propertyType?: PropertyType
+  propertyType?: PropertyType | "ALL"
 ): Promise<Package[]> {
   try {
-    const effectivePropertyType = propertyType || "RESIDENTIAL";
+    let whereClause: any = {
+      serviceName: serviceName,
+    };
+
+    if (propertyType && propertyType !== "ALL") {
+      whereClause.propertyType = propertyType;
+    }
 
     const packages = await prisma.package.findMany({
-      where: {
-        serviceName: serviceName,
-        propertyType: effectivePropertyType,
-      },
+      where: whereClause,
       orderBy: {
         price: "asc",
       },

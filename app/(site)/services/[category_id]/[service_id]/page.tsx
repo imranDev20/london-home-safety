@@ -19,6 +19,7 @@ import BookNowButtonCompo from "./_components/book-now-button-compo";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import PropertyTypeCompo from "./_components/property-type";
+import ServicePricingSection from "./_components/service-pricing";
 
 export default async function ServiceDetailsPage({
   params: { service_id, category_id },
@@ -35,7 +36,12 @@ export default async function ServiceDetailsPage({
 
   const packages = await getPackagesByService(
     currentServiceWithoutPackage?.label ?? "",
-    property_type
+    property_type ?? "RESIDENTIAL"
+  );
+
+  const allPackages = await getPackagesByService(
+    currentServiceWithoutPackage?.label ?? "",
+    "ALL"
   );
 
   if (!packages) {
@@ -161,6 +167,15 @@ export default async function ServiceDetailsPage({
         </div>
       </section>
 
+      <ServicePricingSection
+        commercialPackages={allPackages.filter(
+          (p) => p.propertyType === "COMMERCIAL"
+        )}
+        residentialPackages={allPackages.filter(
+          (p) => p.propertyType === "RESIDENTIAL"
+        )}
+      />
+
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <h2 className="text-4xl font-bold text-center mb-10">
           {currentService?.pageContent?.title}
@@ -200,27 +215,3 @@ export default async function ServiceDetailsPage({
     </>
   );
 }
-
-// <div className="relative w-full md:w-1/2 h-[300px] md:h-auto">
-//           {currentService?.image && (
-//             <Image
-//               src={currentService.image}
-//               alt={currentService.label}
-//               layout="fill"
-//               objectFit="cover"
-//               className="absolute inset-0"
-//             />
-//           )}
-//           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"></div>
-//         </div>
-
-//         <div className="w-full md:w-1/2 bg-white p-8 md:p-12 lg:p-16 flex flex-col justify-between">
-//           <div>
-//             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-//               {currentService?.label}
-//             </h1>
-//             <p className="text-gray-700 mb-8 leading-relaxed text-lg">
-//               {currentService?.description}
-//             </p>
-
-// </div>

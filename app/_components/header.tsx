@@ -4,16 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { NAV_ITEMS } from "@/shared/data";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FaCalendarCheck } from "react-icons/fa6";
+import { FaCalendarCheck, FaChevronDown } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
+
+import { NON_INVERTED_ROUTES } from "@/lib/constants";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
 
-  const nonInvertedRoutes = [""];
-  const isTransparent = !nonInvertedRoutes.some((route) =>
-    new RegExp(`^${route.replace(/\[.*?\]/g, "[^/]+")}$`).test(pathname)
+  const isTransparent = !NON_INVERTED_ROUTES.some((route) =>
+    pathname.startsWith(`/${route}`)
   );
 
   return (
@@ -42,50 +43,47 @@ export default function Header() {
                         <Link
                           href={navItem.path}
                           className={`py-5 px-3 block w-full font-medium ${
-                            isActive
-                              ? isTransparent
-                                ? "text-secondary"
-                                : "text-primary"
-                              : isTransparent
+                            isTransparent
                               ? "hover:text-secondary text-white"
                               : "hover:text-primary text-body-dark"
-                          }`}
+                          } flex items-center`}
                         >
                           {navItem.label}
+                          <FaChevronDown className="ml-1 text-xs" />
                         </Link>
 
                         <ul
-                          className={`hidden group-hover/first:block absolute ${
-                            isTransparent ? "bg-white" : "bg-white"
-                          } shadow-lg rounded-md z-20 top-full left-1/2 -translate-x-1/2 min-w-56`}
+                          className={`hidden group-hover/first:block absolute bg-white shadow-lg rounded-md z-20 top-full left-1/2 -translate-x-1/2 min-w-56 py-2 border border-gray-200`}
                         >
                           {navItem.children?.map((navFChild) => (
                             <li
                               key={navFChild.path}
-                              className="group/second relative px-5 py-1 last-of-type:pb-3 hover:bg-gray-100 over"
+                              className="group/second relative"
                             >
                               <Link
                                 href={`/services${navFChild.path}`}
-                                className="block py-1 text-body-dark hover:text-primary font-medium"
+                                className=" py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium flex items-center justify-between"
                               >
                                 {navFChild.label}
+                                {navFChild.children && (
+                                  <FaChevronDown className="ml-2 text-xs transform -rotate-90" />
+                                )}
                               </Link>
 
-                              <ul className="hidden group-hover/second:block absolute top-0 left-[98%] bg-white z-20 min-w-72 shadow-lg rounded-md">
-                                {navFChild.children?.map((navSChild) => (
-                                  <li
-                                    key={navSChild.path}
-                                    className="px-5 py-1 last-of-type:pb-3"
-                                  >
-                                    <Link
-                                      href={`/services${navFChild.path}${navSChild.path}`}
-                                      className="py-1 block text-body-dark hover:text-primary font-medium"
-                                    >
-                                      {navSChild.label}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
+                              {navFChild.children && (
+                                <ul className="hidden group-hover/second:block absolute top-0 left-full bg-white z-20 min-w-72 shadow-lg rounded-md py-2 border border-gray-200">
+                                  {navFChild.children?.map((navSChild) => (
+                                    <li key={navSChild.path}>
+                                      <Link
+                                        href={`/services${navFChild.path}${navSChild.path}`}
+                                        className="block py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium"
+                                      >
+                                        {navSChild.label}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
                             </li>
                           ))}
                         </ul>

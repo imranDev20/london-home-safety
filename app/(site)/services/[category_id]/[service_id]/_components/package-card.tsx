@@ -9,11 +9,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function PackageCard({ pack }: { pack: Package }) {
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const { createQueryString } = useQueryString();
-
   const { selectedPackage, setPackage } = usePackageStore();
 
   return (

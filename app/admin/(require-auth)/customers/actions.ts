@@ -1,11 +1,13 @@
 "use server";
 
 import { notifyUserCancelEmailHtml } from "@/lib/notify-customer-order-cancel-email";
+import { notifyUserCompleteEmailHtml } from "@/lib/notify-customer-order-completd-email";
 import { notifyUserConfirmEmailHtml } from "@/lib/notify-customer-order-confirm-email";
+import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
-import { SendEmailDataType } from "@/types/misc";
+import { PlacedOrderDataType, SendEmailDataType } from "@/types/misc";
 import { Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
@@ -229,6 +231,39 @@ export async function sendEmailToCustomerOrderConfirmation(
     };
   }
 }
+export async function sendEmailToCustomerOrderCompleted(
+  emailData: SendEmailDataType
+) {
+  try {
+    await sendEmail({
+      fromEmail: EMAIL_ADDRESS,
+      fromName: "London Home Safety",
+      to: emailData.receiver,
+      subject: emailData.subject,
+      html: notifyUserCompleteEmailHtml(
+        emailData.orderDetails,
+        emailData.content
+      ),
+    });
+
+    // Revalidate the necessary paths if applicable (example paths)
+    revalidatePath(`/admin/orders`);
+    revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
+
+    return {
+      message: "Email sent successfully to customer!",
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Error sending email:", error);
+    return {
+      message:
+        "An error occurred while sending the email. Please try again later.",
+      success: false,
+    };
+  }
+}
+
 export async function sendEmailToCustomerOrderCancelled(
   emailData: SendEmailDataType
 ) {
