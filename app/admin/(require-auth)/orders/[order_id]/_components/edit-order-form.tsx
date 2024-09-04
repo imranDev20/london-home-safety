@@ -291,27 +291,7 @@ export default function EditOrderForm({
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Select
-              value={paymentStatus as PaymentStatus}
-              onValueChange={(value) => {
-                if (value) {
-                  handleUpdatePaymentStatus(value as PaymentStatus);
-                }
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Update Payment Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {PAYMENT_STATUS_OPTION.map((option) => (
-                    <SelectItem value={option} key={option}>
-                      {option.replace("_", " ")}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+
             <LoadingButton
               type="button"
               disabled={isLoading}
@@ -420,7 +400,34 @@ export default function EditOrderForm({
                   </div>
 
                   <div className="mt-4 space-y-2">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
+                      <span>Payment Status:</span>
+                      <span>
+                        <Select
+                          value={paymentStatus as PaymentStatus}
+                          onValueChange={(value) => {
+                            if (value) {
+                              handleUpdatePaymentStatus(value as PaymentStatus);
+                            }
+                          }}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Update Payment Status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {PAYMENT_STATUS_OPTION.map((option) => (
+                                <SelectItem value={option} key={option}>
+                                  {option.replace("_", " ")}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
                       <span>Subtotal:</span>
                       <span>£{calculateSubtotal(orderDetails.packages)}</span>
                     </div>
