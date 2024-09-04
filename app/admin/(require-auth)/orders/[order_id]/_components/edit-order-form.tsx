@@ -158,10 +158,8 @@ export default function EditOrderForm({
             content: `Dear ${orderDetails?.user.name},\n\nWe are pleased to inform you that your order has been successfully completed. Your order number is ${orderDetails?.invoice}. If you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`,
             orderDetails: orderDetails,
           };
-          
-          const response = await sendEmailToCustomerOrderCompleted(
-            emailData
-          );
+
+          const response = await sendEmailToCustomerOrderCompleted(emailData);
           toast({
             title: response.success ? "Success" : "Error",
             description: response.message,
@@ -175,7 +173,7 @@ export default function EditOrderForm({
             content: `Dear ${orderDetails?.user.name},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
             orderDetails: orderDetails,
           };
-       
+
           const response = await sendEmailToCustomerOrderCancelled(emailData);
           toast({
             title: response.success ? "Success" : "Error",
@@ -260,76 +258,78 @@ export default function EditOrderForm({
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
 
-      <div className="flex items-center gap-4 mt-7">
-        <h1 className="text-2xl font-bold flex items-center">
-          <Link href="/admin/orders">
-            <Button variant="outline" size="icon" className="h-7 w-7 mr-2">
-              <ChevronLeft className="h-5 w-5" />
-              <span className="sr-only">Back</span>
-            </Button>
-          </Link>
-          {`Edit ${orderDetails?.invoice}`}
-        </h1>
-
-        <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <Select
-            value={status as OrderStatus}
-            onValueChange={(value) => {
-              if (value) {
-                handleUpdateOrderStatus(value as OrderStatus);
-              }
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Update Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {ORDER_STATUS_OPTIONS.map((option) => (
-                  <SelectItem value={option} key={option}>
-                    {kebabToNormal(option)}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Select
-            value={paymentStatus as PaymentStatus}
-            onValueChange={(value) => {
-              if (value) {
-                handleUpdatePaymentStatus(value as PaymentStatus);
-              }
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Update Payment Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {PAYMENT_STATUS_OPTION.map((option) => (
-                  <SelectItem value={option} key={option}>
-                    {kebabToNormal(option)}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <LoadingButton
-            type="button"
-            disabled={isLoading}
-            loading={isLoading}
-            className="text-sm h-9 font-medium flex items-center"
-            onClick={handleDownload}
-            variant="default"
-          >
-            {!isLoading && <Download className="mr-2 h-4 w-4" />}
-            Download Invoice
-          </LoadingButton>
+      <div className="mb-6 mt-7">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex items-center mb-2">
+            <Link href="/admin/orders">
+              <Button variant="outline" size="icon" className="h-7 w-7 mr-2">
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">Back</span>
+              </Button>
+            </Link>
+            <h1 className="text-2xl font-bold">Edit {orderDetails?.invoice}</h1>
+          </div>
+          <div className="flex gap-3">
+            <Select
+              value={status as OrderStatus}
+              onValueChange={(value) => {
+                if (value) {
+                  handleUpdateOrderStatus(value as OrderStatus);
+                }
+              }}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Update Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {ORDER_STATUS_OPTIONS.map((option) => (
+                    <SelectItem value={option} key={option}>
+                      {option.replace("_", " ")}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select
+              value={paymentStatus as PaymentStatus}
+              onValueChange={(value) => {
+                if (value) {
+                  handleUpdatePaymentStatus(value as PaymentStatus);
+                }
+              }}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Update Payment Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {PAYMENT_STATUS_OPTION.map((option) => (
+                    <SelectItem value={option} key={option}>
+                      {option.replace("_", " ")}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <LoadingButton
+              type="button"
+              disabled={isLoading}
+              loading={isLoading}
+              className="text-sm h-9 font-medium flex items-center"
+              onClick={handleDownload}
+              variant="default"
+            >
+              {!isLoading && <Download className="mr-2 h-4 w-4" />}
+              Download Invoice
+            </LoadingButton>
+          </div>
         </div>
+        <Badge variant="outline">
+          Placed:{" "}
+          {dayjs(new Date(orderDetails.createdAt)).format("DD-MM-YYYY HH:mm A")}
+        </Badge>
       </div>
-      <Badge className="mb-5 ml-8" variant="outline">
-        {dayjs(new Date(orderDetails?.createdAt)).format("DD-MM-YYYY hh:mm A")}
-      </Badge>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
@@ -387,7 +387,7 @@ export default function EditOrderForm({
                     </Command>
                   </PopoverContent>
                 </Popover>
-                
+
                 <SendEmailDialog
                   engineerEmail={selectedEngineerEmail}
                   orderDetails={orderDetails}
