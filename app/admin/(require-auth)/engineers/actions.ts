@@ -87,7 +87,10 @@ export async function deleteEngineer(engineersId: string) {
       },
     });
 
-    revalidatePath("/engineers");
+    revalidatePath("/admin/engineers");
+    revalidatePath("/admin/orders/new");
+    revalidatePath("/admin/orders/[order_id]", "page");
+    revalidatePath(`/admin/orders/${deletedEngineer.id}`);
 
     return {
       message: "Engineer deleted successfully!",

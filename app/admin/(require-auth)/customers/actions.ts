@@ -93,7 +93,8 @@ export async function deleteCustomer(customerId: string) {
       },
     });
 
-    revalidatePath("/customers");
+    revalidatePath("/admin/customers");
+    revalidatePath("/admin/orders/new");
 
     return {
       message: "Customer deleted successfully!",
