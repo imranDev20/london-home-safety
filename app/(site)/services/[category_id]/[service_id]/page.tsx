@@ -76,7 +76,7 @@ export default async function ServiceDetailsPage({
     <>
       <section className="relative -mt-[65px]">
         <Image
-          src={BackgroundImage}
+          src={currentService?.image}
           alt="Background"
           sizes="100vw"
           fill
