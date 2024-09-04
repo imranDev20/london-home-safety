@@ -7,11 +7,12 @@ import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-plac
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
-import { PlacedOrderDataType, SendEmailDataType } from "@/types/misc";
+import { SendEmailDataType } from "@/types/misc";
 import { Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
 export const getUsers = cache(
   async (
@@ -95,6 +96,7 @@ export async function deleteCustomer(customerId: string) {
 
     revalidatePath("/admin/customers");
     revalidatePath("/admin/orders/new");
+    revalidatePath("/admin/orders");
 
     return {
       message: "Customer deleted successfully!",

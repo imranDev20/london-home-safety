@@ -6,7 +6,8 @@ import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { SendEmailDataType } from "@/types/misc";
 import { Prisma } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
 export const getEngineers = cache(
   async (

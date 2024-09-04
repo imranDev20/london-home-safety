@@ -5,20 +5,10 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
     packages: true;
     user: {
       include: {
-        address: true;        
-      };
-    };
-  };
-}>;
-
-export type OrderWithRelation = Prisma.OrderGetPayload<{
-  include: {
-    user: {
-      include: {
         address: true;
       };
     };
-    services: true;
+    assignedEngineer: true;
   };
 }>;
 

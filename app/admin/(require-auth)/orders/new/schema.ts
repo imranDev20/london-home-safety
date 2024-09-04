@@ -83,7 +83,7 @@ export const createOrderSchema = z.object({
   invoiceId: z.string({
     required_error: "Invoice ID is required",
   }),
-  PaymentMethod: z.nativeEnum(PaymentMethod, {
+  paymentMethod: z.nativeEnum(PaymentMethod, {
     required_error: "Please select a payment method",
     invalid_type_error: "Invalid payment method selected",
   }),

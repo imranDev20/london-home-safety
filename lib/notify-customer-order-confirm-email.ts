@@ -117,8 +117,6 @@ export const notifyUserConfirmEmailHtml = (
             )
             .join("")}
         </ul>
-        <p style="font-weight: bold;">Additional Notes:</p>
-        <p style="margin-left: 20px;">${content}</p>
       </div>
       <p style="margin-top: 20px;">
         If you have any questions or need further assistance, please don't hesitate to contact us.

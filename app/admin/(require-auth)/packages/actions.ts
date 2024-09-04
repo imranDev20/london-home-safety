@@ -2,8 +2,9 @@
 
 import prisma from "@/lib/prisma";
 import { PackageType, Prisma } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { PackageFormInputType } from "./schema";
+import { cache } from "react";
 
 export const getPackages = cache(
   async (

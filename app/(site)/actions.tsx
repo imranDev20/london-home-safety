@@ -9,7 +9,8 @@ import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { UserEmailDataType } from "@/types/misc";
-import { revalidatePath, unstable_cache as cache } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 import { z } from "zod";
 import { reviewSchema } from "./schema";
 

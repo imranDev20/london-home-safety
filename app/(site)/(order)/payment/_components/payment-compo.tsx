@@ -15,7 +15,6 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import useOrderStore from "@/hooks/use-order-store";
 import { AlertCircle, Loader2, ShoppingCart } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PaymentMethod } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
