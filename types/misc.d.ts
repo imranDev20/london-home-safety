@@ -52,7 +52,6 @@ export type SendEmailDataType = {
   content: string;
   receiver: string;
   orderDetails: OrderWithRelation | null;
-  
 };
 export type PlacedOrderDataType = {
   subject: string;

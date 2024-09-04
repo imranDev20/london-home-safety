@@ -3,8 +3,7 @@ import { OrderWithRelation } from "@/types/order";
 import dayjs from "dayjs";
 
 export const notifyUserOrderPlacedEmailHtml = (
-  orderDetails: OrderWithRelation | null,
-  content: string
+  orderDetails: OrderWithRelation | null
 ) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -117,8 +116,6 @@ export const notifyUserOrderPlacedEmailHtml = (
             )
             .join("")}
         </ul>
-        <p style="font-weight: bold;">Additional Notes:</p>
-        <p style="margin-left: 20px;">${content}</p>
       </div>
       <p style="margin-top: 20px;">
         We will notify you once your order is complete. If you have any questions or need further assistance, please don't hesitate to contact us.

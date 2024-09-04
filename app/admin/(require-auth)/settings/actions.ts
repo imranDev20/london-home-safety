@@ -1,7 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 import { SiteSettingsFormValues, siteSettingsSchema } from "./schema";
 
 export const getSettings = cache(async () => {

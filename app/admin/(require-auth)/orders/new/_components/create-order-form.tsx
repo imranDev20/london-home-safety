@@ -150,9 +150,7 @@ export default function CreateOrderForm({
             description: result.message,
             variant: "success",
           });
-          
-        
-         
+
           toast({
             title: result.emailSuccess ? "Success" : "Error",
             description: result.emailMessage,
@@ -813,7 +811,7 @@ export default function CreateOrderForm({
                   <div className="col-span-3">
                     <FormField
                       control={control}
-                      name="PaymentMethod"
+                      name="paymentMethod"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Payment Method</FormLabel>

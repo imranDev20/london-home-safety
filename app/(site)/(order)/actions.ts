@@ -95,59 +95,66 @@ type OrderData = {
   };
 };
 
-export async function createOrder(orderData: OrderData): Promise<{
-  success: boolean;
-  data: Order | null;
-  message: string;
-}> {
-  const { customerDetails, cartItems, userId, paymentDetails } = orderData;
-
+export async function createOrder(orderData: OrderData) {
   try {
+    const { customerDetails, cartItems, userId, paymentDetails } = orderData;
+
     const packageIds = cartItems.map((pkg) => pkg.id);
+
     const packages = await prisma.package.findMany({
-      where: { id: { in: packageIds } },
+      where: {
+        id: {
+          in: packageIds,
+        },
+      },
+      select: {
+        price: true,
+        propertyType: true,
+      },
     });
 
-    if (packages.length !== packageIds.length) {
-      throw new Error("One or more packages not found");
-    }
+    const packageTotal = packages.reduce((total, pkg) => total + pkg.price, 0);
 
-    const parkingFee = customerDetails.parkingOptions === "FREE" ? 0 : 5;
-    const congestionFee = customerDetails.isCongestionZone ? 5 : 0;
-
-    const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-    const totalPrice = cartTotal + parkingFee + congestionFee;
+    const totalPrice =
+      packageTotal +
+      (customerDetails.isCongestionZone ? 5 : 0) +
+      (customerDetails.parkingOptions === "NO" ||
+      customerDetails.parkingOptions === "PAID"
+        ? 5
+        : 0);
 
     const invoiceNumber = await generateInvoiceId();
 
-    const order = await prisma.order.create({
+    const createdOrder = await prisma.order.create({
       data: {
-        userId,
+        userId: userId,
+        assignedEngineerId: null,
         propertyType: packages[0].propertyType,
+        isCongestionZone: customerDetails.isCongestionZone ?? false,
+        parkingOptions: customerDetails.parkingOptions,
         date: customerDetails.orderDate,
         inspectionTime: customerDetails.inspectionTime ?? "MORNING",
-        parkingOptions: customerDetails.parkingOptions,
-        isCongestionZone: customerDetails.isCongestionZone ?? false,
-        orderNotes: customerDetails.orderNotes,
-        totalPrice,
+        totalPrice: totalPrice,
         invoice: invoiceNumber,
-        paymentMethod: paymentDetails.method,
+        status: "CONFIRMED",
         paymentStatus: paymentDetails.status,
-        status: "PENDING",
+        paymentMethod: paymentDetails.method,
         packages: {
-          connect: packageIds.map((id) => ({ id })),
+          connect: cartItems.map((pack) => ({ id: pack.id })),
         },
       },
+
       include: {
         user: true,
+        assignedEngineer: true,
       },
     });
 
-    if (!order || !order.user?.name) {
+    if (!createdOrder || !createdOrder.user?.name) {
       throw new Error("Order creation failed or user details are missing");
     }
 
-    const invoice = await generateInvoice(order.id);
+    const invoice = await generateInvoice(createdOrder.id);
 
     if (!invoice?.data) {
       throw new Error("Invoice creation failed");
@@ -156,7 +163,7 @@ export async function createOrder(orderData: OrderData): Promise<{
     const attachments = [
       {
         ContentType: "application/pdf",
-        Filename: `Invoice_${order.invoice}.pdf`,
+        Filename: `Invoice_${createdOrder.invoice}.pdf`,
         Base64Content: invoice?.data,
       },
     ];
@@ -164,28 +171,34 @@ export async function createOrder(orderData: OrderData): Promise<{
     await sendEmail({
       fromEmail: EMAIL_ADDRESS,
       fromName: "London Home Safety",
-      to: customerDetails.email,
+      to: createdOrder.user.email,
       subject: "Your Order Confirmation",
-      html: placedOrderEmailHtml(order.user.name, order.invoice),
+      html: placedOrderEmailHtml(
+        createdOrder.user.name ?? "",
+        createdOrder.invoice
+      ),
       attachments: attachments,
     });
 
+    // Revalidate paths if needed
     revalidatePath("/admin/orders");
-    revalidatePath(`/admin/customers/${userId}`);
+    revalidatePath("/admin/orders/[order_id]", "page");
+    revalidatePath(`/admin/customers/${createdOrder.userId}`);
+    revalidatePath("/admin/engineers/[engineer_id]", "page");
 
     return {
-      success: true,
-      data: order,
       message: "Order created successfully!",
+      emailMessage: "Email sent successrylly!",
+      data: createdOrder,
+      success: true,
+      emailSuccess: true,
     };
   } catch (error) {
+    console.error(error);
     return {
-      success: false,
-      data: null,
-      message:
-        error instanceof Error
-          ? `Failed to create order: ${error.message}`
-          : "An unknown error occurred while creating the order.",
+      message: "An error occurred while creating the order.",
+      emailMessage: "An error occoured while sending email",
+      emailSuccess: false,
     };
   }
 }

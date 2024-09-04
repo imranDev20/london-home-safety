@@ -5,7 +5,7 @@ import { OrderStatus, Prisma, Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { sendEmail } from "@/lib/send-email";
@@ -13,86 +13,89 @@ import { BUSINESS_NAME, EMAIL_ADDRESS } from "@/shared/data";
 import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
 import { getEngineerById } from "../engineers/actions";
 import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
+import { cache } from "react";
 
-export const getOrders = async (
-  page: number = 1,
-  pageSize: number = 10,
-  search: string = "",
-  sortBy: string = "createdAt",
-  sortOrder: "asc" | "desc" = "desc",
-  filterStatus: OrderStatus | "" = ""
-) => {
-  try {
-    const skip = (page - 1) * pageSize;
+export const getOrders = cache(
+  async (
+    page: number = 1,
+    pageSize: number = 10,
+    search: string = "",
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc",
+    filterStatus: OrderStatus | "" = ""
+  ) => {
+    try {
+      const skip = (page - 1) * pageSize;
 
-    const whereClause: Prisma.OrderWhereInput = {
-      AND: [
-        search
-          ? {
-              OR: [
-                { invoice: { contains: search, mode: "insensitive" } },
-                {
-                  user: { email: { contains: search, mode: "insensitive" } },
-                },
-                { user: { name: { contains: search, mode: "insensitive" } } },
-              ],
-            }
-          : {},
-        filterStatus ? { status: filterStatus } : {},
-      ],
-    };
+      const whereClause: Prisma.OrderWhereInput = {
+        AND: [
+          search
+            ? {
+                OR: [
+                  { invoice: { contains: search, mode: "insensitive" } },
+                  {
+                    user: { email: { contains: search, mode: "insensitive" } },
+                  },
+                  { user: { name: { contains: search, mode: "insensitive" } } },
+                ],
+              }
+            : {},
+          filterStatus ? { status: filterStatus } : {},
+        ],
+      };
 
-    // Create orderBy clause
-    const orderByClause: Prisma.OrderOrderByWithRelationInput = {};
-    switch (sortBy) {
-      case "name":
-        orderByClause.user = { name: sortOrder };
-        break;
-      case "email":
-        orderByClause.user = { email: sortOrder };
-        break;
-      case "price":
-        orderByClause.totalPrice = sortOrder;
-        break;
-      case "createdAt":
-        orderByClause.createdAt = sortOrder;
-        break;
-      default:
-        orderByClause.createdAt = "desc";
-    }
+      // Create orderBy clause
+      const orderByClause: Prisma.OrderOrderByWithRelationInput = {};
+      switch (sortBy) {
+        case "name":
+          orderByClause.user = { name: sortOrder };
+          break;
+        case "email":
+          orderByClause.user = { email: sortOrder };
+          break;
+        case "price":
+          orderByClause.totalPrice = sortOrder;
+          break;
+        case "createdAt":
+          orderByClause.createdAt = sortOrder;
+          break;
+        default:
+          orderByClause.createdAt = "desc";
+      }
 
-    const [orders, totalCount] = await Promise.all([
-      prisma.order.findMany({
-        where: whereClause,
-        skip,
-        take: pageSize,
-        include: {
-          user: {
-            include: {
-              address: true,
+      const [orders, totalCount] = await Promise.all([
+        prisma.order.findMany({
+          where: whereClause,
+          skip,
+          take: pageSize,
+          include: {
+            user: {
+              include: {
+                address: true,
+              },
             },
           },
-        },
-        orderBy: orderByClause,
-      }),
-      prisma.order.count({ where: whereClause }),
-    ]);
-    // Generate Excel file
+          orderBy: orderByClause,
+        }),
+        prisma.order.count({ where: whereClause }),
+      ]);
+      // Generate Excel file
 
-    return {
-      orders,
-      pagination: {
-        currentPage: page,
-        pageSize,
-        totalCount,
-        totalPages: Math.ceil(totalCount / pageSize),
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw new Error("Failed to fetch orders");
+      return {
+        orders,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalCount,
+          totalPages: Math.ceil(totalCount / pageSize),
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw new Error("Failed to fetch orders");
+    }
   }
-};
+);
 
 export const getOrderById = cache(async (orderId: string) => {
   try {
@@ -106,6 +109,7 @@ export const getOrderById = cache(async (orderId: string) => {
         id: orderId,
       },
       include: {
+        assignedEngineer: true,
         user: {
           include: {
             address: true,
@@ -515,7 +519,6 @@ export default async function generateInvoice(orderId: string) {
 export async function createOrder(data: CreateOrderFormInput) {
   try {
     const validatedData = createOrderSchema.parse(data);
-
     const packageIds = validatedData.packages.map((pkg) => pkg.packageId);
 
     const packages = await prisma.package.findMany({
@@ -550,42 +553,47 @@ export async function createOrder(data: CreateOrderFormInput) {
         invoice: data.invoiceId,
         status: "CONFIRMED",
         paymentStatus: "UNPAID",
-        paymentMethod: data.PaymentMethod,
+        paymentMethod: data.paymentMethod,
         packages: {
           connect: data.packages.map((pack) => ({ id: pack.packageId })),
         },
       },
+      include: {
+        packages: true,
+        user: {
+          include: {
+            address: true,
+          },
+        },
+        assignedEngineer: true,
+      },
     });
-    const orderDetails = await getOrderById(createdOrder.id);
-    const engineer = await getEngineerById(
-      createdOrder?.assignedEngineerId ?? ""
-    );
 
-    let content = `Dear ${orderDetails?.user.name},\n\nThank you for placing your order with us! Your order number is ${createdOrder.invoice}. We have received your request and are currently processing it. You will receive another email once your order is complete.\n\nIf you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`;
-
-    const response = await sendEmail({
+    await sendEmail({
       fromEmail: EMAIL_ADDRESS,
       fromName: "London Home Safety",
-      to: orderDetails?.user.email ?? "",
+      to: createdOrder?.user.email ?? "",
       subject: "Order Placed Successfully",
-      html: notifyUserOrderPlacedEmailHtml(orderDetails, content),
+      html: notifyUserOrderPlacedEmailHtml(createdOrder),
     });
 
-    if (engineer) {
-      content = `Dear ${engineer.name},\n\nYou have been assigned a new order. The order number is ${createdOrder.invoice}. Please review the details and proceed with the necessary steps to complete the assigned tasks. Ensure all protocols are followed, and keep the customer updated on the progress.\n\nIf you encounter any issues or need further assistance, feel free to reach out to the management team.\n\nThank you for your dedication and hard work.\n\nBest regards,\nThe ${BUSINESS_NAME} Management Team`;
+    if (createdOrder.assignedEngineer) {
+      const content = `Dear ${createdOrder.assignedEngineer.name},\n\nYou have been assigned a new order. The order number is ${createdOrder.invoice}. Please review the details and proceed with the necessary steps to complete the assigned tasks. Ensure all protocols are followed, and keep the customer updated on the progress.\n\nIf you encounter any issues or need further assistance, feel free to reach out to the management team.\n\nThank you for your dedication and hard work.\n\nBest regards,\nThe ${BUSINESS_NAME} Management Team`;
 
       await sendEmail({
         fromEmail: EMAIL_ADDRESS,
         fromName: "London Home Safety",
-        to: engineer.email,
+        to: createdOrder.assignedEngineer.email,
         subject: "New Service Order",
-        html: notifyEngineerEmailHtml(orderDetails, content),
+        html: notifyEngineerEmailHtml(createdOrder, content),
       });
     }
 
     // Revalidate paths if needed
     revalidatePath("/admin/orders");
-    revalidatePath("/admin/orders/new");
+    revalidatePath("/admin/orders/[order_id]", "page");
+    revalidatePath(`/admin/customers/${createdOrder.userId}`);
+    revalidatePath("/admin/engineers/[engineer_id]", "page");
 
     return {
       message: "Order created successfully!",

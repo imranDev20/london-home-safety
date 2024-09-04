@@ -2,7 +2,8 @@
 
 import prisma from "@/lib/prisma";
 import { OrderStatus, PaymentStatus, PropertyType } from "@prisma/client";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
 export const getEngineersForOrder = cache(async () => {
   try {
