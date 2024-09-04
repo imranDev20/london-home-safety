@@ -171,6 +171,7 @@ export async function createOrder(orderData: OrderData): Promise<{
     });
 
     revalidatePath("/admin/orders");
+    revalidatePath(`/admin/customers/${userId}`);
 
     return {
       success: true,
