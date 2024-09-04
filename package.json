@@ -48,6 +48,7 @@
     "next": "14.2.5",
     "next-auth": "^4.24.7",
     "next-themes": "^0.3.0",
+    "nextjs-toploader": "^3.6.15",
     "node-mailjet": "^6.0.5",
     "popover": "^2.4.1",
     "puppeteer": "^23.1.1",
