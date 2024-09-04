@@ -291,7 +291,9 @@ export default function PaymentCompo({
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Service Price:</span>
-                    <span className="text-gray-900">£{cartTotal}.00</span>
+                    <span className="text-gray-900">
+                      £{cartTotal.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Parking Fee:</span>
@@ -304,7 +306,7 @@ export default function PaymentCompo({
                   <Separator className="my-4" />
                   <div className="flex justify-between items-center text-xl font-semibold">
                     <span>Total Price:</span>
-                    <span>£{totalPrice}.00</span>
+                    <span>£{totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
 

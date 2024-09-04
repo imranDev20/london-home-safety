@@ -36,12 +36,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTION } from "@/lib/constants";
-import {
-  calculateSubtotal,
-  calculateTotal,
-  cn,
-  kebabToNormal,
-} from "@/lib/utils";
+import { calculateSubtotal, calculateTotal, cn } from "@/lib/utils";
 import { StaffWithRelations } from "@/types/engineers";
 import { OrderWithRelation } from "@/types/order";
 
@@ -400,6 +395,12 @@ export default function EditOrderForm({
                   </div>
 
                   <div className="mt-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span>Payment Method:</span>
+                      <span>
+                        {orderDetails.paymentMethod.replace("_", " ")}
+                      </span>
+                    </div>
                     <div className="flex justify-between items-center">
                       <span>Payment Status:</span>
                       <span>
