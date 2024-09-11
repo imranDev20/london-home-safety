@@ -19,7 +19,7 @@ const authOptions: NextAuthOptions = {
       if (account?.provider === "google" && user?.email) {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email },
-          select: { role: true },
+          select: { role: true, id: true },
         });
 
         // Only allow sign in if the user exists and has the ADMIN role
@@ -45,9 +45,10 @@ const authOptions: NextAuthOptions = {
       if (user?.email) {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email },
-          select: { role: true },
+          select: { role: true, id: true },
         });
         token.role = dbUser?.role;
+        token.userId = dbUser?.id;
       }
       return token;
     },
@@ -56,13 +57,21 @@ const authOptions: NextAuthOptions = {
       token,
     }: {
       session: Session;
-      token: JWT & { accessToken?: string; role?: Role };
+      token: JWT & { accessToken?: string; role?: Role; userId?: string };
     }) {
       return {
         ...session,
         accessToken: token.accessToken,
         role: token.role,
-      } as Session & { accessToken?: string; role?: Role };
+        user: {
+          ...session.user,
+          id: token.userId,
+        },
+      } as Session & {
+        accessToken?: string;
+        role?: Role;
+        user: { id?: string };
+      };
     },
 
     async redirect({ url, baseUrl }) {

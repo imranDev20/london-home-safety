@@ -11,7 +11,7 @@ export default function AdminLayout({
   return (
     <NextAuthSessionProvider>
       <AdminTopLoader />
-      <AdminPanelLayout>{children}</AdminPanelLayout>;
+      <AdminPanelLayout>{children}</AdminPanelLayout>
     </NextAuthSessionProvider>
   );
 }

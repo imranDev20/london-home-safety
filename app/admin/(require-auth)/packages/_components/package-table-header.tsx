@@ -82,6 +82,7 @@ export default function ServiceTableHeader() {
               router.push(
                 `${pathname}?${createQueryString({
                   filter_status: value !== "ALL" ? value : "",
+                  page: "",
                 })}`
               );
             }

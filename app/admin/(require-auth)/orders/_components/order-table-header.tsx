@@ -196,6 +196,7 @@ export default function OrderTableHeader() {
               router.push(
                 `${pathname}?${createQueryString({
                   filter_status: value !== "ALL" ? value : "",
+                  page: "",
                 })}`
               );
             }

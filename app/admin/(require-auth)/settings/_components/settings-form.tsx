@@ -29,6 +29,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Prisma } from "@prisma/client";
 import { CalendarIcon, Clock, Plus } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export type SettingsWithRelation = Prisma.SiteSettingsGetPayload<{
   include: {
@@ -48,6 +49,9 @@ export default function SettingsForm({
 }) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const { data: sessionData, status } = useSession();
+
+  console.log(status, sessionData);
 
   const form = useForm<SiteSettingsFormValues>({
     resolver: zodResolver(siteSettingsSchema),
@@ -69,11 +73,6 @@ export default function SettingsForm({
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "openingDateTime",
-  });
-
   useEffect(() => {
     if (settings) {
       form.reset({
@@ -93,12 +92,28 @@ export default function SettingsForm({
         openingDateTime: settings.openingDateTime || [],
       });
     }
-  }, [form, toast, settings]);
+  }, [form, settings]);
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "openingDateTime",
+  });
 
   function onSubmit(data: SiteSettingsFormValues) {
+    console.log(status, sessionData);
+
+    if (status !== "authenticated" || !sessionData.user.id) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to update settings.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     startTransition(async () => {
       try {
-        const result = await updateSiteSettings(data);
+        const result = await updateSiteSettings(data, sessionData.user.id);
         if (result.success) {
           toast({
             title: "Success",
@@ -114,8 +129,21 @@ export default function SettingsForm({
         }
       } catch (error) {
         console.error("Error updating site settings:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred.",
+          variant: "destructive",
+        });
       }
     });
+  }
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "unauthenticated") {
+    return <div>You must be logged in to view this page.</div>;
   }
 
   return (
