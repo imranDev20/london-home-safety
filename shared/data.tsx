@@ -9,9 +9,17 @@ import FuseBoxIcon from "@/components/icons/fuse-box";
 import LocationIcon from "@/components/icons/location";
 import LowerPriceIcon from "@/components/icons/lower-price";
 import PatIcon from "@/components/icons/pat";
+import BoilerServiceImage from "@/images/boiler-service.jpg";
+import ElectricalRepairsImage from "@/images/electrical-repairs.jpg";
 import EicrImage from "@/images/electrician-multimeter.jpeg";
-import backgroundImage from "@/images/about-bg.jpeg";
-
+import EnergyPerformanceImage from "@/images/energy-performance.jpg";
+import EvCrargerImage from "@/images/ev-charger-installation.jpg";
+import FireAlarmCertificateImage from "@/images/fire-alarm-certificate.jpg";
+import FireAlarmInstallationImage from "@/images/fire-alarm-installation.jpg";
+import FireRiskImage from "@/images/fire-risk.jpg";
+import FuseBoxImage from "@/images/fuse-box-installation.jpg";
+import GasCertificateImage from "@/images/gas-certificate.jpg";
+import PatImage from "@/images/portable-testing.jpg";
 import { NavItem, NavLeafItem } from "@/types/misc";
 import { CiInstagram } from "react-icons/ci";
 import { FaClock } from "react-icons/fa";
@@ -243,7 +251,7 @@ export const NAV_ITEMS: NavItem[] = [
             path: "/portable-appliance-testing",
             abbr: "PAT",
             Icon: PatIcon,
-            image: backgroundImage,
+            image: PatImage,
             description:
               "Test the safety of your portable appliances to prevent electrical hazards with our PAT service.",
             detailedDesc: {
@@ -408,7 +416,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Fuse Box Installation",
             path: "/fuse-box-installation",
             Icon: FuseBoxIcon,
-            image: backgroundImage,
+            image: FuseBoxImage,
             description:
               "Upgrade or install a new fuse box to enhance your home's electrical safety and performance.",
             detailedDesc: {
@@ -563,7 +571,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Electrical Diagnostic & Repair Services",
             path: "/electrical-diagnostic-and-repair-services",
             Icon: ElectricalRepairs,
-            image: backgroundImage,
+            image: ElectricalRepairsImage,
             description:
               "Get reliable and efficient electrical repairs from our certified professionals.",
             detailedDesc: {
@@ -718,7 +726,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "EV Charger Installation",
             path: "/ev-charger-installation",
             Icon: EvCrarger,
-            image: backgroundImage,
+            image: EvCrargerImage,
             description:
               "Install a convenient and efficient EV charger at your home for your electric vehicle.",
             detailedDesc: {
@@ -889,7 +897,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Gas Certificate & Repairs",
             path: "/gas-certificate-repair",
 
-            image: backgroundImage,
+            image: GasCertificateImage,
             description:
               "Ensure the safety of your gas appliances with our certification and repair services.",
 
@@ -962,7 +970,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Boiler Service & Repair",
             path: "/boiler-service-repair",
 
-            image: backgroundImage,
+            image: BoilerServiceImage,
             description:
               "Maintain and repair your boiler to ensure efficient and safe operation.",
 
@@ -1141,7 +1149,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Fire Risk Assessment",
             path: "/fire-risk-assessment",
 
-            image: backgroundImage,
+            image: FireRiskImage,
             description:
               "Identify and mitigate fire hazards in your home with our comprehensive fire risk assessments.",
             detailedDesc: {
@@ -1325,7 +1333,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Fire Alarm Certificate",
             path: "/fire-alarm-certificate",
 
-            image: backgroundImage,
+            image: FireAlarmCertificateImage,
             description:
               "Certify your fire alarm system to ensure it meets all safety regulations.",
             detailedDesc: {
@@ -1508,7 +1516,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Fire Alarm Installation",
             path: "/fire-alarm-installation",
 
-            image: backgroundImage,
+            image: FireAlarmInstallationImage,
             description:
               "Install a reliable fire alarm system to protect your home and loved ones.",
             detailedDesc: {
@@ -1684,7 +1692,7 @@ export const NAV_ITEMS: NavItem[] = [
             Icon: EpcIcon,
             description:
               "Assess the energy efficiency of your home and get certified with our EPC service.",
-            image: backgroundImage,
+            image: EnergyPerformanceImage,
             detailedDesc: {
               details:
                 "An EPC provides an assessment of your property's energy efficiency and recommendations for improvement. It is essential for buying, selling, or renting both residential and commercial properties. Our experts will conduct a thorough inspection and provide you with an official certificate.",

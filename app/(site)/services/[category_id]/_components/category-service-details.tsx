@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { NavLeafItem } from "@/types/misc";
 import Image from "next/image";
@@ -31,7 +30,7 @@ export default function CategoryServiceDetails({
         <Image
           width={500}
           height={300}
-          className="rounded-2xl w-full h-auto object-cover"
+          className="rounded-2xl w-full h-96 object-cover"
           src={service.image || "/images/placeholder-service.jpg"}
           alt={`Illustration of ${service.label} service`}
           loading="lazy"
