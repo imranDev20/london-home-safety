@@ -46,7 +46,7 @@ export default function Hero() {
                 020 8146 6698
               </Button>
             </Link>
-            <Link href="#services" className="w-full sm:w-auto">
+            <Link href="/services" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="default"

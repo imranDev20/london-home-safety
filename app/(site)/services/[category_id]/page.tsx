@@ -6,7 +6,7 @@ import AboutCategory from "./_components/about-category";
 import CategoryServices from "./_components/category-services";
 import { kebabToNormal } from "@/lib/utils";
 
-export default function CategoryDetailsPage({
+export default async function CategoryDetailsPage({
   params,
 }: {
   params: {
@@ -14,6 +14,7 @@ export default function CategoryDetailsPage({
   };
 }) {
   const { category_id } = params;
+
   const breadCrumbOptions = [
     {
       label: "Services",

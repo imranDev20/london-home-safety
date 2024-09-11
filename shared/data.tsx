@@ -9,7 +9,9 @@ import FuseBoxIcon from "@/components/icons/fuse-box";
 import LocationIcon from "@/components/icons/location";
 import LowerPriceIcon from "@/components/icons/lower-price";
 import PatIcon from "@/components/icons/pat";
+import EicrImage from "@/images/electrician-multimeter.jpeg";
 import backgroundImage from "@/images/about-bg.jpeg";
+
 import { NavItem, NavLeafItem } from "@/types/misc";
 import { CiInstagram } from "react-icons/ci";
 import { FaClock } from "react-icons/fa";
@@ -36,7 +38,7 @@ export const NAV_ITEMS: NavItem[] = [
             path: "/electrical-installation-condition-report",
             abbr: "EICR",
             Icon: EicrIcon,
-            image: backgroundImage,
+            image: EicrImage,
             description:
               "Ensure the safety and compliance of your electrical installations with our thorough EICR.",
             detailedDesc: {

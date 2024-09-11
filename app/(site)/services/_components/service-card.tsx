@@ -25,6 +25,8 @@ export default function ServiceCard({
   const { description, image, path, label, categoryPath } = service;
   const [isHovered, setIsHovered] = useState(false);
 
+  console.log(image);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

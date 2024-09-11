@@ -6,11 +6,13 @@ import useOrderStore from "@/hooks/use-order-store";
 import usePackageStore from "@/hooks/use-package-store";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { ShoppingCart, Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useState, useMemo } from "react";
 
 export default function BookNowButtonCompo() {
   const { selectedPackage } = usePackageStore();
   const { addItem, cartItems } = useOrderStore();
+  const router = useRouter();
 
   const [showAlert, setShowAlert] = useState(false);
 
@@ -33,6 +35,7 @@ export default function BookNowButtonCompo() {
         id: selectedPackage.id,
         description: selectedPackage.description ?? "",
       });
+      router.push(`/cart`);
     }
   };
 
