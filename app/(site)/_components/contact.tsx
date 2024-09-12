@@ -1,10 +1,15 @@
 import ContactUsForm from "@/app/_components/common/contact-us-form";
 import { Button } from "@/components/ui/button";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
+import { SiteSettingWithUserAddress } from "@/types/misc";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Contact() {
+export default function Contact({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   return (
     <div className="bg-slate-200 py-12 sm:py-16 md:py-24">
       <h2 className="mb-16 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight text-center">
@@ -46,9 +51,9 @@ export default function Contact() {
           </ul>
           <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
             <span className="text-primary font-medium">Need Help?</span>
-            <Link href="tel:+020 8146 6698">
+            <Link href={`tel:${siteSettings?.phone1 || ""}`}>
               <Button className="bg-white text-black shadow-none hover:bg-white font-semibold hover:underline">
-                020 8146 6698
+                {siteSettings?.phone1 || "No phone number available"}
               </Button>
             </Link>
           </div>

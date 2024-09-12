@@ -1,14 +1,18 @@
 "use client";
 
-import React from "react";
 import { Button } from "@/components/ui/button";
 import backgroundImage from "@/images/about-bg.jpeg";
+import { SiteSettingWithUserAddress } from "@/types/misc";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { FaCalendarAlt, FaPhoneAlt } from "react-icons/fa";
-import { motion } from "framer-motion";
 
-export default function AboutCta() {
+export default function AboutCta({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   return (
     <div className="relative py-24 md:py-32 flex items-center justify-center bg-[#1D63A9] overflow-hidden">
       <Image
@@ -51,10 +55,13 @@ export default function AboutCta() {
               Book Now
             </Button>
           </Link>
-          <Link href="tel:+020 8146 6698" className="w-full sm:w-auto">
+          <Link
+            href={`tel:${siteSettings?.phone1 || ""}`}
+            className="w-full sm:w-auto"
+          >
             <Button className="w-full sm:w-[200px] bg-white text-[#1D63A9] px-6 py-4 rounded-md hover:bg-body-dark hover:text-white font-bold transition-all duration-300">
               <FaPhoneAlt className="mr-2" />
-              020 8146 6698
+              {siteSettings?.phone1 || "No phone number available"}
             </Button>
           </Link>
         </motion.div>

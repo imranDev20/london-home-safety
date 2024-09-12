@@ -1,12 +1,16 @@
-import React from "react";
 import BookNow from "@/app/_components/book-now";
 import { Button } from "@/components/ui/button";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
+import { SiteSettingWithUserAddress } from "@/types/misc";
 import Image from "next/image";
 import Link from "next/link";
 import { FaPhoneAlt, FaShieldAlt } from "react-icons/fa";
 
-export default function Hero() {
+export default function Hero({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   return (
     <section className="relative flex items-center py-28 lg:py-0 min-h-[600px] sm:min-h-[800px] lg:min-h-screen -mt-[65px]">
       <Image
@@ -37,13 +41,16 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Link href="tel:+020 8146 6698" className="w-full sm:w-auto">
+            <Link
+              href={`tel:${siteSettings?.phone1 || ""}`}
+              className="w-full sm:w-auto"
+            >
               <Button
                 size="lg"
                 className="w-full bg-secondary hover:bg-primary text-black font-medium text-sm sm:text-base lg:text-lg flex items-center justify-center hover:text-white py-3 sm:py-4 lg:py-6 transition-all duration-300"
               >
                 <FaPhoneAlt className="mr-2 text-sm sm:text-base lg:text-lg" />
-                020 8146 6698
+                {siteSettings?.phone1 || "No phone number available"}
               </Button>
             </Link>
             <Link href="/services" className="w-full sm:w-auto">

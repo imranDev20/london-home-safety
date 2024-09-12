@@ -1,14 +1,19 @@
 "use client";
 
-import BackgroundImage from "@/images/about-bg.jpeg";
-import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import BackgroundImage from "@/images/about-bg.jpeg";
+import { SiteSettingWithUserAddress } from "@/types/misc";
+import { motion, useAnimation } from "framer-motion";
+import { Calendar, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, Calendar } from "lucide-react";
-import { motion, useAnimation } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-const CallToAction = () => {
+const CallToAction = ({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const controls = useAnimation();
   const ref = useRef(null);
@@ -115,7 +120,10 @@ const CallToAction = () => {
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link href="tel:+02081466698" className="w-full sm:w-auto">
+            <Link
+              href={`tel:${siteSettings?.phone1 || ""}`}
+              className="w-full sm:w-auto"
+            >
               <Button className="w-full bg-white text-black px-6 rounded-md hover:bg-yellow-400 font-semibold text-lg py-4 sm:py-6 transition-all duration-300 flex items-center justify-center group">
                 <Phone className="mr-2 group-hover:animate-ping" size={20} />
                 Call Now

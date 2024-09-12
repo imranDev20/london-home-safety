@@ -1,8 +1,10 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import AboutImage1 from "@/images/electrician-2.jpg";
-import AboutImage2 from "@/images/happy-family.jpg";
 import AboutImage3 from "@/images/electrician-3.jpg";
+import AboutImage2 from "@/images/happy-family.jpg";
 import TrustPilot from "@/images/trustpilot.jpeg";
+import { SiteSettingWithUserAddress } from "@/types/misc";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -30,7 +32,11 @@ const DotIcon = () => (
   </span>
 );
 
-export default function AboutUsHome() {
+export default function AboutUsHome({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   return (
     <section className="bg-gradient-to-t from-blue-50 to-white py-36 overflow-hidden">
       <div className="container max-w-screen-xl grid grid-cols-12 lg:px-16 lg:gap-20">
@@ -135,9 +141,9 @@ export default function AboutUsHome() {
               <HiPhone className="text-4xl text-body mr-2" />
               <div>
                 <p className="text-sm text-body">Call Us Anytime</p>
-                <Link href="tel:+020 8146 6698">
+                <Link href={`tel:${siteSettings?.phone1 || ""}`}>
                   <p className="text-xl font-semibold text-body-dark hover:underline">
-                    020 8146 6698
+                    {siteSettings?.phone1 || "No phone number available"}
                   </p>
                 </Link>
               </div>

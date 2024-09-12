@@ -1,4 +1,4 @@
-import { PropertyType } from "@prisma/client";
+import { Prisma, PropertyType } from "@prisma/client";
 import { OrderWithRelation } from "./order";
 
 export type ChildrenProp = {
@@ -67,3 +67,13 @@ export type UserEmailDataType = {
   message: string;
   phone: string;
 };
+
+export type SiteSettingWithUserAddress = Prisma.SiteSettingsGetPayload<{
+  include: {
+    user: {
+      include: {
+        address: true;
+      };
+    };
+  };
+}> | null;

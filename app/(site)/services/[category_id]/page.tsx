@@ -1,3 +1,4 @@
+import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { kebabToNormal } from "@/lib/utils";
@@ -25,6 +26,7 @@ export default async function CategoryDetailsPage({
       isCurrentPage: true,
     },
   ];
+  const siteSettings = await getSettings();
 
   return (
     <div>
@@ -34,7 +36,7 @@ export default async function CategoryDetailsPage({
       />
       <CategoryServices categoryId={category_id} />
       <AboutCategory categoryId={category_id} />
-      <CallToAction />
+      <CallToAction siteSettings={siteSettings} />
       <Partners />
     </div>
   );

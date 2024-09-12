@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { SiteSettingWithUserAddress } from "@/types/misc";
 import Link from "next/link";
 
-export default function ServiceDetailsCta() {
+export default function ServiceDetailsCta({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   return (
     <div className="relative my-10 mx-auto   overflow-hidden">
       <div className="relative h-full py-10 bg-black text-white rounded-2xl text-center px-5">
@@ -20,9 +25,9 @@ export default function ServiceDetailsCta() {
               Book an Appointment
             </Button>
           </Link>
-          <Link href="tel:+020 8146 6698">
+          <Link href={`tel:${siteSettings?.phone1 || ""}`}>
             <Button className="bg-white text-black   rounded-md text-lg font-semibold hover:bg-secondary hover:text-black transition-colors">
-              Call: 020 8146 6698
+              Call:{siteSettings?.phone1 || "No phone number available"}
             </Button>
           </Link>
         </div>
