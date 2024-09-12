@@ -1,3 +1,4 @@
+import { getPackages } from "@/app/admin/(require-auth)/orders/[order_id]/actions";
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import ServiceCategories from "../_components/service-categories";
@@ -10,7 +11,9 @@ const breadCrumbOptions = [
   },
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const packages = await getPackages();
+
   return (
     <div>
       <PageHeader
@@ -18,7 +21,7 @@ export default function ServicesPage() {
         breadCrumbOptions={breadCrumbOptions}
       />
       <ServiceCategories />
-      <ServiceItems />
+      <ServiceItems packages={packages} />
     </div>
   );
 }

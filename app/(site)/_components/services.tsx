@@ -1,20 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { mergeArrays } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
+import { Package } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import { Package } from "@prisma/client";
-import { mergeArrays } from "@/lib/utils";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 
 interface ServiceCardProps {
   title: string;
