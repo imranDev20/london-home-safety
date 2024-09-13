@@ -190,6 +190,7 @@ enum PackageCategory {
   FIRE
   GAS
   HEALTH_SAFETY
+  PROPERTY_MANAGEMENT
 }
 
 enum PackageType {
