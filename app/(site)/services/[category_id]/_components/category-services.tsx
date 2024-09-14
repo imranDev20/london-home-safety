@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { ALL_SERVICES } from "@/shared/data";
 import { kebabToNormal } from "@/lib/utils";
+import { ALL_SERVICES } from "@/shared/data";
 import { motion, useAnimation } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import ServiceCard from "../../_components/service-card";
 
 export default function CategoryServices({
@@ -74,6 +74,7 @@ export default function CategoryServices({
               service={service}
               index={index}
               isVisible={isVisible}
+              price={""}
             />
           ))}
         </div>
