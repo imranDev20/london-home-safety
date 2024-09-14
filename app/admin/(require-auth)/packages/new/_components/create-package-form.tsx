@@ -2,13 +2,7 @@
 
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -36,6 +30,7 @@ import {
   SERVICE_TYPE_OPTIONS,
 } from "@/lib/constants";
 import { kebabToNormal } from "@/lib/utils";
+import { ALL_SERVICES } from "@/shared/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import Link from "next/link";
@@ -45,7 +40,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { ContentLayout } from "../../../_components/content-layout";
 import { createPackage } from "../../actions";
 import { PackageFormInputType, packageSchema } from "../../schema";
-import { ALL_SERVICES } from "@/shared/data";
 
 const FormSection = ({
   title,
@@ -312,6 +306,9 @@ export default function CreatePackageForm() {
                     <SelectContent>
                       <SelectItem value="RESIDENTIAL">Residential</SelectItem>
                       <SelectItem value="COMMERCIAL">Commercial</SelectItem>
+                      <SelectItem value="NOT_APPLICABLE">
+                        Not Aapplicable
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
