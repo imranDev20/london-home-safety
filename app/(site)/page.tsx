@@ -1,4 +1,5 @@
 import { getPackages } from "../admin/(require-auth)/orders/[order_id]/actions";
+import { getSettings } from "../admin/(require-auth)/settings/actions";
 import AboutUsHome from "./_components/about-us-home";
 import CallToAction from "./_components/call-to-action";
 import Contact from "./_components/contact";
@@ -14,17 +15,19 @@ export default async function Home() {
   const reviews = await getReviews();
   const packages = await getPackages();
 
+  const siteSettings = await getSettings();
+
   return (
     <>
-      <Hero />
+      <Hero siteSettings={siteSettings} />
       <Services packages={packages} />
-      <AboutUsHome />
+      <AboutUsHome siteSettings={siteSettings} />
       <ServiceCategories />
-      <CallToAction />
+      <CallToAction siteSettings={siteSettings} />
       <Reviews reviews={reviews} />
       <Faq />
       <Partners />
-      <Contact />
+      <Contact siteSettings={siteSettings} />
     </>
   );
 }

@@ -1,25 +1,23 @@
-import React from "react";
-import Image from "next/image";
+import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
+import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ALL_SERVICES } from "@/shared/data";
-import { kebabToNormal } from "@/lib/utils";
-import { mergeArrays } from "@/lib/utils";
-import ServiceDetailsCta from "./_components/service-details-cta";
-import { getPackagesByService } from "./actions";
-import { Clock, DollarSign, Shield, Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import PackageCard from "./_components/package-card";
+import { kebabToNormal, mergeArrays } from "@/lib/utils";
+import { ALL_SERVICES } from "@/shared/data";
 import { PropertyType } from "@prisma/client";
+import { Clock, DollarSign, Shield, Star } from "lucide-react";
+import Image from "next/image";
 import BookNowButtonCompo from "./_components/book-now-button-compo";
-import BackgroundImage from "@/images/hero-image-new.jpeg";
-import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
+import PackageCard from "./_components/package-card";
 import PropertyTypeCompo from "./_components/property-type";
+import ServiceDetailsCta from "./_components/service-details-cta";
 import ServicePricingSection from "./_components/service-pricing";
+import { getPackagesByService } from "./actions";
 
 export default async function ServiceDetailsPage({
   params: { service_id, category_id },
@@ -71,6 +69,8 @@ export default async function ServiceDetailsPage({
     },
     { label: kebabToNormal(service_id), isCurrentPage: true },
   ];
+
+  const siteSettings = await getSettings();
 
   return (
     <>
@@ -190,7 +190,7 @@ export default async function ServiceDetailsPage({
           />
         )}
 
-        <ServiceDetailsCta />
+        <ServiceDetailsCta siteSettings={siteSettings} />
 
         <div className="my-20">
           <h2 className="text-3xl font-bold text-center mb-8">

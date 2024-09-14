@@ -1,10 +1,10 @@
-import React from "react";
+import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
-import ContactInfo from "./_components/contact-info";
-import ContactForm from "./_components/contact-form";
-import ContactMap from "./_components/contact-map";
 import AnimatedSection from "./_components/animated-section";
+import ContactForm from "./_components/contact-form";
+import ContactInfo from "./_components/contact-info";
+import ContactMap from "./_components/contact-map";
 
 const breadCrumbOptions = [
   {
@@ -13,7 +13,8 @@ const breadCrumbOptions = [
   },
 ];
 
-export default function Contact(): JSX.Element {
+export default async function Contact() {
+  const siteSettings = await getSettings();
   return (
     <>
       <PageHeader
@@ -31,7 +32,7 @@ export default function Contact(): JSX.Element {
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <ContactInfo />
+            <ContactInfo siteSettings={siteSettings} />
             <ContactForm />
           </div>
         </div>

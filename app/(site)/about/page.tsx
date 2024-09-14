@@ -1,3 +1,4 @@
+import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import AboutUsHome from "../_components/about-us-home";
@@ -13,17 +14,18 @@ const breadCrumbOptions = [
   },
 ];
 
-export default function About() {
+export default async function About() {
+  const siteSettings = await getSettings();
   return (
     <div>
       <PageHeader
         backgroundImage={BackgroundImage}
         breadCrumbOptions={breadCrumbOptions}
       />
-      <AboutUsHome />
+      <AboutUsHome siteSettings={siteSettings} />
       <Advantage />
       <Achievement />
-      <AboutCta />
+      <AboutCta siteSettings={siteSettings} />
       <Partners />
     </div>
   );

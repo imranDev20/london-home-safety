@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Phone, Mail, MapPin, Clock, LucideIcon } from "lucide-react";
 import { SOCIALS } from "@/shared/data";
+import { SiteSettingWithUserAddress } from "@/types/misc";
+import { Clock, LucideIcon, Mail, MapPin, Phone } from "lucide-react";
+import React from "react";
 import SocialIcon from "./social-icon";
 
 interface ContactInfoItemProps {
@@ -28,23 +29,31 @@ const ContactInfoItem: React.FC<ContactInfoItemProps> = ({
   </div>
 );
 
-export default function ContactInfo(): JSX.Element {
+export default function ContactInfo({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}): JSX.Element {
   return (
     <Card>
       <CardContent className="p-8">
         <h2 className="text-2xl font-semibold mb-6 text-gray-900">
           Contact Information
         </h2>
-        <ContactInfoItem icon={Phone} title="Phone" content="020 8146 6698" />
+        <ContactInfoItem
+          icon={Phone}
+          title="Phone"
+          content={siteSettings?.phone1 || "No phone number available"}
+        />
         <ContactInfoItem
           icon={Mail}
           title="Email"
-          content="info@londonhomesafety.co.uk"
+          content={siteSettings?.email || "No email address available"}
         />
         <ContactInfoItem
           icon={MapPin}
           title="Address"
-          content="123 Safety Street, London, UK"
+          content="46d, Greatorex Street, Micro Business Park, London, England, E1 5NP"
         />
         <ContactInfoItem
           icon={Clock}

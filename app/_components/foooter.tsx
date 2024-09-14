@@ -1,4 +1,5 @@
 import { ALL_SERVICES, NAV_ITEMS } from "@/shared/data";
+import { SiteSettingWithUserAddress } from "@/types/misc";
 import Link from "next/link";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -6,7 +7,11 @@ import { IoLogoFacebook, IoMdMail } from "react-icons/io";
 import { IoLocationSharp } from "react-icons/io5";
 import { MdLocalPhone } from "react-icons/md";
 
-export default function Footer() {
+export default function Footer({
+  siteSettings,
+}: {
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   return (
     <footer className="bg-primary-darker text-white py-10 ">
       <div className="max-w-6xl mx-auto">
@@ -57,21 +62,25 @@ export default function Footer() {
               <li className="flex items-center">
                 <IoMdMail className="mr-2 text-xl" />
                 <Link
-                  href="mailto:info@homesafetylondon.co.uk"
+                  href={`mailto:${siteSettings?.email || ""}`}
                   className="hover:underline"
                 >
-                  info@londonhomesafety.co.uk
+                  {siteSettings?.email || "No email address available"}
                 </Link>
               </li>
               <li className="flex items-center">
                 <MdLocalPhone className="mr-2 text-xl" />
-                <Link href="tel:+020 8146 6698" className="hover:underline">
-                  020 8146 6698
+                <Link
+                  href={`tel:${siteSettings?.phone1 || ""}`}
+                  className="hover:underline"
+                >
+                  {siteSettings?.phone1 || "No phone number available"}
                 </Link>
               </li>
               <li className="flex items-center">
-                <IoLocationSharp className="mr-2 text-2xl" />
-                43 Felton Road, Barking, London IG11 7YA
+                <IoLocationSharp className="mr-2 text-5xl" />
+                46d, Greatorex Street, Micro Business Park, London, England, E1
+                5NP
               </li>
             </ul>
             <div className="flex space-x-3 text-xl mt-4">
