@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // Enums for Select options
 export const PackageCategorySchema = z.enum(
-  ["ELECTRICAL", "FIRE", "GAS", "HEALTH_SAFETY"],
+  ["ELECTRICAL", "FIRE", "GAS", "HEALTH_SAFETY", "PROPERTY_MANAGEMENT"],
   {
     errorMap: () => ({ message: "Invalid package category selected" }),
   }
