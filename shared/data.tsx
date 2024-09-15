@@ -887,6 +887,170 @@ export const NAV_ITEMS: NavItem[] = [
               },
             ],
           },
+          {
+            label: "Emergency Light Installation",
+            path: "/emergency-light-installation",
+
+            image: EmergencyLightImage,
+            description:
+              "Ensure safety during power outages with our expert emergency lighting installation service.",
+            detailedDesc: {
+              details:
+                "Our Emergency Light Installation service ensures that your property remains safe and well-lit in the event of a power outage or emergency. We provide tailored solutions to fit the layout and specific requirements of your building, ensuring full compliance with UK safety regulations. With cutting-edge emergency lighting technology and expert installation, our team guarantees reliable performance, providing clear evacuation paths and peace of mind for all occupants.",
+
+              points: [
+                "Strategic placement for optimal emergency coverage",
+                "Installation of reliable, energy-efficient emergency lighting",
+                "Full compliance with UK building safety regulations",
+              ],
+            },
+            pageContent: {
+              title:
+                "Ensuring Safety with Trusted Emergency Light Installation Services",
+              html: `
+                 <div class="max-w-4xl mx-auto">
+  <p class="text-lg mb-6">
+    At London Home Safety Limited, we specialize in providing reliable Emergency Light Installation services to ensure your property is prepared for any emergency situation. Our expert team is dedicated to designing, installing, and maintaining emergency lighting systems that meet the highest safety standards, providing peace of mind and protection for your property and its occupants.
+  </p>
+
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Why is Professional Emergency Light Installation Essential?</h2>
+    <p class="mb-4">
+      Professional emergency light installation is crucial for ensuring that your emergency lighting system operates effectively during power outages or emergencies. Proper installation not only enhances visibility but also guarantees compliance with safety regulations, facilitating safe evacuation and minimizing risks.
+    </p>
+    <p class="font-bold mb-2">Benefits of Professional Emergency Light Installation:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Enhanced Safety:</span> Ensures that your emergency lighting system is installed correctly to provide clear guidance for safe evacuation, helping to protect lives.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Regulatory Compliance:</span> Guarantees that your emergency lighting system meets all relevant safety standards and regulations, avoiding potential legal issues.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Optimized Performance:</span> Ensures that all components of the emergency lighting system are installed and configured for maximum effectiveness.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Peace of Mind:</span> Provides confidence that your emergency lighting system is reliable and capable of functioning during emergencies.</span>
+      </li>
+    </ul>
+  </div>
+
+  <blockquote class="bg-yellow-50 text-lg p-6 rounded-lg mb-8">
+    <p>
+      A professionally installed emergency lighting system is your safeguard during unforeseen events. Ensure your property is protected with an expertly installed system from London Home Safety Limited.
+    </p>
+  </blockquote>
+
+  <h2 class="text-2xl font-bold mb-4">What Does Our Emergency Light Installation Service Include?</h2>
+  <p class="mb-4">
+    Our comprehensive emergency light installation service covers everything from the initial consultation to the final testing of your system. We work closely with you to design a system that meets your specific needs and ensures complete coverage of your property.
+  </p>
+  <p class="font-bold mb-2">Installation Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Consultation:</span> We assess your property and discuss your emergency lighting requirements to design a tailored system.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">System Design:</span> Our experts create a detailed plan for the installation, including the placement of emergency lights and signage.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Installation:</span> Professional installation of all system components, ensuring proper placement and secure fitting.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Testing and Commissioning:</span> Thorough testing of the entire system to ensure it operates correctly and meets all safety standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Training:</span> We provide training on how to operate and maintain your new emergency lighting system effectively.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">Why Choose Us for Your Emergency Light Installation?</h2>
+  <p class="mb-4">
+    London Home Safety Limited is committed to delivering exceptional emergency light installation services with a focus on quality, reliability, and compliance. Our experienced team uses the latest technology and best practices to ensure your emergency lighting system provides optimal protection for your property.
+  </p>
+  <p class="font-bold mb-2">Reasons to Choose Our Service:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Experienced Professionals:</span> Our team consists of qualified and experienced engineers who are experts in emergency lighting systems.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Custom Solutions:</span> We provide tailored solutions that meet your specific emergency safety needs and requirements.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Compliance Assurance:</span> We ensure that all installations comply with the latest safety regulations and standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Reliable Support:</span> Our team offers ongoing support and maintenance to keep your emergency lighting system in top condition.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What to Expect After Installation?</h2>
+  <p class="mb-4">
+    After the installation of your emergency lighting system, we provide a detailed handover including all necessary documentation and training. Our commitment to your safety continues with regular maintenance and support to ensure that your system remains effective and compliant.
+  </p>
+  <p class="font-bold mb-2">Post-Installation Services:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> You will receive comprehensive documentation including system specifications, testing reports, and maintenance schedules.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Training:</span> Our team will provide training on how to use and maintain the system effectively.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Ongoing Support:</span> We offer ongoing support and maintenance services to ensure your emergency lighting system remains in optimal working order.</span>
+    </li>
+  </ul>
+</div>
+
+                `,
+            },
+            faqs: [
+              {
+                ques: "What is Emergency Light Installation?",
+                ans: "Emergency Light Installation involves the strategic placement and setup of emergency lighting systems in buildings to provide illumination during power outages or emergencies. This process includes assessing the building's layout, selecting appropriate lighting fixtures, and ensuring compliance with safety regulations.",
+              },
+              {
+                ques: "Why is professional Emergency Light Installation important?",
+                ans: "Professional installation ensures that emergency lighting systems are correctly positioned, properly wired, and fully functional when needed. Experts can optimize coverage, ensure compliance with local building codes, and integrate the system with existing electrical infrastructure for maximum reliability during critical situations.",
+              },
+              {
+                ques: "What does the Emergency Light Installation process involve?",
+                ans: "The process typically includes a site assessment, creating a lighting plan, installing fixtures and backup power supplies, connecting to the building's electrical system, and conducting thorough testing. Professionals also ensure proper labeling and provide documentation for future maintenance and inspections.",
+              },
+              {
+                ques: "How long does Emergency Light Installation take?",
+                ans: "The duration varies depending on the size and complexity of the building. A small office might be completed in a day, while larger commercial spaces could take several days to a week. The timeline includes assessment, installation, and final testing to ensure all systems are functioning correctly.",
+              },
+              {
+                ques: "Can I install emergency lights myself?",
+                ans: "While DIY installation might seem cost-effective, professional installation is strongly recommended. Emergency lighting is critical for safety and must meet specific legal requirements. Professionals have the expertise to ensure proper placement, wiring, and compliance with local regulations, which is crucial for the system's effectiveness and legality.",
+              },
+              {
+                ques: "What types of emergency lighting systems are available?",
+                ans: "There are several types, including maintained systems (always on), non-maintained systems (activate only during power failures), centrally powered systems, self-contained battery units, LED emergency lights, and photoluminescent systems. The best choice depends on your building's specific needs, usage, and local regulations.",
+              },
+              {
+                ques: "How often should emergency lighting systems be tested and maintained?",
+                ans: "Regular testing and maintenance are crucial. Monthly function tests and annual full duration tests are typically required. However, specific requirements may vary based on local regulations. Professional installers can provide a maintenance schedule and often offer ongoing service plans to ensure your system remains compliant and effective.",
+              },
+            ],
+          },
         ],
       },
       {
@@ -1676,170 +1840,6 @@ export const NAV_ITEMS: NavItem[] = [
               {
                 ques: "What should I do after the fire alarm system is installed?",
                 ans: "After installation, ensure that the fire alarm system is tested and inspected to confirm it operates correctly. Schedule regular maintenance and testing to keep the system in optimal condition and ensure ongoing compliance with safety standards.",
-              },
-            ],
-          },
-          {
-            label: "Emergency Light Installation",
-            path: "/emergency-light-installation",
-
-            image: EmergencyLightImage,
-            description:
-              "Ensure safety during power outages with our expert emergency lighting installation service.",
-            detailedDesc: {
-              details:
-                "Our Emergency Light Installation service ensures that your property remains safe and well-lit in the event of a power outage or emergency. We provide tailored solutions to fit the layout and specific requirements of your building, ensuring full compliance with UK safety regulations. With cutting-edge emergency lighting technology and expert installation, our team guarantees reliable performance, providing clear evacuation paths and peace of mind for all occupants.",
-
-              points: [
-                "Strategic placement for optimal emergency coverage",
-                "Installation of reliable, energy-efficient emergency lighting",
-                "Full compliance with UK building safety regulations",
-              ],
-            },
-            pageContent: {
-              title:
-                "Ensuring Safety with Trusted Emergency Light Installation Services",
-              html: `
-                 <div class="max-w-4xl mx-auto">
-  <p class="text-lg mb-6">
-    At London Home Safety Limited, we specialize in providing reliable Emergency Light Installation services to ensure your property is prepared for any emergency situation. Our expert team is dedicated to designing, installing, and maintaining emergency lighting systems that meet the highest safety standards, providing peace of mind and protection for your property and its occupants.
-  </p>
-
-  <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-4">Why is Professional Emergency Light Installation Essential?</h2>
-    <p class="mb-4">
-      Professional emergency light installation is crucial for ensuring that your emergency lighting system operates effectively during power outages or emergencies. Proper installation not only enhances visibility but also guarantees compliance with safety regulations, facilitating safe evacuation and minimizing risks.
-    </p>
-    <p class="font-bold mb-2">Benefits of Professional Emergency Light Installation:</p>
-    <ul class="space-y-2">
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Enhanced Safety:</span> Ensures that your emergency lighting system is installed correctly to provide clear guidance for safe evacuation, helping to protect lives.</span>
-      </li>
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Regulatory Compliance:</span> Guarantees that your emergency lighting system meets all relevant safety standards and regulations, avoiding potential legal issues.</span>
-      </li>
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Optimized Performance:</span> Ensures that all components of the emergency lighting system are installed and configured for maximum effectiveness.</span>
-      </li>
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Peace of Mind:</span> Provides confidence that your emergency lighting system is reliable and capable of functioning during emergencies.</span>
-      </li>
-    </ul>
-  </div>
-
-  <blockquote class="bg-yellow-50 text-lg p-6 rounded-lg mb-8">
-    <p>
-      A professionally installed emergency lighting system is your safeguard during unforeseen events. Ensure your property is protected with an expertly installed system from London Home Safety Limited.
-    </p>
-  </blockquote>
-
-  <h2 class="text-2xl font-bold mb-4">What Does Our Emergency Light Installation Service Include?</h2>
-  <p class="mb-4">
-    Our comprehensive emergency light installation service covers everything from the initial consultation to the final testing of your system. We work closely with you to design a system that meets your specific needs and ensures complete coverage of your property.
-  </p>
-  <p class="font-bold mb-2">Installation Process:</p>
-  <ul class="space-y-2 mb-6">
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Consultation:</span> We assess your property and discuss your emergency lighting requirements to design a tailored system.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">System Design:</span> Our experts create a detailed plan for the installation, including the placement of emergency lights and signage.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Installation:</span> Professional installation of all system components, ensuring proper placement and secure fitting.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Testing and Commissioning:</span> Thorough testing of the entire system to ensure it operates correctly and meets all safety standards.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Training:</span> We provide training on how to operate and maintain your new emergency lighting system effectively.</span>
-    </li>
-  </ul>
-
-  <h2 class="text-2xl font-bold mb-4">Why Choose Us for Your Emergency Light Installation?</h2>
-  <p class="mb-4">
-    London Home Safety Limited is committed to delivering exceptional emergency light installation services with a focus on quality, reliability, and compliance. Our experienced team uses the latest technology and best practices to ensure your emergency lighting system provides optimal protection for your property.
-  </p>
-  <p class="font-bold mb-2">Reasons to Choose Our Service:</p>
-  <ul class="space-y-2 mb-6">
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Experienced Professionals:</span> Our team consists of qualified and experienced engineers who are experts in emergency lighting systems.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Custom Solutions:</span> We provide tailored solutions that meet your specific emergency safety needs and requirements.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Compliance Assurance:</span> We ensure that all installations comply with the latest safety regulations and standards.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Reliable Support:</span> Our team offers ongoing support and maintenance to keep your emergency lighting system in top condition.</span>
-    </li>
-  </ul>
-
-  <h2 class="text-2xl font-bold mb-4">What to Expect After Installation?</h2>
-  <p class="mb-4">
-    After the installation of your emergency lighting system, we provide a detailed handover including all necessary documentation and training. Our commitment to your safety continues with regular maintenance and support to ensure that your system remains effective and compliant.
-  </p>
-  <p class="font-bold mb-2">Post-Installation Services:</p>
-  <ul class="space-y-2 mb-6">
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Documentation:</span> You will receive comprehensive documentation including system specifications, testing reports, and maintenance schedules.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Training:</span> Our team will provide training on how to use and maintain the system effectively.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Ongoing Support:</span> We offer ongoing support and maintenance services to ensure your emergency lighting system remains in optimal working order.</span>
-    </li>
-  </ul>
-</div>
-
-                `,
-            },
-            faqs: [
-              {
-                ques: "What is Emergency Light Installation?",
-                ans: "Emergency Light Installation involves the strategic placement and setup of emergency lighting systems in buildings to provide illumination during power outages or emergencies. This process includes assessing the building's layout, selecting appropriate lighting fixtures, and ensuring compliance with safety regulations.",
-              },
-              {
-                ques: "Why is professional Emergency Light Installation important?",
-                ans: "Professional installation ensures that emergency lighting systems are correctly positioned, properly wired, and fully functional when needed. Experts can optimize coverage, ensure compliance with local building codes, and integrate the system with existing electrical infrastructure for maximum reliability during critical situations.",
-              },
-              {
-                ques: "What does the Emergency Light Installation process involve?",
-                ans: "The process typically includes a site assessment, creating a lighting plan, installing fixtures and backup power supplies, connecting to the building's electrical system, and conducting thorough testing. Professionals also ensure proper labeling and provide documentation for future maintenance and inspections.",
-              },
-              {
-                ques: "How long does Emergency Light Installation take?",
-                ans: "The duration varies depending on the size and complexity of the building. A small office might be completed in a day, while larger commercial spaces could take several days to a week. The timeline includes assessment, installation, and final testing to ensure all systems are functioning correctly.",
-              },
-              {
-                ques: "Can I install emergency lights myself?",
-                ans: "While DIY installation might seem cost-effective, professional installation is strongly recommended. Emergency lighting is critical for safety and must meet specific legal requirements. Professionals have the expertise to ensure proper placement, wiring, and compliance with local regulations, which is crucial for the system's effectiveness and legality.",
-              },
-              {
-                ques: "What types of emergency lighting systems are available?",
-                ans: "There are several types, including maintained systems (always on), non-maintained systems (activate only during power failures), centrally powered systems, self-contained battery units, LED emergency lights, and photoluminescent systems. The best choice depends on your building's specific needs, usage, and local regulations.",
-              },
-              {
-                ques: "How often should emergency lighting systems be tested and maintained?",
-                ans: "Regular testing and maintenance are crucial. Monthly function tests and annual full duration tests are typically required. However, specific requirements may vary based on local regulations. Professional installers can provide a maintenance schedule and often offer ongoing service plans to ensure your system remains compliant and effective.",
               },
             ],
           },
