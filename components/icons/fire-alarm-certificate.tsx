@@ -1,10 +1,11 @@
 import * as React from "react";
-const FireAlarmCertificate = (props: React.SVGProps<SVGSVGElement>) => (
+const FireAlarmCertificateIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     width={78}
     height={78}
+    viewBox="0 0 350 600"
     {...props}
   >
     <path
@@ -39,4 +40,4 @@ const FireAlarmCertificate = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-export default FireAlarmCertificate;
+export default FireAlarmCertificateIcon;

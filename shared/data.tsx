@@ -1,11 +1,19 @@
+import AsbestosSurveysIcon from "@/components/icons/asbestos-survey";
+import BoilerIcon from "@/components/icons/boiler";
 import BookingIcon from "@/components/icons/booking-icon";
 import EicrIcon from "@/components/icons/eicr";
 import ElectricalRepairs from "@/components/icons/electrical-repairs";
+import EmergencyLightInstallationIcon from "@/components/icons/emergency-light-installation";
 import EngineerIcon from "@/components/icons/engineer";
 import EpcIcon from "@/components/icons/epc";
 import EvCrarger from "@/components/icons/ev-charger";
 import FastResponseIcon from "@/components/icons/fast-response";
+import FireAlarmCertificateIcon from "@/components/icons/fire-alarm-certificate";
+import FireAlarmInstallationIcon from "@/components/icons/fire-alarm-installation";
+import FireRiskAssessmentIcon from "@/components/icons/fire-risk-assessment";
 import FuseBoxIcon from "@/components/icons/fuse-box";
+import GasCertificateIcon from "@/components/icons/gas-certificate";
+import InventoryServicesIcon from "@/components/icons/inventory-services";
 import LocationIcon from "@/components/icons/location";
 import LowerPriceIcon from "@/components/icons/lower-price";
 import PatIcon from "@/components/icons/pat";
@@ -890,7 +898,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Emergency Light Installation",
             path: "/emergency-light-installation",
-
+            Icon: EmergencyLightInstallationIcon,
             image: EmergencyLightImage,
             description:
               "Ensure safety during power outages with our expert emergency lighting installation service.",
@@ -1063,7 +1071,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Gas Certificate & Repairs",
             path: "/gas-certificate-repair",
-
+            Icon: GasCertificateIcon,
             image: GasCertificateImage,
             description:
               "Ensure the safety of your gas appliances with our certification and repair services.",
@@ -1136,7 +1144,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Boiler Service & Repair",
             path: "/boiler-service-repair",
-
+            Icon: BoilerIcon,
             image: BoilerServiceImage,
             description:
               "Maintain and repair your boiler to ensure efficient and safe operation.",
@@ -1315,7 +1323,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Fire Risk Assessment",
             path: "/fire-risk-assessment",
-
+            Icon: FireRiskAssessmentIcon,
             image: FireRiskImage,
             description:
               "Identify and mitigate fire hazards in your home with our comprehensive fire risk assessments.",
@@ -1499,7 +1507,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Fire Alarm Certificate",
             path: "/fire-alarm-certificate",
-
+            Icon: FireAlarmCertificateIcon,
             image: FireAlarmCertificateImage,
             description:
               "Certify your fire alarm system to ensure it meets all safety regulations.",
@@ -1682,7 +1690,7 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Fire Alarm Installation",
             path: "/fire-alarm-installation",
-
+            Icon: FireAlarmInstallationIcon,
             image: FireAlarmInstallationImage,
             description:
               "Install a reliable fire alarm system to protect your home and loved ones.",
@@ -2035,8 +2043,8 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Asbestos Surveys",
             path: "/asbestos-surveys",
-            abbr: "EPC",
-            Icon: EpcIcon,
+
+            Icon: AsbestosSurveysIcon,
             description:
               "Identify and manage asbestos risks in your property with our comprehensive survey service.",
             image: AsbestosSurveysImage,
@@ -2208,8 +2216,8 @@ export const NAV_ITEMS: NavItem[] = [
           {
             label: "Inventory Services",
             path: "/inventory-services",
-            abbr: "EPC",
-            Icon: EpcIcon,
+
+            Icon: InventoryServicesIcon,
             description:
               "Document your property's condition and contents accurately with our professional inventory service.",
             image: InventoryServicesImage,

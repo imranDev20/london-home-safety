@@ -1,10 +1,10 @@
-import * as React from "react";
-const FireRiskAssessment = (props: React.SVGProps<SVGSVGElement>) => (
+const FireRiskAssessmentIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     width={78}
     height={78}
+    viewBox="0 0 256 420"
     {...props}
   >
     <path
@@ -70,4 +70,4 @@ const FireRiskAssessment = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-export default FireRiskAssessment;
+export default FireRiskAssessmentIcon;
