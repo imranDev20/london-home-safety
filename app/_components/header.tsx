@@ -65,9 +65,9 @@ export default function Header() {
                           <FaChevronDown className="ml-1 text-xs" />
                         </Link>
 
-                        <div className="hidden group-hover:block absolute right-0 -left-[780px]  w-screen  bg-white shadow-lg z-5  ">
-                          <div className="container   py-8 px-10 ">
-                            <div className="grid grid-cols-5  ">
+                        <div className="hidden group-hover:block absolute left-0 -translate-x-1/2 w-[90vw] max-w-6xl bg-white shadow-lg z-5 rounded-lg">
+                          <div className="container py-8 px-4 md:px-6">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                               {navItem.children?.map((category) => (
                                 <div key={category.path} className="space-y-4">
                                   <h3 className="text-lg font-semibold text-primary">
