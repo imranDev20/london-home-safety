@@ -1,4 +1,4 @@
-const GasCertificate = (props: React.SVGProps<SVGSVGElement>) => (
+const GasCertificateIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
@@ -50,4 +50,4 @@ const GasCertificate = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-export default GasCertificate;
+export default GasCertificateIcon;

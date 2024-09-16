@@ -25,18 +25,20 @@ const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
     >
       <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white">
         <CardContent className="p-6 flex flex-col items-center h-full">
-          <div className="min-h-44">
-            <div className="p-3 rounded-full text-white group-hover:bg-white group-hover:text-primary transition-all duration-300 flex flex-col items-center">
-              <Icon height={48} width={48} />
+          <div>
+            <div className="p-3 pb-5 rounded-full text-white group-hover:bg-white group-hover:text-primary transition-all duration-300 flex flex-col items-center">
+              <Icon height={78} width={78} />
             </div>
-            <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300 text-center">
-              {title}
+            <CardTitle className="text-xl font-bold text-gray-900 h-28 group-hover:text-primary transition-colors duration-300 text-center">
+              <h3>{title}</h3>
             </CardTitle>
           </div>
 
-          <p className="text-body flex-grow text-sm">Starting from</p>
-          <p className="text-2xl font-bold text-primary mt-1">
-            £{typeof price === "number" ? price?.toFixed(2) : "N/A"}
+          <p className="text-body flex-grow text-sm">
+            {typeof price === "number" ? "Starting from" : "For Price"}
+          </p>
+          <p className="text-2xl font-bold text-primary mt-2">
+            {typeof price === "number" ? `£${price?.toFixed(2)}` : "Call Us"}
           </p>
         </CardContent>
 
@@ -114,7 +116,7 @@ export default function Services({ packages }: { packages: Package[] }) {
           </span>
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
-          {mergedData.slice(0, 5).map((service, index) => (
+          {mergedData.map((service, index) => (
             <motion.div
               key={service.label}
               initial={{ opacity: 0, scale: 0.5 }}
@@ -138,7 +140,7 @@ export default function Services({ packages }: { packages: Package[] }) {
                   Icon={service.Icon}
                   price={
                     service.packages.sort((a, b) => a.price - b.price)[0]
-                      ?.price ?? "N/A"
+                      ?.price ?? "Call Us For Price"
                   }
                 />
               </Link>

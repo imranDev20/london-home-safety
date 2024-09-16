@@ -1,5 +1,5 @@
 import * as React from "react";
-const FireAlarmInstallation = (props: React.SVGProps<SVGSVGElement>) => (
+const FireAlarmInstallationIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
@@ -64,4 +64,4 @@ const FireAlarmInstallation = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-export default FireAlarmInstallation;
+export default FireAlarmInstallationIcon;

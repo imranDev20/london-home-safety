@@ -36,6 +36,7 @@ export const SERVICE_CATEGORY_OPTION: PackageCategory[] = [
   "FIRE",
   "GAS",
   "HEALTH_SAFETY",
+  "PROPERTY_MANAGEMENT",
 ];
 
 export const PROPERTY_TYPE_OPTIONS: PropertyType[] = [

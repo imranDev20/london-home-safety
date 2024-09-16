@@ -29,7 +29,7 @@ export default function Footer({
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Company</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2  ">
               {NAV_ITEMS.map((option) => (
                 <li key={option.path}>
                   <Link href={option.path} className="hover:underline">
@@ -37,6 +37,21 @@ export default function Footer({
                   </Link>
                 </li>
               ))}
+            </ul>
+            <ul className="space-y-2 mt-2 ">
+              <li className="hover:underline">
+                {" "}
+                <Link href="/privacy-policy">Privacy Policy</Link>
+              </li>
+
+              <li className="hover:underline">
+                {" "}
+                <Link href={"/cookie-policy"}>Cookie Policy </Link>
+              </li>
+
+              <li className="hover:underline">
+                <Link href={"/terms-and-conditions"}>Terms & Conditions </Link>
+              </li>
             </ul>
           </div>
 
@@ -78,7 +93,7 @@ export default function Footer({
                 </Link>
               </li>
               <li className="flex items-center">
-                <IoLocationSharp className="mr-2 text-5xl" />
+                <IoLocationSharp className="mr-2 lg:text-5xl text-2xl" />
                 46d, Greatorex Street, Micro Business Park, London, England, E1
                 5NP
               </li>

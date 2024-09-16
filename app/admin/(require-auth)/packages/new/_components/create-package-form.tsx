@@ -245,7 +245,7 @@ export default function CreatePackageForm() {
                     <SelectContent>
                       {SERVICE_CATEGORY_OPTION.map((category, index) => (
                         <SelectItem key={index} value={category}>
-                          {kebabToNormal(category)}
+                          {kebabToNormal(category.replace(/_/g, " "))}
                         </SelectItem>
                       ))}
                     </SelectContent>

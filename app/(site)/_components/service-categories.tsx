@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { NAV_ITEMS } from "@/shared/data";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { NAV_ITEMS } from "@/shared/data";
 import { motion, useAnimation } from "framer-motion";
 import {
-  Shield,
-  Zap,
+  ChevronRight,
   FireExtinguisher,
   Flame,
   HeartPulse,
-  ChevronRight,
+  HomeIcon,
+  Zap,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 const iconMap = {
   "Fire Services": FireExtinguisher,
@@ -81,7 +81,7 @@ export default function ServiceCategories() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {serviceItems.map((service, index) => {
-            const Icon = iconMap[service.label] || Shield;
+            const Icon = iconMap[service.label] || HomeIcon;
 
             return (
               <motion.div
@@ -95,6 +95,9 @@ export default function ServiceCategories() {
                     transition: { duration: 0.3, delay: index * 0.1 },
                   },
                 }}
+                className={`${
+                  index === 4 ? "lg:col-start-2 lg:col-span-1" : ""
+                }`}
               >
                 <Link
                   href={`/services${service.path}`}
