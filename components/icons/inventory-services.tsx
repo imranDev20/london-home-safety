@@ -3,481 +3,113 @@ const InventoryServicesIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
-    width={512}
-    height={512}
-    viewBox="0 0 682.667 682.667"
+    width={78}
+    height={78}
+    viewBox="0 0 512 512"
     {...props}
   >
-    <defs>
-      <clipPath id="a" clipPathUnits="userSpaceOnUse">
-        <path d="M0 512h512V0H0Z" data-original="#000000" />
-      </clipPath>
-    </defs>
-    <g clipPath="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 682.667)">
-      <path
-        fill="#eaf6ff"
-        d="M0 0h-166.515a3 3 0 0 0-3 3v212.251a3 3 0 0 0 3 3H0a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3"
-        data-original="#eaf6ff"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(475.868 240.93)"
-      />
-      <path
-        fill="#d8ecfe"
-        d="M0 0v212.251a3 3 0 0 0 3 3h-41.646a3 3 0 0 1-3-3V0a3 3 0 0 1 3-3H3a3 3 0 0 0-3 3"
-        data-original="#d8ecfe"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(348 243.93)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0v109.182a3 3 0 0 1-3 3h-166.516a3 3 0 0 1-3-3v-212.251a3 3 0 0 1 3-3H-3a3 3 0 0 1 3 3V-35"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(478.87 347)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h78.646"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(353.288 406.64)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h78.646"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(353.288 368.918)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h78.646"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(353.288 331.195)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h51.963"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(353.288 293.473)"
-      />
-      <path
-        fill="#fed2a4"
-        d="M0 0h-155.158v144.062H-3a3 3 0 0 0 3-3z"
-        data-original="#fed2a4"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(446.084 39.555)"
-      />
-      <path
-        fill="#ffbd86"
-        d="M290.926 39.555h33.916v144.062h-33.916z"
-        data-original="#ffbd86"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h-155.158v152.617H-3a3 3 0 0 0 3-3z"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(446.084 31)"
-      />
-      <path
-        fill="#fe646f"
-        d="M0 0h-37.654a3 3 0 0 0-3 3v36.308H3V3a3 3 0 0 0-3-3"
-        data-original="#fe646f"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(387.332 144.31)"
-      />
-      <path
-        fill="#fd4755"
-        d="M0 0v36.308h-16.668V0a3 3 0 0 1 3-3H3a3 3 0 0 0-3 3"
-        data-original="#fd4755"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(363.346 147.31)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h-37.654a3 3 0 0 0-3 3v36.308H3V3a3 3 0 0 0-3-3Z"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(387.332 144.31)"
-      />
-      <path
-        fill="#fed2a4"
-        d="M0 0h-155.159v141.062a3 3 0 0 0 3 3H-3a3 3 0 0 0 3-3z"
-        data-original="#fed2a4"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(256 160.283)"
-      />
-      <path
-        fill="#ffbd86"
-        d="M0 0h-34a3 3 0 0 1-3-3v-141.062h34V-3a3 3 0 0 0 3 3"
-        data-original="#ffbd86"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(137.842 304.346)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0v52.346a3 3 0 0 1-3 3h-149.158a3 3 0 0 1-3-3V-88.717H0V-35"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(256 249)"
-      />
-      <path
-        fill="#fe646f"
-        d="M0 0h-37.654a3 3 0 0 0-3 3v36.307H3V3a3 3 0 0 0-3-3"
-        data-original="#fe646f"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(197.248 265.038)"
-      />
-      <path
-        fill="#fd4755"
-        d="M0 0v36.308h-16.752V0a3 3 0 0 1 3-3H3a3 3 0 0 0-3 3"
-        data-original="#fd4755"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(173.346 268.038)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h-37.654a3 3 0 0 0-3 3v36.307H3V3a3 3 0 0 0-3-3Z"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(197.248 265.038)"
-      />
-      <path
-        fill="#f6a96c"
-        d="M0 0h-225.01v141.062a3 3 0 0 0 3 3H0Z"
-        data-original="#f6a96c"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(290.926 39.555)"
-      />
-      <path
-        fill="#ea9b58"
-        d="M0 0h-33.084a3 3 0 0 1-3-3v-141.062H-3V-3a3 3 0 0 0 3 3"
-        data-original="#ea9b58"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(102 183.617)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h-225.01v141.062a3 3 0 0 0 3 3H0Z"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(290.926 39.555)"
-      />
-      <path
-        fill="#fe646f"
-        d="M0 0h-42.65a3 3 0 0 0-3 3v36.308H3V3a3 3 0 0 0-3-3"
-        data-original="#fe646f"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(199.746 144.31)"
-      />
-      <path
-        fill="#fd4755"
-        d="M0 0v36.308h-16.904V0a3 3 0 0 1 3-3H3a3 3 0 0 0-3 3"
-        data-original="#fd4755"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(171 147.31)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h-42.65a3 3 0 0 0-3 3v36.308H3V3a3 3 0 0 0-3-3Z"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(199.746 144.31)"
-      />
-      <path
-        fill="#fac600"
-        d="M0 0h-479.91a3 3 0 0 0-3 3v31.5a3 3 0 0 0 3 3H0a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3"
-        data-original="#fac600"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(495.955 7.5)"
-      />
-      <path
-        fill="#e8b801"
-        d="M0 0v31.5a3 3 0 0 0 3 3h-47.045a3 3 0 0 1-3-3V0a3 3 0 0 1 3-3H3a3 3 0 0 0-3 3"
-        data-original="#e8b801"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(60.09 10.5)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0h-364.955a3 3 0 0 1-3-3v-31.5a3 3 0 0 1 3-3h479.91a3 3 0 0 1 3 3V-3a3 3 0 0 1-3 3H35"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(381 45)"
-      />
-      <path
-        fill="#4fc123"
-        d="M0 0c0-32.677-26.489-59.165-59.165-59.165S-118.33-32.677-118.33 0c0 32.676 26.489 59.165 59.165 59.165S0 32.676 0 0"
-        data-original="#4fc123"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(373.071 445.335)"
-      />
-      <path
-        fill="#47a920"
-        d="M0 0c0 26.778 17.795 49.39 42.201 56.684a59.163 59.163 0 0 1-16.965 2.481C-7.439 59.165-33.929 32.676-33.929 0c0-32.677 26.49-59.165 59.165-59.165 5.899 0 11.589.874 16.965 2.48C17.795-49.39 0-26.778 0 0"
-        data-original="#47a920"
-        style={{
-          fillOpacity: 1,
-          fillRule: "nonzero",
-          stroke: "none",
-        }}
-        transform="translate(288.67 445.335)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="M0 0c0-32.677-26.489-59.165-59.165-59.165S-118.33-32.677-118.33 0c0 32.676 26.489 59.165 59.165 59.165S0 32.676 0 0Z"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(373.071 445.335)"
-      />
-      <path
-        fill="none"
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={15}
-        d="m0 0 22.982-22.982 30.5 30.499"
-        data-original="#000000"
-        style={{
-          strokeWidth: 15,
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          strokeMiterlimit: 10,
-          strokeDasharray: "none",
-          strokeOpacity: 1,
-        }}
-        transform="translate(287.165 451.587)"
-      />
-    </g>
+    <path
+      fill="#eaf6ff"
+      d="M482.505 46.686H373.877a59.864 59.864 0 0 1 1.729 14.265c0 33.058-26.894 59.951-59.951 59.951a60 60 0 0 1-7.781-.522v148.053a3.091 3.091 0 0 0 3.091 3.091h171.541a3.09 3.09 0 0 0 3.09-3.091V49.776a3.092 3.092 0 0 0-3.091-3.09z"
+      data-original="#eaf6ff"
+    />
+    <path
+      fill="#d8ecfe"
+      d="M350.777 268.433v-158.94c-9.879 7.167-22.011 11.41-35.122 11.41a60 60 0 0 1-7.781-.522v148.053a3.09 3.09 0 0 0 3.09 3.091h42.904a3.092 3.092 0 0 1-3.091-3.092z"
+      data-original="#d8ecfe"
+    />
+    <path
+      fill="#8ac9fe"
+      d="M437.244 93.313H366.08a60.419 60.419 0 0 1-12.906 14.348 7.462 7.462 0 0 0 3.049.652h81.021c4.143 0 7.5-3.357 7.5-7.5s-3.357-7.5-7.5-7.5zm0 53.862h-81.021c-4.143 0-7.5-3.357-7.5-7.5s3.357-7.5 7.5-7.5h81.021c4.143 0 7.5 3.357 7.5 7.5s-3.357 7.5-7.5 7.5zm0 38.86h-81.021c-4.143 0-7.5-3.357-7.5-7.5s3.357-7.5 7.5-7.5h81.021c4.143 0 7.5 3.357 7.5 7.5s-3.357 7.5-7.5 7.5zm-27.489 38.861h-53.531c-4.143 0-7.5-3.357-7.5-7.5s3.357-7.5 7.5-7.5h53.531c4.143 0 7.5 3.357 7.5 7.5s-3.358 7.5-7.5 7.5z"
+      data-original="#8ac9fe"
+    />
+    <path
+      fill="#fed2a4"
+      d="M448.731 330.567h-54.344l-1 1.225v36.178a2.093 2.093 0 0 1-2.091 2.091h-38.791a2.093 2.093 0 0 1-2.091-2.091v-36.189l-1-1.214h-57.435l-1 8.469v135.332h160.842v-140.71a3.09 3.09 0 0 0-3.09-3.091z"
+      data-original="#fed2a4"
+    />
+    <path
+      fill="#ffbd86"
+      d="M291.979 330.567h34.94v143.801h-34.94z"
+      data-original="#ffbd86"
+    />
+    <path
+      fill="#fe646f"
+      d="M391.296 371.061h-38.791a3.091 3.091 0 0 1-3.091-3.091v-37.403h44.972v37.403a3.09 3.09 0 0 1-3.09 3.091z"
+      data-original="#fe646f"
+    />
+    <path
+      fill="#fd4755"
+      d="M366.586 367.971v-37.403h-17.171v37.403a3.091 3.091 0 0 0 3.091 3.091h17.171a3.092 3.092 0 0 1-3.091-3.091z"
+      data-original="#fd4755"
+    />
+    <path
+      fill="#fed2a4"
+      d="M252.909 206.196h-54.344l-1 1.453v35.949a2.093 2.093 0 0 1-2.091 2.091h-38.791a2.093 2.093 0 0 1-2.09-2.091V207.66l-1-1.465H99.249a3.09 3.09 0 0 0-3.091 3.09v122.281H256v-122.28a3.09 3.09 0 0 0-3.091-3.09z"
+      data-original="#fed2a4"
+    />
+    <path
+      fill="#ffbd86"
+      d="M131.185 331.567V209.286a3.09 3.09 0 0 1 3.091-3.09H99.249a3.09 3.09 0 0 0-3.091 3.09v122.281z"
+      data-original="#ffbd86"
+    />
+    <path
+      fill="#fe646f"
+      d="M195.475 246.689h-38.791a3.091 3.091 0 0 1-3.091-3.091v-37.403h44.972v37.403a3.09 3.09 0 0 1-3.09 3.091z"
+      data-original="#fe646f"
+    />
+    <path
+      fill="#fd4755"
+      d="M170.851 243.599v-37.403h-17.258v37.403a3.091 3.091 0 0 0 3.091 3.091h17.258a3.092 3.092 0 0 1-3.091-3.091z"
+      data-original="#fd4755"
+    />
+    <path
+      fill="#f6a96c"
+      d="M291.979 474.368V330.567H63.27a3.091 3.091 0 0 0-3.091 3.091v140.71z"
+      data-original="#f6a96c"
+    />
+    <path
+      fill="#ea9b58"
+      d="M94.262 474.368v-140.71a3.091 3.091 0 0 1 3.091-3.091H63.269a3.09 3.09 0 0 0-3.09 3.091v140.71z"
+      data-original="#ea9b58"
+    />
+    <path
+      fill="#fe646f"
+      d="M198.048 371.061H154.11a3.091 3.091 0 0 1-3.091-3.091v-37.403h50.119v37.403a3.09 3.09 0 0 1-3.09 3.091z"
+      data-original="#fe646f"
+    />
+    <path
+      fill="#fd4755"
+      d="M168.435 367.971v-37.403H151.02v37.403a3.091 3.091 0 0 0 3.091 3.091h17.415a3.092 3.092 0 0 1-3.091-3.091z"
+      data-original="#fd4755"
+    />
+    <path
+      fill="#fac600"
+      d="M503.197 512H8.803a3.091 3.091 0 0 1-3.091-3.091v-32.451a3.091 3.091 0 0 1 3.091-3.091h494.395a3.091 3.091 0 0 1 3.091 3.091v32.451a3.093 3.093 0 0 1-3.092 3.091z"
+      data-original="#fac600"
+    />
+    <path
+      fill="#e8b800"
+      d="M54.177 508.909v-32.451a3.091 3.091 0 0 1 3.091-3.091H8.803a3.091 3.091 0 0 0-3.091 3.091v32.451A3.091 3.091 0 0 0 8.803 512h48.465a3.09 3.09 0 0 1-3.091-3.091z"
+      data-original="#e8b800"
+    />
+    <circle
+      cx={315.654}
+      cy={60.951}
+      r={60.951}
+      fill="#4fc123"
+      data-original="#4fc123"
+    />
+    <path
+      fill="#47a920"
+      d="M289.655 60.951c0-27.587 18.332-50.881 43.475-58.395A60.922 60.922 0 0 0 315.654 0c-33.662 0-60.951 27.289-60.951 60.951s27.289 60.951 60.951 60.951c6.076 0 11.939-.901 17.476-2.556-25.142-7.515-43.475-30.809-43.475-58.395z"
+      data-original="#47a920"
+    />
+    <path
+      fill="#fff"
+      d="M311.782 85.687a7.481 7.481 0 0 1-5.304-2.196l-23.676-23.676a7.5 7.5 0 0 1 10.607-10.607l18.372 18.373 26.116-26.117a7.5 7.5 0 0 1 10.607 10.607l-31.42 31.42a7.477 7.477 0 0 1-5.302 2.196z"
+      data-original="#ffffff"
+    />
   </svg>
 );
 export default InventoryServicesIcon;

@@ -8,8 +8,8 @@ import { FaCalendarCheck, FaChevronDown } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
 
 import { NON_INVERTED_ROUTES } from "@/lib/constants";
-import Hamburger from "./hamburger";
 import { usePathname } from "next/navigation";
+import Hamburger from "./hamburger";
 
 export default function Header() {
   const pathname = usePathname();
@@ -48,7 +48,7 @@ export default function Header() {
                 {NAV_ITEMS.map((navItem) => {
                   if (navItem.path === "/services") {
                     return (
-                      <li key={navItem.path} className="group/first relative">
+                      <li key={navItem.path} className="group relative">
                         <Link
                           href={navItem.path}
                           className={`py-5 px-3 block w-full font-medium ${
@@ -65,51 +65,41 @@ export default function Header() {
                           <FaChevronDown className="ml-1 text-xs" />
                         </Link>
 
-                        <ul
-                          className={`hidden group-hover/first:block absolute bg-white shadow-lg rounded-md z-20 top-full left-1/2 -translate-x-1/2 min-w-56 py-2 border border-gray-200`}
-                        >
-                          {navItem.children?.map((navFChild) => (
-                            <li
-                              key={navFChild.path}
-                              className="group/second relative"
-                            >
-                              <Link
-                                href={`/services${navFChild.path}`}
-                                className={`py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium flex items-center justify-between ${
-                                  isActive(`/services${navFChild.path}`)
-                                    ? "text-primary"
-                                    : ""
-                                }`}
-                              >
-                                {navFChild.label}
-                                {navFChild.children && (
-                                  <FaChevronDown className="ml-2 text-xs transform -rotate-90" />
-                                )}
-                              </Link>
-
-                              {navFChild.children && (
-                                <ul className="hidden group-hover/second:block absolute top-0 left-full bg-white z-20 min-w-72 shadow-lg rounded-md py-2 border border-gray-200">
-                                  {navFChild.children?.map((navSChild) => (
-                                    <li key={navSChild.path}>
-                                      <Link
-                                        href={`/services${navFChild.path}${navSChild.path}`}
-                                        className={`block py-2 px-5 text-body-dark hover:text-primary hover:bg-gray-100 font-medium ${
-                                          isActive(
-                                            `/services${navFChild.path}${navSChild.path}`
-                                          )
-                                            ? "text-primary"
-                                            : ""
-                                        }`}
-                                      >
-                                        {navSChild.label}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
+                        <div className="hidden group-hover:block absolute right-0 -left-[780px]  w-screen  bg-white shadow-lg z-5  ">
+                          <div className="container   py-8 px-10 ">
+                            <div className="grid grid-cols-5  ">
+                              {navItem.children?.map((category) => (
+                                <div key={category.path} className="space-y-4">
+                                  <h3 className="text-lg font-semibold text-primary">
+                                    <Link href={`/services${category.path}`}>
+                                      {category.label}
+                                    </Link>
+                                  </h3>
+                                  {category.children && (
+                                    <ul className="space-y-2">
+                                      {category.children.map((subItem) => (
+                                        <li key={subItem.path}>
+                                          <Link
+                                            href={`/services${category.path}${subItem.path}`}
+                                            className={`text-sm text-body-dark hover:text-primary ${
+                                              isActive(
+                                                `/services${category.path}${subItem.path}`
+                                              )
+                                                ? "text-primary"
+                                                : ""
+                                            }`}
+                                          >
+                                            {subItem.label}
+                                          </Link>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
                       </li>
                     );
                   }
