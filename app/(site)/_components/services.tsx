@@ -30,7 +30,7 @@ const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
               <Icon height={78} width={78} />
             </div>
             <CardTitle className="text-xl font-bold text-gray-900 h-28 group-hover:text-primary transition-colors duration-300 text-center">
-              <h3>{title}</h3>
+              {title}
             </CardTitle>
           </div>
 
