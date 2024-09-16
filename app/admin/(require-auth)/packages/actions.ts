@@ -3,8 +3,8 @@
 import prisma from "@/lib/prisma";
 import { PackageType, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { PackageFormInputType } from "./schema";
 import { cache } from "react";
+import { PackageFormInputType } from "./schema";
 
 export const getPackages = cache(
   async (
@@ -93,6 +93,7 @@ export async function createPackage(data: PackageFormInputType) {
       data: {
         name: data.name,
         type: data.type,
+        description: data.description,
         price:
           typeof data.price === "number" ? data.price : parseFloat(data.price),
 
@@ -138,6 +139,7 @@ export async function updatePackage(
       },
       data: {
         name: data.name ?? undefined,
+        description: data.description ?? undefined,
         type: data.type ?? undefined,
         price:
           data.price !== undefined

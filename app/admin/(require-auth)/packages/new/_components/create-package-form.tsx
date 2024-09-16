@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import {
   COMMERCIAL_TYPE_OPTIONS,
@@ -73,6 +74,7 @@ export default function CreatePackageForm() {
     resolver: zodResolver(packageSchema),
     defaultValues: {
       name: "",
+      description: "",
       type: undefined,
       category: undefined,
       price: "",
@@ -95,6 +97,7 @@ export default function CreatePackageForm() {
   ) => {
     startTransition(async () => {
       const result = await createPackage(data);
+
       if (result.success) {
         toast({
           title: "Success",
@@ -200,7 +203,7 @@ export default function CreatePackageForm() {
               control={control}
               name="serviceName"
               render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
+                <FormItem className="col-span-12 md:col-span-4">
                   <FormLabel className="text-sm font-medium">
                     Service Name
                   </FormLabel>
@@ -229,7 +232,7 @@ export default function CreatePackageForm() {
               control={control}
               name="category"
               render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
+                <FormItem className="col-span-12 md:col-span-4">
                   <FormLabel className="text-sm font-medium">
                     Package Category
                   </FormLabel>
@@ -258,7 +261,7 @@ export default function CreatePackageForm() {
               control={control}
               name="type"
               render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
+                <FormItem className="col-span-12 md:col-span-4">
                   <FormLabel className="text-sm font-medium">
                     Package Type
                   </FormLabel>
@@ -279,6 +282,25 @@ export default function CreatePackageForm() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="col-span-12 md:col-span-12">
+                  <FormLabel className="text-sm font-medium">
+                    Package Description
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="h-24"
+                      placeholder="Type your message here."
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
