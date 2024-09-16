@@ -21,6 +21,9 @@ import {
   Building,
   Briefcase,
   Clock,
+  Zap,
+  Flame,
+  Shield,
 } from "lucide-react";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
 import { mergeArrays } from "@/lib/utils";
@@ -80,14 +83,27 @@ export default function BookNowComponent({
       />
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-center mb-10 text-3xl sm:text-4xl font-bold text-gray-900">
-          Book Your Professional Services
+        <h1 className="text-center mb-16 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight">
+          Book Your Professional
+          <span className="text-primary block mt-2 relative">
+            Safety Services Today
+            <svg
+              className="absolute w-full h-3 -bottom-2 left-0 text-primary opacity-30"
+              viewBox="0 0 200 9"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill="currentColor"
+                d="M0,7 C50,9 100,4 150,6 L200,7 L200,9 L0,9 Z"
+              />
+            </svg>
+          </span>
         </h1>
 
-        <div className="flex items-center justify-center space-x-4 mb-12">
+        <div className="flex items-center justify-center space-x-6 mb-12 transition-all">
           <Label
             htmlFor="property-type"
-            className="text-lg font-medium text-gray-700"
+            className="text-lg font-semibold text-gray-800"
           >
             Residential
           </Label>
@@ -101,11 +117,11 @@ export default function BookNowComponent({
                 { scroll: false }
               );
             }}
-            className="scale-110"
+            className="scale-125 transition-transform duration-300 hover:scale-130"
           />
           <Label
             htmlFor="property-type"
-            className="text-lg font-medium text-gray-700"
+            className="text-lg font-semibold text-gray-800"
           >
             Commercial
           </Label>
@@ -118,12 +134,12 @@ export default function BookNowComponent({
                 return (
                   <div
                     key={service.label}
-                    className="mb-16"
+                    className="mb-24"
                     id={`${service.path.toString().slice(1)}`}
                   >
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
                       {service.Icon && (
-                        <service.Icon className="mr-2 h-6 w-6 text-primary" />
+                        <service.Icon height={54} width={54} className="mr-2" />
                       )}
                       {service.label}
                     </h2>
@@ -134,66 +150,67 @@ export default function BookNowComponent({
                         return (
                           <Card
                             key={pack.id}
-                            className="flex flex-col justify-between hover:shadow-lg transition-all overflow-hidden relative group"
+                            className="flex flex-col justify-between shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden bg-white border border-gray-200 tracking-wider"
                           >
-                            <CardContent className="p-6">
-                              <div className="absolute top-2 right-2">
-                                {pack.propertyType === "RESIDENTIAL" ? (
-                                  <Home className="h-5 w-5 text-blue-500" />
-                                ) : (
-                                  <Building className="h-5 w-5 text-orange-500" />
-                                )}
-                              </div>
-
-                              <div className="flex flex-col mb-4">
-                                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">
-                                  {pack.name}
-                                </h3>
-                              </div>
-
-                              <div className="mb-4 flex justify-between items-center">
-                                <p className="text-3xl font-bold text-primary">
-                                  £{pack.price}
-                                </p>
-                              </div>
+                            <CardContent className="p-6 flex flex-col h-full items-center">
+                              <span className="text-center uppercase text-primary text-sm mb-4 rounded-lg">
+                                {service.label}
+                              </span>
+                              <h3 className="text-xl font-bold text-gray-900 transition-colors duration-300 mb-2 text-center">
+                                {pack.name}
+                              </h3>
 
                               {pack.description && (
-                                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                                <p className="text-sm text-gray-600 mb-4 flex-grow">
                                   {pack.description}
                                 </p>
                               )}
 
-                              <Button
-                                className={`w-full mt-2 font-semibold transition-colors duration-300 ${
-                                  productInCart
-                                    ? "bg-green-500 hover:bg-green-600 text-white"
-                                    : "bg-primary hover:bg-primary-dark text-white"
-                                }`}
-                                onClick={() =>
-                                  handleAddToCart({
-                                    id: pack.id,
-                                    name: `${pack.propertyType} ${pack.name}`,
-                                    price: pack.price,
-                                    description:
-                                      pack.description || "Package description",
-                                  })
-                                }
-                                disabled={productInCart}
-                              >
-                                <span className="flex items-center justify-center">
-                                  {productInCart ? (
-                                    <>
-                                      <ShoppingCart className="mr-2 h-5 w-5" />
-                                      Added to Cart
-                                    </>
-                                  ) : (
-                                    <>
-                                      <ShoppingCart className="mr-2 h-5 w-5" />
-                                      Add to Cart
-                                    </>
-                                  )}
-                                </span>
-                              </Button>
+                              <div className="w-full mt-4">
+                                <Separator className="my-4" />
+
+                                <div className="flex justify-between items-center mb-4 flex-col">
+                                  <span className="text-sm font-medium text-gray-500 mb-2">
+                                    STARTS FROM
+                                  </span>
+                                  <p className="text-3xl font-bold text-primary">
+                                    £{pack.price.toFixed(2)}
+                                  </p>
+                                </div>
+
+                                <Button
+                                  className={`w-full py-3 font-semibold text-sm transition-all duration-300 rounded-md ${
+                                    productInCart
+                                      ? "bg-green-500 hover:bg-green-600 text-white"
+                                      : "bg-body-dark text-white hover:bg-primary hover:text-white"
+                                  }`}
+                                  onClick={() =>
+                                    handleAddToCart({
+                                      id: pack.id,
+                                      name: `${pack.propertyType} ${pack.name}`,
+                                      price: pack.price,
+                                      description:
+                                        pack.description ||
+                                        "Package description",
+                                    })
+                                  }
+                                  disabled={productInCart}
+                                >
+                                  <span className="flex items-center justify-center">
+                                    {productInCart ? (
+                                      <>
+                                        <Check className="mr-2 h-4 w-4" />
+                                        Added to Cart
+                                      </>
+                                    ) : (
+                                      <>
+                                        <ShoppingCart className="mr-2 h-4 w-4" />
+                                        Add to Cart
+                                      </>
+                                    )}
+                                  </span>
+                                </Button>
+                              </div>
                             </CardContent>
                           </Card>
                         );
@@ -211,11 +228,11 @@ export default function BookNowComponent({
               <Card>
                 <CardHeader className="py-4">
                   <h4 className="text-xl font-semibold text-gray-900">
-                    Quick Links
+                    Explore by Categories
                   </h4>
                 </CardHeader>
                 <Separator />
-                <CardContent className="py-2">
+                <CardContent className="py-2 p-0">
                   {mergedData.map((service, index) => {
                     if (service?.packages && service.packages?.length > 0) {
                       return (
@@ -232,9 +249,13 @@ export default function BookNowComponent({
                           <div className="flex items-center justify-between py-3 px-4 hover:bg-gray-100 rounded-md transition-colors duration-200">
                             <div className="flex items-center">
                               {service.Icon && (
-                                <service.Icon className="h-5 w-5 text-primary mr-3" />
+                                <service.Icon
+                                  height={48}
+                                  width={48}
+                                  className="mr-2 min-w-[48px]"
+                                />
                               )}
-                              <span className="font-medium text-sm text-gray-700">
+                              <span className="font-medium text-base text-gray-700">
                                 {service.label}
                               </span>
                             </div>
