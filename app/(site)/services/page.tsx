@@ -1,6 +1,6 @@
 import { getPackages } from "@/app/admin/(require-auth)/orders/[order_id]/actions";
 import PageHeader from "@/components/page-header";
-import BackgroundImage from "@/images/hero-image-new.jpeg";
+import BackgroundImage from "@/images/services-bg.jpg";
 import ServiceCategories from "../_components/service-categories";
 import ServiceItems from "./_components/service-items";
 
