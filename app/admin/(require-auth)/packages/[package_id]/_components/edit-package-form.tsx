@@ -366,6 +366,9 @@ export default function EditPackageForm({
                     <SelectContent>
                       <SelectItem value="RESIDENTIAL">Residential</SelectItem>
                       <SelectItem value="COMMERCIAL">Commercial</SelectItem>
+                      <SelectItem value="NOT_APPLICABLE">
+                        Not Aapplicable
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

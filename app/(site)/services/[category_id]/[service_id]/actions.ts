@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { PropertyType, Package } from "@prisma/client";
+import { Package, PropertyType } from "@prisma/client";
 
 export async function getPackagesByService(
   serviceName: string,
