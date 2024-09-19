@@ -4,12 +4,21 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import useOrderStore from "@/hooks/use-order-store";
 import usePackageStore from "@/hooks/use-package-store";
+import { SiteSettingWithUserAddress } from "@/types/misc";
+import { Package } from "@prisma/client";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { ShoppingCart, Check } from "lucide-react";
+import { Check, ShoppingCart } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 
-export default function BookNowButtonCompo() {
+export default function BookNowButtonCompo({
+  packages,
+  siteSettings,
+}: {
+  packages: Package[];
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   const { selectedPackage } = usePackageStore();
   const { addItem, cartItems } = useOrderStore();
   const router = useRouter();
@@ -64,8 +73,18 @@ export default function BookNowButtonCompo() {
           </>
         ) : (
           <>
-            <ShoppingCart className="mr-2 h-5 w-5" />
-            <span className="mr-2">Book Now</span>
+            {packages.length > 0 ? (
+              <>
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                <span className="mr-2">Book Now</span>
+              </>
+            ) : (
+              <span className="mr-2">
+                <Link href={`tel:${siteSettings?.phone1 || ""}`}>
+                  Call Us For Service
+                </Link>
+              </span>
+            )}
           </>
         )}
       </Button>

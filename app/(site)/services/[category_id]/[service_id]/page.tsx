@@ -77,7 +77,7 @@ export default async function ServiceDetailsPage({
 
   return (
     <>
-      <section className="relative -mt-[65px]">
+      <section className="relative -mt-[110px]">
         <Image
           src={currentService?.image}
           alt="Background"
@@ -167,7 +167,10 @@ export default async function ServiceDetailsPage({
                   ))}
                 </div>
 
-                <BookNowButtonCompo />
+                <BookNowButtonCompo
+                  siteSettings={siteSettings}
+                  packages={packages}
+                />
               </Card>
             </div>
           </div>

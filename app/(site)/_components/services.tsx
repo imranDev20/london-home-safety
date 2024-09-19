@@ -1,14 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { mergeArrays } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
+import { SiteSettingWithUserAddress } from "@/types/misc";
 import { Package } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import ServiceCard from "../services/_components/service-card";
 
 interface ServiceCardProps {
   title: string;
@@ -16,14 +17,15 @@ interface ServiceCardProps {
   Icon: React.ElementType;
 }
 
-const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white">
+// const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
+// return (
+//   <motion.div
+//     initial={{ opacity: 0, scale: 0.9 }}
+//     animate={{ opacity: 1, scale: 1 }}
+//     transition={{ duration: 0.3 }}
+//   >
+{
+  /* <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white">
         <CardContent className="p-6 flex flex-col items-center h-full">
           <div>
             <div className="p-3 pb-5 rounded-full text-white group-hover:bg-white group-hover:text-primary transition-all duration-300 flex flex-col items-center">
@@ -48,17 +50,25 @@ const ServiceCard = React.memo(({ title, Icon, price }: ServiceCardProps) => {
             <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform duration-300" />
           </Button>
         </CardFooter>
-      </Card>
-    </motion.div>
-  );
-});
+      </Card> */
+}
+//     </motion.div>
+//   );
+// });
 
-ServiceCard.displayName = "ServiceCard";
+// ServiceCard.displayName = "ServiceCard";
 
-export default function Services({ packages }: { packages: Package[] }) {
+export default function Services({
+  packages,
+  siteSettings,
+}: {
+  packages: Package[];
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   const [inView, setInView] = useState(false);
   const sectionRef = useRef(null);
   const controls = useAnimation();
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -71,6 +81,26 @@ export default function Services({ packages }: { packages: Package[] }) {
       },
       {
         threshold: 0.1,
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [controls]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          controls.start("visible");
+        }
+      },
+      {
+        threshold: 0.2,
       }
     );
 
@@ -115,7 +145,7 @@ export default function Services({ packages }: { packages: Package[] }) {
             </svg>
           </span>
         </motion.h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+        {/* <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
           {mergedData.map((service, index) => (
             <motion.div
               key={service.label}
@@ -145,6 +175,21 @@ export default function Services({ packages }: { packages: Package[] }) {
                 />
               </Link>
             </motion.div>
+          ))}
+        </div> */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {mergedData.map((service, index) => (
+            <ServiceCard
+              siteSettings={siteSettings}
+              key={service.label}
+              service={service}
+              index={index}
+              isVisible={isVisible}
+              price={
+                service.packages.sort((a, b) => a.price - b.price)[0]?.price ??
+                "Call Us"
+              }
+            />
           ))}
         </div>
         <motion.div

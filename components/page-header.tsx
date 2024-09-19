@@ -1,6 +1,6 @@
+import { PageHeaderProps } from "@/types/props";
 import Image from "next/image";
 import Link from "next/link";
-import { PageHeaderProps } from "@/types/props";
 
 export default function PageHeader({
   backgroundImage,
@@ -9,7 +9,7 @@ export default function PageHeader({
   const title = breadCrumbOptions.find((item) => item.isCurrentPage)?.label;
 
   return (
-    <section className="relative -mt-[65px]">
+    <section className="relative -mt-[110px]">
       <Image
         src={backgroundImage}
         alt="Background"
