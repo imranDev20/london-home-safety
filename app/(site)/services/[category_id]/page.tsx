@@ -34,7 +34,7 @@ export default async function CategoryDetailsPage({
         backgroundImage={BackgroundImage}
         breadCrumbOptions={breadCrumbOptions}
       />
-      <CategoryServices categoryId={category_id} />
+      <CategoryServices siteSettings={siteSettings} categoryId={category_id} />
       <AboutCategory categoryId={category_id} />
       <CallToAction siteSettings={siteSettings} />
       <Partners />
