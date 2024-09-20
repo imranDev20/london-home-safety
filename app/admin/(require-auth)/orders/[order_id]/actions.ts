@@ -1,7 +1,12 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus, PaymentStatus, PropertyType } from "@prisma/client";
+import {
+  OrderStatus,
+  Package,
+  PaymentStatus,
+  PropertyType,
+} from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
 
@@ -175,3 +180,24 @@ export const getPackages = cache(async (propertyType?: PropertyType) => {
     throw new Error("Failed to fetch services");
   }
 });
+
+export const getPackageById = cache(
+  async (packageId: string): Promise<Package[]> => {
+    try {
+      const packages = await prisma.package.findUnique({
+        where: {
+          id: packageId,
+        },
+      });
+
+      if (!packages) {
+        return []; // Return an empty array if no package is found
+      }
+
+      return [packages]; // Return an array with the single package
+    } catch (error) {
+      console.error("Error fetching package:", error);
+      throw new Error("Failed to fetch package");
+    }
+  }
+);

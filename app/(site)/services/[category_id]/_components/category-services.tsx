@@ -9,9 +9,11 @@ import ServiceCard from "../../_components/service-card";
 
 export default function CategoryServices({
   categoryId: category,
+
   siteSettings,
 }: {
   categoryId: string;
+
   siteSettings: SiteSettingWithUserAddress;
 }) {
   const controls = useAnimation();
