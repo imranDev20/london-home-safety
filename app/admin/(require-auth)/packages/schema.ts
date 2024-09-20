@@ -62,6 +62,7 @@ export const packageSchema = z.object({
       required_error: "Service name is required",
     })
     .min(1, { message: "Service name cannot be empty" }),
+  description: z.string().optional(),
   propertyType: PropertyTypeSchema,
   residentialType: ResidentialTypeSchema.optional(),
   commercialType: CommercialTypeSchema.optional(),

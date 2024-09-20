@@ -1,10 +1,11 @@
 "use client";
 
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
 
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,12 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useEffect, useTransition } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
-import { SiteSettingsFormValues, siteSettingsSchema } from "../schema";
-import { updateSiteSettings } from "../actions";
-import { ContentLayout } from "../../_components/content-layout";
 import {
   Select,
   SelectContent,
@@ -26,10 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { Prisma } from "@prisma/client";
 import { CalendarIcon, Clock, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useEffect, useTransition } from "react";
+import { ContentLayout } from "../../_components/content-layout";
+import { updateSiteSettings } from "../actions";
+import { SiteSettingsFormValues, siteSettingsSchema } from "../schema";
 
 export type SettingsWithRelation = Prisma.SiteSettingsGetPayload<{
   include: {
@@ -50,8 +50,6 @@ export default function SettingsForm({
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const { data: sessionData, status } = useSession();
-
-  console.log(status, sessionData);
 
   const form = useForm<SiteSettingsFormValues>({
     resolver: zodResolver(siteSettingsSchema),
@@ -114,6 +112,7 @@ export default function SettingsForm({
     startTransition(async () => {
       try {
         const result = await updateSiteSettings(data, sessionData.user.id);
+        console.log("data", result);
         if (result.success) {
           toast({
             title: "Success",

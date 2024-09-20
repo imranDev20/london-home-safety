@@ -1,14 +1,13 @@
 "use client";
-
+import LhsLogo from "@/components/icons/lhs-logo";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { NON_INVERTED_ROUTES } from "@/lib/constants";
 import { NAV_ITEMS } from "@/shared/data";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaCalendarCheck, FaChevronDown } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
-
-import { NON_INVERTED_ROUTES } from "@/lib/constants";
-import { usePathname } from "next/navigation";
 import Hamburger from "./hamburger";
 
 export default function Header() {
@@ -38,8 +37,8 @@ export default function Header() {
         }`}
       >
         <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-3 md:py-0">
-          <div className="text-lg font-medium test-white relative z-20">
-            LOGO
+          <div className=" pt-2 relative z-20">
+            <LhsLogo />
           </div>
 
           <div className="flex items-center relative z-20">

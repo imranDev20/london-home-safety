@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { NavLeafItem } from "@/types/misc";
+import { NavLeafItem, SiteSettingWithUserAddress } from "@/types/misc";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,11 +18,13 @@ export default function ServiceCard({
   index,
   isVisible,
   price,
+  siteSettings,
 }: {
   service: NavLeafItem;
   index: number;
   isVisible: boolean;
   price: number | string;
+  siteSettings: SiteSettingWithUserAddress;
 }) {
   const { description, image, path, label, categoryPath } = service;
   const [isHovered, setIsHovered] = useState(false);
@@ -62,12 +64,28 @@ export default function ServiceCard({
           </CardContent>
           <CardFooter className="bg-gray-50 px-6 py-4 flex justify-between items-center">
             <div className="flex flex-col">
-              <p className="text-sm text-gray-500">Starts from</p>
-              <span className="text-primary text-2xl font-bold">£{price}</span>
+              <p className="text-sm text-gray-500">
+                {typeof price === "number" ? "Starting from" : "For Price"}
+              </p>
+              <span className="text-primary text-2xl font-bold">
+                {typeof price === "number"
+                  ? `£${price?.toFixed(2)}`
+                  : "Call Us"}
+              </span>
             </div>
-            <Button className="bg-primary text-white font-semibold py-2 px-6 rounded-full hover:bg-secondary hover:text-body-dark transition-colors duration-200 shadow-md hover:shadow-lg">
-              Book Now
-            </Button>
+            <div>
+              {typeof price === "number" ? (
+                <Button className="bg-primary text-white font-semibold py-2 px-6 rounded-full hover:bg-secondary hover:text-body-dark transition-colors duration-200 shadow-md hover:shadow-lg">
+                  Book Now
+                </Button>
+              ) : (
+                <Button className="bg-primary text-white font-semibold py-2 px-6 rounded-full hover:bg-secondary hover:text-body-dark transition-colors duration-200 shadow-md hover:shadow-lg">
+                  <Link href={`tel:${siteSettings?.phone1 || ""}`}>
+                    Call Now
+                  </Link>
+                </Button>
+              )}
+            </div>
           </CardFooter>
         </Card>
       </Link>

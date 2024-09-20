@@ -1,6 +1,6 @@
 import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import PageHeader from "@/components/page-header";
-import BackgroundImage from "@/images/hero-image-new.jpeg";
+import BackgroundImage from "@/images/bg-image-2.jpg";
 import AnimatedSection from "./_components/animated-section";
 import ContactForm from "./_components/contact-form";
 import ContactInfo from "./_components/contact-info";

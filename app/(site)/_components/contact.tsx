@@ -1,15 +1,18 @@
 import ContactUsForm from "@/app/_components/common/contact-us-form";
+import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import { Button } from "@/components/ui/button";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
 import { SiteSettingWithUserAddress } from "@/types/misc";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Contact({
+export default async function Contact({
   siteSettings,
 }: {
   siteSettings: SiteSettingWithUserAddress;
 }) {
+  const siteSettingTime = await getSettings();
+
   return (
     <div className="bg-slate-200 py-12 sm:py-16 md:py-24">
       <h2 className="mb-16 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight text-center">
@@ -31,21 +34,13 @@ export default function Contact({
         <div className="md:col-span-4 p-6 bg-white">
           <h2 className="text-lg font-semibold mb-6">Working Hours:</h2>
           <ul className="space-y-4 sm:space-y-7">
-            {[
-              { day: "Monday", time: "09:00 - 17:00" },
-              { day: "Tuesday", time: "09:00 - 17:00" },
-              { day: "Wednesday", time: "09:00 - 17:00" },
-              { day: "Thursday", time: "09:00 - 17:00" },
-              { day: "Friday", time: "09:00 - 17:00" },
-              { day: "Saturday", time: "09:00 - 17:00" },
-              { day: "Sunday", time: "09:00 - 17:00" },
-            ].map((item) => (
+            {siteSettingTime?.openingDateTime?.map((item) => (
               <li
-                key={item.day}
+                key={item.dayOfWeek}
                 className="flex justify-between border-b border-gray-200 pb-2"
               >
-                <span className="font-medium">{item.day}:</span>
-                <span className="text-body">{item.time}</span>
+                <span className="font-medium">{item.dayOfWeek}:</span>
+                <span className="text-body">{`${item.openingTime}-${item.closingTime}`}</span>
               </li>
             ))}
           </ul>

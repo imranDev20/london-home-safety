@@ -3,12 +3,20 @@
 import { ALL_SERVICES } from "@/shared/data";
 
 import { mergeArrays } from "@/lib/utils";
+
+import { SiteSettingWithUserAddress } from "@/types/misc";
 import { Package } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import ServiceCard from "./service-card";
 
-export default function ServiceItems({ packages }: { packages: Package[] }) {
+export default function ServiceItems({
+  packages,
+  siteSettings,
+}: {
+  packages: Package[];
+  siteSettings: SiteSettingWithUserAddress;
+}) {
   const controls = useAnimation();
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -70,6 +78,7 @@ export default function ServiceItems({ packages }: { packages: Package[] }) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {mergedData.map((service, index) => (
             <ServiceCard
+              siteSettings={siteSettings}
               key={service.label}
               service={service}
               index={index}

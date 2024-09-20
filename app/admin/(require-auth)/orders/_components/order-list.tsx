@@ -9,8 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pagination } from "@/types/order";
-import OrderTableRow from "./order-table-row";
 import { Prisma } from "@prisma/client";
+import OrderTableRow from "./order-table-row";
 
 export type OrderWithUserRelation = Prisma.OrderGetPayload<{
   include: {
@@ -50,7 +50,7 @@ export default async function OrderList({
                   Created at
                 </TableHead>
                 <TableHead className="w-10">
-                  <span className="sr-only">Actions</span>
+                  <p className="sr-only">Actions</p>
                 </TableHead>
               </TableRow>
             </TableHeader>

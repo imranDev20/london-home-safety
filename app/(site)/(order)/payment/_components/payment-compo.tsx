@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useTransition } from "react";
-import { loadStripe, Stripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,17 +9,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import useOrderStore from "@/hooks/use-order-store";
+import { PaymentMethod } from "@prisma/client";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { AlertCircle, Loader2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { PaymentMethod } from "@prisma/client";
-import { useToast } from "@/components/ui/use-toast";
-import { LoadingButton } from "@/components/ui/loading-button";
+import React, { useEffect, useState, useTransition } from "react";
 import { createOrder, upsertUser } from "../../actions";
-import StripePaymentElement from "./stripe-payment-element";
 import PaymentResult from "./payment-result";
+import StripePaymentElement from "./stripe-payment-element";
 
 export default function PaymentCompo({
   redirectStatus,
@@ -37,6 +37,8 @@ export default function PaymentCompo({
 
   const [isPending, startTransition] = useTransition();
   const { cartItems, customerDetails, clearCart, resetOrder } = useOrderStore();
+  const isNonCreditCardPayment =
+    paymentMethod === "BANK_TRANSFER" || paymentMethod === "CASH_TO_ENGINEER";
 
   const parkingFee = customerDetails.parkingOptions !== "FREE" ? 5 : 0;
   const congestionFee = customerDetails.isCongestionZone ? 5 : 0;
@@ -310,14 +312,14 @@ export default function PaymentCompo({
                   </div>
                 </div>
 
-                {paymentMethod !== "CREDIT_CARD" && (
+                {paymentMethod === "CREDIT_CARD" && (
                   <Button type="submit" className="w-full mt-6">
                     Proceed to Payment
                   </Button>
                 )}
               </Card>
 
-              {paymentMethod !== "CREDIT_CARD" && (
+              {isNonCreditCardPayment && (
                 <LoadingButton
                   type="submit"
                   className="w-full flex items-center justify-center space-x-2"

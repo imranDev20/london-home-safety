@@ -2,14 +2,19 @@
 
 import { kebabToNormal } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
+import { SiteSettingWithUserAddress } from "@/types/misc";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import ServiceCard from "../../_components/service-card";
 
 export default function CategoryServices({
   categoryId: category,
+
+  siteSettings,
 }: {
   categoryId: string;
+
+  siteSettings: SiteSettingWithUserAddress;
 }) {
   const controls = useAnimation();
   const sectionRef = useRef(null);
@@ -70,6 +75,7 @@ export default function CategoryServices({
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <ServiceCard
+              siteSettings={siteSettings}
               key={service.label}
               service={service}
               index={index}

@@ -34,13 +34,16 @@ export default async function ServiceDetailsPage({
 
   const packages = await getPackagesByService(
     currentServiceWithoutPackage?.label ?? "",
-    property_type ?? "RESIDENTIAL"
+    property_type
   );
+  console.log("pack", packages);
 
   const allPackages = await getPackagesByService(
     currentServiceWithoutPackage?.label ?? "",
     "ALL"
   );
+
+  const propertyType = allPackages.map((item) => item.propertyType);
 
   if (!packages) {
     return (
@@ -74,7 +77,7 @@ export default async function ServiceDetailsPage({
 
   return (
     <>
-      <section className="relative -mt-[65px]">
+      <section className="relative -mt-[110px]">
         <Image
           src={currentService?.image}
           alt="Background"
@@ -144,11 +147,15 @@ export default async function ServiceDetailsPage({
             </div>
             <div className="col-span-2 md:col-span-1">
               <Card className="p-7">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <span className="mr-2">Select Property Type</span>
-                </h2>
+                {propertyType[0] !== "NOT_APPLICABLE" && (
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                      <span className="mr-2">Select Property Type</span>
+                    </h2>
 
-                <PropertyTypeCompo propertyType={property_type} />
+                    <PropertyTypeCompo propertyType={property_type} />
+                  </div>
+                )}
 
                 <div className="space-y-6 mb-8 mt-5">
                   <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -160,7 +167,10 @@ export default async function ServiceDetailsPage({
                   ))}
                 </div>
 
-                <BookNowButtonCompo />
+                <BookNowButtonCompo
+                  siteSettings={siteSettings}
+                  packages={packages}
+                />
               </Card>
             </div>
           </div>

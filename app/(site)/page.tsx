@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <>
       <Hero siteSettings={siteSettings} />
-      <Services packages={packages} />
+      <Services siteSettings={siteSettings} packages={packages} />
       <AboutUsHome siteSettings={siteSettings} />
       <ServiceCategories />
       <CallToAction siteSettings={siteSettings} />

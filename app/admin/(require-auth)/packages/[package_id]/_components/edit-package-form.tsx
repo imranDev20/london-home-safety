@@ -29,12 +29,13 @@ import {
   SERVICE_CATEGORY_OPTION,
   SERVICE_TYPE_OPTIONS,
 } from "@/lib/constants";
-import { ALL_SERVICES } from "@/shared/data";
 import { kebabToNormal } from "@/lib/utils";
+import { ALL_SERVICES } from "@/shared/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
 import Link from "next/link";
 
+import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -73,11 +74,12 @@ export default function EditPackageForm({
       isCurrentPage: true,
     },
   ];
-  console.log(packageDetails);
+
   const form = useForm<PackageFormInputType>({
     resolver: zodResolver(packageSchema),
     defaultValues: {
       name: "",
+      description: "",
       type: undefined,
       category: undefined,
       price: "",
@@ -98,6 +100,7 @@ export default function EditPackageForm({
     if (packageDetails) {
       form.reset({
         name: packageDetails.name,
+        description: packageDetails.description || undefined,
         type: packageDetails.type || undefined,
         category: packageDetails.category || undefined,
         price: packageDetails.price.toString(),
@@ -174,7 +177,7 @@ export default function EditPackageForm({
               </div>
             </div>
             <p className="text-gray-600 text-sm sm:text-base hidden sm:block">
-              Please fill out the details below to create a package.
+              Please fill out the details below to edit a package.
             </p>
           </div>
 
@@ -222,7 +225,7 @@ export default function EditPackageForm({
               control={control}
               name="serviceName"
               render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
+                <FormItem className="col-span-12 md:col-span-4">
                   <FormLabel className="text-sm font-medium">
                     Service Name
                   </FormLabel>
@@ -255,7 +258,7 @@ export default function EditPackageForm({
               control={control}
               name="category"
               render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
+                <FormItem className="col-span-12 md:col-span-4">
                   <FormLabel className="text-sm font-medium">
                     Package Category
                   </FormLabel>
@@ -288,7 +291,7 @@ export default function EditPackageForm({
               control={control}
               name="type"
               render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
+                <FormItem className="col-span-12 md:col-span-4">
                   <FormLabel className="text-sm font-medium">
                     Package Type
                   </FormLabel>
@@ -313,6 +316,25 @@ export default function EditPackageForm({
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="col-span-12 md:col-span-12">
+                  <FormLabel className="text-sm font-medium">
+                    Package Description
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="h-24"
+                      placeholder="Type your message here."
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -344,6 +366,9 @@ export default function EditPackageForm({
                     <SelectContent>
                       <SelectItem value="RESIDENTIAL">Residential</SelectItem>
                       <SelectItem value="COMMERCIAL">Commercial</SelectItem>
+                      <SelectItem value="NOT_APPLICABLE">
+                        Not Aapplicable
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

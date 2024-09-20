@@ -22,6 +22,7 @@ import AsbestosSurveysImage from "@/images/asbestos-surveys.jpg";
 import BoilerServiceImage from "@/images/boiler-service.png";
 import ElectricalRepairsImage from "@/images/electrical-repairs.png";
 import EicrImage from "@/images/electrician-multimeter.jpeg";
+import EmergencyLightCertificateImage from "@/images/emergency-light-certificate.jpg";
 import EmergencyLightImage from "@/images/emergency-light.png";
 import EnergyPerformanceImage from "@/images/energy-performance.png";
 import EvCrargerImage from "@/images/ev-charger.jpg";
@@ -1856,7 +1857,7 @@ export const NAV_ITEMS: NavItem[] = [
             label: "Emergency Light Certificate",
             path: "/emergency-light-certificate",
             Icon: EmergencyLightCertificateIcon,
-            image: EmergencyLightImage,
+            image: EmergencyLightCertificateImage,
             description:
               "Ensure Compliance with Our Expert Emergency Light Certification Service",
             detailedDesc: {
