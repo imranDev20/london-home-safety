@@ -152,19 +152,21 @@ export default function BookNowComponent({
                             key={pack.id}
                             className="flex flex-col justify-between shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden bg-white border border-gray-200 tracking-wider"
                           >
-                            <CardContent className="p-6 flex flex-col h-full items-center">
-                              <span className="text-center uppercase text-primary text-sm mb-4 rounded-lg">
-                                {service.label}
-                              </span>
-                              <h3 className="text-xl font-bold text-gray-900 transition-colors duration-300 mb-2 text-center">
-                                {pack.name}
-                              </h3>
+                            <CardContent className="p-6 flex flex-col h-full items-center justify-between">
+                              <div className="text-center flex flex-col">
+                                <span className="text-center uppercase text-primary text-sm mb-4 rounded-lg">
+                                  {service.label}
+                                </span>
+                                <h3 className="text-xl font-bold text-gray-900 transition-colors duration-300 mb-2 text-center">
+                                  {pack.name}
+                                </h3>
 
-                              {pack.description && (
-                                <p className="text-sm text-gray-600 mb-4 flex-grow">
-                                  {pack.description}
-                                </p>
-                              )}
+                                {pack.description && (
+                                  <p className="text-sm text-gray-600 mb-4 flex-grow">
+                                    {pack.description}
+                                  </p>
+                                )}
+                              </div>
 
                               <div className="w-full mt-4">
                                 <Separator className="my-4" />
@@ -179,11 +181,7 @@ export default function BookNowComponent({
                                 </div>
 
                                 <Button
-                                  className={`w-full py-3 font-semibold text-sm transition-all duration-300 rounded-md ${
-                                    productInCart
-                                      ? "bg-green-500 hover:bg-green-600 text-white"
-                                      : "bg-body-dark text-white hover:bg-primary hover:text-white"
-                                  }`}
+                                  className={`w-full py-5 font-semibold text-sm transition-all duration-300 rounded-full bg-body-dark text-white hover:bg-secondary hover:text-black`}
                                   onClick={() =>
                                     handleAddToCart({
                                       id: pack.id,

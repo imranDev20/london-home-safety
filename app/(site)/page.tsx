@@ -14,7 +14,6 @@ import { getReviews } from "./actions";
 export default async function Home() {
   const reviews = await getReviews();
   const packages = await getPackages();
-
   const siteSettings = await getSettings();
 
   return (

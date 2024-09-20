@@ -22,7 +22,7 @@ import AsbestosSurveysImage from "@/images/asbestos-surveys.jpg";
 import BoilerServiceImage from "@/images/boiler-service.png";
 import ElectricalRepairsImage from "@/images/electrical-repairs.png";
 import EicrImage from "@/images/electrician-multimeter.jpeg";
-import EmergencyLightCertificateImage from "@/images/emergency-light-certificate.jpg";
+import EmergencyLightCertificateImage from "@/images/emergency-light-certificate.jpeg";
 import EmergencyLightImage from "@/images/emergency-light.png";
 import EnergyPerformanceImage from "@/images/energy-performance.png";
 import EvCrargerImage from "@/images/ev-charger.jpg";
@@ -2679,8 +2679,9 @@ export const SOCIALS = [
   },
 ];
 
-export const BUSINESS_NAME: string = "London Home Safety Limited";
-export const ADDRESS: string = "43 Felton Road, Barking, London IG11 7YA";
-export const PHONE_NO: string = "020 8146 6698";
-export const WEBSITE_URL: string = "www.londonhomesafety.co.uk";
-export const EMAIL_ADDRESS: string = "info@londonhomesafety.co.uk";
+export const BUSINESS_NAME = "London Home Safety Limited";
+export const ADDRESS = "43 Felton Road, Barking, London IG11 7YA";
+export const PHONE_NO = "073 9869 4439";
+export const WEBSITE_URL = "www.londonhomesafety.co.uk";
+export const EMAIL_ADDRESS = "info@londonhomesafety.co.uk";
+export const LANDLINE = "020 8146 6698";

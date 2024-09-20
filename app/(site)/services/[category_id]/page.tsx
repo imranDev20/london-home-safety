@@ -6,6 +6,7 @@ import CallToAction from "../../_components/call-to-action";
 import Partners from "../../about/_components/partners";
 import AboutCategory from "./_components/about-category";
 import CategoryServices from "./_components/category-services";
+import { getPackages } from "@/app/admin/(require-auth)/orders/[order_id]/actions";
 
 export default async function CategoryDetailsPage({
   params,
@@ -26,7 +27,9 @@ export default async function CategoryDetailsPage({
       isCurrentPage: true,
     },
   ];
+
   const siteSettings = await getSettings();
+  const packages = await getPackages();
 
   return (
     <div>
@@ -34,7 +37,11 @@ export default async function CategoryDetailsPage({
         backgroundImage={BackgroundImage}
         breadCrumbOptions={breadCrumbOptions}
       />
-      <CategoryServices siteSettings={siteSettings} categoryId={category_id} />
+      <CategoryServices
+        siteSettings={siteSettings}
+        categoryId={category_id}
+        packages={packages}
+      />
       <AboutCategory categoryId={category_id} />
       <CallToAction siteSettings={siteSettings} />
       <Partners />

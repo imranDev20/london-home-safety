@@ -1,19 +1,20 @@
 "use client";
 
-import { kebabToNormal } from "@/lib/utils";
+import { kebabToNormal, mergeArrays } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
 import { SiteSettingWithUserAddress } from "@/types/misc";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import ServiceCard from "../../_components/service-card";
+import { Package } from "@prisma/client";
 
 export default function CategoryServices({
   categoryId: category,
-
+  packages,
   siteSettings,
 }: {
   categoryId: string;
-
+  packages: Package[];
   siteSettings: SiteSettingWithUserAddress;
 }) {
   const controls = useAnimation();
@@ -23,6 +24,10 @@ export default function CategoryServices({
   const services = ALL_SERVICES.filter((item) =>
     item.categoryPath?.includes(category)
   );
+
+  const mergedData = mergeArrays(services, packages, "label", "serviceName");
+
+  console.log(mergedData);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -73,14 +78,17 @@ export default function CategoryServices({
         </motion.h1>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+          {mergedData.map((service, index) => (
             <ServiceCard
               siteSettings={siteSettings}
               key={service.label}
               service={service}
               index={index}
               isVisible={isVisible}
-              price={""}
+              price={
+                service.packages.sort((a, b) => a.price - b.price)[0]?.price ??
+                "Call Us"
+              }
             />
           ))}
         </div>

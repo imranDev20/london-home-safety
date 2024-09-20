@@ -174,6 +174,7 @@ export const getPackages = cache(async (propertyType?: PropertyType) => {
         price: "asc",
       },
     });
+
     return packages;
   } catch (error) {
     console.error("Error fetching services:", error);
