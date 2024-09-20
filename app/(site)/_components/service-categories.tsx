@@ -1,26 +1,33 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { NAV_ITEMS } from "@/shared/data";
+import { Card, CardContent } from "@/components/ui/card";
 import { motion, useAnimation } from "framer-motion";
 import {
-  ChevronRight,
+  Shield,
+  Zap,
   FireExtinguisher,
   Flame,
   HeartPulse,
-  HomeIcon,
-  Zap,
+  ChevronRight,
+  Building,
+  LucideIcon,
 } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 
-const iconMap = {
+type IconMapType = {
+  [key: string]: LucideIcon;
+};
+
+const iconMap: IconMapType = {
   "Fire Services": FireExtinguisher,
   "Gas Services": Flame,
   "Health & Safety Services": HeartPulse,
   "Electrical Services": Zap,
-} as any;
+  "Property Management": Building, // New icon for property management
+};
 
 export default function ServiceCategories() {
   const serviceItems =
@@ -39,9 +46,7 @@ export default function ServiceCategories() {
           observer.disconnect();
         }
       },
-      {
-        threshold: 0.3,
-      }
+      { threshold: 0.3 }
     );
 
     if (sectionRef.current) {
@@ -78,11 +83,10 @@ export default function ServiceCategories() {
             </svg>
           </span>
         </motion.h2>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {serviceItems.map((service, index) => {
-            const Icon = iconMap[service.label] || HomeIcon;
-
+            const IconComponent =
+              service.label in iconMap ? iconMap[service.label] : Shield;
             return (
               <motion.div
                 key={index}
@@ -95,42 +99,25 @@ export default function ServiceCategories() {
                     transition: { duration: 0.3, delay: index * 0.1 },
                   },
                 }}
-                className={`${
-                  index === 4 ? "lg:col-start-2 lg:col-span-1" : ""
-                }`}
               >
                 <Link
                   href={`/services${service.path}`}
                   className="block h-full"
                 >
                   <Card className="h-full overflow-hidden group hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white">
-                    <CardContent className="p-6 flex flex-col h-full">
-                      <div className="flex items-center mb-4">
-                        <div className="p-3 rounded-full bg-primary text-white mr-4 group-hover:bg-white group-hover:text-primary transition-all duration-300">
-                          <Icon size={24} />
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">
-                          {service.label}
-                        </h3>
+                    <CardContent className="p-6 flex flex-col items-center h-full text-center">
+                      <div className="mb-4 p-3 rounded-full bg-primary text-white group-hover:bg-white group-hover:text-primary transition-all duration-300">
+                        <IconComponent size={24} />
                       </div>
-                      <p className="text-body flex-grow">
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors duration-300 mb-2">
+                        {service.label}
+                      </h3>
+                      <p className="text-body text-sm flex-grow mb-4">
                         {service.description}
                       </p>
-                      <div className="mt-6 flex items-center text-primary font-semibold">
+                      <div className="text-primary font-semibold text-sm flex items-center">
                         Learn More
-                        <svg
-                          className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform duration-300"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
+                        <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                       </div>
                     </CardContent>
                   </Card>

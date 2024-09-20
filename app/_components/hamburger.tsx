@@ -175,10 +175,11 @@ export default function HamburgerMenu() {
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-6 w-6" />
+          <Menu className="h-10 w-10" />
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
+
       <SheetContent side="left" className="w-[280px] sm:w-[350px] p-0">
         <nav className="h-full flex flex-col">
           <div className="p-4 border-b">

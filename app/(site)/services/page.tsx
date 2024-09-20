@@ -21,8 +21,8 @@ export default async function ServicesPage() {
         backgroundImage={BackgroundImage}
         breadCrumbOptions={breadCrumbOptions}
       />
-      <ServiceCategories />
       <ServiceItems siteSettings={siteSettings} packages={packages} />
+      <ServiceCategories />
     </div>
   );
 }

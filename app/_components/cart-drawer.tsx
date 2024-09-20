@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -57,7 +55,7 @@ export default function CartDrawer() {
     <Button
       onClick={() => setIsOpen(true)}
       variant="ghost"
-      className={`p-3 relative  ${
+      className={`p-3 relative ${
         isTransparent
           ? "text-white hover:bg-primary/50"
           : "text-body-dark hover:bg-secondary/20"
@@ -150,6 +148,7 @@ export default function CartDrawer() {
 
   return (
     <>
+      {CartTrigger}
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerContent className="flex flex-col h-[85vh]">
@@ -167,22 +166,19 @@ export default function CartDrawer() {
           </DrawerContent>
         </Drawer>
       ) : (
-        <>
-          {CartTrigger}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetContent className="flex flex-col p-0">
-              <SheetHeader className="p-5 flex-shrink-0">
-                <SheetTitle className="font-medium flex items-center">
-                  <ShoppingBasket className="mr-2" /> {cartItems.length} items
-                </SheetTitle>
-              </SheetHeader>
-              <Separator className="flex-shrink-0" />
-              {CartContent}
-              <Separator className="flex-shrink-0" />
-              {CartFooter}
-            </SheetContent>
-          </Sheet>
-        </>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetContent className="flex flex-col p-0">
+            <SheetHeader className="p-5 flex-shrink-0">
+              <SheetTitle className="font-medium flex items-center">
+                <ShoppingBasket className="mr-2" /> {cartItems.length} items
+              </SheetTitle>
+            </SheetHeader>
+            <Separator className="flex-shrink-0" />
+            {CartContent}
+            <Separator className="flex-shrink-0" />
+            {CartFooter}
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

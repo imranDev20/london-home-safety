@@ -37,12 +37,16 @@ export default function Header() {
         }`}
       >
         <div className="container mx-auto max-w-screen-xl px-4 md:px-8 lg:px-16 flex justify-between items-center py-3 md:py-0">
-          <div className=" pt-2 relative z-20">
-            <LhsLogo />
+          <div className="block md:hidden relative z-20 w-12">
+            <Hamburger />
           </div>
 
-          <div className="flex items-center relative z-20">
-            <nav className="hidden md:block">
+          <Link href="/" className="pt-2 relative z-20">
+            <LhsLogo />
+          </Link>
+
+          <div className="hidden md:flex items-center relative z-20">
+            <nav>
               <ul className="flex gap-3 md:gap-5 lg:gap-7">
                 {NAV_ITEMS.map((navItem) => {
                   if (navItem.path === "/services") {
@@ -124,7 +128,6 @@ export default function Header() {
                 })}
               </ul>
             </nav>
-
             <div className="ml-4 md:ml-8 lg:ml-16 flex items-center gap-3 md:gap-4 lg:gap-7">
               <Link href="/book-now" className="hidden md:block">
                 <Button
@@ -135,10 +138,14 @@ export default function Header() {
                 </Button>
               </Link>
 
-              <CartDrawer />
-
-              <Hamburger />
+              <div className="hidden md:block">
+                <CartDrawer />
+              </div>
             </div>
+          </div>
+
+          <div className="block md:hidden relative z-20">
+            <CartDrawer />
           </div>
         </div>
       </header>

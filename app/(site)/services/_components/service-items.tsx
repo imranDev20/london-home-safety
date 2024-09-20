@@ -30,7 +30,7 @@ export default function ServiceItems({
         }
       },
       {
-        threshold: 0.2,
+        threshold: 0.0,
       }
     );
 
