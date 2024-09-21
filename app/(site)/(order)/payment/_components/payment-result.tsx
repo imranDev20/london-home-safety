@@ -92,7 +92,7 @@ function getPaymentStatusInfo(status: string): {
   switch (status) {
     case "succeeded":
       return {
-        message: "Your payment was successful. Thank you for your purchase!",
+        message: "Your payment was successful. Thank you for your order!",
         type: "success",
       };
     case "processing":

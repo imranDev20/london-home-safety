@@ -166,6 +166,8 @@ export const getEngineers = cache(async () => {
 
 export const getPackages = cache(async (propertyType?: PropertyType) => {
   try {
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+
     const packages = await prisma.package.findMany({
       where: {
         propertyType,
