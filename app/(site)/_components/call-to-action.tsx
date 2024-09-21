@@ -120,7 +120,7 @@ const CallToAction = ({
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link
+            <a
               href={`tel:${siteSettings?.phone1 || ""}`}
               className="w-full sm:w-auto"
             >
@@ -128,7 +128,7 @@ const CallToAction = ({
                 <Phone className="mr-2 group-hover:animate-ping" size={20} />
                 Call Now
               </Button>
-            </Link>
+            </a>
           </motion.div>
         </motion.div>
       </motion.div>

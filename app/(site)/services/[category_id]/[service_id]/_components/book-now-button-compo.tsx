@@ -19,15 +19,13 @@ export default function BookNowButtonCompo({
   packages: Package[];
   siteSettings: SiteSettingWithUserAddress;
 }) {
-  const { selectedPackage } = usePackageStore();
+  const { selectedPackage, setPackage } = usePackageStore();
   const { addItem, cartItems } = useOrderStore();
   const router = useRouter();
 
   const [showAlert, setShowAlert] = useState(false);
 
-  const isInCart = useMemo(() => {
-    return cartItems.some((item) => item.id === selectedPackage?.id);
-  }, [cartItems, selectedPackage]);
+  const isInCart = cartItems.some((item) => item.id === selectedPackage?.id);
 
   const handleClick = () => {
     if (!selectedPackage) {
@@ -44,6 +42,7 @@ export default function BookNowButtonCompo({
         id: selectedPackage.id,
         description: selectedPackage.description ?? "",
       });
+      setPackage(null);
       router.push(`/cart`);
     }
   };
@@ -80,9 +79,9 @@ export default function BookNowButtonCompo({
               </>
             ) : (
               <span className="mr-2">
-                <Link href={`tel:${siteSettings?.phone1 || ""}`}>
+                <a href={`tel:${siteSettings?.phone1 || ""}`}>
                   Call Us For Service
-                </Link>
+                </a>
               </span>
             )}
           </>

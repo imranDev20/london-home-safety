@@ -141,11 +141,11 @@ export default function AboutUsHome({
               <HiPhone className="text-4xl text-body mr-2 hidden md:block" />
               <div className="text-center md:text-left">
                 <p className="text-sm text-body">Call Us Anytime</p>
-                <Link href={`tel:${siteSettings?.phone1 || ""}`}>
+                <a href={`tel:${siteSettings?.phone1 || ""}`}>
                   <p className="text-xl font-semibold text-body-dark hover:underline">
                     {siteSettings?.phone1 || "No phone number available"}
                   </p>
-                </Link>
+                </a>
               </div>
             </div>
           </div>
