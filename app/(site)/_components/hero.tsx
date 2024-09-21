@@ -13,7 +13,7 @@ export default function Hero({
   siteSettings: SiteSettingWithUserAddress;
 }) {
   return (
-    <section className="relative flex items-center py-44 lg:py-0 -mt-[132px] md:-mt-[110px] min-h-[900px] lg:min-h-[750px] lg:h-screen">
+    <section className="relative flex items-center py-44 lg:py-0 -mt-[156px] md:-mt-[132px] min-h-[900px] lg:min-h-[750px] lg:h-screen">
       <Image
         src={BackgroundImage}
         alt="London Home Safety Hero Background"

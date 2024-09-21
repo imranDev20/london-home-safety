@@ -98,7 +98,7 @@ export default function BookNowPackages({ packages }: { packages: Package[] }) {
   return (
     <>
       <div className="flex items-center justify-center mb-12 transition-all">
-        <Card className="p-6 mb-8">
+        <Card className="p-6 mb-8 w-full max-w-3xl mx-auto">
           <h2 className="text-xl font-semibold mb-6 text-center">
             Select Property Type
           </h2>

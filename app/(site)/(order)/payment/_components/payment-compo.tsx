@@ -167,7 +167,7 @@ export default function PaymentCompo({
   }
 
   if (
-    (!customerDetails.customerName || cartItems.length === 0) &&
+    (!customerDetails.firstName || cartItems.length === 0) &&
     !redirectStatus
   ) {
     return (
