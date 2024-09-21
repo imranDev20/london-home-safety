@@ -8,7 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useRouter, usePathname } from "next/navigation";
 import useOrderStore from "@/hooks/use-order-store";
-import { createOrder, upsertUser } from "../../actions";
+import { createOrder } from "../../actions";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { CreditCard } from "lucide-react";
 
@@ -35,23 +35,13 @@ export default function StripePaymentElement() {
     try {
       setLoading(true);
 
-      const userResponse = await upsertUser(customerDetails);
-
-      if (!userResponse.data?.id) {
-        throw new Error("There wass error creating the customer");
-      }
-
       const orderResponse = await createOrder({
         cartItems,
         customerDetails,
-        userId: userResponse.data?.id,
-        paymentDetails: {
-          method: "CREDIT_CARD",
-          status: "PAID",
-        },
+        paymentMethod: "CREDIT_CARD",
       });
 
-      if (!orderResponse) {
+      if (!orderResponse.success) {
         throw new Error("There was error creating the order");
       }
 
@@ -69,12 +59,11 @@ export default function StripePaymentElement() {
 
       if (response.paymentIntent) {
         const status = response.paymentIntent.status;
-        const { message, type } = getPaymentStatusInfo(status);
 
         resetOrder();
         clearCart();
 
-        router.push(
+        router.replace(
           `${pathname}?payment_intent=${response.paymentIntent.id}&payment_intent_client_secret=${response.paymentIntent.client_secret}&redirect_status=${status}`
         );
       }
@@ -97,7 +86,7 @@ export default function StripePaymentElement() {
           defaultValues: {
             billingDetails: {
               email: customerDetails.email,
-              name: customerDetails.customerName,
+              name: customerDetails.firstName + " " + customerDetails.lastName,
               phone: customerDetails.phoneNumber,
               address: {
                 country: "GB",

@@ -9,7 +9,12 @@ import { revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { sendEmail } from "@/lib/send-email";
-import { BUSINESS_NAME, EMAIL_ADDRESS } from "@/shared/data";
+import {
+  BUSINESS_NAME,
+  CONGESTION_FEE,
+  EMAIL_ADDRESS,
+  PARKING_FEE,
+} from "@/shared/data";
 import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
 import { getEngineerById } from "../engineers/actions";
 import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
@@ -232,8 +237,8 @@ export default async function generateInvoice(orderId: string) {
       };
     }
 
-    const parkingFee = order.parkingOptions === "FREE" ? 0 : 5;
-    const congestionFee = order.isCongestionZone ? 5 : 0;
+    const parkingFee = order.parkingOptions === "FREE" ? 0 : PARKING_FEE;
+    const congestionFee = order.isCongestionZone ? CONGESTION_FEE : 0;
     const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
     const totalPrice = cartTotal + parkingFee + congestionFee;
 
@@ -243,39 +248,45 @@ export default async function generateInvoice(orderId: string) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Invoice</title>
+    <title>Professional Invoice - London Home Safety Limited</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --background-color: #ecf0f1;
+            --primary-color: #267ECE;
+            --secondary-color: #FFC527;
             --text-color: #2c3e50;
             --border-color: #bdc3c7;
+            --background-color: #f8fafc;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             margin: 0;
             padding: 0;
+            background-color: var(--background-color);
         }
         .container {
             max-width: 800px;
             margin: 40px auto;
             background-color: white;
             padding: 40px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         .header {
             border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
         }
         .logo {
-            max-width: 150px;
+            width: 150px;
             height: auto;
         }
         .company-details {
@@ -283,7 +294,7 @@ export default async function generateInvoice(orderId: string) {
             font-size: 0.9em;
         }
         .invoice-title {
-            font-size: 28px;
+            font-size: 32px;
             color: var(--primary-color);
             margin: 0 0 10px 0;
         }
@@ -296,8 +307,8 @@ export default async function generateInvoice(orderId: string) {
             flex-basis: 48%;
         }
         .section-title {
-            font-size: 18px;
-            color: var(--secondary-color);
+            font-size: 20px;
+            color: var(--primary-color);
             margin-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 5px;
@@ -313,7 +324,7 @@ export default async function generateInvoice(orderId: string) {
             border-bottom: 1px solid var(--border-color);
         }
         thead {
-            background-color: var(--secondary-color);
+            background-color: var(--primary-color);
             color: white;
         }
         .amount-column {
@@ -335,7 +346,7 @@ export default async function generateInvoice(orderId: string) {
         .total-row {
             font-size: 1.2em;
             font-weight: bold;
-            color: var(--accent-color);
+            color: var(--primary-color);
         }
         .bank-details {
             margin-top: 20px;
@@ -352,7 +363,7 @@ export default async function generateInvoice(orderId: string) {
             margin-top: 20px;
             text-align: center;
             font-size: 0.9em;
-            color: var(--secondary-color);
+            color: var(--text-color);
         }
         .payment-status {
             font-weight: bold;
@@ -370,7 +381,11 @@ export default async function generateInvoice(orderId: string) {
 <body>
     <div class="container">
         <header class="header">
-            <img src="/api/placeholder/150/75" alt="Company Logo" class="logo">
+            <div class="logo-container">
+                <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 266.62 215.6">
+                    <path fill="#267ECE" d="M177.01 215.6v-46.48h-17.53v46.48h-13.87v-46.48h-17.53v46.48h-13.87v-46.48h-36.4v-15.5h36.4V98.48h-35.06v-15.5h35.06V27.85H83.85v67.14H48.79V27.85H0V0h266.62v27.85h-48.79v67.14h-35.06v55.14h35.06v15.5h-35.06v70.98h-5.76zm-31.4-61.97V98.48h-17.53v55.14h17.53zm-31.4 0V98.48h-17.53v55.14h17.53zm76.31-70.64V27.85h-31.26v55.14h31.26zM66.32 82.99V27.85H35.06v55.14h31.26z"></path>
+                </svg>
+            </div>
             <div class="company-details">
                 <h1 class="invoice-title">INVOICE</h1>
                 <p>London Home Safety Limited<br>
@@ -429,13 +444,12 @@ export default async function generateInvoice(orderId: string) {
 
         <div class="total-section">
             <div class="payment-status-section">
-                
                 <div class="payment-status status-${order.paymentStatus}">
                     ${order.paymentStatus}
                 </div>
             </div>
             <div class="totals">
-                <p><strong>Subtotal:</strong> £${cartTotal}</p>
+                <p><strong>Subtotal:</strong> £${cartTotal.toFixed(2)}</p>
                 ${
                   order.isCongestionZone
                     ? `<p><strong>Congestion Zone Fee:</strong> £5.00</p>`
@@ -452,34 +466,23 @@ export default async function generateInvoice(orderId: string) {
 
         ${
           order.paymentMethod !== "CREDIT_CARD"
-            ? `{" "}
-              <div class="bank-details">
-                <div class="bank-details-grid">
-                  <span>
-                    <strong>Bank:</strong>
-                  </span>
-                  <span>International Bank of Commerce</span>
-                  <span>
-                    <strong>Account:</strong>
-                  </span>
-                  <span>London Home Safety Limited</span>
-                  <span>
-                    <strong>Account No:</strong>
-                  </span>
-                  <span>1234567890</span>
-                  <span>
-                    <strong>Sort Code:</strong>
-                  </span>
-                  <span>12-34-56</span>
-                </div>
-              </div>
-              <div class="footer">
-                <p>
-                  Thank you for your business. Please make payment within 15
-                  days of the invoice date.
-                </p>
-              </div>
-              `
+            ? `
+        <div class="bank-details">
+            <div class="bank-details-grid">
+                <span><strong>Bank:</strong></span>
+                <span>International Bank of Commerce</span>
+                <span><strong>Account:</strong></span>
+                <span>London Home Safety Limited</span>
+                <span><strong>Account No:</strong></span>
+                <span>1234567890</span>
+                <span><strong>Sort Code:</strong></span>
+                <span>12-34-56</span>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Thank you for your business. Please make payment within 15 days of the invoice date.</p>
+        </div>
+        `
             : ""
         }
     </div>
@@ -590,10 +593,7 @@ export async function createOrder(data: CreateOrderFormInput) {
     }
 
     // Revalidate paths if needed
-    revalidatePath("/admin/orders");
-    revalidatePath("/admin/orders/[order_id]", "page");
-    revalidatePath(`/admin/customers/${createdOrder.userId}`);
-    revalidatePath("/admin/engineers/[engineer_id]", "page");
+    revalidatePath("/admin", "layout");
 
     return {
       message: "Order created successfully!",

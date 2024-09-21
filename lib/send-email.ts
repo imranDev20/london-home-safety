@@ -1,9 +1,9 @@
 import Mailjet from "node-mailjet";
 
-const mailjet = Mailjet.apiConnect(
-  process.env.MAILJET_API_KEY as string,
-  process.env.MAILJET_API_SECRET as string
-);
+const mailjet = new Mailjet({
+  apiKey: process.env.MAILJET_API_KEY as string,
+  apiSecret: process.env.MAILJET_API_SECRET as string,
+});
 
 interface EmailOptions {
   fromName: string;

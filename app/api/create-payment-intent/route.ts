@@ -1,4 +1,5 @@
 import { CartItem, CustomerDetails } from "@/hooks/use-order-store";
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -6,8 +7,6 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2024-06-20",
 });
-
-console.log(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,14 +16,18 @@ export async function POST(req: NextRequest) {
     }: { customerDetails: CustomerDetails; cartItems: CartItem[] } =
       await req.json();
 
-    const parkingFee = customerDetails.parkingOptions !== "FREE" ? 5 : 0;
-    const congestionFee = customerDetails.isCongestionZone ? 5 : 0;
+    const parkingFee =
+      customerDetails.parkingOptions !== "FREE" ? PARKING_FEE : 0;
+    const congestionFee = customerDetails.isCongestionZone ? CONGESTION_FEE : 0;
     const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
     const totalPrice = cartTotal + parkingFee + congestionFee;
 
+    // Convert totalPrice from pounds to pence
+    const amountInPence = Math.round(totalPrice * 100);
+
     const paymentIntent = await stripe.paymentIntents.create({
       currency: "gbp",
-      amount: totalPrice,
+      amount: amountInPence,
       payment_method_types: ["card"],
       description: "Thanks for your purchase!",
     });

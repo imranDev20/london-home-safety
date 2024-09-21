@@ -19,9 +19,11 @@ import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { AlertCircle, Loader2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState, useTransition } from "react";
-import { createOrder, upsertUser } from "../../actions";
+import { createOrder } from "../../actions";
 import PaymentResult from "./payment-result";
 import StripePaymentElement from "./stripe-payment-element";
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import { useRouter } from "next/navigation";
 
 export default function PaymentCompo({
   redirectStatus,
@@ -34,56 +36,59 @@ export default function PaymentCompo({
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethod>("CREDIT_CARD");
   const { toast } = useToast();
+  const router = useRouter();
 
   const [isPending, startTransition] = useTransition();
   const { cartItems, customerDetails, clearCart, resetOrder } = useOrderStore();
   const isNonCreditCardPayment =
     paymentMethod === "BANK_TRANSFER" || paymentMethod === "CASH_TO_ENGINEER";
 
-  const parkingFee = customerDetails.parkingOptions !== "FREE" ? 5 : 0;
-  const congestionFee = customerDetails.isCongestionZone ? 5 : 0;
+  const parkingFee =
+    customerDetails.parkingOptions !== "FREE" ? PARKING_FEE : 0;
+  const congestionFee = customerDetails.isCongestionZone ? CONGESTION_FEE : 0;
   const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const totalPrice = cartTotal + parkingFee + congestionFee;
 
   useEffect(() => {
-    const fetchKey = async () => {
-      try {
-        const response = await fetch("/api/config");
-        const data = await response.json();
-        setStripePromise(loadStripe(data.publishableKey));
-      } catch (error) {
-        console.error("Error loading Stripe key:", error);
-      }
-    };
-
-    fetchKey();
-  }, []);
+    if (customerDetails && cartItems.length > 0) {
+      const fetchKey = async () => {
+        try {
+          const response = await fetch("/api/config");
+          const data = await response.json();
+          setStripePromise(loadStripe(data.publishableKey));
+        } catch (error) {
+          console.error("Error loading Stripe key:", error);
+        }
+      };
+      fetchKey();
+    }
+  }, [customerDetails, cartItems]);
 
   useEffect(() => {
-    const fetchClientSecret = async () => {
-      try {
-        const orderPayload = {
-          cartItems,
-          customerDetails,
-          totalPrice,
-        };
+    if (customerDetails && cartItems.length > 0) {
+      const fetchClientSecret = async () => {
+        try {
+          const orderPayload = {
+            cartItems,
+            customerDetails,
+            totalPrice,
+          };
 
-        const response = await fetch("/api/create-payment-intent", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderPayload),
-        });
+          const response = await fetch("/api/create-payment-intent", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderPayload),
+          });
 
-        const data = await response.json();
-        setClientSecret(data.clientSecret);
-      } catch (error) {
-        console.error("Error creating payment intent:", error);
-      }
-    };
+          const data = await response.json();
+          setClientSecret(data.clientSecret);
+        } catch (error) {
+          console.error("Error creating payment intent:", error);
+        }
+      };
 
-    if (customerDetails) {
       fetchClientSecret();
     }
   }, [cartItems, customerDetails, totalPrice]);
@@ -103,20 +108,10 @@ export default function PaymentCompo({
       }
 
       try {
-        const userResponse = await upsertUser(customerDetails);
-
-        if (!userResponse.data?.id) {
-          throw new Error("There was an error creating the customer");
-        }
-
         const orderResponse = await createOrder({
           cartItems,
           customerDetails,
-          userId: userResponse.data.id,
-          paymentDetails: {
-            method: paymentMethod,
-            status: "UNPAID",
-          },
+          paymentMethod,
         });
 
         if (!orderResponse) {
@@ -124,13 +119,15 @@ export default function PaymentCompo({
         }
 
         toast({
-          title: "Order Placed Successfully",
-          description: `Your order has been created. ${orderResponse.message}`,
+          title: "Order Placed",
+          description: `${orderResponse.message}`,
           variant: "success",
         });
 
         resetOrder();
         clearCart();
+
+        router.replace("/payment/success");
       } catch (error) {
         console.error(error);
         toast({
@@ -141,6 +138,7 @@ export default function PaymentCompo({
               : "An unexpected error occurred",
           variant: "destructive",
         });
+        router.replace("/payment/failed");
       }
     });
   };
@@ -308,15 +306,14 @@ export default function PaymentCompo({
                   <Separator className="my-4" />
                   <div className="flex justify-between items-center text-xl font-semibold">
                     <span>Total Price:</span>
-                    <span>£{totalPrice.toFixed(2)}</span>
+                    <span>
+                      £{totalPrice.toFixed(2)}{" "}
+                      <span className="text-body font-normal text-sm">
+                        (inc. Tax)
+                      </span>
+                    </span>
                   </div>
                 </div>
-
-                {paymentMethod === "CREDIT_CARD" && (
-                  <Button type="submit" className="w-full mt-6">
-                    Proceed to Payment
-                  </Button>
-                )}
               </Card>
 
               {isNonCreditCardPayment && (

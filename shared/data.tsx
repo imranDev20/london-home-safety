@@ -907,7 +907,7 @@ export const NAV_ITEMS: NavItem[] = [
 
         children: [
           {
-            label: "Gas Certificate & Repairs",
+            label: "Gas Safety Certificate",
             path: "/gas-certificate-repair",
             Icon: GasCertificateIcon,
             image: GasCertificateImage,
@@ -2685,3 +2685,7 @@ export const PHONE_NO = "073 9869 4439";
 export const WEBSITE_URL = "www.londonhomesafety.co.uk";
 export const EMAIL_ADDRESS = "info@londonhomesafety.co.uk";
 export const LANDLINE = "020 8146 6698";
+export const CONGESTION_FEE = 15;
+export const PARKING_FEE = 5;
+export const BANK_SORT_CODE = 309950;
+export const BANK_ACCOUNT_NUMBER = 25372562;

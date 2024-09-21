@@ -54,6 +54,7 @@ import { ParkingOptions } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 
 const parkingOptions = [
   {
@@ -66,14 +67,14 @@ const parkingOptions = [
   {
     id: "NO",
     label: "No Parking Available",
-    price: "+£5.00",
+    price: `+£${PARKING_FEE}.00`,
     icon: ParkingCircleOff,
     color: "text-red-600",
   },
   {
     id: "PAID",
     label: "Paid Parking Available",
-    price: "+£5.00",
+    price: `+£${PARKING_FEE}.00`,
     icon: Coins,
     color: "text-amber-600",
   },
@@ -83,7 +84,7 @@ const congestionZoneOptions = [
   {
     id: "yes",
     label: "Yes",
-    price: "+£5.00",
+    price: `+£${CONGESTION_FEE}.00`,
     icon: AlertTriangle,
     color: "text-amber-600",
   },
@@ -139,7 +140,7 @@ export default function CheckoutPage() {
         street: customerDetails.address.street ?? "",
         city: customerDetails.address.city ?? "",
         postcode: customerDetails.address.postcode ?? "",
-        date: new Date(customerDetails.orderDate) ?? new Date(),
+        date: new Date(),
         time: customerDetails.inspectionTime ?? "MORNING",
         parkingOption: customerDetails.parkingOptions ?? "FREE",
         isInCongestionZone: customerDetails.isCongestionZone ?? false,
@@ -158,8 +159,8 @@ export default function CheckoutPage() {
     form.setValue("isInCongestionZone", value === "yes");
   };
 
-  const parkingFee = parkingOption === "FREE" ? 0 : 5;
-  const congestionFee = isInCongestionZone ? 5 : 0;
+  const parkingFee = parkingOption === "FREE" ? 0 : PARKING_FEE;
+  const congestionFee = isInCongestionZone ? CONGESTION_FEE : 0;
   const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const totalPrice = cartTotal + parkingFee + congestionFee;
 
@@ -549,7 +550,12 @@ export default function CheckoutPage() {
                 <Separator className="my-4" />
                 <div className="flex justify-between items-center text-xl font-semibold">
                   <span>Total Price:</span>
-                  <span>£{totalPrice.toFixed(2)}</span>
+                  <span>
+                    £{totalPrice.toFixed(2)}{" "}
+                    <span className="text-body font-normal text-sm">
+                      (inc. Tax)
+                    </span>
+                  </span>
                 </div>
               </div>
               <Button type="submit" className="w-full mt-6">
