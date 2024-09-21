@@ -3,7 +3,6 @@
 import { notifyUserCancelEmailHtml } from "@/lib/notify-customer-order-cancel-email";
 import { notifyUserCompleteEmailHtml } from "@/lib/notify-customer-order-completd-email";
 import { notifyUserConfirmEmailHtml } from "@/lib/notify-customer-order-confirm-email";
-import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";

@@ -63,8 +63,7 @@ export async function upsertUser(userData: CustomerDetails) {
       },
     });
 
-    revalidatePath("/admin/customers");
-    revalidatePath("/admin/orders/new");
+    revalidatePath("/admin", "layout");
 
     return {
       success: true,
@@ -98,7 +97,6 @@ type OrderData = {
 export async function createOrder(orderData: OrderData) {
   try {
     const { customerDetails, cartItems, userId, paymentDetails } = orderData;
-
     const packageIds = cartItems.map((pkg) => pkg.id);
 
     const packages = await prisma.package.findMany({
@@ -181,10 +179,7 @@ export async function createOrder(orderData: OrderData) {
     });
 
     // Revalidate paths if needed
-    revalidatePath("/admin/orders");
-    revalidatePath("/admin/orders/[order_id]", "page");
-    revalidatePath(`/admin/customers/${createdOrder.userId}`);
-    revalidatePath("/admin/engineers/[engineer_id]", "page");
+    revalidatePath("/admin", "layout");
 
     return {
       message: "Order created successfully!",
