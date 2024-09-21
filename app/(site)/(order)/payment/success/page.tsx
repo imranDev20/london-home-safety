@@ -12,8 +12,8 @@ export default function OrderSuccessPage() {
           Order Successful!
         </h1>
         <p className="text-gray-600 mb-6">
-          Thank you for your order. We've received your request and will process
-          it shortly.
+          Thank you for your order. We&apos;ve received your request and will
+          process it shortly.
         </p>
         <p className="text-sm text-gray-500 mb-6">
           For bank transfers, please use the account details provided in your

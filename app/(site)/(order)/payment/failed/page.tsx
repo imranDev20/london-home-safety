@@ -9,8 +9,8 @@ export default function OrderFailedPage() {
         <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Order Failed</h1>
         <p className="text-gray-600 mb-6">
-          We're sorry, but there was an issue processing your order. Please try
-          again or contact our support team for assistance.
+          We&apos;re sorry, but there was an issue processing your order. Please
+          try again or contact our support team for assistance.
         </p>
 
         <div className="space-y-4">
