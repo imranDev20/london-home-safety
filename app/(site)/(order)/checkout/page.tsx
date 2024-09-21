@@ -53,6 +53,7 @@ import { useEffect } from "react";
 import { ParkingOptions } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import RequiredIndicator from "@/components/custom/required-indicator";
 
 const parkingOptions = [
   {
@@ -109,7 +110,8 @@ export default function CheckoutPage() {
   const form = useForm<CheckoutFormInput>({
     resolver: zodResolver(checkoutFormSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       street: "",
@@ -130,7 +132,8 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (customerDetails) {
       reset({
-        name: customerDetails.customerName ?? "",
+        firstName: customerDetails.firstName ?? "",
+        lastName: customerDetails.lastName ?? "",
         email: customerDetails.email ?? "",
         phone: customerDetails.phoneNumber ?? "",
         street: customerDetails.address.street ?? "",
@@ -167,7 +170,8 @@ export default function CheckoutPage() {
         city: data.city,
         postcode: data.postcode,
       },
-      customerName: data.name,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       phoneNumber: data.phone,
       orderDate: data.date,
@@ -246,25 +250,46 @@ export default function CheckoutPage() {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">User Information</h2>
               <div className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          First Name <RequiredIndicator />
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your first name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Last Name <RequiredIndicator />
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your last name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>
+                        Email <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Your email" {...field} />
                       </FormControl>
@@ -277,7 +302,9 @@ export default function CheckoutPage() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone</FormLabel>
+                      <FormLabel>
+                        Phone <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Your phone number" {...field} />
                       </FormControl>
@@ -297,7 +324,9 @@ export default function CheckoutPage() {
                   name="street"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Street</FormLabel>
+                      <FormLabel>
+                        Street <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Street address" {...field} />
                       </FormControl>
@@ -311,7 +340,9 @@ export default function CheckoutPage() {
                     name="city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>City</FormLabel>
+                        <FormLabel>
+                          City <RequiredIndicator />
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder="City" {...field} />
                         </FormControl>
@@ -324,7 +355,9 @@ export default function CheckoutPage() {
                     name="postcode"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Postcode</FormLabel>
+                        <FormLabel>
+                          Postcode <RequiredIndicator />
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder="Postcode" {...field} />
                         </FormControl>

@@ -17,7 +17,8 @@ export type CartItem = {
 type AddressType = Omit<Address, "userId" | "createdAt" | "updatedAt" | "id">;
 
 export type CustomerDetails = {
-  customerName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phoneNumber: string;
   address: AddressType;
@@ -41,7 +42,8 @@ interface OrderState {
 }
 
 const initialCustomerDetails: CustomerDetails = {
-  customerName: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phoneNumber: "",
   address: {
