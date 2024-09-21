@@ -105,6 +105,8 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
     });
   };
 
+  const RequiredIndicator = () => <span className="text-red-500">*</span>;
+
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onCreateUserSubmit)} className="w-full">
@@ -125,7 +127,8 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
               </DialogTitle>
               <DialogDescription>
                 Fill in the details below to add a new {userType.toLowerCase()}{" "}
-                to the system.
+                to the system. Fields marked with <RequiredIndicator /> are
+                required.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -135,7 +138,9 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>
+                        Full Name <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="John Doe"
@@ -152,7 +157,9 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address</FormLabel>
+                      <FormLabel>
+                        Email Address <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
@@ -189,7 +196,9 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                 name="street"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Street Address</FormLabel>
+                    <FormLabel>
+                      Street Address <RequiredIndicator />
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="123 Main St"
@@ -207,7 +216,10 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                   name="city"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>City</FormLabel>
+                      <FormLabel>
+                        City
+                        <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="London"
@@ -224,7 +236,10 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                   name="postcode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Postcode</FormLabel>
+                      <FormLabel>
+                        Postcode
+                        <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="SW1A 1AA"
@@ -243,7 +258,9 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                   name="expertise"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Expertise</FormLabel>
+                      <FormLabel>
+                        Expertise <RequiredIndicator />
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
