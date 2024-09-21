@@ -76,21 +76,21 @@ export default function Footer({
             <ul className="space-y-2  ">
               <li className="flex items-center">
                 <IoMdMail className="mr-2 text-xl" />
-                <Link
+                <a
                   href={`mailto:${siteSettings?.email || ""}`}
                   className="hover:underline"
                 >
                   {siteSettings?.email || "No email address available"}
-                </Link>
+                </a>
               </li>
               <li className="flex items-center">
                 <MdLocalPhone className="mr-2 text-xl" />
-                <Link
+                <a
                   href={`tel:${siteSettings?.phone1 || ""}`}
                   className="hover:underline"
                 >
                   {siteSettings?.phone1 || "No phone number available"}
-                </Link>
+                </a>
               </li>
               <li className="flex items-center">
                 <IoLocationSharp className="mr-2 lg:text-5xl text-2xl" />
@@ -99,18 +99,18 @@ export default function Footer({
               </li>
             </ul>
             <div className="flex space-x-3 text-xl mt-4">
-              <Link href="#" className="hover:underline">
+              <a href="#" className="hover:underline">
                 <IoLogoFacebook />
-              </Link>
-              <Link href="#" className="hover:underline">
+              </a>
+              <a href="#" className="hover:underline">
                 <FaInstagram />
-              </Link>
-              <Link href="#" className="hover:underline">
+              </a>
+              <a href="#" className="hover:underline">
                 <FaXTwitter />
-              </Link>
-              <Link href="#" className="hover:underline">
+              </a>
+              <a href="#" className="hover:underline">
                 <FaYoutube />
-              </Link>
+              </a>
             </div>
           </div>
         </div>

@@ -46,11 +46,11 @@ export default async function Contact({
           </ul>
           <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
             <span className="text-primary font-medium">Need Help?</span>
-            <Link href={`tel:${siteSettings?.phone1 || ""}`}>
+            <a href={`tel:${siteSettings?.phone1 || ""}`}>
               <Button className="bg-white text-black shadow-none hover:bg-white font-semibold hover:underline">
                 {siteSettings?.phone1 || "No phone number available"}
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
 

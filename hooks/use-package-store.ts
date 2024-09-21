@@ -4,7 +4,7 @@ import { create } from "zustand";
 interface PackageState {
   selectedPackage: Package | null;
   propertyType: PropertyType;
-  setPackage: (pack: Package) => void;
+  setPackage: (pack: Package | null) => void;
   setPropertyType: (type: PropertyType) => void;
   reset: () => void;
 }

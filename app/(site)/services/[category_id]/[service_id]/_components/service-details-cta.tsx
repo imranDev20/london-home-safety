@@ -25,11 +25,11 @@ export default function ServiceDetailsCta({
               Book an Appointment
             </Button>
           </Link>
-          <Link href={`tel:${siteSettings?.phone1 || ""}`}>
+          <a href={`tel:${siteSettings?.phone1 || ""}`}>
             <Button className="bg-white text-black   rounded-md text-lg font-semibold hover:bg-secondary hover:text-black transition-colors">
               Call:{siteSettings?.phone1 || "No phone number available"}
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
     </div>
