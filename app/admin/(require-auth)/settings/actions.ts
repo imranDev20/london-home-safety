@@ -92,7 +92,8 @@ export async function updateSiteSettings(
         },
       });
 
-      revalidatePath("/admin/settings");
+      revalidatePath("/", "layout");
+
       return {
         success: true,
         data: updatedSettings,

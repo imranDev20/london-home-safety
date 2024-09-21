@@ -1,4 +1,4 @@
-import { Prisma, PropertyType } from "@prisma/client";
+import { Package, Prisma, PropertyType } from "@prisma/client";
 import { OrderWithRelation } from "./order";
 
 export type ChildrenProp = {

@@ -7,7 +7,7 @@ import { placedOrderEmailHtml } from "@/lib/placed-order-html";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
-import { Order, PaymentMethod, PaymentStatus } from "@prisma/client";
+import { PaymentMethod, PaymentStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function upsertUser(userData: CustomerDetails) {

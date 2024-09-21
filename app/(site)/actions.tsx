@@ -20,7 +20,7 @@ export const getReviews = cache(async () => {
       orderBy: {
         createdAt: "desc",
       },
-      take: 10,
+      take: 20,
     });
 
     return reviews;
