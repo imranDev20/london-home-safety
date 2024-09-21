@@ -123,11 +123,9 @@ export default function PaymentCompo({
           description: `${orderResponse.message}`,
           variant: "success",
         });
-
+        router.replace("/payment/success");
         resetOrder();
         clearCart();
-
-        router.replace("/payment/success");
       } catch (error) {
         console.error(error);
         toast({
@@ -138,7 +136,6 @@ export default function PaymentCompo({
               : "An unexpected error occurred",
           variant: "destructive",
         });
-        router.replace("/payment/failed");
       }
     });
   };

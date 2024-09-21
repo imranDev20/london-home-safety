@@ -60,12 +60,12 @@ export default function StripePaymentElement() {
       if (response.paymentIntent) {
         const status = response.paymentIntent.status;
 
-        resetOrder();
-        clearCart();
-
         router.replace(
           `${pathname}?payment_intent=${response.paymentIntent.id}&payment_intent_client_secret=${response.paymentIntent.client_secret}&redirect_status=${status}`
         );
+
+        resetOrder();
+        clearCart();
       }
     } catch (error: any) {
       console.error("Payment error:", error);
