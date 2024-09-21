@@ -77,7 +77,7 @@ export default async function ServiceDetailsPage({
 
   return (
     <>
-      <section className="relative -mt-[110px]">
+      <section className="relative -mt-[156px] md:-mt-[132px]">
         <Image
           src={currentService?.image}
           alt="Background"
@@ -87,7 +87,7 @@ export default async function ServiceDetailsPage({
           placeholder="blur"
           className="object-cover"
         />
-        <div className="relative py-20 before:content-[''] before:absolute before:inset-0 before:bg-[#062C64] before:opacity-90 before:mix-blend-multiply">
+        <div className="relative py-28 lg:py-20 before:content-[''] before:absolute before:inset-0 before:bg-[#062C64] before:opacity-90 before:mix-blend-multiply">
           <div className="container mx-auto pt-[65px] max-w-screen-xl grid grid-cols-2 gap-10 px-4 md:px-8 lg:px-16 relative z-10">
             <div className="col-span-2 md:col-span-1 ">
               <DynamicBreadcrumb items={breadCrumbOptions} isTransparent />

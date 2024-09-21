@@ -9,11 +9,17 @@ import { revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { sendEmail } from "@/lib/send-email";
-import { BUSINESS_NAME, EMAIL_ADDRESS } from "@/shared/data";
+import {
+  BUSINESS_NAME,
+  CONGESTION_FEE,
+  EMAIL_ADDRESS,
+  PARKING_FEE,
+} from "@/shared/data";
 import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
 import { getEngineerById } from "../engineers/actions";
 import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 import { cache } from "react";
+import { generateInvoiceHtml } from "@/lib/invoice-html";
 
 export const getOrders = cache(
   async (
@@ -232,260 +238,12 @@ export default async function generateInvoice(orderId: string) {
       };
     }
 
-    const parkingFee = order.parkingOptions === "FREE" ? 0 : 5;
-    const congestionFee = order.isCongestionZone ? 5 : 0;
+    const parkingFee = order.parkingOptions === "FREE" ? 0 : PARKING_FEE;
+    const congestionFee = order.isCongestionZone ? CONGESTION_FEE : 0;
     const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
     const totalPrice = cartTotal + parkingFee + congestionFee;
 
-    const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Invoice</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --background-color: #ecf0f1;
-            --text-color: #2c3e50;
-            --border-color: #bdc3c7;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background-color: white;
-            padding: 40px;
-        }
-        .header {
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .logo {
-            max-width: 150px;
-            height: auto;
-        }
-        .company-details {
-            text-align: right;
-            font-size: 0.9em;
-        }
-        .invoice-title {
-            font-size: 28px;
-            color: var(--primary-color);
-            margin: 0 0 10px 0;
-        }
-        .invoice-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-        .client-details, .invoice-info {
-            flex-basis: 48%;
-        }
-        .section-title {
-            font-size: 18px;
-            color: var(--secondary-color);
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        thead {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        .amount-column {
-            text-align: right;
-        }
-        .total-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 20px;
-        }
-        .payment-status-section {
-            flex-basis: 48%;
-        }
-        .totals {
-            flex-basis: 48%;
-            text-align: right;
-        }
-        .total-row {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-        .bank-details {
-            margin-top: 20px;
-            font-size: 0.9em;
-            border-top: 1px solid var(--border-color);
-            padding-top: 10px;
-        }
-        .bank-details-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 5px 10px;
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 0.9em;
-            color: var(--secondary-color);
-        }
-        .payment-status {
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        .status-UNPAID { background-color: #fecaca; color: #991b1b; }
-        .status-PARTIALLY_PAID { background-color: #fef3c7; color: #92400e; }
-        .status-PAID { background-color: #d1fae5; color: #065f46; }
-        .status-REFUNDED { background-color: #e0e7ff; color: #3730a3; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <img src="/api/placeholder/150/75" alt="Company Logo" class="logo">
-            <div class="company-details">
-                <h1 class="invoice-title">INVOICE</h1>
-                <p>London Home Safety Limited<br>
-                43 Felton Road, Barking<br>
-                London IG11 7YA<br>
-                United Kingdom</p>
-            </div>
-        </header>
-
-        <div class="invoice-details">
-            <div class="client-details">
-                <h2 class="section-title">Bill To</h2>
-                <p>
-                    ${order?.user.name}<br>
-                    ${order?.user.address?.street},<br>
-                    ${order?.user.address?.city}, ${
-      order?.user.address?.postcode
-    }<br>
-                    United Kingdom
-                </p>
-            </div>
-            <div class="invoice-info">
-                <h2 class="section-title">Invoice Details</h2>
-                <p>
-                    <strong>Invoice Number:</strong> ${order.invoice}<br>
-                    <strong>Date:</strong> ${dayjs(order.date).format(
-                      "MMMM DD, YYYY"
-                    )}<br>
-                    <strong>Due Date:</strong> ${dayjs(order.date)
-                      .add(3, "day")
-                      .format("MMMM DD, YYYY")}
-                </p>
-            </div>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th class="amount-column">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${order?.packages
-                  .map(
-                    (item) => `
-                <tr>
-                    <td>${item.name}</td>
-                    <td class="amount-column">£${item.price.toFixed(2)}</td>
-                </tr>
-                `
-                  )
-                  .join("")}
-            </tbody>
-        </table>
-
-        <div class="total-section">
-            <div class="payment-status-section">
-                
-                <div class="payment-status status-${order.paymentStatus}">
-                    ${order.paymentStatus}
-                </div>
-            </div>
-            <div class="totals">
-                <p><strong>Subtotal:</strong> £${cartTotal}</p>
-                ${
-                  order.isCongestionZone
-                    ? `<p><strong>Congestion Zone Fee:</strong> £5.00</p>`
-                    : ""
-                }
-                ${
-                  order.parkingOptions !== "FREE"
-                    ? `<p><strong>Parking Fee:</strong> £5.00</p>`
-                    : ""
-                }
-                <p class="total-row">Total: £${totalPrice.toFixed(2)}</p>
-            </div>
-        </div>
-
-        ${
-          order.paymentMethod !== "CREDIT_CARD"
-            ? `{" "}
-              <div class="bank-details">
-                <div class="bank-details-grid">
-                  <span>
-                    <strong>Bank:</strong>
-                  </span>
-                  <span>International Bank of Commerce</span>
-                  <span>
-                    <strong>Account:</strong>
-                  </span>
-                  <span>London Home Safety Limited</span>
-                  <span>
-                    <strong>Account No:</strong>
-                  </span>
-                  <span>1234567890</span>
-                  <span>
-                    <strong>Sort Code:</strong>
-                  </span>
-                  <span>12-34-56</span>
-                </div>
-              </div>
-              <div class="footer">
-                <p>
-                  Thank you for your business. Please make payment within 15
-                  days of the invoice date.
-                </p>
-              </div>
-              `
-            : ""
-        }
-    </div>
-</body>
-</html>
-`;
+    const htmlContent = generateInvoiceHtml(order, cartTotal, totalPrice);
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -590,10 +348,7 @@ export async function createOrder(data: CreateOrderFormInput) {
     }
 
     // Revalidate paths if needed
-    revalidatePath("/admin/orders");
-    revalidatePath("/admin/orders/[order_id]", "page");
-    revalidatePath(`/admin/customers/${createdOrder.userId}`);
-    revalidatePath("/admin/engineers/[engineer_id]", "page");
+    revalidatePath("/admin", "layout");
 
     return {
       message: "Order created successfully!",

@@ -53,6 +53,8 @@ import { useEffect } from "react";
 import { ParkingOptions } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import RequiredIndicator from "@/components/custom/required-indicator";
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 
 const parkingOptions = [
   {
@@ -65,14 +67,14 @@ const parkingOptions = [
   {
     id: "NO",
     label: "No Parking Available",
-    price: "+£5.00",
+    price: `+£${PARKING_FEE}.00`,
     icon: ParkingCircleOff,
     color: "text-red-600",
   },
   {
     id: "PAID",
     label: "Paid Parking Available",
-    price: "+£5.00",
+    price: `+£${PARKING_FEE}.00`,
     icon: Coins,
     color: "text-amber-600",
   },
@@ -82,7 +84,7 @@ const congestionZoneOptions = [
   {
     id: "yes",
     label: "Yes",
-    price: "+£5.00",
+    price: `+£${CONGESTION_FEE}.00`,
     icon: AlertTriangle,
     color: "text-amber-600",
   },
@@ -109,7 +111,8 @@ export default function CheckoutPage() {
   const form = useForm<CheckoutFormInput>({
     resolver: zodResolver(checkoutFormSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       street: "",
@@ -130,13 +133,14 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (customerDetails) {
       reset({
-        name: customerDetails.customerName ?? "",
+        firstName: customerDetails.firstName ?? "",
+        lastName: customerDetails.lastName ?? "",
         email: customerDetails.email ?? "",
         phone: customerDetails.phoneNumber ?? "",
         street: customerDetails.address.street ?? "",
         city: customerDetails.address.city ?? "",
         postcode: customerDetails.address.postcode ?? "",
-        date: new Date(customerDetails.orderDate) ?? new Date(),
+        date: new Date(),
         time: customerDetails.inspectionTime ?? "MORNING",
         parkingOption: customerDetails.parkingOptions ?? "FREE",
         isInCongestionZone: customerDetails.isCongestionZone ?? false,
@@ -155,8 +159,8 @@ export default function CheckoutPage() {
     form.setValue("isInCongestionZone", value === "yes");
   };
 
-  const parkingFee = parkingOption === "FREE" ? 0 : 5;
-  const congestionFee = isInCongestionZone ? 5 : 0;
+  const parkingFee = parkingOption === "FREE" ? 0 : PARKING_FEE;
+  const congestionFee = isInCongestionZone ? CONGESTION_FEE : 0;
   const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const totalPrice = cartTotal + parkingFee + congestionFee;
 
@@ -167,7 +171,8 @@ export default function CheckoutPage() {
         city: data.city,
         postcode: data.postcode,
       },
-      customerName: data.name,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       phoneNumber: data.phone,
       orderDate: data.date,
@@ -246,25 +251,46 @@ export default function CheckoutPage() {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">User Information</h2>
               <div className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          First Name <RequiredIndicator />
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your first name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Last Name <RequiredIndicator />
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your last name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>
+                        Email <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Your email" {...field} />
                       </FormControl>
@@ -277,7 +303,9 @@ export default function CheckoutPage() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone</FormLabel>
+                      <FormLabel>
+                        Phone <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Your phone number" {...field} />
                       </FormControl>
@@ -297,7 +325,9 @@ export default function CheckoutPage() {
                   name="street"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Street</FormLabel>
+                      <FormLabel>
+                        Street <RequiredIndicator />
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Street address" {...field} />
                       </FormControl>
@@ -311,7 +341,9 @@ export default function CheckoutPage() {
                     name="city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>City</FormLabel>
+                        <FormLabel>
+                          City <RequiredIndicator />
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder="City" {...field} />
                         </FormControl>
@@ -324,7 +356,9 @@ export default function CheckoutPage() {
                     name="postcode"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Postcode</FormLabel>
+                        <FormLabel>
+                          Postcode <RequiredIndicator />
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder="Postcode" {...field} />
                         </FormControl>
@@ -516,7 +550,12 @@ export default function CheckoutPage() {
                 <Separator className="my-4" />
                 <div className="flex justify-between items-center text-xl font-semibold">
                   <span>Total Price:</span>
-                  <span>£{totalPrice.toFixed(2)}</span>
+                  <span>
+                    £{totalPrice.toFixed(2)}{" "}
+                    <span className="text-body font-normal text-sm">
+                      (inc. Tax)
+                    </span>
+                  </span>
                 </div>
               </div>
               <Button type="submit" className="w-full mt-6">

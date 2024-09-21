@@ -71,17 +71,17 @@ export default function CartPage() {
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
             <div className="flex justify-between mb-4">
               <span>Total:</span>
-              <span className="font-semibold">£{totalPrice.toFixed(2)}</span>
+              <span className="font-semibold">
+                £{totalPrice.toFixed(2)}{" "}
+                <span className="text-body font-normal text-sm">
+                  (inc. Tax)
+                </span>
+              </span>
             </div>
-            <Textarea
-              placeholder="Add a note to your order"
-              className="mb-4"
-              rows={4}
-            />
-            <Separator className="my-4" />
-            <Link href="/book-now">
+
+            <Link href="/book-now" className="mt-10 block">
               <Button className="w-full mb-3" variant="outline">
-                Continue Shopping
+                Continue Booking
               </Button>
             </Link>
             <Link href="/checkout">

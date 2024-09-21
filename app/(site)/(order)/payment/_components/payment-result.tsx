@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useStripe } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
-import { LoadingButton } from "@/components/ui/loading-button";
 import { CheckCircle2, XCircle, AlertCircle, Loader2 } from "lucide-react";
 
 export default function PaymentResult() {
@@ -23,7 +22,7 @@ export default function PaymentResult() {
     const clientSecret = searchParams.get("payment_intent_client_secret");
 
     if (clientSecret) {
-      stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+      stripe?.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
         setStatus(paymentIntent?.status || null);
         setMessage(getPaymentStatusInfo(paymentIntent?.status || "").message);
         setLoading(false);

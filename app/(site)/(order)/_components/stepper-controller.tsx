@@ -30,7 +30,7 @@ export default function StepperController() {
 
   const isCheckoutDisabled = cartItems.length === 0;
   const isPaymentDisabled =
-    cartItems.length === 0 || !customerDetails.customerName;
+    cartItems.length === 0 || !customerDetails.firstName;
 
   return (
     <Stepper

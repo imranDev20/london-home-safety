@@ -8,9 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Link from "next/link";
-import { Download, Search, SortAsc, SortDesc, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Download, Search, SortAsc, SortDesc } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useQueryString from "@/hooks/use-query-string";
 import { useEffect, useState, useTransition } from "react";
@@ -20,7 +18,7 @@ import { exportCustomers } from "../actions";
 import { toast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
 import CreateUser from "../../orders/new/_components/create-user";
-import { FaHelmetSafety, FaUser, FaUserGroup } from "react-icons/fa6";
+import { FaUserGroup } from "react-icons/fa6";
 
 export default function CustomerTableHeader() {
   const router = useRouter();
@@ -47,7 +45,6 @@ export default function CustomerTableHeader() {
     startTransition(async () => {
       const result = await exportCustomers();
       if (result.success) {
-        // Handle successful deletion (e.g., show a success message, update UI)
         const excelData = result.data as string;
         const byteArray = new Uint8Array(
           atob(excelData)
@@ -69,7 +66,7 @@ export default function CustomerTableHeader() {
         link.click();
         link.remove();
         toast({
-          title: "Customers  Downloaded",
+          title: "Customers Downloaded",
           description: result.message,
           variant: "success",
         });
@@ -86,18 +83,18 @@ export default function CustomerTableHeader() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-4 mt-7">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 mt-7">
         <h1 className="text-2xl font-bold mb-2 flex items-center">
           <FaUserGroup className="text-primary mr-2" />
           Customer List
         </h1>
 
-        <div className="hidden items-center gap-2 md:ml-auto md:flex">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
           <LoadingButton
             type="button"
             disabled={isPending}
             loading={isPending}
-            className="text-sm h-9 font-medium flex items-center"
+            className="text-sm h-9 font-medium flex items-center w-full sm:w-auto"
             onClick={handleExportCustomers}
             variant="outline"
           >
@@ -109,8 +106,8 @@ export default function CustomerTableHeader() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto mb-5">
-        <div className="relative flex-1">
+      <div className="flex flex-col space-y-2 w-full mb-5">
+        <div className="relative w-full">
           <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <Input
             type="search"
@@ -120,57 +117,57 @@ export default function CustomerTableHeader() {
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
-
-        <Select
-          value={sortBy}
-          onValueChange={(value) => {
-            if (value) {
-              router.push(
-                `${pathname}?${createQueryString({
-                  sort_by: value,
-                })}`
-              );
-            }
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SortAsc className="mr-2 h-4 w-4" />
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectItem value="name">Name</SelectItem>
-            <SelectItem value="email">Email</SelectItem>
-            <SelectItem value="createdAt">Created At</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select
-          value={sortOrder}
-          onValueChange={(value) => {
-            if (value) {
-              router.push(
-                `${pathname}?${createQueryString({
-                  sort_order: value,
-                })}`
-              );
-            }
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            {sortOrder === "asc" ? (
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full">
+          <Select
+            value={sortBy}
+            onValueChange={(value) => {
+              if (value) {
+                router.push(
+                  `${pathname}?${createQueryString({
+                    sort_by: value,
+                  })}`
+                );
+              }
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SortAsc className="mr-2 h-4 w-4" />
-            ) : (
-              <SortDesc className="mr-2 h-4 w-4" />
-            )}
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
 
-            <SelectValue placeholder="Sort Order" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="desc">Desc</SelectItem>
-            <SelectItem value="asc">Asc</SelectItem>
-          </SelectContent>
-        </Select>
+            <SelectContent>
+              <SelectItem value="name">Name</SelectItem>
+              <SelectItem value="email">Email</SelectItem>
+              <SelectItem value="createdAt">Created At</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={sortOrder}
+            onValueChange={(value) => {
+              if (value) {
+                router.push(
+                  `${pathname}?${createQueryString({
+                    sort_order: value,
+                  })}`
+                );
+              }
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
+              {sortOrder === "asc" ? (
+                <SortAsc className="mr-2 h-4 w-4" />
+              ) : (
+                <SortDesc className="mr-2 h-4 w-4" />
+              )}
+              <SelectValue placeholder="Sort Order" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desc">Desc</SelectItem>
+              <SelectItem value="asc">Asc</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </>
   );

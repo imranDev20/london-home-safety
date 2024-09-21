@@ -2,7 +2,7 @@ import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { ContentLayout } from "../_components/content-layout";
 import { Suspense } from "react";
 import { getPackages } from "./actions";
-import ServiceTableHeader from "./_components/package-table-header";
+import PackageTableHeader from "./_components/package-table-header";
 import ServiceLoading from "./_components/package-loading";
 import { ServicePagination } from "./_components/package-pagination";
 import ServiceList from "./_components/package-list";
@@ -33,7 +33,7 @@ export default async function AdminOrdersPage({
   return (
     <ContentLayout title="Services">
       <DynamicBreadcrumb items={breadcrumbItems} />
-      <ServiceTableHeader />
+      <PackageTableHeader />
       <Suspense fallback={<ServiceLoading />}>
         <ServiceList services={services} pagination={pagination} />
       </Suspense>

@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { FaCalendarCheck, FaChevronDown } from "react-icons/fa6";
 import CartDrawer from "./cart-drawer";
 import Hamburger from "./hamburger";
+import LhsLogoBlack from "@/images/icons/lhs-logo-black";
 
 export default function Header() {
   const pathname = usePathname();
@@ -41,8 +42,8 @@ export default function Header() {
             <Hamburger />
           </div>
 
-          <Link href="/" className="pt-2 relative z-20">
-            <LhsLogo />
+          <Link href="/" className="py-4 relative z-20">
+            {isTransparent ? <LhsLogo /> : <LhsLogoBlack />}
           </Link>
 
           <div className="hidden md:flex items-center relative z-20">
