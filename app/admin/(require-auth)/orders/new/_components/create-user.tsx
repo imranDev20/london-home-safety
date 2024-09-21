@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/select";
 import { createUser } from "../../actions";
 import { useToast } from "@/components/ui/use-toast";
-import { Check, Loader2, PlusIcon, X } from "lucide-react";
+import { Check, PlusIcon, X } from "lucide-react";
 import { Role } from "@prisma/client";
 
 interface CreateUserForOrderProps {
@@ -55,12 +55,7 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
     },
   });
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = form;
+  const { control, handleSubmit, reset } = form;
 
   const { toast } = useToast();
 
@@ -112,18 +107,18 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onCreateUserSubmit)}>
+      <form onSubmit={handleSubmit(onCreateUserSubmit)} className="w-full">
         <Dialog open={isUserDialogOpen} onOpenChange={setUserDialogOpen}>
           <DialogTrigger asChild>
             <Button
               type="button"
-              className="h-9 w-full text-sm font-medium flex"
+              className="h-9 w-full text-sm font-medium flex items-center justify-center"
             >
               <PlusIcon className="mr-2 h-4 w-4" />
-              {`Add ${userType === "CUSTOMER" ? "Customer" : "Engineer"}`}
+              {`Add New ${userType === "CUSTOMER" ? "Customer" : "Engineer"}`}
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[550px]">
+          <DialogContent className="sm:max-w-[550px] w-[calc(100%-2rem)] mx-auto rounded-xl">
             <DialogHeader>
               <DialogTitle className="text-2xl font-semibold">
                 Create New {userType === "CUSTOMER" ? "Customer" : "Engineer"}
@@ -133,8 +128,8 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                 to the system.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-6 py-4">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={control}
                   name="name"
@@ -206,7 +201,7 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={control}
                   name="city"
@@ -277,23 +272,25 @@ export default function CreateUser({ userType }: CreateUserForOrderProps) {
                 />
               )}
             </div>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setUserDialogOpen(false)}
-                className="flex items-center"
-              >
-                <X className="mr-2 h-4 w-4" />
-                Cancel
-              </Button>
-              <LoadingButton
-                onClick={() => handleSubmit(onCreateUserSubmit)()}
-                loading={isPending}
-                className="ml-2"
-              >
-                {!isPending && <Check className="mr-2 h-4 w-4" />}
-                Create {userType === "CUSTOMER" ? "Customer" : "Engineer"}
-              </LoadingButton>
+            <DialogFooter className="sm:justify-end">
+              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                <LoadingButton
+                  onClick={() => handleSubmit(onCreateUserSubmit)()}
+                  loading={isPending}
+                  className="w-full mb-2 sm:w-auto sm:mb-0"
+                >
+                  {!isPending && <Check className="mr-2 h-4 w-4" />}
+                  Create {userType === "CUSTOMER" ? "Customer" : "Engineer"}
+                </LoadingButton>
+                <Button
+                  variant="outline"
+                  onClick={() => setUserDialogOpen(false)}
+                  className="w-full sm:w-auto sm:mr-2"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Cancel
+                </Button>
+              </div>
             </DialogFooter>
           </DialogContent>
         </Dialog>
