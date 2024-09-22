@@ -331,6 +331,15 @@ export default function CreatePackageForm() {
                       <SelectItem value="NOT_APPLICABLE">
                         Not Aapplicable
                       </SelectItem>
+                      <SelectItem value="HMOS_AND_RENTAL_HOMES">
+                        HMO&apos;s & Rental Homes
+                      </SelectItem>
+                      <SelectItem value="COMMUNAL_AREA">
+                        Communal Area
+                      </SelectItem>
+                      <SelectItem value="BUSINESS_SECTORS">
+                        Business Sectors
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

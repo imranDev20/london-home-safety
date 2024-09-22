@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -132,6 +132,9 @@ enum PropertyType {
   RESIDENTIAL
   COMMERCIAL
   NOT_APPLICABLE
+  HMOS_AND_RENTAL_HOMES
+  COMMUNAL_AREA
+  BUSINESS_SECTORS
 }
 
 enum ResidentialType {

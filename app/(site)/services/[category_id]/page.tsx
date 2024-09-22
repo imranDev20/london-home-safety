@@ -1,3 +1,4 @@
+import { getPackages } from "@/app/admin/(require-auth)/orders/[order_id]/actions";
 import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
@@ -6,7 +7,6 @@ import CallToAction from "../../_components/call-to-action";
 import Partners from "../../about/_components/partners";
 import AboutCategory from "./_components/about-category";
 import CategoryServices from "./_components/category-services";
-import { getPackages } from "@/app/admin/(require-auth)/orders/[order_id]/actions";
 
 export default async function CategoryDetailsPage({
   params,
