@@ -113,7 +113,7 @@ export async function createPackage(data: PackageFormInputType) {
     };
   } catch (error) {
     console.error(error);
-    handlePrismaError(error);
+    return handlePrismaError(error);
   }
 }
 
