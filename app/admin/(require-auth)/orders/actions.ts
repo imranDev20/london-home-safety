@@ -272,7 +272,11 @@ export default async function generateInvoice(orderId: string) {
     };
   } catch (error) {
     console.error("Error generating PDF:", error);
-    return handlePrismaError(error);
+    return {
+      message: handlePrismaError(error).message,
+      data: null,
+      success: false,
+    };
   }
 }
 

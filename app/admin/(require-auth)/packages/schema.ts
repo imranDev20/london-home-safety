@@ -1,48 +1,11 @@
+import {
+  CommercialType,
+  PackageCategory,
+  PackageType,
+  PropertyType,
+  ResidentialType,
+} from "@prisma/client";
 import { z } from "zod";
-
-// Enums for Select options
-export const PackageCategorySchema = z.enum(
-  ["ELECTRICAL", "FIRE", "GAS", "HEALTH_SAFETY", "PROPERTY_MANAGEMENT"],
-  {
-    errorMap: () => ({ message: "Invalid package category selected" }),
-  }
-);
-
-export const PackageTypeSchema = z.enum(
-  ["CERTIFICATE", "REPAIR", "INSTALLATION", "INSPECTION", "OTHER"],
-  {
-    errorMap: () => ({ message: "Invalid package type selected" }),
-  }
-);
-
-export const PropertyTypeSchema = z.enum(
-  ["RESIDENTIAL", "COMMERCIAL", "NOT_APPLICABLE"],
-  {
-    errorMap: () => ({ message: "Invalid property type selected" }),
-  }
-);
-
-export const ResidentialTypeSchema = z.enum(
-  [
-    "BUNGALOW",
-    "MID_TERRACED_HOUSE",
-    "DETACHED_HOUSE",
-    "SEMI_DETACHED_HOUSE",
-    "FLAT",
-    "APARTMENT",
-    "OTHER",
-  ],
-  {
-    errorMap: () => ({ message: "Invalid residential type selected" }),
-  }
-);
-
-export const CommercialTypeSchema = z.enum(
-  ["PUB", "STORE", "OFFICE", "RESTAURANT", "WAREHOUSE", "OTHER"],
-  {
-    errorMap: () => ({ message: "Invalid commercial type selected" }),
-  }
-);
 
 export const packageSchema = z.object({
   name: z
@@ -50,8 +13,12 @@ export const packageSchema = z.object({
       required_error: "Package name is required",
     })
     .min(1, { message: "Package name cannot be empty" }),
-  type: PackageTypeSchema,
-  category: PackageCategorySchema,
+  type: z.nativeEnum(PackageType, {
+    errorMap: () => ({ message: "Invalid package type selected" }),
+  }),
+  category: z.nativeEnum(PackageCategory, {
+    errorMap: () => ({ message: "Invalid package category selected" }),
+  }),
   price: z
     .string({
       required_error: "Price is required",
@@ -63,9 +30,19 @@ export const packageSchema = z.object({
     })
     .min(1, { message: "Service name cannot be empty" }),
   description: z.string().optional(),
-  propertyType: PropertyTypeSchema,
-  residentialType: ResidentialTypeSchema.optional(),
-  commercialType: CommercialTypeSchema.optional(),
+  propertyType: z.nativeEnum(PropertyType, {
+    errorMap: () => ({ message: "Invalid property type selected" }),
+  }),
+  residentialType: z
+    .nativeEnum(ResidentialType, {
+      errorMap: () => ({ message: "Invalid residential type selected" }),
+    })
+    .optional(),
+  commercialType: z
+    .nativeEnum(CommercialType, {
+      errorMap: () => ({ message: "Invalid commercial type selected" }),
+    })
+    .optional(),
   unitType: z.string().optional(),
 });
 
