@@ -912,7 +912,7 @@ export const NAV_ITEMS: NavItem[] = [
         children: [
           {
             label: "Gas Safety Certificates",
-            path: "/gas-certificate-repair",
+            path: "/gas-safety-certificates",
             Icon: GasCertificateIcon,
             image: GasCertificateImage,
             description:
@@ -984,8 +984,8 @@ export const NAV_ITEMS: NavItem[] = [
             ],
           },
           {
-            label: "Boiler Service & Repair",
-            path: "/boiler-service-repair",
+            label: "Boiler Servicing & Repair",
+            path: "/boiler-servicing-and-repair",
             Icon: BoilerIcon,
             image: BoilerServiceImage,
             description:
@@ -1347,8 +1347,8 @@ export const NAV_ITEMS: NavItem[] = [
             ],
           },
           {
-            label: "Fire Alarm Certificate",
-            path: "/fire-alarm-certificate",
+            label: "Fire Alarm Certificates",
+            path: "/fire-alarm-certificates",
             Icon: FireAlarmCertificateIcon,
             image: FireAlarmCertificateImage,
             description:
@@ -1694,15 +1694,15 @@ export const NAV_ITEMS: NavItem[] = [
             ],
           },
           {
-            label: "Emergency Light Installation",
-            path: "/emergency-light-installation",
+            label: "Emergency Lighting Installation",
+            path: "/emergency-lighting-installation",
             Icon: EmergencyLightInstallationIcon,
             image: EmergencyLightImage,
             description:
               "Ensure safety during power outages with our expert emergency lighting installation service.",
             detailedDesc: {
               details:
-                "Our Emergency Light Installation service ensures that your property remains safe and well-lit in the event of a power outage or emergency. We provide tailored solutions to fit the layout and specific requirements of your building, ensuring full compliance with UK safety regulations. With cutting-edge emergency lighting technology and expert installation, our team guarantees reliable performance, providing clear evacuation paths and peace of mind for all occupants.",
+                "Our Emergency Lighting Installation service ensures that your property remains safe and well-lit in the event of a power outage or emergency. We provide tailored solutions to fit the layout and specific requirements of your building, ensuring full compliance with UK safety regulations. With cutting-edge emergency lighting technology and expert installation, our team guarantees reliable performance, providing clear evacuation paths and peace of mind for all occupants.",
 
               points: [
                 "Strategic placement for optimal emergency coverage",
@@ -1712,19 +1712,19 @@ export const NAV_ITEMS: NavItem[] = [
             },
             pageContent: {
               title:
-                "Ensuring Safety with Trusted Emergency Light Installation Services",
+                "Ensuring Safety with Trusted Emergency Lighting Installation Services",
               html: `
                  <div class="max-w-4xl mx-auto">
   <p class="text-lg mb-6">
-    At London Home Safety Limited, we specialize in providing reliable Emergency Light Installation services to ensure your property is prepared for any emergency situation. Our expert team is dedicated to designing, installing, and maintaining emergency lighting systems that meet the highest safety standards, providing peace of mind and protection for your property and its occupants.
+    At London Home Safety Limited, we specialize in providing reliable Emergency Lighting Installation services to ensure your property is prepared for any emergency situation. Our expert team is dedicated to designing, installing, and maintaining emergency lighting systems that meet the highest safety standards, providing peace of mind and protection for your property and its occupants.
   </p>
 
   <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-4">Why is Professional Emergency Light Installation Essential?</h2>
+    <h2 class="text-2xl font-bold mb-4">Why is Professional Emergency Lighting Installation Essential?</h2>
     <p class="mb-4">
-      Professional emergency light installation is crucial for ensuring that your emergency lighting system operates effectively during power outages or emergencies. Proper installation not only enhances visibility but also guarantees compliance with safety regulations, facilitating safe evacuation and minimizing risks.
+      Professional emergency lighting installation is crucial for ensuring that your emergency lighting system operates effectively during power outages or emergencies. Proper installation not only enhances visibility but also guarantees compliance with safety regulations, facilitating safe evacuation and minimizing risks.
     </p>
-    <p class="font-bold mb-2">Benefits of Professional Emergency Light Installation:</p>
+    <p class="font-bold mb-2">Benefits of Professional Emergency Lighting Installation:</p>
     <ul class="space-y-2">
       <li class="flex items-start">
         <span class="text-black font-bold mr-2">•</span>
@@ -1858,8 +1858,8 @@ export const NAV_ITEMS: NavItem[] = [
             ],
           },
           {
-            label: "Emergency Light Certificate",
-            path: "/emergency-light-certificate",
+            label: "Emergency Lighting Certificates",
+            path: "/emergency-lighting-certificates",
             Icon: EmergencyLightCertificateIcon,
             image: EmergencyLightCertificateImage,
             description:
@@ -2033,185 +2033,6 @@ export const NAV_ITEMS: NavItem[] = [
               {
                 ques: "How does Emergency Light Certification relate to overall building safety?",
                 ans: "Emergency Light Certification is a crucial component of a building's overall safety strategy. It intersects with fire safety regulations, workplace health and safety requirements, and building codes. A valid certificate contributes to a comprehensive safety approach, potentially affecting insurance premiums and demonstrating commitment to occupant safety.",
-              },
-            ],
-          },
-
-          {
-            label: "Carbon Monoxide Alarm",
-            path: "/carbon-monoxide-alarm",
-            Icon: CarbonMonoxideIcon,
-            image: SmokeAlarm,
-            description:
-              "Safeguard Lives with Our Expert Carbon Monoxide Alarm Installation and Inspection Service",
-            detailedDesc: {
-              details:
-                "Our Carbon Monoxide Alarm service ensures that your property is protected against the silent killer - carbon monoxide. Through professional installation, meticulous inspections, and rigorous testing, we guarantee that your carbon monoxide detection systems meet the highest standards of safety and reliability. Our service provides peace of mind, keeping your property and its occupants safe from this odorless, colorless threat.",
-              points: [
-                "Guidance on optimal alarm placement and maintenance",
-                "Detailed documentation and certification of alarm functionality",
-                "Expert installation of state-of-the-art carbon monoxide detectors",
-              ],
-            },
-            pageContent: {
-              title:
-                "Protecting Lives with Professional Carbon Monoxide Alarm Services",
-              html: `
-               <div class="max-w-4xl mx-auto">
-  <p class="text-lg mb-6">
-    At London Home Safety Limited, we specialize in providing comprehensive Carbon Monoxide Alarm services to ensure your property is fully protected against this silent, deadly threat. Our expert team is dedicated to the proper installation, thorough inspection, and meticulous testing of carbon monoxide detection systems, offering you and your property's occupants the highest level of safety and peace of mind.
-  </p>
-
-  <div class="mb-8">
-    <h2 class="text-2xl font-bold mb-4">Why are Professional Carbon Monoxide Alarm Services Critical?</h2>
-    <p class="mb-4">
-      Professional carbon monoxide alarm services are essential for detecting this odorless, colorless gas that can be lethal in high concentrations. Proper installation and regular maintenance of these alarms are crucial for early detection and prevention of carbon monoxide poisoning, potentially saving lives in your home or business.
-    </p>
-    <p class="font-bold mb-2">Benefits of Professional Carbon Monoxide Alarm Services:</p>
-    <ul class="space-y-2">
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Life-Saving Protection:</span> Ensures early detection of carbon monoxide, preventing potential poisoning and saving lives.</span>
-      </li>
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Legal Compliance:</span> Meets all relevant safety standards and regulations, avoiding potential legal issues.</span>
-      </li>
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Expert Installation:</span> Guarantees optimal placement and functionality of alarms for maximum effectiveness.</span>
-      </li>
-      <li class="flex items-start">
-        <span class="text-black font-bold mr-2">•</span>
-        <span><span class="font-semibold">Regular Maintenance:</span> Ensures continuous, reliable operation of your carbon monoxide detection system.</span>
-      </li>
-    </ul>
-  </div>
-
-  <blockquote class="bg-yellow-50 text-lg p-6 rounded-lg mb-8">
-    <p>
-      A professionally installed and maintained carbon monoxide alarm system is your first line of defense against this invisible threat. Ensure your property's safety with expert services from London Home Safety Limited.
-    </p>
-  </blockquote>
-
-  <h2 class="text-2xl font-bold mb-4">What Does Our Carbon Monoxide Alarm Service Include?</h2>
-  <p class="mb-4">
-    Our comprehensive carbon monoxide alarm service covers every aspect of system installation, verification, and maintenance. We conduct thorough inspections and tests to ensure your system provides the highest level of protection.
-  </p>
-  <p class="font-bold mb-2">Service Process:</p>
-  <ul class="space-y-2 mb-6">
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Site Assessment:</span> We evaluate your property to determine optimal alarm placement for maximum effectiveness.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Professional Installation:</span> Our experts install high-quality, reliable carbon monoxide alarms.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">System Testing:</span> We rigorously test each installed unit to ensure proper functionality.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Documentation:</span> Detailed reports are prepared, documenting the installation and performance of each unit.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">User Education:</span> We provide comprehensive guidance on system operation and maintenance.</span>
-    </li>
-  </ul>
-
-  <h2 class="text-2xl font-bold mb-4">Why Choose Us for Your Carbon Monoxide Alarm Services?</h2>
-  <p class="mb-4">
-    London Home Safety Limited is committed to delivering exceptional carbon monoxide alarm services with a focus on reliability, effectiveness, and customer safety. Our experienced team uses state-of-the-art equipment and follows the latest industry standards to ensure your carbon monoxide detection system provides optimal protection.
-  </p>
-  <p class="font-bold mb-2">Reasons to Choose Our Service:</p>
-  <ul class="space-y-2 mb-6">
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Certified Professionals:</span> Our team consists of qualified and experienced technicians who are experts in carbon monoxide detection systems and related regulations.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">High-Quality Equipment:</span> We use only the most reliable and advanced carbon monoxide alarms available.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Comprehensive Service:</span> From installation to ongoing maintenance, we provide end-to-end carbon monoxide alarm solutions.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Customer Education:</span> We ensure you understand how to operate and maintain your system for long-term safety.</span>
-    </li>
-  </ul>
-
-  <h2 class="text-2xl font-bold mb-4">Ongoing Support and Maintenance</h2>
-  <p class="mb-4">
-    Our commitment to your safety doesn't end with installation. We provide ongoing support and maintenance services to ensure your carbon monoxide detection system remains effective and compliant.
-  </p>
-  <p class="font-bold mb-2">Post-Installation Services:</p>
-  <ul class="space-y-2 mb-6">
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Regular Inspections:</span> We offer scheduled check-ups to verify system functionality and compliance.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Maintenance Support:</span> Our team is available for any maintenance needs or system updates.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">24/7 Emergency Assistance:</span> We provide round-the-clock support for any carbon monoxide alarm emergencies.</span>
-    </li>
-    <li class="flex items-start">
-      <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">System Upgrades:</span> We keep you informed about the latest advancements in carbon monoxide detection technology.</span>
-    </li>
-  </ul>
-</div>
-                `,
-            },
-            faqs: [
-              {
-                ques: "What is a Carbon Monoxide Alarm?",
-                ans: "A Carbon Monoxide Alarm is a safety device designed to detect the presence of carbon monoxide (CO) gas and provide early warning to building occupants. It's crucial for preventing CO poisoning, which can be fatal. These alarms continuously monitor the air for carbon monoxide and sound an alert if dangerous levels are detected, allowing occupants to evacuate and seek help.",
-              },
-              {
-                ques: "Why is professional installation of Carbon Monoxide Alarms important?",
-                ans: "Professional installation of Carbon Monoxide Alarms is important for several reasons: it ensures optimal placement for early detection, guarantees correct connection (especially for hardwired systems), and ensures compliance with all relevant safety standards and regulations. Professionals can also provide valuable advice on maintenance and proper usage. Their expertise helps maximize the effectiveness of the alarm system, potentially saving lives in the event of a CO leak.",
-              },
-              {
-                ques: "How often should Carbon Monoxide Alarms be tested?",
-                ans: "Carbon Monoxide Alarms should be tested monthly to ensure they're functioning correctly. This typically involves pressing the test button to confirm the alarm sounds. Additionally, most manufacturers recommend replacing the entire unit every 5-7 years, as the sensors degrade over time. Some alarms have end-of-life warnings, but it's important to keep track of installation dates and follow manufacturer guidelines for replacement.",
-              },
-              {
-                ques: "Where should Carbon Monoxide Alarms be installed?",
-                ans: "Carbon Monoxide Alarms should be installed on every level of your home, including the basement. Ideally, place them near sleeping areas and at least 15 feet away from fuel-burning appliances. Specific locations might include outside each separate sleeping area, in each bedroom, and in the vicinity of any gas-burning appliances. Avoid placing them near windows, doors, or areas with high humidity. Professional installers can assess your property and recommend the best locations based on your specific layout and potential CO sources.",
-              },
-              {
-                ques: "Can I install a Carbon Monoxide Alarm myself?",
-                ans: "While it's possible to install battery-operated CO alarms yourself, professional installation is strongly recommended, especially for hardwired systems. Self-installation may seem straightforward, but professionals ensure optimal placement, proper function, and compliance with local regulations. They have the expertise to consider factors like potential interference, air flow patterns, and integration with existing safety systems. Professional installation also often comes with warranties and ongoing support, providing additional peace of mind.",
-              },
-              {
-                ques: "What are the signs of Carbon Monoxide poisoning?",
-                ans: "Signs of Carbon Monoxide poisoning can be subtle and often mistaken for other illnesses. Common symptoms include headache, dizziness, weakness, nausea, vomiting, chest pain, and confusion. More severe poisoning can lead to loss of consciousness and death. CO poisoning can occur suddenly or over an extended period. If multiple people in the same building experience these symptoms simultaneously, or if symptoms alleviate when leaving the building, it could indicate CO poisoning. If you suspect CO poisoning, immediately move to fresh air and seek emergency medical attention.",
-              },
-              {
-                ques: "How long do Carbon Monoxide Alarms last?",
-                ans: "Most Carbon Monoxide Alarms have a lifespan of 5-7 years. After this period, the sensors may not reliably detect CO, so it's important to replace the units according to manufacturer recommendations. Some newer models have end-of-life indicators that will alert you when it's time for replacement. It's crucial to keep track of installation dates and not rely solely on the alarm's apparent functionality. Regular testing and timely replacement ensure continuous protection against this silent killer.",
-              },
-              {
-                ques: "What should I do if my Carbon Monoxide Alarm goes off?",
-                ans: "If your Carbon Monoxide Alarm sounds, take it seriously every time. Immediately evacuate all people and pets from the premises and move to fresh air. Once safe, call emergency services or the fire department. Do not re-enter the building until it has been cleared by professionals. Even if symptoms aren't immediately apparent, seek medical attention, as CO poisoning can have delayed effects. Never ignore a CO alarm or assume it's a false alarm – it's always better to err on the side of caution when dealing with this odorless, colorless gas.",
-              },
-              {
-                ques: "Are there different types of Carbon Monoxide Alarms?",
-                ans: "Yes, there are several types of Carbon Monoxide Alarms available. These include battery-operated units, plug-in models with battery backup, and hardwired alarms that integrate with your home's electrical system. Some CO alarms are standalone devices, while others are combined with smoke detectors for comprehensive protection. Digital display alarms show CO levels in real-time, while smart alarms can send alerts to your phone. The choice depends on your specific needs, budget, and the layout of your property. Our professionals can help you select the most suitable type for your situation.",
-              },
-              {
-                ques: "How does your Carbon Monoxide Alarm service ensure ongoing safety?",
-                ans: "Our Carbon Monoxide Alarm service ensures ongoing safety through a comprehensive approach. We don't just install alarms; we provide regular maintenance checks, timely battery replacements (if applicable), and advice on when to upgrade your system. We offer education on CO safety practices and what to do in case of an alarm. Our service includes scheduled follow-ups to test alarm functionality and assess whether changes in your property necessitate adjustments to your CO detection system. We also keep you informed about advances in CO alarm technology and updates to safety regulations, ensuring your protection remains cutting-edge.",
               },
             ],
           },

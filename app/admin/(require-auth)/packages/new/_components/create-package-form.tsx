@@ -348,6 +348,7 @@ export default function CreatePackageForm() {
                 </FormItem>
               )}
             />
+
             {watch("propertyType") === "RESIDENTIAL" && (
               <FormField
                 control={control}
