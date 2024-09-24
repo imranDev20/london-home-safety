@@ -41,16 +41,35 @@ export default async function ServiceDetailsPage({
   const availablePropertyTypes = Array.from(
     new Set(allPackages.map((pkg) => pkg.propertyType))
   );
-
   let filteredPackages = allPackages;
-  if (availablePropertyTypes.length > 1 && property_type) {
-    filteredPackages = allPackages.filter(
-      (pkg) => pkg.propertyType === property_type
-    );
-  } else if (availablePropertyTypes.length > 1) {
-    filteredPackages = allPackages.filter(
-      (pkg) => pkg.propertyType === availablePropertyTypes[0]
-    );
+  if (availablePropertyTypes.length > 1) {
+    if (property_type) {
+      // If a property type is selected in the URL, use that
+      filteredPackages = allPackages.filter(
+        (pkg) => pkg.propertyType === property_type
+      );
+    } else {
+      // If no property type is selected, apply the new default logic
+      if (
+        availablePropertyTypes.includes("RESIDENTIAL") &&
+        availablePropertyTypes.includes("COMMERCIAL")
+      ) {
+        // Default to RESIDENTIAL when both RESIDENTIAL and COMMERCIAL are available
+        filteredPackages = allPackages.filter(
+          (pkg) => pkg.propertyType === "RESIDENTIAL"
+        );
+      } else if (availablePropertyTypes.includes("HMO")) {
+        // Default to HMO when HMO is one of the options (assuming HMO, COMMUNAL_AREA, BUSINESS_SECTOR are the other possibilities)
+        filteredPackages = allPackages.filter(
+          (pkg) => pkg.propertyType === "HMO"
+        );
+      } else {
+        // If neither of the above cases, just use the first available type
+        filteredPackages = allPackages.filter(
+          (pkg) => pkg.propertyType === availablePropertyTypes[0]
+        );
+      }
+    }
   }
 
   const mergedData = mergeArrays(
@@ -88,8 +107,8 @@ export default async function ServiceDetailsPage({
           className="object-cover"
         />
         <div className="relative py-28 lg:py-20 before:content-[''] before:absolute before:inset-0 before:bg-[#062C64] before:opacity-90 before:mix-blend-multiply">
-          <div className="container mx-auto pt-[65px] max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-10 px-4 md:px-8 lg:px-16 relative z-10 min-h-[1300px] md:min-h-[900px]">
-            <div className="col-span-1 order-2 md:order-1">
+          <div className="container mx-auto pt-[65px] max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-10 px-4 md:px-8 lg:px-16 relative z-10 min-h-[1300px] md:min-h-[950px]">
+            <div className="col-span-1 order-2 md:order-1 mt-10">
               <DynamicBreadcrumb items={breadCrumbOptions} isTransparent />
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight mt-10">
                 {currentService?.label}
@@ -101,7 +120,7 @@ export default async function ServiceDetailsPage({
               {filteredPackages.length > 0 && <ServiceFeatures />}
             </div>
 
-            <div className="col-span-1 order-1 md:order-2">
+            <div className="col-span-1 order-1 md:order-2 mt-10">
               <Card className="p-7">
                 {availablePropertyTypes.length > 1 && (
                   <div>

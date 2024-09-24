@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Home,
@@ -10,14 +10,13 @@ import {
   Warehouse,
   Briefcase,
 } from "lucide-react";
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 interface PropertyButtonProps {
   type: string;
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   label: string;
-  href: string;
+  onClick: () => void;
   isActive: boolean;
 }
 
@@ -25,24 +24,22 @@ const PropertyButton: React.FC<PropertyButtonProps> = ({
   type,
   icon: Icon,
   label,
-  href,
+  onClick,
   isActive,
 }) => (
   <Button
-    asChild
     variant="outline"
     className={`flex-1 py-6 flex flex-col items-center justify-center border-2 transition-all duration-200 h-auto ${
       isActive
         ? "bg-primary/10 border-primary"
         : "hover:bg-primary/10 hover:border-primary"
     }`}
+    onClick={onClick}
   >
-    <Link href={href} scroll={false}>
-      <div>
-        <Icon className="w-8 h-8 mb-2" />
-      </div>
-      <span>{label}</span>
-    </Link>
+    <div>
+      <Icon className="w-8 h-8 mb-2" />
+    </div>
+    <span>{label}</span>
   </Button>
 );
 
@@ -52,17 +49,15 @@ interface PropertyTypeCompoProps {
 }
 
 export default function PropertyTypeCompo({
-  propertyType,
+  propertyType: initialPropertyType,
   availableTypes,
 }: PropertyTypeCompoProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const [selectedType, setSelectedType] = useState(initialPropertyType);
 
-  const propertyTypes: {
-    type: string;
-    icon: React.FC<React.SVGProps<SVGSVGElement>>;
-    label: string;
-  }[] = [
+  const propertyTypes = [
     { type: "RESIDENTIAL", icon: Home, label: "Residential" },
     { type: "COMMERCIAL", icon: Building, label: "Commercial" },
     { type: "HMO", icon: Hotel, label: "HMOs" },
@@ -76,26 +71,30 @@ export default function PropertyTypeCompo({
     availableTypes.includes(type.type)
   );
 
+  useEffect(() => {
+    if (selectedType) {
+      const params = new URLSearchParams(searchParams);
+      params.set("property_type", selectedType);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [selectedType, pathname, router, searchParams]);
+
   if (filteredTypes.length === 0 || availableTypes.includes("NOT_APPLICABLE")) {
     return null;
   }
 
   return (
     <div className="flex flex-wrap gap-4">
-      {filteredTypes.map((property) => {
-        const params = new URLSearchParams(searchParams);
-        params.set("property_type", property.type);
-        return (
-          <PropertyButton
-            key={property.type}
-            type={property.type}
-            icon={property.icon}
-            label={property.label}
-            href={`${pathname}?${params.toString()}`}
-            isActive={propertyType === property.type}
-          />
-        );
-      })}
+      {filteredTypes.map((property) => (
+        <PropertyButton
+          key={property.type}
+          type={property.type}
+          icon={property.icon}
+          label={property.label}
+          onClick={() => setSelectedType(property.type)}
+          isActive={selectedType === property.type}
+        />
+      ))}
     </div>
   );
 }
