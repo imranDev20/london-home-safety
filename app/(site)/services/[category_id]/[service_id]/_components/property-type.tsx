@@ -1,13 +1,19 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { PropertyType } from "@prisma/client";
-import { Building, Home } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import React from "react";
+import {
+  Home,
+  Building,
+  Users,
+  Hotel,
+  Warehouse,
+  Briefcase,
+} from "lucide-react";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 interface PropertyButtonProps {
-  type: PropertyType;
+  type: string;
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   label: string;
   onClick: () => void;
@@ -37,40 +43,56 @@ const PropertyButton: React.FC<PropertyButtonProps> = ({
   </Button>
 );
 
-export default function PropertyTypeCompo({
-  propertyType,
-}: {
-  propertyType?: PropertyType;
-}) {
-  const router = useRouter();
-  const pathname = usePathname();
+interface PropertyTypeCompoProps {
+  propertyType?: string;
+  availableTypes: string[];
+}
 
-  const propertyTypes: {
-    type: PropertyType;
-    icon: React.FC<React.SVGProps<SVGSVGElement>>;
-    label: string;
-  }[] = [
+export default function PropertyTypeCompo({
+  propertyType: initialPropertyType,
+  availableTypes,
+}: PropertyTypeCompoProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [selectedType, setSelectedType] = useState(initialPropertyType);
+
+  const propertyTypes = [
     { type: "RESIDENTIAL", icon: Home, label: "Residential" },
     { type: "COMMERCIAL", icon: Building, label: "Commercial" },
+    { type: "HMO", icon: Hotel, label: "HMOs" },
+    { type: "RENTAL_HOME", icon: Home, label: "Rental Homes" },
+    { type: "COMMUNAL_AREA", icon: Users, label: "Communal Area" },
+    { type: "BUSINESS_SECTOR", icon: Briefcase, label: "Business Sectors" },
+    { type: "WAREHOUSE", icon: Warehouse, label: "Warehouse" },
   ];
 
+  const filteredTypes = propertyTypes.filter((type) =>
+    availableTypes.includes(type.type)
+  );
+
+  useEffect(() => {
+    if (selectedType) {
+      const params = new URLSearchParams(searchParams);
+      params.set("property_type", selectedType);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [selectedType, pathname, router, searchParams]);
+
+  if (filteredTypes.length === 0 || availableTypes.includes("NOT_APPLICABLE")) {
+    return null;
+  }
+
   return (
-    <div className="flex space-x-4">
-      {propertyTypes.map((property) => (
+    <div className="flex flex-wrap gap-4">
+      {filteredTypes.map((property) => (
         <PropertyButton
           key={property.type}
           type={property.type}
           icon={property.icon}
           label={property.label}
-          onClick={() => {
-            router.push(`${pathname}?property_type=${property.type}`, {
-              scroll: false,
-            });
-          }}
-          isActive={
-            propertyType === property.type ||
-            (propertyType === undefined && property.type === "RESIDENTIAL")
-          }
+          onClick={() => setSelectedType(property.type)}
+          isActive={selectedType === property.type}
         />
       ))}
     </div>

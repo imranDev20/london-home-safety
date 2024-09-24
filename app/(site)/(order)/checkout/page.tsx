@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -39,6 +40,7 @@ import {
   CalendarIcon,
   CheckCircle,
   Coins,
+  HelpCircle,
   ParkingCircleOff,
   ParkingSquare,
 } from "lucide-react";
@@ -55,6 +57,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import { Textarea } from "@/components/ui/textarea";
 
 const parkingOptions = [
   {
@@ -163,6 +166,15 @@ export default function CheckoutPage() {
   const congestionFee = isInCongestionZone ? CONGESTION_FEE : 0;
   const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const totalPrice = cartTotal + parkingFee + congestionFee;
+
+  const infoItems = [
+    "Contact details for access (if different from main contact)",
+    "Location of key safe or special entry instructions",
+    "Presence and location of safety equipment",
+    "Any known hazards or areas requiring special attention",
+    "Parking instructions or restrictions",
+    "Any other relevant details for our service team",
+  ];
 
   const onCheckoutSubmit: SubmitHandler<CheckoutFormInput> = async (data) => {
     setCustomerDetails({
@@ -465,7 +477,10 @@ export default function CheckoutPage() {
                   name="date"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel>Date</FormLabel>
+                      <FormLabel>
+                        Date
+                        <RequiredIndicator />
+                      </FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
@@ -502,7 +517,10 @@ export default function CheckoutPage() {
                   name="time"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Select Time</FormLabel>
+                      <FormLabel>
+                        Select Time
+                        <RequiredIndicator />
+                      </FormLabel>
                       <Select
                         onValueChange={(value) => {
                           if (value) field.onChange(value);
@@ -527,6 +545,50 @@ export default function CheckoutPage() {
                   )}
                 />
               </div>
+            </Card>
+
+            {/* Order Notes */}
+            <Card className="p-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold mb-6">
+                  Additional Information
+                </h2>
+                <Popover>
+                  <PopoverTrigger>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80">
+                    <ul className="list-disc pl-4 space-y-1">
+                      {infoItems.map((item, index) => (
+                        <li key={index} className="text-sm">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="orderNotes"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <div className="flex items-center justify-between"></div>
+                    <Textarea
+                      className="w-full"
+                      {...field}
+                      rows={6}
+                      placeholder="Enter any additional property information here..."
+                    />
+                    <FormDescription className="text-sm text-muted-foreground">
+                      Include details about access, safety equipment, hazards,
+                      and any other relevant information.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </Card>
           </div>
 

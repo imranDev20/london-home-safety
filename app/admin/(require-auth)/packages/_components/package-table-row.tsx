@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +12,6 @@ import {
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -20,12 +19,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { Package } from "@prisma/client";
 import { deletePackage } from "../actions";
 
-export default function ServiceTableRow({ pack }: { pack: Package }) {
-  const router = useRouter();
+export default function PackageTableRow({ pack }: { pack: Package }) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
   const handleDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault(); // Prevent the default link behavior
     e.stopPropagation(); // Stop the propagation to prevent routing
 
     startTransition(async () => {
@@ -38,7 +37,6 @@ export default function ServiceTableRow({ pack }: { pack: Package }) {
           variant: "success",
         });
       } else {
-        // Handle error (e.g., show an error message)
         toast({
           title: "Error Deleting Service",
           description: result.message,
@@ -49,23 +47,21 @@ export default function ServiceTableRow({ pack }: { pack: Package }) {
   };
 
   return (
-    <TableRow
-      onClick={() => router.push(`/admin/packages/${pack.id}`)}
-      className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
-    >
+    <TableRow className={`${isPending ? "opacity-30" : "opacity-100"}`}>
       <TableCell>
         <div className="flex justify-center">
           <Checkbox />
         </div>
       </TableCell>
-
-      <TableCell className="w-[25%]">{pack.name}</TableCell>
-      <TableCell className="w-[10%]">£{pack.price}</TableCell>
-      <TableCell className="">{pack.serviceName || "N/A"}</TableCell>
-      <TableCell className="">{pack.type || "N/A"}</TableCell>
-      <TableCell className="hidden md:table-cell">
-        {pack.propertyType || "N/A"}
-      </TableCell>
+      <Link href={`/admin/packages/${pack.id}`} className="contents">
+        <TableCell className="w-[25%]">{pack.name}</TableCell>
+        <TableCell className="w-[10%]">£{pack.price}</TableCell>
+        <TableCell className="">{pack.serviceName || "N/A"}</TableCell>
+        <TableCell className="">{pack.type || "N/A"}</TableCell>
+        <TableCell className="hidden md:table-cell">
+          {pack.propertyType || "N/A"}
+        </TableCell>
+      </Link>
       <TableCell className="w-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -80,11 +76,7 @@ export default function ServiceTableRow({ pack }: { pack: Package }) {
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                handleDelete(e);
-              }}
-            >
+            <DropdownMenuItem onClick={handleDelete}>
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </DropdownMenuItem>

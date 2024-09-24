@@ -10,7 +10,6 @@ import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { UserEmailDataType } from "@/types/misc";
 import { revalidatePath, unstable_cache as cache } from "next/cache";
-import { z } from "zod";
 import { reviewSchema } from "./schema";
 import { handlePrismaError } from "@/lib/prisma-error";
 
@@ -89,7 +88,7 @@ export async function sendEmailToAdminAndCustomerAction(
       message: "Email sent successfully!",
       success: true,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending email:", error);
     return handlePrismaError(error);
   }
