@@ -1,3 +1,4 @@
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { NavItem, NavLeafItem } from "@/types/misc";
 import { OrderWithRelation } from "@/types/order";
 import { Package } from "@prisma/client";
@@ -226,8 +227,8 @@ export const calculateSubtotal = (packages: Package[]) => {
 };
 export const calculateTotal = (orderDetails: OrderWithRelation) => {
   let total = parseFloat(calculateSubtotal(orderDetails.packages));
-  if (orderDetails.isCongestionZone) total += 5;
-  if (orderDetails.parkingOptions !== "FREE") total += 5;
+  if (orderDetails.isCongestionZone) total += CONGESTION_FEE;
+  if (orderDetails.parkingOptions !== "FREE") total += PARKING_FEE;
   return total.toFixed(2);
 };
 

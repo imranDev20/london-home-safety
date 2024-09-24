@@ -9,10 +9,10 @@ import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { UserEmailDataType } from "@/types/misc";
-import { revalidatePath } from "next/cache";
-import { cache } from "react";
+import { revalidatePath, unstable_cache as cache } from "next/cache";
 import { z } from "zod";
 import { reviewSchema } from "./schema";
+import { handlePrismaError } from "@/lib/prisma-error";
 
 export const getReviews = cache(async () => {
   try {
@@ -51,21 +51,8 @@ export async function createReview(data: unknown) {
       success: true,
     };
   } catch (error) {
-    // Handle Zod validation errors
-    if (error instanceof z.ZodError) {
-      console.error("Validation error:", error.errors);
-      throw new Error("Invalid review data");
-    }
-
-    // Handle Prisma errors
-    if (error instanceof Error) {
-      console.error("Database error:", error.message);
-      throw new Error("Failed to create review");
-    }
-
-    // Handle other errors
     console.error("Unexpected error:", error);
-    throw new Error("An unexpected error occurred");
+    return handlePrismaError(error);
   }
 }
 
@@ -97,8 +84,6 @@ export async function sendEmailToAdminAndCustomerAction(
       subject: customerEmailSubject,
       html: contactCustomerNotificationEmailHtml(name, subject, message),
     });
-    // Revalidate the necessary paths if applicable (example paths)
-    revalidatePath(`/contact`);
 
     return {
       message: "Email sent successfully!",
@@ -106,10 +91,6 @@ export async function sendEmailToAdminAndCustomerAction(
     };
   } catch (error: any) {
     console.error("Error sending email:", error);
-    return {
-      message:
-        "An error occurred while sending the email. Please try again later.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }

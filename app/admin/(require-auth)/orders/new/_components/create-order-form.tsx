@@ -152,9 +152,9 @@ export default function CreateOrderForm({
           });
 
           toast({
-            title: result.emailSuccess ? "Success" : "Error",
-            description: result.emailMessage,
-            variant: result.emailSuccess ? "success" : "destructive",
+            title: result.success ? "Success" : "Error",
+            description: result.message,
+            variant: result.success ? "success" : "destructive",
           });
 
           router.push("/admin/orders");

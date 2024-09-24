@@ -69,7 +69,9 @@ export default function EngineersTableRow({
             <AvatarFallback>{engineer?.name?.charAt(0) ?? "A"}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-medium">{engineer.name}</p>
+            <p className="text-sm font-medium">
+              {engineer.firstName + " " + engineer.lastName}
+            </p>
             <p className="text-xs text-gray-500 font-normal">
               {engineer.email}
             </p>

@@ -7,13 +7,13 @@ import { Role } from "@prisma/client";
 
 const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
-
   providers: [
     GoogleProvider({
       clientId: process.env.AUTH_GOOGLE_ID!,
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
     }),
   ],
+
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google" && user?.email) {
@@ -89,5 +89,4 @@ const authOptions: NextAuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

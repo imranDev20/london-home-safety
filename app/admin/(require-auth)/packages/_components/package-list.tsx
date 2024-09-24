@@ -21,7 +21,7 @@ export default async function ServiceList({
   return (
     <Card className="flex flex-col justify-between">
       <CardContent className="p-0">
-        <div className="overflow-auto h-[calc(100vh-325px)]">
+        <div className="overflow-auto h-[calc(100vh-315px)]">
           <Table>
             <TableHeader>
               <TableRow>
@@ -31,10 +31,11 @@ export default async function ServiceList({
                   </div>
                 </TableHead>
                 <TableHead className="w-[15%]">Name</TableHead>
-                <TableHead className="w-[15%]">Price</TableHead>
-                <TableHead className="hidden md:table-cell">Category</TableHead>
+                <TableHead className="w-[10%]">Price</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Service Name
+                </TableHead>
                 <TableHead>Type</TableHead>
-                <TableHead className="hidden md:table-cell">Unit</TableHead>
                 <TableHead className="hidden md:table-cell">
                   Property Type
                 </TableHead>

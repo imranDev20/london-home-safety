@@ -58,7 +58,7 @@ export default function OrderTableHeader() {
       const result = await exportOrders();
       if (result.success) {
         // Handle successful deletion (e.g., show a success message, update UI)
-        const excelData = result.data as string;
+        const excelData = result?.data as string;
         const byteArray = new Uint8Array(
           atob(excelData)
             .split("")
@@ -79,7 +79,7 @@ export default function OrderTableHeader() {
         link.click();
         link.remove();
         toast({
-          title: "Orders  Downloaded",
+          title: "Orders Downloaded",
           description: result.message,
           variant: "success",
         });
@@ -95,14 +95,13 @@ export default function OrderTableHeader() {
   };
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 mt-7">
-        <h1 className="text-2xl font-bold mb-2 flex items-center">
+    <div className="space-y-4 mt-7 mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <h1 className="text-2xl font-bold flex items-center mb-4 sm:mb-0">
           <FaCartShopping className="mr-2 text-primary" />
           Order List
         </h1>
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <LoadingButton
             type="button"
             disabled={isPending}
@@ -114,7 +113,6 @@ export default function OrderTableHeader() {
             {!isPending && <Download className="mr-2 h-4 w-4" />}
             Download Excel
           </LoadingButton>
-
           <Link href="/admin/orders/new" className="w-full sm:w-auto">
             <Button
               size="sm"
@@ -127,8 +125,8 @@ export default function OrderTableHeader() {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-2 w-full mb-5">
-        <div className="relative w-full">
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-grow">
           <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <Input
             type="search"
@@ -138,86 +136,81 @@ export default function OrderTableHeader() {
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full">
-          <Select
-            value={sortBy}
-            onValueChange={(value) => {
-              if (value) {
-                router.push(
-                  `${pathname}?${createQueryString({
-                    sort_by: value,
-                  })}`
-                );
-              }
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[160px]">
+        <Select
+          value={sortBy}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  sort_by: value,
+                })}`
+              );
+            }
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[160px]">
+            <SortAsc className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="name">Name</SelectItem>
+            <SelectItem value="price">Cost</SelectItem>
+            <SelectItem value="email">Email</SelectItem>
+            <SelectItem value="createdAt">Created At</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select
+          value={sortOrder}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  sort_order: value,
+                })}`
+              );
+            }
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[160px]">
+            {sortOrder === "asc" ? (
               <SortAsc className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="name">Name</SelectItem>
-              <SelectItem value="price">Cost</SelectItem>
-              <SelectItem value="email">Email</SelectItem>
-              <SelectItem value="createdAt">Created At</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={sortOrder}
-            onValueChange={(value) => {
-              if (value) {
-                router.push(
-                  `${pathname}?${createQueryString({
-                    sort_order: value,
-                  })}`
-                );
-              }
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[160px]">
-              {sortOrder === "asc" ? (
-                <SortAsc className="mr-2 h-4 w-4" />
-              ) : (
-                <SortDesc className="mr-2 h-4 w-4" />
-              )}
-              <SelectValue placeholder="Sort Order" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="desc">Desc</SelectItem>
-              <SelectItem value="asc">Asc</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={filterStatus}
-            onValueChange={(value) => {
-              if (value) {
-                router.push(
-                  `${pathname}?${createQueryString({
-                    filter_status: value !== "ALL" ? value : "",
-                    page: "",
-                  })}`
-                );
-              }
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[160px]">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Filter by Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">ALL</SelectItem>
-              {ORDER_STATUS_OPTIONS.map((option) => (
-                <SelectItem value={option} key={option}>
-                  {kebabToNormal(option)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+            ) : (
+              <SortDesc className="mr-2 h-4 w-4" />
+            )}
+            <SelectValue placeholder="Sort Order" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="desc">Desc</SelectItem>
+            <SelectItem value="asc">Asc</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select
+          value={filterStatus}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  filter_status: value !== "ALL" ? value : "",
+                  page: "",
+                })}`
+              );
+            }
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[160px]">
+            <Filter className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Filter by Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">ALL</SelectItem>
+            {ORDER_STATUS_OPTIONS.map((option) => (
+              <SelectItem value={option} key={option}>
+                {kebabToNormal(option)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-    </>
+    </div>
   );
 }

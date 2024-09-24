@@ -7,7 +7,7 @@ import { EMAIL_ADDRESS } from "@/shared/data";
 import { SendEmailDataType } from "@/types/misc";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { cache } from "react";
+import { unstable_cache as cache } from "next/cache";
 
 export const getEngineers = cache(
   async (
@@ -27,7 +27,8 @@ export const getEngineers = cache(
             ? {
                 OR: [
                   { email: { contains: search, mode: "insensitive" } },
-                  { name: { contains: search, mode: "insensitive" } },
+                  { firstName: { contains: search, mode: "insensitive" } },
+                  { lastName: { contains: search, mode: "insensitive" } },
                 ],
               }
             : {},

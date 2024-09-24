@@ -78,7 +78,7 @@ import { Badge } from "@/components/ui/badge";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import SendEmailDialog from "./send-email-dialog";
-import { BUSINESS_NAME } from "@/shared/data";
+import { BUSINESS_NAME, CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 
 export default function EditOrderForm({
   orderDetails,
@@ -134,7 +134,7 @@ export default function EditOrderForm({
           const emailData = {
             receiver: orderDetails?.user.email,
             subject: "Order Confirmation",
-            content: `Dear ${orderDetails?.user.name},\n\nThank you for your order. Your order has been confirmed. Your order number is ${orderDetails?.invoice}.`,
+            content: `Dear ${orderDetails?.user.firstName},\n\nThank you for your order. Your order has been confirmed. Your order number is ${orderDetails?.invoice}.`,
             orderDetails: orderDetails,
           };
           const response = await sendEmailToCustomerOrderConfirmation(
@@ -150,7 +150,7 @@ export default function EditOrderForm({
           const emailData = {
             receiver: orderDetails?.user.email,
             subject: "Order Completed",
-            content: `Dear ${orderDetails?.user.name},\n\nWe are pleased to inform you that your order has been successfully completed. Your order number is ${orderDetails?.invoice}. If you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`,
+            content: `Dear ${orderDetails?.user.firstName},\n\nWe are pleased to inform you that your order has been successfully completed. Your order number is ${orderDetails?.invoice}. If you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`,
             orderDetails: orderDetails,
           };
 
@@ -165,7 +165,7 @@ export default function EditOrderForm({
           const emailData = {
             receiver: orderDetails?.user.email,
             subject: "Order Cancelled",
-            content: `Dear ${orderDetails?.user.name},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
+            content: `Dear ${orderDetails?.user.firstName},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
             orderDetails: orderDetails,
           };
 
@@ -339,7 +339,9 @@ export default function EditOrderForm({
                         <CommandGroup>
                           {engineers?.map((engineer) => (
                             <CommandItem
-                              value={engineer.name ?? ""}
+                              value={
+                                engineer.firstName + " " + engineer.lastName
+                              }
                               key={engineer.id}
                               onSelect={() => handleSelectEngineer(engineer.id)}
                               onChange={() =>
@@ -354,7 +356,7 @@ export default function EditOrderForm({
                                     : "opacity-0"
                                 )}
                               />
-                              {engineer.name}
+                              {engineer.firstName + " " + engineer.lastName}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -381,7 +383,7 @@ export default function EditOrderForm({
                       <TableHeader>
                         <TableRow>
                           <TableHead>Name</TableHead>
-                          <TableHead>Category</TableHead>
+                          <TableHead>Type</TableHead>
                           <TableHead>Unit</TableHead>
                           <TableHead>Price</TableHead>
                         </TableRow>
@@ -435,13 +437,13 @@ export default function EditOrderForm({
                     {orderDetails.isCongestionZone && (
                       <div className="flex justify-between">
                         <span>Congestion Zone Fee:</span>
-                        <span>£5.00</span>
+                        <span>£{CONGESTION_FEE}.00</span>
                       </div>
                     )}
                     {orderDetails.parkingOptions !== "FREE" && (
                       <div className="flex justify-between">
                         <span>Parking Fee:</span>
-                        <span>£5.00</span>
+                        <span>£{PARKING_FEE}.00</span>
                       </div>
                     )}
                     <div className="flex justify-between font-semibold">
@@ -512,7 +514,7 @@ export default function EditOrderForm({
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium">{orderDetails?.user.name}</p>
+                <p className="font-medium">{orderDetails?.user.firstName}</p>
                 <p className="text-sm text-gray-500">
                   {orderDetails?.user.email}
                 </p>

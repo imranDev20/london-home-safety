@@ -92,7 +92,7 @@ export const notifyUserCompleteEmailHtml = (
       <h2>Order Completed</h2>
     </div>
     <div class="content">
-      <p>Dear ${orderDetails?.user.name},</p>
+      <p>Dear ${orderDetails?.user.firstName},</p>
       <p>
         We are pleased to inform you that your order has been successfully completed. Below are the details of your completed order:
       </p>

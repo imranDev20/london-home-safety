@@ -2,9 +2,9 @@
 
 import prisma from "@/lib/prisma";
 import { PackageType, Prisma } from "@prisma/client";
-import { revalidatePath } from "next/cache";
-import { cache } from "react";
+import { revalidatePath, unstable_cache as cache } from "next/cache";
 import { PackageFormInputType } from "./schema";
+import { handlePrismaError } from "@/lib/prisma-error";
 
 export const getPackages = cache(
   async (
@@ -24,6 +24,7 @@ export const getPackages = cache(
                 OR: [
                   { name: { contains: search, mode: "insensitive" } },
                   { unitType: { contains: search, mode: "insensitive" } },
+                  { serviceName: { contains: search, mode: "insensitive" } },
                 ],
               }
             : {},
@@ -68,21 +69,16 @@ export async function deletePackage(serviceId: string) {
       },
     });
 
-    revalidatePath("/admin/packages");
-    revalidatePath("/admin/orders/new");
-    revalidatePath("/book-now");
+    revalidatePath("/", "layout");
 
     return {
-      message: "Service deleted successfully!",
+      message: "Package deleted successfully!",
       data: deletedService,
       success: true,
     };
   } catch (error) {
     console.error("Error deleting service:", error);
-    return {
-      message: "An error occurred while deleting the service.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }
 
@@ -108,11 +104,7 @@ export async function createPackage(data: PackageFormInputType) {
       },
     });
 
-    revalidatePath("/");
-    revalidatePath("/admin/packages");
-    revalidatePath("/book-now");
-    revalidatePath("/admin/orders/new");
-    revalidatePath("/services/[category_id]/[service_id]", "page");
+    revalidatePath("/", "layout");
 
     return {
       message: "Package created successfully!",
@@ -121,10 +113,7 @@ export async function createPackage(data: PackageFormInputType) {
     };
   } catch (error) {
     console.error(error);
-    return {
-      message: "An error occurred while creating the service.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }
 
@@ -163,11 +152,8 @@ export async function updatePackage(
     });
 
     // Revalidate paths if needed
-    revalidatePath("/admin/packages");
-    revalidatePath("/");
-    revalidatePath("/book-now");
-    revalidatePath("/admin/orders/new");
-    revalidatePath("/services/[category_id]/[service_id]", "page");
+
+    revalidatePath("/", "layout");
 
     return {
       message: "Package updated successfully!",
@@ -176,10 +162,7 @@ export async function updatePackage(
     };
   } catch (error) {
     console.error("Error updating package:", error);
-    return {
-      message: "An error occurred while updating the package.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }
 

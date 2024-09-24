@@ -2,7 +2,6 @@
 
 import prisma from "@/lib/prisma";
 import { OrderStatus, Prisma, Role } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
@@ -16,10 +15,22 @@ import {
   PARKING_FEE,
 } from "@/shared/data";
 import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
-import { getEngineerById } from "../engineers/actions";
 import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
-import { cache } from "react";
+import { unstable_cache as cache } from "next/cache";
 import { generateInvoiceHtml } from "@/lib/invoice-html";
+import { handlePrismaError } from "@/lib/prisma-error";
+
+type OrderWithUser = Prisma.OrderGetPayload<{
+  include: {
+    packages: true;
+    user: {
+      include: {
+        address: true;
+      };
+    };
+    assignedEngineer: true;
+  };
+}>;
 
 export const getOrders = cache(
   async (
@@ -149,10 +160,7 @@ export async function deleteOrder(orderId: string) {
     };
   } catch (error) {
     console.error("Error updating product:", error);
-    return {
-      message: "An error occurred while deleting the order.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }
 
@@ -182,7 +190,7 @@ export async function exportOrders() {
     orders.forEach((order) => {
       worksheet.addRow({
         invoice_id: order.invoice,
-        name: order.user?.name,
+        name: order.user?.firstName + " " + order.user.lastName,
         email: order.user?.email,
         // phone: order.user?.phone,
         address: `${
@@ -204,8 +212,9 @@ export async function exportOrders() {
     };
   } catch (error) {
     return {
-      message: "An error occured when downloading orders data" + error,
+      data: null,
       success: false,
+      message: handlePrismaError(error).message,
     };
   }
 }
@@ -268,7 +277,8 @@ export default async function generateInvoice(orderId: string) {
   } catch (error) {
     console.error("Error generating PDF:", error);
     return {
-      message: "An error occured when generating invoice" + error,
+      message: handlePrismaError(error).message,
+      data: null,
       success: false,
     };
   }
@@ -279,58 +289,69 @@ export async function createOrder(data: CreateOrderFormInput) {
     const validatedData = createOrderSchema.parse(data);
     const packageIds = validatedData.packages.map((pkg) => pkg.packageId);
 
-    const packages = await prisma.package.findMany({
-      where: {
-        id: {
-          in: packageIds,
-        },
-      },
-      select: {
-        price: true,
-      },
-    });
+    let createdOrder: OrderWithUser;
 
-    const packageTotal = packages.reduce((total, pkg) => total + pkg.price, 0);
-
-    const totalPrice =
-      packageTotal +
-      (data.isCongestionZone ? 5 : 0) +
-      (data.parkingOptions === "NO" || data.parkingOptions === "PAID" ? 5 : 0);
-
-    const createdOrder = await prisma.order.create({
-      data: {
-        userId: data.userId,
-        assignedEngineerId: data.assignedEngineer,
-        propertyType: data.propertyType,
-        residentialType: data.residentialType,
-        isCongestionZone: data.isCongestionZone,
-        parkingOptions: data.parkingOptions,
-        date: data.date,
-        inspectionTime: data.inspectionTime,
-        totalPrice: totalPrice,
-        invoice: data.invoiceId,
-        status: "CONFIRMED",
-        paymentStatus: "UNPAID",
-        paymentMethod: data.paymentMethod,
-        packages: {
-          connect: data.packages.map((pack) => ({ id: pack.packageId })),
-        },
-      },
-      include: {
-        packages: true,
-        user: {
-          include: {
-            address: true,
+    // Database transaction
+    createdOrder = await prisma.$transaction(async (prismaTransaction) => {
+      const packages = await prismaTransaction.package.findMany({
+        where: {
+          id: {
+            in: packageIds,
           },
         },
-        assignedEngineer: true,
-      },
+        select: {
+          price: true,
+        },
+      });
+
+      const packageTotal = packages.reduce(
+        (total, pkg) => total + pkg.price,
+        0
+      );
+
+      const totalPrice =
+        packageTotal +
+        (data.isCongestionZone ? 5 : 0) +
+        (data.parkingOptions === "NO" || data.parkingOptions === "PAID"
+          ? 5
+          : 0);
+
+      return await prismaTransaction.order.create({
+        data: {
+          userId: data.userId,
+          assignedEngineerId: data.assignedEngineer,
+          propertyType: data.propertyType,
+          residentialType: data.residentialType,
+          isCongestionZone: data.isCongestionZone,
+          parkingOptions: data.parkingOptions,
+          date: data.date,
+          inspectionTime: data.inspectionTime,
+          totalPrice: totalPrice,
+          invoice: data.invoiceId,
+          status: "CONFIRMED",
+          paymentStatus: "UNPAID",
+          paymentMethod: data.paymentMethod,
+          packages: {
+            connect: data.packages.map((pack) => ({ id: pack.packageId })),
+          },
+        },
+        include: {
+          packages: true,
+          user: {
+            include: {
+              address: true,
+            },
+          },
+          assignedEngineer: true,
+        },
+      });
     });
 
+    // Email sending (outside of transaction)
     await sendEmail({
       fromEmail: EMAIL_ADDRESS,
       fromName: "London Home Safety",
-      to: createdOrder?.user.email ?? "",
+      to: createdOrder.user.email ?? "",
       subject: "Order Placed Successfully",
       html: notifyUserOrderPlacedEmailHtml(createdOrder),
     });
@@ -352,23 +373,19 @@ export async function createOrder(data: CreateOrderFormInput) {
 
     return {
       message: "Order created successfully!",
-      emailMessage: "Email sent successrylly!",
+      emailMessage: "Email sent successfully!",
       data: createdOrder,
       success: true,
       emailSuccess: true,
     };
   } catch (error) {
-    console.error(error);
-    return {
-      message: "An error occurred while creating the order.",
-      emailMessage: "An error occoured while sending email",
-      emailSuccess: false,
-    };
+    return handlePrismaError(error);
   }
 }
 
 interface CreateUserInput {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string | "";
   address: {
@@ -383,8 +400,10 @@ export async function createUser(data: CreateUserInput, userType: Role) {
   try {
     const newUser = await prisma.user.create({
       data: {
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
-        name: data.name,
+        name: data.firstName + " " + data.lastName,
         password: "123456",
         role: userType,
         phone: data.phone,
@@ -404,10 +423,7 @@ export async function createUser(data: CreateUserInput, userType: Role) {
       },
     });
 
-    revalidatePath("/admin/orders");
-    revalidatePath("/admin/orders/new");
-    revalidatePath("/admin/customers");
-    revalidatePath("/admin/engineers");
+    revalidatePath("/admin", "layout");
 
     return {
       message: "User created successfully!",
@@ -415,50 +431,7 @@ export async function createUser(data: CreateUserInput, userType: Role) {
       success: true,
     };
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case "P2002":
-          return {
-            message: `A user with this ${error.meta?.target} already exists.`,
-            success: false,
-          };
-        case "P2003":
-          return {
-            message: `Foreign key constraint failed on the field: ${error.meta?.field_name}`,
-            success: false,
-          };
-        case "P2005":
-          return {
-            message: `Invalid value provided for ${error.meta?.field_name}.`,
-            success: false,
-          };
-        case "P2006":
-          return {
-            message: `The value provided is too long for the field: ${error.meta?.field_name}.`,
-            success: false,
-          };
-        case "P2011":
-          return {
-            message: `Missing required field: ${error.meta?.field_name}.`,
-            success: false,
-          };
-        case "P2025":
-          return {
-            message: `Record does not exist.`,
-            success: false,
-          };
-        default:
-          return {
-            message: "An unknown error occurred.",
-            success: false,
-          };
-      }
-    } else {
-      console.error("Unhandled error:", error);
-      return {
-        message: "An unexpected error occurred.",
-        success: false,
-      };
-    }
+    console.error("Error creating user:", error);
+    return handlePrismaError(error);
   }
 }

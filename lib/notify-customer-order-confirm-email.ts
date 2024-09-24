@@ -92,7 +92,7 @@ export const notifyUserConfirmEmailHtml = (
       <h2>Order Confirmation</h2>
     </div>
     <div class="content">
-      <p>Dear ${orderDetails?.user.name},</p>
+      <p>Dear ${orderDetails?.user.firstName},</p>
       <p>
         Thank you for your order! We have received your request and are currently processing it. Below are the details of your order:
       </p>

@@ -91,7 +91,7 @@ export const notifyUserOrderPlacedEmailHtml = (
       <h2>Order Placed Successfully</h2>
     </div>
     <div class="content">
-      <p>Dear ${orderDetails?.user.name},</p>
+      <p>Dear ${orderDetails?.user.firstName},</p>
       <p>
         Thank you for placing your order with us! We have received your request and are currently processing it. Below are the details of your order:
       </p>

@@ -13,6 +13,8 @@ model User {
   email          String        @unique
   password       String
   name           String?
+  firstName      String
+  lastName       String
   phone          String?
   role           Role          @default(CUSTOMER)
   expertise      String?
@@ -132,6 +134,9 @@ enum PropertyType {
   RESIDENTIAL
   COMMERCIAL
   NOT_APPLICABLE
+  HMO
+  COMMUNAL_AREA
+  BUSINESS_SECTOR
 }
 
 enum ResidentialType {

@@ -1,14 +1,14 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { handlePrismaError } from "@/lib/prisma-error";
 import {
   OrderStatus,
   Package,
   PaymentStatus,
   PropertyType,
 } from "@prisma/client";
-import { revalidatePath } from "next/cache";
-import { cache } from "react";
+import { revalidatePath, unstable_cache as cache } from "next/cache";
 
 export const getEngineersForOrder = cache(async () => {
   try {
@@ -65,11 +65,7 @@ export async function updateOrder(orderId: string, assignedEngineerId: string) {
     };
   } catch (error) {
     console.error("Error updating order:", error);
-    return {
-      message:
-        "An error occurred while updating the order. Please try again later.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }
 
@@ -94,11 +90,7 @@ export async function updateOrderStatus(orderId: string, orderStatus: string) {
     };
   } catch (error) {
     console.error("Error updating order status:", error);
-    return {
-      message:
-        "An error occurred while updating the order status. Please try again later.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }
 export async function updatePaymentStatus(
@@ -125,11 +117,7 @@ export async function updatePaymentStatus(
     };
   } catch (error) {
     console.error("Error updating order payment status:", error);
-    return {
-      message:
-        "An error occurred while updating the order payment status. Please try again later.",
-      success: false,
-    };
+    return handlePrismaError(error);
   }
 }
 

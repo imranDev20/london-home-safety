@@ -6,6 +6,7 @@ import { generateInvoiceHtml } from "@/lib/invoice-html";
 import { notifyAdminOrderPlacedEmailHtml } from "@/lib/notify-admin-order-placed";
 import { placedOrderEmailHtml } from "@/lib/placed-order-html";
 import prisma from "@/lib/prisma";
+import { handlePrismaError } from "@/lib/prisma-error";
 import { sendEmail } from "@/lib/send-email";
 import { CONGESTION_FEE, EMAIL_ADDRESS, PARKING_FEE } from "@/shared/data";
 import { Order, PaymentMethod, Prisma, Role } from "@prisma/client";
@@ -67,8 +68,9 @@ export default async function generateInvoice(order: OrderWithRelation) {
   } catch (error) {
     console.error("Error generating PDF:", error);
     return {
-      message: "An error occured when generating invoice" + error,
       success: false,
+      data: null,
+      message: handlePrismaError(error).message,
     };
   }
 }
@@ -102,6 +104,8 @@ export async function createOrder(orderData: OrderData): Promise<{
         const upsertedUser = await transactionPrisma.user.upsert({
           where: { email: customerDetails.email },
           update: {
+            firstName: customerDetails.firstName,
+            lastName: customerDetails.lastName,
             name: customerDetails.firstName + " " + customerDetails.lastName,
             phone: customerDetails.phoneNumber,
             address: {
@@ -113,6 +117,8 @@ export async function createOrder(orderData: OrderData): Promise<{
             },
           },
           create: {
+            firstName: customerDetails.firstName,
+            lastName: customerDetails.lastName,
             email: customerDetails.email,
             name: customerDetails.firstName + " " + customerDetails.lastName,
             password: "12345678", // Store the hashed password
@@ -190,7 +196,7 @@ export async function createOrder(orderData: OrderData): Promise<{
           {
             ContentType: "application/pdf",
             Filename: `Invoice_${createdOrder.invoice}.pdf`,
-            Base64Content: invoice.data,
+            Base64Content: invoice?.data,
           },
         ];
 
@@ -200,7 +206,7 @@ export async function createOrder(orderData: OrderData): Promise<{
           to: createdOrder.user.email,
           subject: "Thank You for Your Order",
           html: placedOrderEmailHtml(
-            createdOrder.user.name ?? "",
+            createdOrder.user.firstName ?? "",
             createdOrder.invoice
           ),
           attachments,
@@ -238,13 +244,12 @@ export async function createOrder(orderData: OrderData): Promise<{
       "Transaction failed, all changes have been rolled back:",
       error
     );
+    const message = handlePrismaError(error).message;
+
     return {
       success: false,
       data: null,
-      message:
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred while creating the order.",
+      message,
     };
   }
 }
