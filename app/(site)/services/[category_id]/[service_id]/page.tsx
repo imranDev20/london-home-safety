@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
 import { kebabToNormal, mergeArrays } from "@/lib/utils";
-import { ALL_SERVICES, PHONE_NO } from "@/shared/data";
+import { ALL_SERVICES } from "@/shared/data";
 import { PropertyType } from "@prisma/client";
 import Image from "next/image";
 import BookNowButtonCompo from "./_components/book-now-button-compo";
