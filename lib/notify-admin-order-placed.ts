@@ -157,7 +157,9 @@ export const notifyAdminOrderPlacedEmailHtml = (
         <table>
           <tr>
             <th>Name:</th>
-            <td>${orderDetails?.user.name}</td>
+            <td>${orderDetails?.user.firstName} ${
+  orderDetails?.user.lastName
+}</td>
           </tr>
           <tr>
             <th>Email:</th>

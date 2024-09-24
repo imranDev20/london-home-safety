@@ -92,7 +92,7 @@ export const notifyUserCancelEmailHtml = (
       <h2>Order Cancellation</h2>
     </div>
     <div class="content">
-      <p>Dear ${orderDetails?.user.name},</p>
+      <p>Dear ${orderDetails?.user.firstName},</p>
       <p>
         We regret to inform you that your order has been cancelled. Below are the details of the cancelled order:
       </p>

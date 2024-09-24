@@ -6,7 +6,7 @@ export default function PackageTableRow({ pack }: { pack: Package }) {
   return (
     <TableRow>
       <TableCell className="font-medium">{pack.name}</TableCell>
-      <TableCell>{pack.category}</TableCell>
+      <TableCell>{pack.serviceName}</TableCell>
       <TableCell>{pack.unitType}</TableCell>
       <TableCell>£{pack.price}</TableCell>
     </TableRow>

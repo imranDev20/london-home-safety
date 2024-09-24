@@ -40,13 +40,12 @@ export default function PackageTableHeader() {
   }, [debouncedSearchValue, pathname, router, createQueryString]);
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 mt-7">
-        <h1 className="text-2xl font-bold mb-2 flex items-center">
+    <div className="space-y-4 mt-7 mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <h1 className="text-2xl font-bold flex items-center mb-4 sm:mb-0">
           <FaPlug className="text-primary mr-2" />
           Package List
         </h1>
-
         <Link href="/admin/packages/new" className="w-full sm:w-auto">
           <Button className="h-9 w-full text-sm font-medium flex items-center justify-center">
             <Plus className="mr-2 h-4 w-4" />
@@ -55,8 +54,8 @@ export default function PackageTableHeader() {
         </Link>
       </div>
 
-      <div className="flex flex-col space-y-2 w-full mb-5">
-        <div className="relative w-full">
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-grow">
           <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <Input
             type="search"
@@ -66,35 +65,33 @@ export default function PackageTableHeader() {
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full">
-          <Select
-            value={filterStatus}
-            onValueChange={(value) => {
-              if (value) {
-                router.push(
-                  `${pathname}?${createQueryString({
-                    filter_status: value !== "ALL" ? value : "",
-                    page: "",
-                  })}`
-                );
-              }
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Filter by Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">ALL</SelectItem>
-              {SERVICE_TYPE_OPTIONS.map((option) => (
-                <SelectItem value={option} key={option}>
-                  {kebabToNormal(option)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Select
+          value={filterStatus}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  filter_status: value !== "ALL" ? value : "",
+                  page: "",
+                })}`
+              );
+            }
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <Filter className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Filter by Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">ALL</SelectItem>
+            {SERVICE_TYPE_OPTIONS.map((option) => (
+              <SelectItem value={option} key={option}>
+                {kebabToNormal(option)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-    </>
+    </div>
   );
 }

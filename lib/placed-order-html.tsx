@@ -1,7 +1,7 @@
 import { ADDRESS, BUSINESS_NAME, PHONE_NO, WEBSITE_URL } from "@/shared/data";
 
 export const placedOrderEmailHtml = (
-  customerName: string,
+  firstName: string,
   invoiceNumber: string
 ) => {
   return `<!DOCTYPE html>
@@ -86,7 +86,7 @@ export const placedOrderEmailHtml = (
           <h2>Thank You for Your Order</h2>
         </div>
         <div class="content">
-          <p>Dear ${customerName},</p>
+          <p>Dear ${firstName},</p>
           <p>We are pleased to inform you that we have received your order. Your order number is <strong>${invoiceNumber}</strong>.</p>
           <p>We will process your order promptly and keep you updated on its status.</p>
           <p>If you have any questions or concerns, feel free to contact our customer support team.</p>

@@ -59,15 +59,10 @@ export default function ServiceTableRow({ pack }: { pack: Package }) {
         </div>
       </TableCell>
 
-      <TableCell className="w-[15%]">{pack.name}</TableCell>
-      <TableCell className="w-[15%]">£{pack.price}</TableCell>
-      <TableCell className="">
-        <Badge variant="outline">{pack.category || "N/A"}</Badge>
-      </TableCell>
+      <TableCell className="w-[25%]">{pack.name}</TableCell>
+      <TableCell className="w-[10%]">£{pack.price}</TableCell>
+      <TableCell className="">{pack.serviceName || "N/A"}</TableCell>
       <TableCell className="">{pack.type || "N/A"}</TableCell>
-      <TableCell className="hidden md:table-cell">
-        {pack.unitType || "N/A"}
-      </TableCell>
       <TableCell className="hidden md:table-cell">
         {pack.propertyType || "N/A"}
       </TableCell>

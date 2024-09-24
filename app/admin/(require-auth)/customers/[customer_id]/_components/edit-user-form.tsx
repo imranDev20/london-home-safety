@@ -62,7 +62,7 @@ export default function EditCustomerForm({
       href: user.role === "CUSTOMER" ? "/admin/customers" : "/admin/engineers",
     },
     {
-      label: `Edit ${user.name}`,
+      label: `Edit ${user.firstName} ${user.lastName}`,
       href:
         user.role === "CUSTOMER"
           ? `/admin/customers/${user.id}`
@@ -113,7 +113,9 @@ export default function EditCustomerForm({
 
   return (
     <ContentLayout
-      title={`${user.role === "STAFF" ? "Engineer" : "Customer"}: ${user.name}`}
+      title={`${user.role === "STAFF" ? "Engineer" : "Customer"}: ${
+        user.firstName
+      } ${user.lastName}`}
     >
       <DynamicBreadcrumb items={breadcrumbItems} />
 
@@ -166,7 +168,9 @@ export default function EditCustomerForm({
 
         <Card className="overflow-hidden">
           <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-400 text-white">
-            <CardTitle className="text-2xl font-bold">{user.name}</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              {user.firstName} {user.lastName}
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="space-y-4">

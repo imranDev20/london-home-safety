@@ -66,10 +66,14 @@ export default function CustomerTableRow({
       <TableCell className="w-[25%]">
         <div className="flex">
           <Avatar className="mr-3">
-            <AvatarFallback>{customer?.name?.charAt(0) ?? "A"}</AvatarFallback>
+            <AvatarFallback>
+              {customer?.firstName?.charAt(0) ?? "A"}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-medium">{customer.name}</p>
+            <p className="text-sm font-medium">
+              {customer.firstName + " " + customer.lastName}
+            </p>
             <p className="text-xs text-gray-500 font-normal">
               {customer.email}
             </p>

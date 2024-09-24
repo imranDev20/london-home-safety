@@ -92,12 +92,19 @@ export const createOrderSchema = z.object({
 export type CreateOrderFormInput = z.infer<typeof createOrderSchema>;
 
 export const createUserSchema = z.object({
-  name: z
+  firstName: z
     .string({
-      required_error: "Name is required",
+      required_error: "First name is required",
     })
     .min(2, {
-      message: "Name must be at least 2 characters long",
+      message: "First name must be at least 2 characters long",
+    }),
+  lastName: z
+    .string({
+      required_error: "Last name is required",
+    })
+    .min(2, {
+      message: "Last name must be at least 2 characters long",
     }),
   email: z
     .string({

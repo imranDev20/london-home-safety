@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
 import { SiteSettingsFormValues, siteSettingsSchema } from "./schema";
+import { handlePrismaError } from "@/lib/prisma-error";
 
 export const getSettings = cache(async () => {
   try {
@@ -146,8 +147,7 @@ export async function updateSiteSettings(
         },
       });
 
-      revalidatePath("/admin/settings");
-      revalidatePath("/");
+      revalidatePath("/", "layout");
 
       return {
         success: true,
@@ -157,12 +157,6 @@ export async function updateSiteSettings(
     }
   } catch (error) {
     console.error("Failed to update/create site settings:", error);
-    return {
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Failed to update/create site settings",
-    };
+    return handlePrismaError(error);
   }
 }

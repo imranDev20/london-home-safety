@@ -27,12 +27,12 @@ export const metadata: Metadata = {
   ],
   referrer: "origin-when-cross-origin",
 
-  // Icons
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
+  // // Icons
+  // icons: {
+  //   icon: "/favicon.ico",
+  //   shortcut: "/favicon-16x16.png",
+  //   apple: "/apple-touch-icon.png",
+  // },
 
   // Open Graph metadata
   openGraph: {

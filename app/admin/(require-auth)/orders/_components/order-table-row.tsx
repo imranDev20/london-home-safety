@@ -16,7 +16,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { kebabToNormal } from "@/lib/utils";
 import dayjs from "dayjs";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTransition } from "react";
 import { NumericFormat } from "react-number-format";
 import { deleteOrder } from "../actions";
@@ -27,11 +27,11 @@ export default function OrderTableRow({
 }: {
   order: OrderWithUserRelation;
 }) {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
   const handleDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault(); // Prevent the default link behavior
     e.stopPropagation(); // Stop the propagation to prevent routing
 
     startTransition(async () => {
@@ -56,7 +56,6 @@ export default function OrderTableRow({
 
   return (
     <TableRow
-      onClick={() => router.push(`/admin/orders/${order.id}`)}
       className={`cursor-pointer ${isPending ? "opacity-30" : "opacity-100"}`}
     >
       <TableCell>
@@ -66,17 +65,21 @@ export default function OrderTableRow({
       </TableCell>
 
       <TableCell className="w-[25%]">
-        <div className="flex">
-          <Avatar className="mr-3">
-            <AvatarFallback>{order.user?.name?.charAt(0) ?? ""}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium">{order.user.name}</p>
-            <p className="text-xs text-gray-500 font-normal">
-              {order.user.email}
-            </p>
+        <Link href={`/admin/orders/${order.id}`} passHref>
+          <div className="flex">
+            <Avatar className="mr-3">
+              <AvatarFallback>{`${order.user?.firstName?.charAt(0) ?? ""}${
+                order.user?.lastName?.charAt(0) ?? ""
+              }`}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">{`${order.user.firstName} ${order.user.lastName}`}</p>
+              <p className="text-xs text-gray-500 font-normal">
+                {order.user.email}
+              </p>
+            </div>
           </div>
-        </div>
+        </Link>
       </TableCell>
       <TableCell className="">{order.invoice || "N/A"}</TableCell>
       <TableCell className="">

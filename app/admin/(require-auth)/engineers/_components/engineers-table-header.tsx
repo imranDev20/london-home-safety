@@ -38,9 +38,9 @@ export default function EngineersTableHeader() {
   }, [debouncedSearchValue, pathname, router, createQueryString]);
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 mt-7">
-        <h1 className="text-2xl font-bold mb-2 flex items-center">
+    <div className="space-y-4 mt-7 mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <h1 className="text-2xl font-bold flex items-center mb-4 sm:mb-0">
           <FaHelmetSafety className="text-primary mr-2" />
           Engineer List
         </h1>
@@ -49,8 +49,8 @@ export default function EngineersTableHeader() {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-2 w-full mb-5">
-        <div className="relative w-full">
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="relative flex-grow">
           <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <Input
             type="search"
@@ -60,57 +60,54 @@ export default function EngineersTableHeader() {
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full">
-          <Select
-            value={sortBy}
-            onValueChange={(value) => {
-              if (value) {
-                router.push(
-                  `${pathname}?${createQueryString({
-                    sort_by: value,
-                  })}`
-                );
-              }
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
+        <Select
+          value={sortBy}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  sort_by: value,
+                })}`
+              );
+            }
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SortAsc className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="name">Name</SelectItem>
+            <SelectItem value="email">Email</SelectItem>
+            <SelectItem value="createdAt">Created At</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select
+          value={sortOrder}
+          onValueChange={(value) => {
+            if (value) {
+              router.push(
+                `${pathname}?${createQueryString({
+                  sort_order: value,
+                })}`
+              );
+            }
+          }}
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            {sortOrder === "asc" ? (
               <SortAsc className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="name">Name</SelectItem>
-              <SelectItem value="email">Email</SelectItem>
-              <SelectItem value="createdAt">Created At</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={sortOrder}
-            onValueChange={(value) => {
-              if (value) {
-                router.push(
-                  `${pathname}?${createQueryString({
-                    sort_order: value,
-                  })}`
-                );
-              }
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              {sortOrder === "asc" ? (
-                <SortAsc className="mr-2 h-4 w-4" />
-              ) : (
-                <SortDesc className="mr-2 h-4 w-4" />
-              )}
-              <SelectValue placeholder="Sort Order" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="desc">Descending</SelectItem>
-              <SelectItem value="asc">Ascending</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+            ) : (
+              <SortDesc className="mr-2 h-4 w-4" />
+            )}
+            <SelectValue placeholder="Sort Order" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="desc">Descending</SelectItem>
+            <SelectItem value="asc">Ascending</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-    </>
+    </div>
   );
 }

@@ -907,7 +907,7 @@ export const NAV_ITEMS: NavItem[] = [
 
         children: [
           {
-            label: "Gas Safety Certificate",
+            label: "Gas Safety Certificates",
             path: "/gas-certificate-repair",
             Icon: GasCertificateIcon,
             image: GasCertificateImage,

@@ -227,7 +227,7 @@ export function generateInvoiceHtml(
             <div class="client-details">
                 <h2 class="section-title">Bill To</h2>
                 <p>
-                    ${order.user.name}<br>
+                    ${order.user.firstName} ${order.user.lastName}<br>
                     ${order.user.address?.street},<br>
                     ${order.user.address?.city}, ${
     order.user.address?.postcode

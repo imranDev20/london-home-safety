@@ -133,7 +133,7 @@ export async function exportCustomers() {
 
     users.forEach((user) => {
       worksheet.addRow({
-        name: user?.name,
+        name: user?.firstName + " " + user.lastName,
         email: user?.email,
         phone: user?.phone,
         address: `${user?.address?.street ? user?.address?.street + "," : ""} ${

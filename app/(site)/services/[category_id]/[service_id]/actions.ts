@@ -1,11 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Package } from "@prisma/client";
+import { unstable_cache as cache } from "next/cache";
 
-export async function getPackagesByService(
-  serviceName: string
-): Promise<Package[]> {
+export const getPackagesByService = cache(async (serviceName: string) => {
   try {
     const packages = await prisma.package.findMany({
       where: {
@@ -21,4 +19,4 @@ export async function getPackagesByService(
     console.error("Error fetching packages:", error);
     throw new Error("Failed to fetch packages. Please try again later.");
   }
-}
+});
