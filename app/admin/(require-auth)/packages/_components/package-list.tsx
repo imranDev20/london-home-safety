@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Pagination } from "@/types/order";
 import { Package } from "@prisma/client";
-import ServiceTableRow from "./package-table-row";
+import PackageTableRow from "./package-table-row";
 
 export default async function ServiceList({
   services: services,
@@ -48,7 +48,7 @@ export default async function ServiceList({
             {services.length > 0 ? (
               <TableBody>
                 {services.map((service) => (
-                  <ServiceTableRow key={service.id} pack={service} />
+                  <PackageTableRow key={service.id} pack={service} />
                 ))}
               </TableBody>
             ) : (

@@ -1,7 +1,6 @@
 import AsbestosSurveysIcon from "@/components/icons/asbestos-survey";
 import BoilerIcon from "@/components/icons/boiler";
 import BookingIcon from "@/components/icons/booking-icon";
-import CarbonMonoxideIcon from "@/components/icons/carbon-monoxide";
 import EicrIcon from "@/components/icons/eicr";
 import ElectricalRepairs from "@/components/icons/electrical-repairs";
 import EmergencyLightCertificateIcon from "@/components/icons/emergency-light-certificate";

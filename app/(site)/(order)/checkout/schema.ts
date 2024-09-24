@@ -49,6 +49,8 @@ export const checkoutFormSchema = z.object({
     required_error: "Please indicate if you're in a congestion zone",
     invalid_type_error: "Congestion zone selection must be yes or no",
   }),
+
+  orderNotes: z.string().optional(),
 });
 
 export type CheckoutFormInput = z.infer<typeof checkoutFormSchema>;

@@ -1,13 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { PropertyType } from "@prisma/client";
-import { Building, Home } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { Building, Home, Users, Briefcase } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 interface PropertyButtonProps {
-  type: PropertyType;
+  type: string;
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   label: string;
   onClick: () => void;
@@ -37,26 +36,42 @@ const PropertyButton: React.FC<PropertyButtonProps> = ({
   </Button>
 );
 
+interface PropertyTypeCompoProps {
+  propertyType?: string;
+  availableTypes: string[];
+}
+
 export default function PropertyTypeCompo({
   propertyType,
-}: {
-  propertyType?: PropertyType;
-}) {
+  availableTypes,
+}: PropertyTypeCompoProps) {
   const router = useRouter();
   const pathname = usePathname();
 
   const propertyTypes: {
-    type: PropertyType;
+    type: string;
     icon: React.FC<React.SVGProps<SVGSVGElement>>;
     label: string;
   }[] = [
     { type: "RESIDENTIAL", icon: Home, label: "Residential" },
     { type: "COMMERCIAL", icon: Building, label: "Commercial" },
+    { type: "HMO", icon: Users, label: "HMOs" },
+    { type: "RENTAL_HOME", icon: Home, label: "Rental Homes" },
+    { type: "COMMUNAL_AREA", icon: Users, label: "Communal Area" },
+    { type: "BUSINESS_SECTOR", icon: Briefcase, label: "Business Sectors" },
   ];
 
+  const filteredTypes = propertyTypes.filter((type) =>
+    availableTypes.includes(type.type)
+  );
+
+  if (filteredTypes.length === 0 || availableTypes.includes("NOT_APPLICABLE")) {
+    return null;
+  }
+
   return (
-    <div className="flex space-x-4">
-      {propertyTypes.map((property) => (
+    <div className="flex flex-wrap gap-4">
+      {filteredTypes.map((property) => (
         <PropertyButton
           key={property.type}
           type={property.type}
@@ -67,10 +82,7 @@ export default function PropertyTypeCompo({
               scroll: false,
             });
           }}
-          isActive={
-            propertyType === property.type ||
-            (propertyType === undefined && property.type === "RESIDENTIAL")
-          }
+          isActive={propertyType === property.type}
         />
       ))}
     </div>

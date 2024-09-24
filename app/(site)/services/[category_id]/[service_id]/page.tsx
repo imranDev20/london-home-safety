@@ -38,20 +38,20 @@ export default async function ServiceDetailsPage({
     currentServiceWithoutPackage?.label ?? ""
   );
 
-  const hasResidentialPackages = allPackages.some(
-    (pkg) => pkg.propertyType === "RESIDENTIAL"
+  const availablePropertyTypes = Array.from(
+    new Set(allPackages.map((pkg) => pkg.propertyType))
   );
-  const hasCommercialPackages = allPackages.some(
-    (pkg) => pkg.propertyType === "COMMERCIAL"
-  );
-  const hasMultiplePropertyTypes =
-    hasResidentialPackages && hasCommercialPackages;
 
-  const filteredPackages = hasMultiplePropertyTypes
-    ? property_type
-      ? allPackages.filter((pkg) => pkg.propertyType === property_type)
-      : allPackages.filter((pkg) => pkg.propertyType === "RESIDENTIAL")
-    : allPackages;
+  let filteredPackages = allPackages;
+  if (availablePropertyTypes.length > 1 && property_type) {
+    filteredPackages = allPackages.filter(
+      (pkg) => pkg.propertyType === property_type
+    );
+  } else if (availablePropertyTypes.length > 1) {
+    filteredPackages = allPackages.filter(
+      (pkg) => pkg.propertyType === availablePropertyTypes[0]
+    );
+  }
 
   const mergedData = mergeArrays(
     ALL_SERVICES,
@@ -88,8 +88,8 @@ export default async function ServiceDetailsPage({
           className="object-cover"
         />
         <div className="relative py-28 lg:py-20 before:content-[''] before:absolute before:inset-0 before:bg-[#062C64] before:opacity-90 before:mix-blend-multiply">
-          <div className="container mx-auto pt-[65px] max-w-screen-xl grid grid-cols-2 gap-10 px-4 md:px-8 lg:px-16 relative z-10">
-            <div className="col-span-2 md:col-span-1 ">
+          <div className="container mx-auto pt-[65px] max-w-screen-xl grid grid-cols-1 md:grid-cols-2 gap-10 px-4 md:px-8 lg:px-16 relative z-10 min-h-[1300px] md:min-h-[900px]">
+            <div className="col-span-1 order-2 md:order-1">
               <DynamicBreadcrumb items={breadCrumbOptions} isTransparent />
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight mt-10">
                 {currentService?.label}
@@ -101,14 +101,17 @@ export default async function ServiceDetailsPage({
               {filteredPackages.length > 0 && <ServiceFeatures />}
             </div>
 
-            <div className="col-span-2 md:col-span-1">
+            <div className="col-span-1 order-1 md:order-2">
               <Card className="p-7">
-                {hasMultiplePropertyTypes && (
+                {availablePropertyTypes.length > 1 && (
                   <div>
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
                       <span className="mr-2">Select Property Type</span>
                     </h2>
-                    <PropertyTypeCompo propertyType={property_type} />
+                    <PropertyTypeCompo
+                      propertyType={property_type}
+                      availableTypes={availablePropertyTypes}
+                    />
                   </div>
                 )}
 
@@ -159,7 +162,7 @@ export default async function ServiceDetailsPage({
         </div>
       </section>
 
-      <ServicePricingSection
+      {/* <ServicePricingSection
         commercialPackages={
           hasCommercialPackages
             ? allPackages.filter((p) => p.propertyType === "COMMERCIAL")
@@ -170,7 +173,7 @@ export default async function ServiceDetailsPage({
             ? allPackages.filter((p) => p.propertyType === "RESIDENTIAL")
             : []
         }
-      />
+      /> */}
 
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <h2 className="text-4xl font-bold text-center mb-10">
