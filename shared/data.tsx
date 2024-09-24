@@ -703,8 +703,7 @@ export const NAV_ITEMS: NavItem[] = [
   <p class="text-lg">
     With our professional electrical repair services, you can have peace of mind knowing that your electrical systems are in safe hands. Contact London Home Safety Limited today to schedule a repair.
   </p>
-</div>
-              `,
+</div>`,
             },
             faqs: [
               {
@@ -865,9 +864,7 @@ export const NAV_ITEMS: NavItem[] = [
   <p class="text-lg">
     By installing an EV charger, you take a significant step towards sustainable living and support the growing infrastructure for electric vehicles. Contact London Home Safety Limited today to schedule your EV charger installation.
   </p>
-</div>
-
-              `,
+</div>`,
             },
             faqs: [
               {
@@ -946,10 +943,110 @@ export const NAV_ITEMS: NavItem[] = [
             pageContent: {
               title:
                 "Securing Gas Safety with Professional Gas Certificate & Repair",
-              html: `
-                <div class="max-w-4xl mx-auto"> <p class="text-lg mb-6">A Gas Safety Certificate is a crucial document that ensures the safety and compliance of gas appliances within your property. At London Home Safety Limited, we provide comprehensive Gas Certificate & Repairs services, ensuring that your gas installations are safe, efficient, and meet all legal requirements. Our certified engineers are experienced in conducting thorough inspections and repairs, offering peace of mind for both residential and commercial property owners.</p> <div class="mb-8"> <h2 class="text-2xl font-bold mb-4">Why Do You Need a Gas Safety Certificate?</h2> <p class="mb-4">A Gas Safety Certificate, also known as a CP12, is essential for demonstrating that your gas appliances are safe to use. Regular inspections help prevent dangerous situations such as gas leaks or carbon monoxide poisoning.</p> <p class="font-bold mb-2">Benefits of a Gas Safety Certificate:</p> <ul class="space-y-2"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Safety:</span> Confirms that gas appliances are functioning correctly and safely, reducing the risk of accidents.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Compliance:</span> Ensures your property meets legal requirements, particularly for landlords and businesses.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Peace of Mind:</span> Provides assurance that your gas installations are secure and reliable.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Insurance:</span> Many insurance policies require an up-to-date Gas Safety Certificate for coverage to remain valid.</span> </li> </ul> </div> <blockquote class="bg-blue-50 text-lg p-6 rounded-lg mb-8"> <p>Did you know that failing to obtain a Gas Safety Certificate can result in legal penalties and endanger the safety of your property’s occupants? Regular gas inspections are vital to ensure safety and compliance with the law.</p> </blockquote> <h2 class="text-2xl font-bold mb-4">Who Needs a Gas Safety Certificate?</h2> <p class="mb-4">Gas Safety Certificates are required by law for rented properties, but they are also highly recommended for homeowners and businesses.</p> <p class="font-bold mb-2">Legal Requirements:</p> <ul class="space-y-2 mb-6"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Landlords:</span> Must have a Gas Safety Certificate for every rental property, renewed annually.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Businesses:</span> Required to ensure that gas appliances are safe and inspected regularly to comply with health and safety regulations.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Homeowners:</span> Though not legally required, it’s advisable to have gas installations inspected regularly for safety.</span> </li> </ul> <h2 class="text-2xl font-bold mb-4">What Does the Inspection Include?</h2> <p class="mb-4">During a gas safety inspection, our qualified engineers will check all gas appliances, fittings, and flues to ensure they are safe and efficient.</p> <p class="font-bold mb-2">Inspection Process:</p> <ul class="space-y-2 mb-6"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Visual Inspection:</span> Examines the condition of gas appliances and pipes for any visible signs of wear or damage.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Functionality Testing:</span> Tests the operation of each gas appliance to ensure they are working correctly and safely.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Flue Gas Analysis:</span> Checks the emissions from gas appliances to ensure they are within safe limits.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Documentation:</span> Provides a detailed report, including any defects or areas requiring attention.</span> </li> </ul> <h2 class="text-2xl font-bold mb-4">What Happens After the Inspection?</h2> <p class="mb-4">Following the inspection, you will receive a Gas Safety Certificate if your installations are compliant. If repairs are needed, we offer expert services to rectify any issues.</p> <p class="font-bold mb-2">Post-Inspection Steps:</p> <ul class="space-y-2 mb-6"> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Review Report:</span> Discuss the findings with our engineer to understand the condition of your gas systems.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Address Repairs:</span> Schedule necessary repairs to ensure all gas installations meet safety standards.</span> </li> <li class="flex items-start"> <span class="text-black font-bold mr-2">•</span> <span><span class="font-semibold">Certification:</span> Upon successful repairs, you will receive a Gas Safety Certificate, ensuring compliance and safety.</span> </li> </ul> <p class="mb-4">Ensuring that your gas installations are safe and compliant is a vital responsibility. Our Gas Certificate & Repairs service provides comprehensive inspections and reliable repairs, helping you maintain a safe and secure environment for all occupants.</p> </div>
+              html: `<div class="max-w-4xl mx-auto">
+  <p class="text-lg mb-6">
+    A Gas Safety Certificate is a crucial document that ensures the safety and compliance of gas appliances within your property. At London Home Safety Limited, we provide comprehensive Gas Certificate & Repairs services, ensuring that your gas installations are safe, efficient, and meet all legal requirements. Our certified engineers are experienced in conducting thorough inspections and repairs, offering peace of mind for both residential and commercial property owners.
+  </p>
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Why Do You Need a Gas Safety Certificate?</h2>
+    <p class="mb-4">
+      A Gas Safety Certificate, also known as a CP12, is essential for demonstrating that your gas appliances are safe to use. Regular inspections help prevent dangerous situations such as gas leaks or carbon monoxide poisoning.
+    </p>
+    <p class="font-bold mb-2">Benefits of a Gas Safety Certificate:</p>
+    <ul class="space-y-2">
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Safety:</span> Confirms that gas appliances are functioning correctly and safely, reducing the risk of accidents.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Compliance:</span> Ensures your property meets legal requirements, particularly for landlords and businesses.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Peace of Mind:</span> Provides assurance that your gas installations are secure and reliable.</span>
+      </li>
+      <li class="flex items-start">
+        <span class="text-black font-bold mr-2">•</span>
+        <span><span class="font-semibold">Insurance:</span> Many insurance policies require an up-to-date Gas Safety Certificate for coverage to remain valid.</span>
+      </li>
+    </ul>
+  </div>
 
-              `,
+  <blockquote class="bg-blue-50 text-lg p-6 rounded-lg mb-8">
+    <p>
+      Did you know that failing to obtain a Gas Safety Certificate can result in legal penalties and endanger the safety of your property's occupants? Regular gas inspections are vital to ensure safety and compliance with the law.
+    </p>
+  </blockquote>
+
+  <h2 class="text-2xl font-bold mb-4">Who Needs a Gas Safety Certificate?</h2>
+  <p class="mb-4">
+    Gas Safety Certificates are required by law for rented properties, but they are also highly recommended for homeowners and businesses.
+  </p>
+  <p class="font-bold mb-2">Legal Requirements:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Landlords:</span> Must have a Gas Safety Certificate for every rental property, renewed annually.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Businesses:</span> Required to ensure that gas appliances are safe and inspected regularly to comply with health and safety regulations.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Homeowners:</span> Though not legally required, it’s advisable to have gas installations inspected regularly for safety.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Does the Inspection Include?</h2>
+  <p class="mb-4">
+    During a gas safety inspection, our qualified engineers will check all gas appliances, fittings, and flues to ensure they are safe and efficient.
+  </p>
+  <p class="font-bold mb-2">Inspection Process:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Visual Inspection:</span> Examines the condition of gas appliances and pipes for any visible signs of wear or damage.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Functionality Testing:</span> Tests the operation of each gas appliance to ensure they are working correctly and safely.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Flue Gas Analysis:</span> Checks the emissions from gas appliances to ensure they are within safe limits.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Documentation:</span> Provides a detailed report, including any defects or areas requiring attention.</span>
+    </li>
+  </ul>
+
+  <h2 class="text-2xl font-bold mb-4">What Happens After the Inspection?</h2>
+  <p class="mb-4">
+    Following the inspection, you will receive a Gas Safety Certificate if your installations are compliant. If repairs are needed, we offer expert services to rectify any issues.
+  </p>
+  <p class="font-bold mb-2">Post-Inspection Steps:</p>
+  <ul class="space-y-2 mb-6">
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Review Report:</span> Discuss the findings with our engineer to understand the condition of your gas systems.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Address Repairs:</span> Schedule necessary repairs to ensure all gas installations meet safety standards.</span>
+    </li>
+    <li class="flex items-start">
+      <span class="text-black font-bold mr-2">•</span>
+      <span><span class="font-semibold">Certification:</span> Upon successful repairs, you will receive a Gas Safety Certificate, ensuring compliance and safety.</span>
+    </li>
+  </ul>
+
+  <p class="mb-4">
+    Ensuring that your gas installations are safe and compliant is a vital responsibility. Our Gas Certificate & Repairs service provides comprehensive inspections and reliable repairs, helping you maintain a safe and secure environment for all occupants.
+  </p>
+</div>`,
             },
             faqs: [
               {
@@ -1307,12 +1404,10 @@ export const NAV_ITEMS: NavItem[] = [
     </li>
     <li class="flex items-start">
       <span class="text-black font-bold mr-2">•</span>
-      <span><span class="font-semibold">Ongoing Support:</span> Our team remains available for follow-up assessments, support, and any additional guidance you may need.</span>
+      <span><span class="font-semibold">Ongoing Support:</span> Our team remains available for follow-up assessments, support, and       <span><span class="font-semibold">Ongoing Support:</span> Our team remains available for follow-up assessments, support, and guidance to ensure your fire safety measures remain effective and compliant.</span>
     </li>
- 
-
-  
-                `,
+  </ul>
+</div>`,
             },
             faqs: [
               {

@@ -180,14 +180,15 @@ export default async function ServiceDetailsPage({
           {currentService?.pageContent?.title}
         </h2>
 
-        {currentService?.pageContent?.html && (
+        {currentService?.pageContent?.html ? (
           <div
+            suppressHydrationWarning
             dangerouslySetInnerHTML={{
               __html: currentService.pageContent.html,
             }}
-            className="prose prose-lg mx-auto "
+            className="prose prose-lg mx-auto"
           />
-        )}
+        ) : null}
 
         <ServiceDetailsCta siteSettings={siteSettings} />
 

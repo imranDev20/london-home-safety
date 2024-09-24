@@ -2,7 +2,14 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Building, Home, Users, Briefcase } from "lucide-react";
+import {
+  Home,
+  Building,
+  Users,
+  Hotel,
+  Warehouse,
+  Briefcase,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 interface PropertyButtonProps {
@@ -55,10 +62,11 @@ export default function PropertyTypeCompo({
   }[] = [
     { type: "RESIDENTIAL", icon: Home, label: "Residential" },
     { type: "COMMERCIAL", icon: Building, label: "Commercial" },
-    { type: "HMO", icon: Users, label: "HMOs" },
+    { type: "HMO", icon: Hotel, label: "HMOs" },
     { type: "RENTAL_HOME", icon: Home, label: "Rental Homes" },
     { type: "COMMUNAL_AREA", icon: Users, label: "Communal Area" },
     { type: "BUSINESS_SECTOR", icon: Briefcase, label: "Business Sectors" },
+    { type: "WAREHOUSE", icon: Warehouse, label: "Warehouse" },
   ];
 
   const filteredTypes = propertyTypes.filter((type) =>
