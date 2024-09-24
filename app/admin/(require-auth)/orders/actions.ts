@@ -211,7 +211,11 @@ export async function exportOrders() {
       success: true,
     };
   } catch (error) {
-    return handlePrismaError(error);
+    return {
+      data: null,
+      success: false,
+      message: handlePrismaError(error).message,
+    };
   }
 }
 

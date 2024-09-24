@@ -340,8 +340,7 @@ export default function EditOrderForm({
                           {engineers?.map((engineer) => (
                             <CommandItem
                               value={
-                                engineer.firstName + " " + engineer.lastName ??
-                                ""
+                                engineer.firstName + " " + engineer.lastName
                               }
                               key={engineer.id}
                               onSelect={() => handleSelectEngineer(engineer.id)}

@@ -58,7 +58,7 @@ export default function OrderTableHeader() {
       const result = await exportOrders();
       if (result.success) {
         // Handle successful deletion (e.g., show a success message, update UI)
-        const excelData = result.data as string;
+        const excelData = result?.data as string;
         const byteArray = new Uint8Array(
           atob(excelData)
             .split("")
