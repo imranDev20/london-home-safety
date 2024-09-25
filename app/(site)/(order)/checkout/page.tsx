@@ -191,6 +191,7 @@ export default function CheckoutPage() {
       inspectionTime: data.time,
       parkingOptions: data.parkingOption,
       isCongestionZone: data.isInCongestionZone,
+      orderNotes: data.orderNotes,
     });
 
     toast({

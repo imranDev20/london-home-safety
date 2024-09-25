@@ -1,12 +1,10 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useOrderStore from "@/hooks/use-order-store";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
   ShoppingCart,
@@ -15,11 +13,12 @@ import {
   Home,
   Building,
   Landmark,
+  Users,
+  Briefcase,
 } from "lucide-react";
 import { Package, PropertyType } from "@prisma/client";
 import { cn, mergeArrays } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const smoothScroll = (
   e: React.MouseEvent<HTMLAnchorElement>,
@@ -38,7 +37,6 @@ interface PropertyTypeOption {
   icon: React.ElementType;
   color: string;
 }
-
 const propertyTypeOptions: PropertyTypeOption[] = [
   {
     id: "RESIDENTIAL",
@@ -58,12 +56,29 @@ const propertyTypeOptions: PropertyTypeOption[] = [
     icon: Landmark,
     color: "text-orange-500",
   },
+  {
+    id: "HMO",
+    label: "HMOs and Rental Houses",
+    icon: Users,
+    color: "text-purple-500",
+  },
+  {
+    id: "BUSINESS_SECTOR",
+    label: "Business Sectors",
+    icon: Briefcase,
+    color: "text-indigo-500",
+  },
+  {
+    id: "COMMUNAL_AREA",
+    label: "Communal Area",
+    icon: Users,
+    color: "text-pink-500",
+  },
 ];
 
 export default function BookNowPackages({ packages }: { packages: Package[] }) {
   const [propertyType, setPropertyType] = useState<PropertyType>("RESIDENTIAL");
   const { cartItems, addItem } = useOrderStore();
-  const router = useRouter();
 
   const handleAddToCart = (cartItem: {
     name: string;

@@ -55,7 +55,21 @@ export default function PropertyTypeCompo({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [selectedType, setSelectedType] = useState(initialPropertyType);
+
+  const getDefaultPropertyType = () => {
+    if (initialPropertyType && availableTypes.includes(initialPropertyType)) {
+      return initialPropertyType;
+    }
+    if (availableTypes.includes("RESIDENTIAL")) {
+      return "RESIDENTIAL";
+    }
+    if (availableTypes.includes("HMO")) {
+      return "HMO";
+    }
+    return availableTypes[0];
+  };
+
+  const [selectedType, setSelectedType] = useState(getDefaultPropertyType());
 
   const propertyTypes = [
     { type: "RESIDENTIAL", icon: Home, label: "Residential" },
@@ -72,11 +86,9 @@ export default function PropertyTypeCompo({
   );
 
   useEffect(() => {
-    if (selectedType) {
-      const params = new URLSearchParams(searchParams);
-      params.set("property_type", selectedType);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    }
+    const params = new URLSearchParams(searchParams);
+    params.set("property_type", selectedType);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [selectedType, pathname, router, searchParams]);
 
   if (filteredTypes.length === 0 || availableTypes.includes("NOT_APPLICABLE")) {
