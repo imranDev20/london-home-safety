@@ -41,7 +41,9 @@ export default async function ServiceDetailsPage({
   const availablePropertyTypes = Array.from(
     new Set(allPackages.map((pkg) => pkg.propertyType))
   );
+
   let filteredPackages = allPackages;
+
   if (availablePropertyTypes.length > 1) {
     if (property_type) {
       // If a property type is selected in the URL, use that
@@ -146,6 +148,22 @@ export default async function ServiceDetailsPage({
                         <PackageCard pack={pack} key={pack.id} />
                       ))}
                     </div>
+
+                    {/* Add the additional pricing information here */}
+                    {currentService?.priceAdditionalInfo && (
+                      <div className="mt-4 mb-6">
+                        <ul className="list-disc pl-5 space-y-1">
+                          {currentService.priceAdditionalInfo
+                            .filter((info) => info.type === property_type)
+                            .map((info, index) => (
+                              <li key={index} className="text-gray-700 text-lg">
+                                {info.name}
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    )}
+
                     <BookNowButtonCompo
                       siteSettings={siteSettings}
                       packages={filteredPackages}

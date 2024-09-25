@@ -80,12 +80,7 @@ export default function BookNowPackages({ packages }: { packages: Package[] }) {
   const [propertyType, setPropertyType] = useState<PropertyType>("RESIDENTIAL");
   const { cartItems, addItem } = useOrderStore();
 
-  const handleAddToCart = (cartItem: {
-    name: string;
-    price: number;
-    id: string;
-    description: string;
-  }) => {
+  const handleAddToCart = (cartItem: Package) => {
     addItem(cartItem);
   };
 
@@ -211,15 +206,7 @@ export default function BookNowPackages({ packages }: { packages: Package[] }) {
 
                               <Button
                                 className={`w-full py-5 font-semibold text-sm transition-all duration-300 rounded-full bg-body-dark text-white hover:bg-secondary hover:text-black`}
-                                onClick={() =>
-                                  handleAddToCart({
-                                    id: pack.id,
-                                    name: `${pack.propertyType} ${pack.name}`,
-                                    price: pack.price,
-                                    description:
-                                      pack.description || "Package description",
-                                  })
-                                }
+                                onClick={() => handleAddToCart(pack)}
                                 disabled={productInCart}
                               >
                                 <span className="flex items-center justify-center">

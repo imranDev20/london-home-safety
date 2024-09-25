@@ -2,6 +2,7 @@ import {
   CommercialType,
   PackageCategory,
   PackageType,
+  PriceType,
   PropertyType,
   ResidentialType,
 } from "@prisma/client";
@@ -24,6 +25,8 @@ export const packageSchema = z.object({
       required_error: "Price is required",
     })
     .min(1, { message: "Price cannot be empty" }),
+
+  priceType: z.nativeEnum(PriceType).optional(),
   serviceName: z
     .string({
       required_error: "Service name is required",

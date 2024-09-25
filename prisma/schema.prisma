@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -83,6 +83,7 @@ model Package {
   commercialType  CommercialType?
   unitType        String?
   price           Float
+  priceType       PriceType        @default(FIXED)
   orderId         String?
   order           Order?           @relation(fields: [orderId], references: [id])
   createdAt       DateTime         @default(now())
@@ -205,4 +206,10 @@ enum PackageType {
   INSTALLATION
   INSPECTION
   OTHER
+}
+
+enum PriceType {
+  FIXED
+  FROM
+  RANGE
 }

@@ -9,6 +9,7 @@ import { useSheetStore } from "@/hooks/use-sheet-store"; // Assume this is your 
 const FloatingCart = () => {
   const { cartItems } = useOrderStore();
   const { setIsOpen } = useSheetStore();
+
   const itemCount = cartItems.length;
 
   return (

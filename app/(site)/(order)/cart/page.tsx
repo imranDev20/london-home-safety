@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import useOrderStore from "@/hooks/use-order-store";
-import { X, ShoppingCart } from "lucide-react";
+import { X, ShoppingCart, Home, Wrench } from "lucide-react";
 import Link from "next/link";
 
 export default function CartPage() {
@@ -23,28 +23,41 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <Card
                   key={item.id}
-                  className="p-7 flex flex-row items-center gap-4 hover:shadow-md transition-shadow duration-300"
+                  className="p-5 hover:shadow-md transition-shadow duration-300"
                 >
-                  <div className="flex-grow">
-                    <h3 className="font-semibold text-lg mb-1">{item.name}</h3>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {item.description || "No description available"}
-                    </p>
+                  <div className="flex h-full">
+                    <div className="flex-grow space-y-3">
+                      <h3 className="font-semibold text-lg">{item.name}</h3>
 
-                    <p className="font-bold text-primary">
-                      £{item.price.toFixed(2)}
-                    </p>
-                  </div>
+                      <div className="flex flex-col space-y-2">
+                        <div className="flex items-center">
+                          <Wrench className="w-5 h-5 mr-2 text-primary" />
+                          <span className="text-gray-900">
+                            {item.serviceName || ""}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <Home className="w-5 h-5 mr-2 text-primary" />
+                          <span className="text-gray-900 capitalize">
+                            {`For ${item.propertyType.toLowerCase()} Property`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem(item.id)}
-                      className="hover:bg-red-100 hover:text-red-600 transition-colors duration-300"
-                    >
-                      <X className="h-5 w-5" />
-                    </Button>
+                    <div className="flex flex-col justify-between items-end ml-4 min-h-[100px]">
+                      <p className="font-bold text-primary text-lg">
+                        £{item.price.toFixed(2)}
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem(item.id)}
+                        className="hover:bg-red-100 hover:text-red-600 transition-shadow duration-300"
+                      >
+                        <X className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               ))}
