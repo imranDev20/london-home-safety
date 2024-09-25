@@ -37,6 +37,7 @@ export default function PaymentCompo({
     useState<PaymentMethod>("CREDIT_CARD");
   const { toast } = useToast();
   const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [isPending, startTransition] = useTransition();
   const { cartItems, customerDetails, clearCart, resetOrder } = useOrderStore();
@@ -123,9 +124,8 @@ export default function PaymentCompo({
           description: `${orderResponse.message}`,
           variant: "success",
         });
+        setIsRedirecting(true);
         router.replace("/payment/success");
-        resetOrder();
-        clearCart();
       } catch (error) {
         console.error(error);
         toast({
@@ -136,9 +136,33 @@ export default function PaymentCompo({
               : "An unexpected error occurred",
           variant: "destructive",
         });
+      } finally {
+        resetOrder();
+        clearCart();
       }
     });
   };
+
+  if (isRedirecting) {
+    return (
+      <div className="container max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 py-8 min-h-[calc(100vh-300px)] flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">
+              Processing Your Order
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+            <p className="text-center text-gray-600">
+              Please wait while we process your order and redirect you to the
+              confirmation page.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if ((!clientSecret || !stripePromise) && !redirectStatus) {
     return (

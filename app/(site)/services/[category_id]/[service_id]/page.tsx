@@ -122,17 +122,18 @@ export default async function ServiceDetailsPage({
 
             <div className="col-span-1 order-1 md:order-2 mt-10">
               <Card className="p-7">
-                {availablePropertyTypes.length > 1 && (
-                  <div>
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                      <span className="mr-2">Select Property Type</span>
-                    </h2>
-                    <PropertyTypeCompo
-                      propertyType={property_type}
-                      availableTypes={availablePropertyTypes}
-                    />
-                  </div>
-                )}
+                {availablePropertyTypes.length > 1 &&
+                  !availablePropertyTypes.includes("NOT_APPLICABLE") && (
+                    <div>
+                      <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <span className="mr-2">Select Property Type</span>
+                      </h2>
+                      <PropertyTypeCompo
+                        propertyType={property_type}
+                        availableTypes={availablePropertyTypes}
+                      />
+                    </div>
+                  )}
 
                 {filteredPackages.length > 0 && (
                   <>
