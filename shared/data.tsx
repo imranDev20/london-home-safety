@@ -41,7 +41,6 @@ import { FaXTwitter, FaYoutube } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { RiFacebookBoxFill } from "react-icons/ri";
 import FireExtinguisherImage from "@/images/fire-extinguisher-image.png";
-import SmokeAlarm from "@/images/smoke-alarm.jpeg";
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", path: "/" },
@@ -74,24 +73,6 @@ export const NAV_ITEMS: NavItem[] = [
                 "Provides a detailed report with recommendations",
               ],
             },
-
-            pricingDetails: [
-              {
-                type: "RESIDENTIAL",
-                unit: "bedroom",
-
-                description:
-                  "Ensure your home's electrical installations are safe and compliant.",
-              },
-
-              {
-                type: "COMMERCIAL",
-                unit: "circuit",
-
-                description:
-                  "Comprehensive electrical safety reports for commercial properties.",
-              },
-            ],
 
             pageContent: {
               title: "Ensuring Electrical Safety with Expert EICR Services",
@@ -279,20 +260,11 @@ export const NAV_ITEMS: NavItem[] = [
                 "Provides certification of compliance",
               ],
             },
-            pricingDetails: [
-              {
-                type: "RESIDENTIAL",
-                unit: "appliances",
 
-                description:
-                  "Ensure your home's portable appliances are safe and compliant.",
-              },
+            priceAdditionalInfo: [
               {
                 type: "COMMERCIAL",
-                unit: "item",
-
-                description:
-                  "Comprehensive PAT testing for commercial properties.",
+                name: "Any extra item £2.00 each",
               },
             ],
 
@@ -444,22 +416,7 @@ export const NAV_ITEMS: NavItem[] = [
                 "Capable of handling increased electrical load",
               ],
             },
-            pricingDetails: [
-              {
-                type: "RESIDENTIAL",
-                unit: "installation",
 
-                description:
-                  "Enhance your home's electrical safety with a new fuse box.",
-              },
-              {
-                type: "COMMERCIAL",
-                unit: "installation",
-
-                description:
-                  "Ensure your business is compliant and safe with a new fuse box.",
-              },
-            ],
             pageContent: {
               title:
                 "Boost Electrical Safety with Professional Fuse Box Installation",
@@ -599,22 +556,6 @@ export const NAV_ITEMS: NavItem[] = [
                 "Ensures systems function safely",
               ],
             },
-            pricingDetails: [
-              {
-                type: "RESIDENTIAL",
-                unit: "repair",
-
-                description:
-                  "Comprehensive electrical repair services for your home.",
-              },
-              {
-                type: "COMMERCIAL",
-                unit: "repair",
-
-                description:
-                  "Professional electrical repair services for businesses.",
-              },
-            ],
 
             pageContent: {
               title: "Reliable and Efficient Electrical Repairs",
@@ -753,22 +694,7 @@ export const NAV_ITEMS: NavItem[] = [
                 "Safe and efficient installation",
               ],
             },
-            pricingDetails: [
-              {
-                type: "RESIDENTIAL",
-                unit: "installation",
 
-                description:
-                  "Install a home EV charger for convenient and efficient charging.",
-              },
-              {
-                type: "COMMERCIAL",
-                unit: "installation",
-
-                description:
-                  "Install EV chargers at your business premises for employees and customers.",
-              },
-            ],
             pageContent: {
               title: "Convenient and Efficient EV Charger Installation",
               html: `
@@ -924,22 +850,6 @@ export const NAV_ITEMS: NavItem[] = [
               ],
             },
 
-            pricingDetails: [
-              {
-                type: "RESIDENTIAL",
-                unit: "service",
-
-                description:
-                  "Comprehensive gas safety checks and repairs for your home.",
-              },
-              {
-                type: "COMMERCIAL",
-                unit: "service",
-
-                description:
-                  "Professional gas safety services and repairs for businesses.",
-              },
-            ],
             pageContent: {
               title:
                 "Securing Gas Safety with Professional Gas Certificate & Repair",
@@ -1097,15 +1007,6 @@ export const NAV_ITEMS: NavItem[] = [
               ],
             },
 
-            pricingDetails: [
-              {
-                type: "RESIDENTIAL",
-                unit: "boiler",
-                description: "",
-
-                packages: [],
-              },
-            ],
             pageContent: {
               title:
                 "Maintaining Efficiency and Safety with Expert Boiler Service & Repair",
@@ -1457,6 +1358,17 @@ export const NAV_ITEMS: NavItem[] = [
                 "Ensures reliable and effective fire alarm performance",
               ],
             },
+            priceAdditionalInfo: [
+              {
+                type: "RESIDENTIAL",
+                name: "Any extra detector £20.00 each",
+              },
+              {
+                type: "COMMERCIAL",
+                name: "Any extra detector £30.00 each",
+              },
+            ],
+
             pageContent: {
               title:
                 "Ensuring Safety Compliance with Professional Fire Alarm Certification",
@@ -1967,6 +1879,18 @@ export const NAV_ITEMS: NavItem[] = [
                 "Issuance of legally compliant emergency lighting certificates",
               ],
             },
+
+            priceAdditionalInfo: [
+              {
+                type: "RESIDENTIAL",
+                name: "Any extra light £20.00 each",
+              },
+              {
+                type: "COMMERCIAL",
+                name: "Any extra lights £30.00 each",
+              },
+            ],
+
             pageContent: {
               title:
                 "Verifying Safety with Professional Emergency Light Certification Services",
@@ -2146,6 +2070,14 @@ export const NAV_ITEMS: NavItem[] = [
                 "Guidance on proper extinguisher placement and usage",
               ],
             },
+
+            priceAdditionalInfo: [
+              {
+                type: "NOT_APPLICABLE",
+                name: "Any extra Extinguisher £7.50 each",
+              },
+            ],
+
             pageContent: {
               title:
                 "Maximizing Safety with Expert Fire Extinguisher Check Services",

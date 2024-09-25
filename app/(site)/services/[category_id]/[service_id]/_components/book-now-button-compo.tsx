@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useTransition } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import useOrderStore from "@/hooks/use-order-store";
@@ -7,10 +8,8 @@ import usePackageStore from "@/hooks/use-package-store";
 import { SiteSettingWithUserAddress } from "@/types/misc";
 import { Package } from "@prisma/client";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { Check, ShoppingCart } from "lucide-react";
-import Link from "next/link";
+import { Check, ShoppingCart, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
 
 export default function BookNowButtonCompo({
   packages,
@@ -22,8 +21,8 @@ export default function BookNowButtonCompo({
   const { selectedPackage, setPackage } = usePackageStore();
   const { addItem, cartItems } = useOrderStore();
   const router = useRouter();
-
   const [showAlert, setShowAlert] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const isInCart = cartItems.some((item) => item.id === selectedPackage?.id);
 
@@ -36,14 +35,11 @@ export default function BookNowButtonCompo({
     setShowAlert(false);
 
     if (!isInCart) {
-      addItem({
-        name: selectedPackage.name,
-        price: selectedPackage.price,
-        id: selectedPackage.id,
-        description: selectedPackage.description ?? "",
-      });
+      addItem(selectedPackage);
       setPackage(null);
-      router.push(`/cart`);
+      startTransition(() => {
+        router.push(`/cart`);
+      });
     }
   };
 
@@ -63,9 +59,11 @@ export default function BookNowButtonCompo({
             : "bg-primary hover:bg-primary-darker"
         }`}
         onClick={handleClick}
-        disabled={isInCart}
+        disabled={isInCart || isPending}
       >
-        {isInCart ? (
+        {isPending ? (
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+        ) : isInCart ? (
           <>
             <Check className="mr-2 h-5 w-5" />
             <span>Added to Cart</span>

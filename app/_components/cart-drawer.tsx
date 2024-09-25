@@ -18,7 +18,7 @@ import {
 import useOrderStore from "@/hooks/use-order-store";
 import { useSheetStore } from "@/hooks/use-sheet-store";
 import { NON_INVERTED_ROUTES } from "@/lib/constants";
-import { ShoppingBasket, X } from "lucide-react";
+import { Home, ShoppingBasket, Wrench, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -81,21 +81,33 @@ export default function CartDrawer() {
           <>
             {cartItems.map((item, index) => (
               <div key={item?.id} className="group">
-                <div className="flex justify-between items-center py-3 px-2 transition-all duration-200">
-                  <div className="flex-grow">
-                    <h3 className="font-medium text-gray-800 transition-colors duration-200 min-h-[48px]">
+                <div className="flex justify-between py-4 px-2 transition-all duration-200">
+                  <div className="flex-grow space-y-2">
+                    <h3 className="font-semibold text-gray-800 transition-colors duration-200">
                       {item?.name}
                     </h3>
-                    <p className="text-sm font-semibold text-primary mt-1">
+                    <div className="flex flex-col space-y-1 text-sm text-gray-600">
+                      <div className="flex items-center">
+                        <Wrench className="w-4 h-4 mr-2 text-primary" />
+                        <span>{item?.serviceName || ""}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Home className="w-4 h-4 mr-2 text-primary" />
+                        <span className="capitalize">
+                          {`For ${item?.propertyType?.toLowerCase()} Property`}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="font-bold text-primary">
                       £{item?.price.toFixed(2)}
                     </p>
                   </div>
                   <button
-                    className="text-gray-400 p-2 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
+                    className="text-gray-400 p-2 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200 self-start"
                     onClick={() => removeItem(item.id)}
                     aria-label="Remove item"
                   >
-                    <X size={18} />
+                    <X size={20} />
                   </button>
                 </div>
                 {index < cartItems.length - 1 && (

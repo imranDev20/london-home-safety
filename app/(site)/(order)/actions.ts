@@ -1,6 +1,6 @@
 "use server";
 
-import { CartItem, CustomerDetails } from "@/hooks/use-order-store";
+import { CustomerDetails } from "@/hooks/use-order-store";
 import { generateInvoiceId } from "@/lib/generate-invoice";
 import { generateInvoiceHtml } from "@/lib/invoice-html";
 import { notifyAdminOrderPlacedEmailHtml } from "@/lib/notify-admin-order-placed";
@@ -9,13 +9,13 @@ import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/lib/prisma-error";
 import { sendEmail } from "@/lib/send-email";
 import { CONGESTION_FEE, EMAIL_ADDRESS, PARKING_FEE } from "@/shared/data";
-import { Order, PaymentMethod, Prisma, Role } from "@prisma/client";
+import { Order, Package, PaymentMethod, Prisma, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import puppeteer from "puppeteer";
 
 type OrderData = {
   customerDetails: CustomerDetails;
-  cartItems: CartItem[];
+  cartItems: Package[];
   paymentMethod: PaymentMethod;
 };
 

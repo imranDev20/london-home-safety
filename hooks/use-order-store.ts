@@ -1,18 +1,12 @@
 import {
   Address,
   InspectionTime,
+  Package,
   ParkingOptions,
   PaymentMethod,
 } from "@prisma/client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-export type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-};
 
 type AddressType = Omit<Address, "userId" | "createdAt" | "updatedAt" | "id">;
 
@@ -30,10 +24,10 @@ export type CustomerDetails = {
 };
 
 interface OrderState {
-  cartItems: CartItem[];
+  cartItems: Package[];
   customerDetails: CustomerDetails;
   paymentMethod: PaymentMethod;
-  addItem: (item: CartItem) => void;
+  addItem: (item: Package) => void;
   removeItem: (id: string) => void;
   clearCart: () => void;
   setCustomerDetails: (details: Partial<CustomerDetails>) => void;

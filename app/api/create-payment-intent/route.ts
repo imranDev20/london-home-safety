@@ -1,5 +1,6 @@
-import { CartItem, CustomerDetails } from "@/hooks/use-order-store";
+import { CustomerDetails } from "@/hooks/use-order-store";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import { Package } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
     const {
       customerDetails,
       cartItems,
-    }: { customerDetails: CustomerDetails; cartItems: CartItem[] } =
+    }: { customerDetails: CustomerDetails; cartItems: Package[] } =
       await req.json();
 
     const parkingFee =

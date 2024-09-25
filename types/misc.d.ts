@@ -18,20 +18,10 @@ export type NavItem = {
     points: string[];
   };
 
-  pricingDetails?: {
+  priceAdditionalInfo?: {
     type: PropertyType;
-    unit: string;
-
-    description: string;
-
-    packages?: {
-      id: string;
-      name: string;
-      price: number;
-      propertyType?: PropertyType;
-    }[];
+    name: string;
   }[];
-
   pageContent?: {
     title: string;
     html: string;
