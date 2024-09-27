@@ -621,7 +621,7 @@ export default function CheckoutPage() {
                   </span>
                 </div>
               </div>
-              <Button type="submit" className="w-full mt-6">
+              <Button type="submit" className="w-full mt-6 h-11 text-base">
                 Proceed to Payment
               </Button>
             </Card>

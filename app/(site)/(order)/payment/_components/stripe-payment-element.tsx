@@ -42,7 +42,9 @@ export default function StripePaymentElement() {
       });
 
       if (!orderResponse.success) {
-        throw new Error("There was error creating the order");
+        throw new Error(
+          orderResponse?.message || "There was an error creating the order"
+        );
       }
 
       const response = await stripe.confirmPayment({

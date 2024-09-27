@@ -91,7 +91,6 @@ export function generateInvoiceHtml(
             margin: 40px auto;
             background-color: white;
             padding: 40px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
         .header {
@@ -270,7 +269,9 @@ export function generateInvoiceHtml(
                 <p><strong>Subtotal:</strong> £${cartTotal.toFixed(2)}</p>
                 ${congestionFee}
                 ${parkingFee}
-                <p class="total-row">Total: £${totalPrice.toFixed(2)}</p>
+                <p class="total-row">Total: £${totalPrice.toFixed(
+                  2
+                )} <span>inc. Tax</span></p>
             </div>
         </div>
 
