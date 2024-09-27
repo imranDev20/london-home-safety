@@ -217,9 +217,8 @@ export function generateInvoiceHtml(
             <div class="company-details">
                 <h1 class="invoice-title">INVOICE</h1>
                 <p>London Home Safety Limited<br>
-                43 Felton Road, Barking<br>
-                London IG11 7YA<br>
-                United Kingdom</p>
+                46d, Greatorex Street, Micro Business Park,<br>
+                London, England, E1 5NP<br>
             </div>
         </header>
 

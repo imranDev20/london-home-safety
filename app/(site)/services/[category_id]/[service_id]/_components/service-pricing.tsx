@@ -3,7 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Package, PropertyType } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
-import { Check, Home, Building } from "lucide-react";
+import { Home, Building, Users, BanknoteIcon, HelpCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PricingCardProps {
   propertyType: PropertyType;
@@ -47,39 +48,70 @@ const PricingCard: React.FC<PricingCardProps> = ({
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
+  const getIcon = () => {
+    switch (propertyType) {
+      case "RESIDENTIAL":
+        return <Home className="w-6 h-6 mr-2" />;
+      case "COMMERCIAL":
+        return <Building className="w-6 h-6 mr-2" />;
+      case "HMO":
+        return <Users className="w-6 h-6 mr-2" />;
+      case "COMMUNAL_AREA":
+        return <BanknoteIcon className="w-6 h-6 mr-2" />;
+      case "BUSINESS_SECTOR":
+        return <Building className="w-6 h-6 mr-2" />;
+      default:
+        return <HelpCircle className="w-6 h-6 mr-2" />;
+    }
+  };
+
+  const getTitle = () => {
+    if (propertyType === "NOT_APPLICABLE") {
+      return packages[0].serviceName;
+    }
+    return propertyType.replace("_", " ");
+  };
+
+  const getDescription = () => {
+    switch (propertyType) {
+      case "RESIDENTIAL":
+        return "Safe living spaces for you and your loved ones";
+      case "COMMERCIAL":
+        return "Secure environments for your business to thrive";
+      case "HMO":
+        return "Comprehensive safety for houses in multiple occupation";
+      case "COMMUNAL_AREA":
+        return "Ensuring safety in shared living spaces";
+      case "BUSINESS_SECTOR":
+        return "Tailored solutions for your business premises";
+      default:
+        return "Safety solutions for all property types";
+    }
+  };
+
   return (
     <motion.div
       ref={ref}
       initial="hidden"
       animate={controls}
       variants={cardVariants}
-      className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full"
+      className={cn(
+        "bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full",
+        propertyType === "NOT_APPLICABLE" ? "mx-auto max-w-xl w-full" : ""
+      )}
     >
       <div className="bg-gradient-to-r from-primary to-blue-600 p-6 text-white">
         <h3 className="text-2xl font-bold flex items-center">
-          {propertyType === "RESIDENTIAL" ? (
-            <>
-              <Home className="w-6 h-6 mr-2" />
-              Residential
-            </>
-          ) : (
-            <>
-              <Building className="w-6 h-6 mr-2" />
-              Commercial
-            </>
-          )}
+          {getIcon()}
+          {getTitle()}
         </h3>
-        <p className="mt-2 text-blue-100">
-          {propertyType === "RESIDENTIAL"
-            ? "Safe living spaces for you and your loved ones"
-            : "Secure environments for your business to thrive"}
-        </p>
+        <p className="mt-2 text-blue-100">{getDescription()}</p>
       </div>
       <div className="p-6 flex-grow">
         {packages.map((pkg, index) => (
           <div
             key={pkg.id}
-            className={`flex justify-between items-center py-4 ${
+            className={`flex justify-between items-center py-4 gap-5 ${
               index !== 0 ? "border-t border-gray-200" : ""
             }`}
           >
@@ -91,7 +123,6 @@ const PricingCard: React.FC<PricingCardProps> = ({
               <span className="text-2xl font-bold text-primary">
                 £{pkg.price}
               </span>
-              <p className="text-sm text-gray-500">per service</p>
             </div>
           </div>
         ))}
@@ -104,13 +135,11 @@ const PricingCard: React.FC<PricingCardProps> = ({
 };
 
 interface ServicePricingSectionProps {
-  residentialPackages: Package[];
-  commercialPackages: Package[];
+  packages: Package[];
 }
 
 const ServicePricingSection: React.FC<ServicePricingSectionProps> = ({
-  residentialPackages,
-  commercialPackages,
+  packages,
 }) => {
   const controls = useAnimation();
   const ref = useRef(null);
@@ -144,9 +173,29 @@ const ServicePricingSection: React.FC<ServicePricingSectionProps> = ({
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
-  const featureVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { delay: 0.5, duration: 0.5 } },
+  if (packages.length === 0) {
+    return null;
+  }
+
+  const groupedPackages = packages.reduce((acc, pkg) => {
+    if (!acc[pkg.propertyType]) {
+      acc[pkg.propertyType] = [];
+    }
+    acc[pkg.propertyType].push(pkg);
+    return acc;
+  }, {} as Record<PropertyType, Package[]>);
+
+  const propertyTypes = Object.keys(groupedPackages) as PropertyType[];
+
+  const getGridColumns = () => {
+    switch (propertyTypes.length) {
+      case 1:
+        return "grid-cols-1";
+      case 2:
+        return "md:grid-cols-2";
+      default:
+        return "md:grid-cols-3";
+    }
   };
 
   return (
@@ -180,15 +229,14 @@ const ServicePricingSection: React.FC<ServicePricingSectionProps> = ({
             your safety investment.
           </p>
         </motion.div>
-        <div className="grid md:grid-cols-2 gap-8">
-          <PricingCard
-            propertyType="RESIDENTIAL"
-            packages={residentialPackages}
-          />
-          <PricingCard
-            propertyType="COMMERCIAL"
-            packages={commercialPackages}
-          />
+        <div className={`grid ${getGridColumns()} gap-8`}>
+          {propertyTypes.map((propertyType) => (
+            <PricingCard
+              key={propertyType}
+              propertyType={propertyType}
+              packages={groupedPackages[propertyType]}
+            />
+          ))}
         </div>
       </div>
     </section>

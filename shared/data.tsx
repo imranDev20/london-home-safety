@@ -1719,6 +1719,7 @@ export const NAV_ITEMS: NavItem[] = [
             pageContent: {
               title:
                 "Ensuring Safety with Trusted Emergency Lighting Installation Services",
+
               html: `
                  <div class="max-w-4xl mx-auto">
   <p class="text-lg mb-6">
@@ -2815,6 +2816,18 @@ export const FAQ_HOME = [
   },
 ];
 
+export const BUSINESS_NAME = "London Home Safety Limited";
+export const ADDRESS =
+  "46d, Greatorex Street, Micro Business Park, London, England, E1 5NP";
+export const PHONE_NO = "073 9869 4439";
+export const WEBSITE_URL = "www.londonhomesafety.co.uk";
+export const EMAIL_ADDRESS = "info@londonhomesafety.co.uk";
+export const LANDLINE = "020 8146 6698";
+export const CONGESTION_FEE = 15;
+export const PARKING_FEE = 5;
+export const BANK_SORT_CODE = 309950;
+export const BANK_ACCOUNT_NUMBER = 25372562;
+
 export const ADVANTAGES = [
   {
     id: 1,
@@ -2846,7 +2859,7 @@ export const CONTACT = [
   {
     id: 1,
     title: "Address:",
-    info: `43 Felton Road, Barking,  London IG11 7YA`,
+    info: ADDRESS,
     icons: <LocationIcon size={45} className="fill-primary" />,
   },
 
@@ -2890,14 +2903,3 @@ export const SOCIALS = [
     icons: <CiInstagram size={24} className="fill-primary" />,
   },
 ];
-
-export const BUSINESS_NAME = "London Home Safety Limited";
-export const ADDRESS = "43 Felton Road, Barking, London IG11 7YA";
-export const PHONE_NO = "073 9869 4439";
-export const WEBSITE_URL = "www.londonhomesafety.co.uk";
-export const EMAIL_ADDRESS = "info@londonhomesafety.co.uk";
-export const LANDLINE = "020 8146 6698";
-export const CONGESTION_FEE = 15;
-export const PARKING_FEE = 5;
-export const BANK_SORT_CODE = 309950;
-export const BANK_ACCOUNT_NUMBER = 25372562;

@@ -200,18 +200,7 @@ export default async function ServiceDetailsPage({
         </div>
       </section>
 
-      {/* <ServicePricingSection
-        commercialPackages={
-          hasCommercialPackages
-            ? allPackages.filter((p) => p.propertyType === "COMMERCIAL")
-            : []
-        }
-        residentialPackages={
-          hasResidentialPackages
-            ? allPackages.filter((p) => p.propertyType === "RESIDENTIAL")
-            : []
-        }
-      /> */}
+      <ServicePricingSection packages={allPackages} />
 
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <h2 className="text-4xl font-bold text-center mb-10">

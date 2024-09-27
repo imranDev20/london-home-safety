@@ -159,6 +159,7 @@ export async function createOrder(orderData: OrderData): Promise<{
 
         // Order creation
         const invoiceNumber = await generateInvoiceId();
+
         const createdOrder = await transactionPrisma.order.create({
           data: {
             userId: upsertedUser.id,

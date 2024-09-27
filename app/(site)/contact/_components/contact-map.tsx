@@ -1,7 +1,8 @@
+import { ADDRESS } from "@/shared/data";
 import React from "react";
 
 export default function ContactMap() {
-  const address = "43 Felton Road, Barking, IG11 7YA";
+  const address = ADDRESS;
   const businessName = "London Home Safety Limited";
 
   const encodedAddress = encodeURIComponent(address);
