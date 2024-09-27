@@ -92,16 +92,21 @@ export default function CartPage() {
               </span>
             </div>
 
-            <Link href="/book-now" className="mt-10 block">
-              <Button className="w-full mb-3" variant="outline">
-                Continue Booking
-              </Button>
-            </Link>
-            <Link href="/checkout">
-              <Button className="w-full" variant="default">
-                Checkout Now
-              </Button>
-            </Link>
+            <div className="mt-20">
+              <Link href="/book-now" className="mt-10 block">
+                <Button
+                  className="w-full mb-3 h-11 text-base"
+                  variant="outline"
+                >
+                  Continue Booking
+                </Button>
+              </Link>
+              <Link href="/checkout">
+                <Button className="w-full h-11 text-base" variant="default">
+                  Checkout Now
+                </Button>
+              </Link>
+            </div>
           </Card>
         </div>
       </div>

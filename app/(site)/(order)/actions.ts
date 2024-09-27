@@ -188,8 +188,9 @@ export async function createOrder(orderData: OrderData): Promise<{
 
         // Invoice generation
         const invoice = await generateInvoice(createdOrder);
-        if (!invoice?.data) {
-          throw new Error("Invoice generation failed");
+
+        if (!invoice.data) {
+          throw new Error(invoice?.message);
         }
 
         // Email sending
