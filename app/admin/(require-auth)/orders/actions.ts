@@ -5,7 +5,7 @@ import { OrderStatus, Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
-import puppeteer from "puppeteer";
+import { jsPDF } from "jspdf";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { sendEmail } from "@/lib/send-email";
 import {
@@ -19,6 +19,7 @@ import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 import { unstable_cache as cache } from "next/cache";
 import { generateInvoiceHtml } from "@/lib/invoice-html";
 import { handlePrismaError } from "@/lib/prisma-error";
+import { generateInvoiceTemplate } from "@/lib/generate-invoice";
 
 type OrderWithUser = Prisma.OrderGetPayload<{
   include: {
@@ -252,22 +253,20 @@ export default async function generateInvoice(orderId: string) {
     const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
     const totalPrice = cartTotal + parkingFee + congestionFee;
 
-    const htmlContent = generateInvoiceHtml(order, cartTotal, totalPrice);
+    // Create a new PDF document
+    const doc = new jsPDF();
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    // Set the content of the page to the provided HTML
-    await page.setContent(htmlContent);
-
-    // Generate the PDF
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
+    // Generate the invoice template
+    generateInvoiceTemplate(doc, {
+      order,
+      cartTotal,
+      parkingFee,
+      congestionFee,
+      totalPrice,
     });
 
-    const pdfBase64 = Buffer.from(pdfBuffer).toString("base64");
-    await browser.close();
+    // Get the PDF as a base64 string
+    const pdfBase64 = doc.output("datauristring").split(",")[1];
 
     return {
       message: "Invoice Generated Successfully",

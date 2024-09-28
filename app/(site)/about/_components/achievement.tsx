@@ -9,6 +9,7 @@ import AchievementImage1 from "@/images/electrician-house-owner.jpeg";
 import AchievementImage2 from "@/images/electrician-thumbs.jpeg";
 import AchievementImage3 from "@/images/electrician-with-happy-family.jpeg";
 import AchievementImage4 from "@/images/electrician-with-report.jpeg";
+import Link from "next/link";
 
 const useIntersectionObserver = (
   options?: IntersectionObserverInit
@@ -94,11 +95,11 @@ const Achievement: React.FC = () => {
               />
             </div>
 
-            <div>
+            <Link href="/services" className="mt-5 block">
               <button className="bg-primary text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-primary-dark transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
                 Learn More About Our Services
               </button>
-            </div>
+            </Link>
           </div>
 
           <div className="flex items-center justify-center h-full">

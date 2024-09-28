@@ -1,8 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { cache } from "react";
+import { revalidatePath, unstable_cache as cache } from "next/cache";
 import { SiteSettingsFormValues, siteSettingsSchema } from "./schema";
 import { handlePrismaError } from "@/lib/prisma-error";
 

@@ -10,7 +10,7 @@ import SocialIcon from "./social-icon";
 interface ContactInfoItemProps {
   icon: LucideIcon;
   title: string;
-  content: string;
+  content: React.ReactNode;
 }
 
 const ContactInfoItem: React.FC<ContactInfoItemProps> = ({

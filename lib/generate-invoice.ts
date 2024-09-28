@@ -1,4 +1,17 @@
 import prisma from "@/lib/prisma";
+import {
+  AREA_NAME,
+  BANK_ACCOUNT_NUMBER,
+  BANK_SORT_CODE,
+  BUSINESS_NAME,
+  LANDLINE,
+  POSTCODE,
+  STREET_NAME,
+} from "@/shared/data";
+import { Order, Prisma } from "@prisma/client";
+import { jsPDF } from "jspdf";
+import PngLogo from "@/public/logo.png";
+import { base64Logo } from "./base-64-logo";
 
 export async function generateInvoiceId() {
   const mostRecentOrder = await prisma.order.findFirst({
@@ -30,4 +43,217 @@ export async function generateInvoiceId() {
 
   const paddedNumericPart = nextNumericPart.toString().padStart(5, "0");
   return `INV${paddedNumericPart}${alphabetPart}`;
+}
+
+type OrderWithRelation = Prisma.OrderGetPayload<{
+  include: {
+    user: {
+      include: {
+        address: true;
+      };
+    };
+    packages: true;
+  };
+}>;
+
+type InvoiceData = {
+  order: OrderWithRelation;
+  cartTotal: number;
+  parkingFee: number;
+  congestionFee: number;
+  totalPrice: number;
+};
+
+export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
+  const { order, cartTotal, parkingFee, congestionFee, totalPrice } = data;
+
+  // Colors
+  const primaryColor = "#267ECE";
+  const secondaryColor = "#FFC527";
+  const lightGray = "#EAF3FB";
+  const darkGray = "#636B74";
+  const white = "#FFFFFF";
+
+  // Fonts
+  doc.setFont("helvetica");
+
+  // Header
+  doc.setFillColor(primaryColor);
+  doc.rect(0, 0, 210, 40, "F");
+
+  // Add logo
+  const logoWidth = 50;
+  const logoHeight = 30;
+
+  var image = new Image();
+  image.src = "logo.png";
+
+  doc.setTextColor(white);
+  doc.setFontSize(24);
+  doc.setFont("helvetica", "bold");
+  doc.text("INVOICE", 80, 25);
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Invoice Number: ${order.invoice}`, 80, 35);
+
+  // Company details
+  doc.setTextColor(darkGray);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text(BUSINESS_NAME, 130, 55);
+
+  const rightMargin = 188;
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+
+  doc.text(STREET_NAME, rightMargin, 62, { align: "right" });
+  doc.text(AREA_NAME, rightMargin, 69, { align: "right" });
+  doc.text(`London ${POSTCODE}`, rightMargin, 76, { align: "right" });
+  doc.text(`Date: ${order.date.toLocaleDateString()}`, rightMargin, 83, {
+    align: "right",
+  });
+
+  // Customer details
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Bill To:", 20, 55);
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(`${order.user.firstName} ${order.user.lastName}`, 20, 62);
+  doc.text(order.user.email, 20, 69);
+  if (order.user.address) {
+    doc.text(`${order.user.address.street}`, 20, 76);
+    doc.text(
+      `${order.user.address.city}, ${order.user.address.postcode}`,
+      20,
+      83
+    );
+  }
+
+  // Table header
+  const tableTop = 100;
+  doc.setFillColor(secondaryColor);
+  doc.rect(20, tableTop, 170, 10, "F");
+  doc.setTextColor(darkGray);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.text("Description", 25, tableTop + 7);
+  doc.text("Amount", 185, tableTop + 7, { align: "right" });
+
+  // Table content
+  let yPos = tableTop + 20;
+  doc.setTextColor(darkGray);
+  doc.setFont("helvetica", "normal");
+
+  order.packages.forEach((pkg, index) => {
+    const isEven = index % 2 === 0;
+    if (isEven) {
+      doc.setFillColor(lightGray);
+      doc.rect(20, yPos - 5, 170, 10, "F");
+    }
+
+    const description = `${pkg.serviceName}: ${pkg.name}`;
+    yPos = wrapText(doc, description, 25, yPos, 130, 10);
+    doc.text(`£${pkg.price.toFixed(2)}`, 190, yPos, { align: "right" });
+    yPos += 15;
+  });
+
+  // Subtotal and fees
+  yPos += 10;
+  doc.line(20, yPos, 190, yPos);
+  yPos += 10;
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Subtotal:", 140, yPos);
+  doc.setFont("helvetica", "normal");
+  doc.text(`£${cartTotal.toFixed(2)}`, 190, yPos, { align: "right" });
+  yPos += 10;
+
+  if (parkingFee > 0) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Parking Fee:", 140, yPos);
+    doc.setFont("helvetica", "normal");
+    doc.text(`£${parkingFee.toFixed(2)}`, 190, yPos, { align: "right" });
+    yPos += 10;
+  }
+
+  if (congestionFee > 0) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Congestion Fee:", 140, yPos);
+    doc.setFont("helvetica", "normal");
+    doc.text(`£${congestionFee.toFixed(2)}`, 190, yPos, { align: "right" });
+    yPos += 10;
+  }
+
+  // Total
+  yPos += 5;
+  doc.setFillColor(primaryColor);
+  doc.rect(140, yPos - 5, 50, 10, "F");
+  doc.setTextColor(white);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Total:", 145, yPos + 3);
+  doc.text(`£${totalPrice.toFixed(2)}`, 185, yPos + 3, { align: "right" });
+
+  // Bank details (if payment method is credit card)
+  if (order.paymentMethod === "CREDIT_CARD") {
+    yPos += 30;
+    doc.setTextColor(darkGray);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("BANK DETAILS", 20, yPos);
+    yPos += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Account Name: ${BUSINESS_NAME}`, 20, yPos);
+    yPos += 7;
+    doc.text(`Sort Code: ${BANK_SORT_CODE}`, 20, yPos);
+    yPos += 7;
+    doc.text(`Account No: ${BANK_ACCOUNT_NUMBER}`, 20, yPos);
+  }
+
+  // Footer
+  doc.setTextColor(darkGray);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.text("Thank you for your business!", 105, 280, { align: "center" });
+  doc.text(
+    "www.londonhomesafety.co.uk | info@londonhomesafety.co.uk",
+    105,
+    285,
+    { align: "center" }
+  );
+}
+
+function wrapText(
+  doc: jsPDF,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number
+) {
+  const words = text.split(" ");
+  let line = "";
+  let yPos = y;
+
+  for (let i = 0; i < words.length; i++) {
+    const testLine = line + words[i] + " ";
+    const metrics = doc.getTextDimensions(testLine);
+    const testWidth = metrics.w;
+
+    if (testWidth > maxWidth && i > 0) {
+      doc.text(line.trim(), x, yPos);
+      line = words[i] + " ";
+      yPos += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  doc.text(line.trim(), x, yPos);
+  return yPos;
 }
