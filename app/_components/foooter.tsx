@@ -1,5 +1,5 @@
 import { ALL_SERVICES, NAV_ITEMS } from "@/shared/data";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import Link from "next/link";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -10,7 +10,7 @@ import { MdLocalPhone } from "react-icons/md";
 export default function Footer({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   return (
     <footer className="bg-primary-darker text-white py-10 ">

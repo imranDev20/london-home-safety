@@ -2,14 +2,14 @@ import ContactUsForm from "@/app/_components/common/contact-us-form";
 import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import { Button } from "@/components/ui/button";
 import ContactUsImage from "@/images/home/home-contact-image.jpeg";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Contact({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   const siteSettingTime = await getSettings();
 

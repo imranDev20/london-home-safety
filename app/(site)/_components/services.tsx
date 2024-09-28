@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { mergeArrays } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { Package } from "@prisma/client";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
@@ -16,7 +16,7 @@ export default function Services({
   siteSettings,
 }: {
   packages: Package[];
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);

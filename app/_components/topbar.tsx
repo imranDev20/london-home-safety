@@ -1,4 +1,4 @@
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import Link from "next/link";
 import { FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -9,7 +9,7 @@ import TelephoneIcon from "@/components/icons/telephone";
 export default function Topbar({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   return (
     <div className="bg-primary text-white h-10 pt-2">

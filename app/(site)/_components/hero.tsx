@@ -2,7 +2,7 @@ import BookNow from "@/app/_components/book-now";
 import TelephoneIcon from "@/components/icons/telephone";
 import { Button } from "@/components/ui/button";
 import BackgroundImage from "@/images/hero-image-new.jpeg";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import Image from "next/image";
 import Link from "next/link";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -10,7 +10,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 export default function Hero({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   return (
     <section className="relative flex items-center py-44 lg:py-0 -mt-[156px] md:-mt-[132px] min-h-[900px] lg:min-h-[750px] lg:h-screen">
