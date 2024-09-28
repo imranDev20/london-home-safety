@@ -17,7 +17,6 @@ import {
 import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
 import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 import { unstable_cache as cache } from "next/cache";
-import { generateInvoiceHtml } from "@/lib/invoice-html";
 import { handlePrismaError } from "@/lib/prisma-error";
 import { generateInvoiceTemplate } from "@/lib/generate-invoice";
 

@@ -1,8 +1,10 @@
 "use server";
 
 import { CustomerDetails } from "@/hooks/use-order-store";
-import { generateInvoiceId } from "@/lib/generate-invoice";
-import { generateInvoiceHtml } from "@/lib/invoice-html";
+import {
+  generateInvoiceId,
+  generateInvoiceTemplate,
+} from "@/lib/generate-invoice";
 import { notifyAdminOrderPlacedEmailHtml } from "@/lib/notify-admin-order-placed";
 import { placedOrderEmailHtml } from "@/lib/placed-order-html";
 import prisma from "@/lib/prisma";
@@ -11,7 +13,7 @@ import { sendEmail } from "@/lib/send-email";
 import { CONGESTION_FEE, EMAIL_ADDRESS, PARKING_FEE } from "@/shared/data";
 import { Order, Package, PaymentMethod, Prisma, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import puppeteer from "puppeteer";
+import { jsPDF } from "jspdf";
 
 type OrderData = {
   customerDetails: CustomerDetails;
@@ -33,10 +35,8 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
 export default async function generateInvoice(order: OrderWithRelation) {
   try {
     if (!order) {
-      return {
-        message: "No order found",
-        success: false,
-      };
+      console.error("No order available to generate invoice");
+      return null;
     }
 
     const parkingFee = order.parkingOptions === "FREE" ? 0 : PARKING_FEE;
@@ -44,21 +44,20 @@ export default async function generateInvoice(order: OrderWithRelation) {
     const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
     const totalPrice = cartTotal + parkingFee + congestionFee;
 
-    const htmlContent = generateInvoiceHtml(order, cartTotal, totalPrice);
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    // Create a new PDF document
+    const doc = new jsPDF();
 
-    // Set the content of the page to the provided HTML
-    await page.setContent(htmlContent);
-
-    // Generate the PDF
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
+    // Generate the invoice template
+    generateInvoiceTemplate(doc, {
+      order,
+      cartTotal,
+      parkingFee,
+      congestionFee,
+      totalPrice,
     });
 
-    const pdfBase64 = Buffer.from(pdfBuffer).toString("base64");
-    await browser.close();
+    // Get the PDF as a base64 string
+    const pdfBase64 = doc.output("datauristring").split(",")[1];
 
     return {
       message: "Invoice Generated Successfully",
@@ -68,9 +67,9 @@ export default async function generateInvoice(order: OrderWithRelation) {
   } catch (error) {
     console.error("Error generating PDF:", error);
     return {
-      success: false,
-      data: null,
       message: handlePrismaError(error).message,
+      data: null,
+      success: false,
     };
   }
 }
@@ -189,7 +188,7 @@ export async function createOrder(orderData: OrderData): Promise<{
         // Invoice generation
         const invoice = await generateInvoice(createdOrder);
 
-        if (!invoice.data) {
+        if (!invoice?.data) {
           console.log(invoice);
           throw new Error(invoice?.message);
         }
