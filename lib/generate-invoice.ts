@@ -10,8 +10,8 @@ import {
 } from "@/shared/data";
 import { Order, Prisma } from "@prisma/client";
 import { jsPDF } from "jspdf";
-import PngLogo from "@/public/logo.png";
-import { base64Logo } from "./base-64-logo";
+import path from "path";
+import fs from "fs";
 
 export async function generateInvoiceId() {
   const mostRecentOrder = await prisma.order.findFirst({
@@ -78,32 +78,39 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   doc.setFont("helvetica");
 
   // Header
-  doc.setFillColor(primaryColor);
+  doc.setFillColor(white);
   doc.rect(0, 0, 210, 40, "F");
 
   // Add logo
-  const logoWidth = 50;
-  const logoHeight = 30;
+  const currentDir = process.cwd();
+  const publicFolderPath = path.join(currentDir, "public");
+  const imagePath = path.join(publicFolderPath, "logo.png");
 
-  var image = new Image();
-  image.src = "logo.png";
+  // Read the image file
+  const imageBuffer = fs.readFileSync(imagePath);
+  const base64Image = imageBuffer.toString("base64");
+  const imgData = `data:image/png;base64,${base64Image}`;
 
-  doc.setTextColor(white);
-  doc.setFontSize(24);
+  doc.addImage(imgData, "PNG", 20, 7, 30, 30);
+
+  const rightMargin = 188;
+
+  doc.setTextColor(primaryColor);
+  doc.setFontSize(32);
+  drawBolderText(doc, "INVOICE", rightMargin, 25, { align: "right" });
+
+  doc.setTextColor(darkGray);
+  doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text("INVOICE", 80, 25);
-
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Invoice Number: ${order.invoice}`, 80, 35);
+  doc.text(`#${order.invoice}`, rightMargin, 35, {
+    align: "right",
+  });
 
   // Company details
-  doc.setTextColor(darkGray);
+  doc.setFontSize(10);
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
   doc.text(BUSINESS_NAME, 130, 55);
-
-  const rightMargin = 188;
 
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
@@ -135,9 +142,9 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
 
   // Table header
   const tableTop = 100;
-  doc.setFillColor(secondaryColor);
+  doc.setFillColor(primaryColor);
   doc.rect(20, tableTop, 170, 10, "F");
-  doc.setTextColor(darkGray);
+  doc.setTextColor(white);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.text("Description", 25, tableTop + 7);
@@ -152,12 +159,14 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
     const isEven = index % 2 === 0;
     if (isEven) {
       doc.setFillColor(lightGray);
-      doc.rect(20, yPos - 5, 170, 10, "F");
+    } else {
+      doc.setFillColor(white);
     }
+    doc.rect(20, yPos - 5, 170, 10, "F");
 
     const description = `${pkg.serviceName}: ${pkg.name}`;
     yPos = wrapText(doc, description, 25, yPos, 130, 10);
-    doc.text(`£${pkg.price.toFixed(2)}`, 190, yPos, { align: "right" });
+    doc.text(`£${pkg.price.toFixed(2)}`, 185, yPos, { align: "right" });
     yPos += 15;
   });
 
@@ -167,7 +176,7 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   yPos += 10;
 
   doc.setFont("helvetica", "bold");
-  doc.text("Subtotal:", 140, yPos);
+  doc.text("Subtotal (inc Tax):", 135, yPos);
   doc.setFont("helvetica", "normal");
   doc.text(`£${cartTotal.toFixed(2)}`, 190, yPos, { align: "right" });
   yPos += 10;
@@ -191,15 +200,23 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   // Total
   yPos += 5;
   doc.setFillColor(primaryColor);
-  doc.rect(140, yPos - 5, 50, 10, "F");
-  doc.setTextColor(white);
+  doc.rect(120, yPos - 5, 70, 10, "F");
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.text("Total:", 145, yPos + 3);
-  doc.text(`£${totalPrice.toFixed(2)}`, 185, yPos + 3, { align: "right" });
+
+  const rectHeight = 10;
+  const textDimensions = doc.getTextDimensions("Total (inc Tax):");
+  const textHeight = textDimensions.h;
+
+  // Calculate the Y position to center the text vertically
+  const textY = yPos - 5 + (rectHeight - textHeight) / 2 + textHeight;
+
+  doc.text("Total (inc Tax):", 125, textY);
+  doc.text(`£${totalPrice.toFixed(2)}`, 185, textY, { align: "right" });
 
   // Bank details (if payment method is credit card)
-  if (order.paymentMethod === "CREDIT_CARD") {
+  if (order.paymentMethod !== "CREDIT_CARD") {
     yPos += 30;
     doc.setTextColor(darkGray);
     doc.setFontSize(12);
@@ -256,4 +273,25 @@ function wrapText(
   }
   doc.text(line.trim(), x, yPos);
   return yPos;
+}
+
+function drawBolderText(
+  doc: jsPDF,
+  text: string,
+  x: number,
+  y: number,
+  options?: { align: "right" | "center" | "left" }
+) {
+  doc.setFont("helvetica", "bold");
+  const offset = 0.1;
+
+  if (options?.align === "right") {
+    const textWidth = doc.getTextWidth(text);
+    x -= textWidth;
+  }
+
+  doc.text(text, x, y);
+  doc.text(text, x + offset, y);
+  doc.text(text, x, y + offset);
+  doc.text(text, x + offset, y + offset);
 }

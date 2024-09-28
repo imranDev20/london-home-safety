@@ -9,21 +9,25 @@ const GroupedOpeningHours: React.FC<GroupedOpeningHoursProps> = ({
   openingHours,
 }) => {
   const sortedDays = [
-    "MONDAY",
-    "TUESDAY",
-    "WEDNESDAY",
-    "THURSDAY",
-    "FRIDAY",
-    "SATURDAY",
-    "SUNDAY",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
   ];
+
+  const formatDay = (day: string) => {
+    return day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
+  };
 
   const groupedHours = openingHours.reduce((acc, curr) => {
     const key = `${curr.openingTime}-${curr.closingTime}`;
     if (!acc[key]) {
       acc[key] = [];
     }
-    acc[key].push(curr.dayOfWeek);
+    acc[key].push(formatDay(curr.dayOfWeek));
     return acc;
   }, {} as Record<string, string[]>);
 
@@ -48,8 +52,9 @@ const GroupedOpeningHours: React.FC<GroupedOpeningHoursProps> = ({
   return (
     <div>
       {Object.entries(groupedHours).map(([hours, days], index) => (
-        <p key={index}>
-          {formatDayRange(days)}: {hours.replace("-", " - ")}
+        <p key={index} className="mb-1">
+          <span className="font-normal">{formatDayRange(days)}:</span>{" "}
+          {hours.replace("-", " - ")}
         </p>
       ))}
     </div>
