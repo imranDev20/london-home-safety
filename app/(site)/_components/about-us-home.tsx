@@ -4,7 +4,7 @@ import AboutImage1 from "@/images/electrician-2.jpg";
 import AboutImage3 from "@/images/electrician-3.jpg";
 import AboutImage2 from "@/images/happy-family.jpg";
 import TrustPilot from "@/images/trustpilot.jpeg";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -35,7 +35,7 @@ const DotIcon = () => (
 export default function AboutUsHome({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   return (
     <section className="bg-gradient-to-t from-blue-50 to-white py-36 overflow-hidden">

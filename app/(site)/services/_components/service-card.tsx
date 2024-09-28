@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { NavLeafItem, SiteSettingWithUserAddress } from "@/types/misc";
+import { NavLeafItem, SiteSettingWithRelations } from "@/types/misc";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +24,7 @@ export default function ServiceCard({
   index: number;
   isVisible: boolean;
   price: number | string;
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   const { description, image, path, label, categoryPath } = service;
   const [isHovered, setIsHovered] = useState(false);

@@ -4,7 +4,7 @@ import { ALL_SERVICES } from "@/shared/data";
 
 import { mergeArrays } from "@/lib/utils";
 
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { Package } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -15,7 +15,7 @@ export default function ServiceItems({
   siteSettings,
 }: {
   packages: Package[];
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   const controls = useAnimation();
   const sectionRef = useRef(null);

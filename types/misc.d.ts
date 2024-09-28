@@ -58,12 +58,13 @@ export type UserEmailDataType = {
   phone: string;
 };
 
-export type SiteSettingWithUserAddress = Prisma.SiteSettingsGetPayload<{
+export type SiteSettingWithRelations = Prisma.SiteSettingsGetPayload<{
   include: {
     user: {
       include: {
         address: true;
       };
     };
+    openingDateTime: true;
   };
 }> | null;

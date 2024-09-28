@@ -67,8 +67,14 @@ export default function SettingsForm({
         city: "",
         postcode: "",
       },
+
       openingDateTime: [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "openingDateTime",
   });
 
   useEffect(() => {
@@ -87,19 +93,17 @@ export default function SettingsForm({
           city: settings.user?.address?.city || "",
           postcode: settings.user?.address?.postcode || "",
         },
-        openingDateTime: settings.openingDateTime || [],
+
+        openingDateTime: settings?.openingDateTime.map((time) => ({
+          closingTime: time.closingTime,
+          dayOfWeek: time.dayOfWeek,
+          openingTime: time.openingTime,
+        })),
       });
     }
   }, [form, settings]);
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "openingDateTime",
-  });
-
   function onSubmit(data: SiteSettingsFormValues) {
-    console.log(status, sessionData);
-
     if (status !== "authenticated" || !sessionData.user.id) {
       toast({
         title: "Error",

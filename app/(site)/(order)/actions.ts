@@ -190,6 +190,7 @@ export async function createOrder(orderData: OrderData): Promise<{
         const invoice = await generateInvoice(createdOrder);
 
         if (!invoice.data) {
+          console.log(invoice);
           throw new Error(invoice?.message);
         }
 

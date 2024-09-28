@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { mergeArrays } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { Package } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
 import { ChevronRight } from "lucide-react";
@@ -61,7 +61,7 @@ export default function Services({
   siteSettings,
 }: {
   packages: Package[];
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   const [inView, setInView] = useState(false);
   const sectionRef = useRef(null);

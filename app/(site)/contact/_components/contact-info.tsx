@@ -2,15 +2,16 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { SOCIALS } from "@/shared/data";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { Clock, LucideIcon, Mail, MapPin, Phone } from "lucide-react";
 import React from "react";
 import SocialIcon from "./social-icon";
+import GroupedOpeningHours from "./grouped-opening-hours";
 
 interface ContactInfoItemProps {
   icon: LucideIcon;
   title: string;
-  content: string;
+  content: React.ReactNode;
 }
 
 const ContactInfoItem: React.FC<ContactInfoItemProps> = ({
@@ -24,7 +25,7 @@ const ContactInfoItem: React.FC<ContactInfoItemProps> = ({
     </div>
     <div>
       <h3 className="font-semibold text-gray-900">{title}</h3>
-      <p className="text-gray-600">{content}</p>
+      <div className="text-gray-600">{content}</div>
     </div>
   </div>
 );
@@ -32,7 +33,7 @@ const ContactInfoItem: React.FC<ContactInfoItemProps> = ({
 export default function ContactInfo({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }): JSX.Element {
   return (
     <Card>
@@ -58,9 +59,17 @@ export default function ContactInfo({
         <ContactInfoItem
           icon={Clock}
           title="Working Hours"
-          content="Monday - Sunday: 09:00 - 17:00"
+          content={
+            siteSettings?.openingDateTime &&
+            siteSettings.openingDateTime.length > 0 ? (
+              <GroupedOpeningHours
+                openingHours={siteSettings.openingDateTime}
+              />
+            ) : (
+              "Opening hours not available"
+            )
+          }
         />
-
         <div className="mt-8">
           <h3 className="font-semibold mb-4 text-gray-900">Follow Us</h3>
           <div className="flex flex-wrap gap-4">

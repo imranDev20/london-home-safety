@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import Link from "next/link";
 
 export default function ServiceDetailsCta({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   return (
     <div className="relative my-10 mx-auto   overflow-hidden">

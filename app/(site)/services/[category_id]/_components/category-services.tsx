@@ -2,7 +2,7 @@
 
 import { kebabToNormal, mergeArrays } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import ServiceCard from "../../_components/service-card";
@@ -15,7 +15,7 @@ export default function CategoryServices({
 }: {
   categoryId: string;
   packages: Package[];
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   const controls = useAnimation();
   const sectionRef = useRef(null);

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import BackgroundImage from "@/images/about-bg.jpeg";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { motion, useAnimation } from "framer-motion";
 import { Calendar, Phone } from "lucide-react";
 import Image from "next/image";
@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 const CallToAction = ({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const controls = useAnimation();

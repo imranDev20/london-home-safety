@@ -2819,6 +2819,9 @@ export const FAQ_HOME = [
 export const BUSINESS_NAME = "London Home Safety Limited";
 export const ADDRESS =
   "46d, Greatorex Street, Micro Business Park, London, England, E1 5NP";
+export const STREET_NAME = "46d, Greatorex Street";
+export const AREA_NAME = "Micro Business Park";
+export const POSTCODE = "E1 5NP";
 export const PHONE_NO = "073 9869 4439";
 export const WEBSITE_URL = "www.londonhomesafety.co.uk";
 export const EMAIL_ADDRESS = "info@londonhomesafety.co.uk";

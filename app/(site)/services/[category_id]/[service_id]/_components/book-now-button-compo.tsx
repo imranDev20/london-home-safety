@@ -5,7 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import useOrderStore from "@/hooks/use-order-store";
 import usePackageStore from "@/hooks/use-package-store";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { Package } from "@prisma/client";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { Check, ShoppingCart, Loader2 } from "lucide-react";
@@ -16,7 +16,7 @@ export default function BookNowButtonCompo({
   siteSettings,
 }: {
   packages: Package[];
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   const { selectedPackage, setPackage } = usePackageStore();
   const { addItem, cartItems } = useOrderStore();

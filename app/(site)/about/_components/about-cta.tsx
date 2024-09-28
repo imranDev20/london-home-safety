@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import backgroundImage from "@/images/about-bg.jpeg";
-import { SiteSettingWithUserAddress } from "@/types/misc";
+import { SiteSettingWithRelations } from "@/types/misc";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { FaCalendarAlt, FaPhoneAlt } from "react-icons/fa";
 export default function AboutCta({
   siteSettings,
 }: {
-  siteSettings: SiteSettingWithUserAddress;
+  siteSettings: SiteSettingWithRelations;
 }) {
   return (
     <div className="relative py-24 md:py-32 flex items-center justify-center bg-[#1D63A9] overflow-hidden">
