@@ -30,7 +30,6 @@ type PartialOrder = Prisma.OrderGetPayload<{
     inspectionTime: true;
     status: true;
     paymentStatus: true;
-    totalPrice: true;
     date: true;
     createdAt: true;
   };
