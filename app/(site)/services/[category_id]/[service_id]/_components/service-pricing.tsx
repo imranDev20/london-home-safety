@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Package, PropertyType } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
 import { Home, Building, Users, BanknoteIcon, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import useIntersectionObserver from "@/hooks/use-intersection-observer";
 
 interface PricingCardProps {
   propertyType: PropertyType;
@@ -16,32 +17,13 @@ const PricingCard: React.FC<PricingCardProps> = ({
   packages,
 }) => {
   const controls = useAnimation();
-  const ref = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 }, true);
 
-  useEffect(() => {
-    const currentRef = ref.current;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          controls.start("visible");
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (currentRef) {
-      observer.observe(currentRef);
+  React.useEffect(() => {
+    if (isVisible) {
+      controls.start("visible");
     }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [controls]);
+  }, [isVisible, controls]);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -142,31 +124,13 @@ const ServicePricingSection: React.FC<ServicePricingSectionProps> = ({
   packages,
 }) => {
   const controls = useAnimation();
-  const ref = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 }, true);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          controls.start("visible");
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
+  React.useEffect(() => {
+    if (isVisible) {
+      controls.start("visible");
     }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [controls]);
+  }, [isVisible, controls]);
 
   const titleVariants = {
     hidden: { opacity: 0, y: -20 },

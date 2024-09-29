@@ -66,12 +66,7 @@ import {
   sendEmailToCustomerOrderConfirmation,
 } from "../../../customers/actions";
 import generateInvoice from "../../actions";
-import {
-  updateOrder,
-  updateOrderStatus,
-  updatePaymentStatus,
-} from "../actions";
-
+import { updateOrder } from "../actions";
 import PackageTableRow from "./service-table-row";
 
 import { Badge } from "@/components/ui/badge";
@@ -124,7 +119,11 @@ export default function EditOrderForm({
     startTransition(async () => {
       if (orderDetails?.id) {
         setStatus(value);
-        const result = await updateOrderStatus(orderDetails.id, value);
+        const result = await updateOrder({
+          orderId: orderDetails?.id,
+          orderStatus: value,
+        });
+
         toast({
           title: result.success ? "Success" : "Error",
           description: result.message,
@@ -183,7 +182,10 @@ export default function EditOrderForm({
     startTransition(async () => {
       if (orderDetails?.id) {
         setPaymentStatus(value);
-        const result = await updatePaymentStatus(orderDetails.id, value);
+        const result = await updateOrder({
+          orderId: orderDetails?.id,
+          paymentStatus: value,
+        });
         toast({
           title: result.success ? "Success" : "Error",
           description: result.message,
@@ -202,7 +204,11 @@ export default function EditOrderForm({
 
     startTransition(async () => {
       if (orderDetails?.id) {
-        const result = await updateOrder(orderDetails.id, engineerId);
+        const result = await updateOrder({
+          orderId: orderDetails?.id,
+          assignedEngineerId: engineerId,
+        });
+
         setOpenAssignedEngineers(false);
         toast({
           title: result.success ? "Success" : "Error",

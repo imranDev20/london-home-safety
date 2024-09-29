@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import useIntersectionObserver from "@/hooks/use-intersection-observer";
 
 interface CounterCardProps {
   icon: React.ElementType;
@@ -11,31 +12,6 @@ interface CounterCardProps {
   description: string;
 }
 
-const useIntersectionObserver = (
-  options?: IntersectionObserverInit
-): [React.RefObject<HTMLDivElement>, boolean] => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsIntersecting(entry.isIntersecting);
-    }, options);
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [options]);
-
-  return [ref, isIntersecting];
-};
-
 const CounterCard: React.FC<CounterCardProps> = ({
   icon: Icon,
   end,
@@ -44,12 +20,13 @@ const CounterCard: React.FC<CounterCardProps> = ({
   description,
 }) => {
   const [count, setCount] = useState<number>(0);
-  const [ref, inView] = useIntersectionObserver({
-    threshold: 0.1,
-  });
+  const [ref, inView] = useIntersectionObserver(
+    { threshold: 0.1 },
+    true // freezeOnceVisible set to true
+  );
 
   useEffect(() => {
-    if (inView) {
+    if (inView && count === 0) {
       let start = 0;
       const increment = end / (duration / 16);
       const timer = setInterval(() => {
@@ -63,7 +40,7 @@ const CounterCard: React.FC<CounterCardProps> = ({
       }, 16);
       return () => clearInterval(timer);
     }
-  }, [inView, end, duration]);
+  }, [inView, end, duration, count]);
 
   return (
     <Card

@@ -1,36 +1,138 @@
-"use client";
-
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ContentLayout } from "./_components/content-layout";
-import { IncomeChart } from "./_components/income-chart";
-import { MostOrderedServiceTypes } from "./_components/most-ordered-types-chart";
-import { OrdersByShift } from "./_components/orders-by-shift-chart";
+import TodaysOrders from "./_components/todays-orders";
+import { DollarSign, CheckCircle, Clock, LucideIcon } from "lucide-react";
+import { dashboardOrders } from "./orders/actions";
 
-export default function AdminDashboardPage() {
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: LucideIcon;
+  trend?: {
+    value: number;
+    isPositive: boolean;
+  };
+}
+
+function StatCard({ title, value, icon: Icon, trend }: StatCardProps) {
+  return (
+    <Card>
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-2 bg-primary/10 rounded-full">
+            <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+          </div>
+          {trend && (
+            <div
+              className={`flex items-center ${
+                trend.isPositive ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              <span className="text-xs sm:text-sm font-medium">
+                {trend.isPositive ? "↑" : "↓"}{" "}
+                {Math.abs(trend.value).toFixed(1)}%
+              </span>
+            </div>
+          )}
+        </div>
+        <div>
+          <h3 className="text-lg sm:text-2xl font-bold">{value}</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            {title}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function calculateTrend(
+  currentValue: number,
+  previousValue: number
+): { value: number; isPositive: boolean } {
+  if (previousValue === 0) return { value: 0, isPositive: true };
+  const trendValue = ((currentValue - previousValue) / previousValue) * 100;
+  return { value: trendValue, isPositive: trendValue >= 0 };
+}
+
+export default async function AdminDashboardPage() {
+  const { todayOrders, yesterdayOrders } = await dashboardOrders();
+
+  // Calculate total earnings
+  const todayEarnings = todayOrders.reduce(
+    (sum, order) => sum + order.totalPrice,
+    0
+  );
+  const yesterdayEarnings = yesterdayOrders.reduce(
+    (sum, order) => sum + order.totalPrice,
+    0
+  );
+
+  // Calculate completed and ongoing jobs
+  const todayCompletedJobs = todayOrders.filter(
+    (order) => order.status === "COMPLETED"
+  ).length;
+  const yesterdayCompletedJobs = yesterdayOrders.filter(
+    (order) => order.status === "COMPLETED"
+  ).length;
+
+  const todayOngoingJobs = todayOrders.filter(
+    (order) => order.status === "IN_PROGRESS"
+  ).length;
+  const yesterdayOngoingJobs = yesterdayOrders.filter(
+    (order) => order.status === "IN_PROGRESS"
+  ).length;
+
+  // Calculate trends
+  const earningsTrend = calculateTrend(todayEarnings, yesterdayEarnings);
+  const completedJobsTrend = calculateTrend(
+    todayCompletedJobs,
+    yesterdayCompletedJobs
+  );
+  const ongoingJobsTrend = calculateTrend(
+    todayOngoingJobs,
+    yesterdayOngoingJobs
+  );
+
   return (
     <ContentLayout title="Dashboard">
-      <div className="grid grid-cols-12 gap-5">
-        <div className="col-span-6">
-          <IncomeChart />
-        </div>
+      <div className="mb-6 sm:mb-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl sm:text-2xl">
+              Today&apos;s Orders
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TodaysOrders orders={todayOrders} />
+          </CardContent>
+        </Card>
+      </div>
 
-        <div className="col-span-6"></div>
-
-        <div className="col-span-4">
-          <MostOrderedServiceTypes />
-        </div>
-
-        <div className="col-span-4">
-          <OrdersByShift />
-        </div>
-
-        <div className="col-span-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Orders by Area</CardTitle>
-            </CardHeader>
-            <CardContent>{/* Bar chart for orders by area */}</CardContent>
-          </Card>
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">
+          Today&apos;s Overview
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          <StatCard
+            title="Total Earnings"
+            value={`£${todayEarnings.toFixed(2)}`}
+            icon={DollarSign}
+            trend={earningsTrend}
+          />
+          <StatCard
+            title="Completed Jobs"
+            value={todayCompletedJobs}
+            icon={CheckCircle}
+            trend={completedJobsTrend}
+          />
+          <StatCard
+            title="Ongoing Jobs"
+            value={todayOngoingJobs}
+            icon={Clock}
+            trend={ongoingJobsTrend}
+          />
         </div>
       </div>
     </ContentLayout>

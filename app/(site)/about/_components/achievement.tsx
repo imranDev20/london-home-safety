@@ -10,40 +10,14 @@ import AchievementImage2 from "@/images/electrician-thumbs.jpeg";
 import AchievementImage3 from "@/images/electrician-with-happy-family.jpeg";
 import AchievementImage4 from "@/images/electrician-with-report.jpeg";
 import Link from "next/link";
-
-const useIntersectionObserver = (
-  options?: IntersectionObserverInit
-): [React.RefObject<HTMLDivElement>, boolean] => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [isIntersecting, setIsIntersecting] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsIntersecting(entry.isIntersecting);
-    }, options);
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [options]);
-
-  return [ref, isIntersecting];
-};
+import useIntersectionObserver from "@/hooks/use-intersection-observer";
 
 const Achievement: React.FC = () => {
-  const [sectionRef, inView] = useIntersectionObserver({
-    threshold: 0.1,
-  });
+  const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
 
   return (
     <section
-      ref={sectionRef}
+      ref={ref}
       className={`bg-gradient-to-t from-blue-50 to-white py-24 overflow-hidden transition-opacity duration-1000 ${
         inView ? "opacity-100" : "opacity-0"
       }`}
