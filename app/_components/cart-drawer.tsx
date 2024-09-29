@@ -94,7 +94,9 @@ export default function CartDrawer() {
                       <div className="flex items-center">
                         <Home className="w-4 h-4 mr-2 text-primary" />
                         <span className="capitalize">
-                          {`For ${item?.propertyType?.toLowerCase()} Property`}
+                          {`For ${item?.propertyType
+                            ?.toLowerCase()
+                            .replace("_", " ")} Property`}
                         </span>
                       </div>
                     </div>
