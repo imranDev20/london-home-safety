@@ -94,7 +94,7 @@ export async function updateOrder({
       data: updateData,
     });
 
-    revalidatePath("/admin", "layout");
+    revalidatePath("/", "layout");
 
     return {
       message: "Order updated successfully!",

@@ -2,8 +2,8 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ContentLayout } from "./_components/content-layout";
 import TodaysOrders from "./_components/todays-orders";
-import { DollarSign, CheckCircle, Clock, LucideIcon } from "lucide-react";
-import { dashboardOrders } from "./orders/actions";
+import { DollarSign, CheckCircle, ShoppingBag, LucideIcon } from "lucide-react";
+import { getTodayStats, getTodayOrders } from "./orders/actions";
 
 interface StatCardProps {
   title: string;
@@ -23,7 +23,7 @@ function StatCard({ title, value, icon: Icon, trend }: StatCardProps) {
           <div className="p-2 bg-primary/10 rounded-full">
             <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
           </div>
-          {trend && (
+          {trend && trend.value !== 0 && (
             <div
               className={`flex items-center ${
                 trend.isPositive ? "text-green-600" : "text-red-600"
@@ -57,43 +57,29 @@ function calculateTrend(
 }
 
 export default async function AdminDashboardPage() {
-  const { todayOrders, yesterdayOrders } = await dashboardOrders();
+  const [todayStats, todayOrders] = await Promise.all([
+    getTodayStats(),
+    getTodayOrders(),
+  ]);
 
-  // Calculate total earnings
-  const todayEarnings = todayOrders.reduce(
-    (sum, order) => sum + order.totalPrice,
-    0
+  const {
+    todayTotalOrders,
+    yesterdayTotalOrders,
+    todayCompletedOrders,
+    yesterdayCompletedOrders,
+    todayEarnings,
+    yesterdayEarnings,
+  } = todayStats;
+
+  const totalOrdersTrend = calculateTrend(
+    todayTotalOrders,
+    yesterdayTotalOrders
   );
-  const yesterdayEarnings = yesterdayOrders.reduce(
-    (sum, order) => sum + order.totalPrice,
-    0
+  const completedOrdersTrend = calculateTrend(
+    todayCompletedOrders,
+    yesterdayCompletedOrders
   );
-
-  // Calculate completed and ongoing jobs
-  const todayCompletedJobs = todayOrders.filter(
-    (order) => order.status === "COMPLETED"
-  ).length;
-  const yesterdayCompletedJobs = yesterdayOrders.filter(
-    (order) => order.status === "COMPLETED"
-  ).length;
-
-  const todayOngoingJobs = todayOrders.filter(
-    (order) => order.status === "IN_PROGRESS"
-  ).length;
-  const yesterdayOngoingJobs = yesterdayOrders.filter(
-    (order) => order.status === "IN_PROGRESS"
-  ).length;
-
-  // Calculate trends
   const earningsTrend = calculateTrend(todayEarnings, yesterdayEarnings);
-  const completedJobsTrend = calculateTrend(
-    todayCompletedJobs,
-    yesterdayCompletedJobs
-  );
-  const ongoingJobsTrend = calculateTrend(
-    todayOngoingJobs,
-    yesterdayOngoingJobs
-  );
 
   return (
     <ContentLayout title="Dashboard">
@@ -122,16 +108,16 @@ export default async function AdminDashboardPage() {
             trend={earningsTrend}
           />
           <StatCard
-            title="Completed Jobs"
-            value={todayCompletedJobs}
-            icon={CheckCircle}
-            trend={completedJobsTrend}
+            title="Total Orders"
+            value={todayTotalOrders}
+            icon={ShoppingBag}
+            trend={totalOrdersTrend}
           />
           <StatCard
-            title="Ongoing Jobs"
-            value={todayOngoingJobs}
-            icon={Clock}
-            trend={ongoingJobsTrend}
+            title="Completed Orders"
+            value={todayCompletedOrders}
+            icon={CheckCircle}
+            trend={completedOrdersTrend}
           />
         </div>
       </div>

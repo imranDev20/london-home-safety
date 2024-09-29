@@ -2,7 +2,6 @@
 
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import {
   Table,
@@ -48,11 +47,7 @@ const formatEnumValue = (value: string): string => {
     .join(" ");
 };
 
-export default function TodaysOrders({
-  orders: initialOrders,
-}: TodaysOrdersProps) {
-  const [orders, setOrders] = useState(initialOrders);
-  const router = useRouter();
+export default function TodaysOrders({ orders }: TodaysOrdersProps) {
   const [isPending, startTransition] = useTransition();
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
 
@@ -66,16 +61,11 @@ export default function TodaysOrders({
         const result = await updateOrder({ orderId, orderStatus: newStatus });
 
         if (result.success) {
-          setOrders(
-            orders.map((order) =>
-              order.id === orderId ? { ...order, status: newStatus } : order
-            )
-          );
           toast({
             title: "Status updated",
             description: "Order status has been successfully updated.",
+            variant: "success",
           });
-          router.refresh();
         } else {
           throw new Error(result.message || "Failed to update order status");
         }
@@ -102,18 +92,10 @@ export default function TodaysOrders({
         const result = await updateOrder({ orderId, paymentStatus: newStatus });
 
         if (result.success) {
-          setOrders(
-            orders.map((order) =>
-              order.id === orderId
-                ? { ...order, paymentStatus: newStatus }
-                : order
-            )
-          );
           toast({
             title: "Payment status updated",
             description: "Order payment status has been successfully updated.",
           });
-          router.refresh();
         } else {
           throw new Error(result.message || "Failed to update payment status");
         }
