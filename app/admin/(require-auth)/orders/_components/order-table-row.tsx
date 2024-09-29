@@ -90,7 +90,7 @@ export default function OrderTableRow({
         {order.totalPrice ? (
           <NumericFormat
             displayType="text"
-            value={order.totalPrice}
+            value={order.totalPrice.toFixed(2)}
             thousandsGroupStyle="lakh"
             thousandSeparator=","
             renderText={(value) => <>{value}</>}
