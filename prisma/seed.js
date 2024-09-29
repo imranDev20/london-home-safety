@@ -148,7 +148,7 @@ const seedDatabase = async () => {
   try {
     // Create 300 customers
     console.log("Creating customers...");
-    const customerPromises = Array(300)
+    const customerPromises = Array(1)
       .fill()
       .map(() => prisma.user.create({ data: generateFakeUser("CUSTOMER") }));
     const customers = await Promise.all(customerPromises);
@@ -156,7 +156,7 @@ const seedDatabase = async () => {
 
     // Create 20 engineers
     console.log("Creating engineers...");
-    const engineerPromises = Array(20)
+    const engineerPromises = Array(1)
       .fill()
       .map(() => prisma.user.create({ data: generateFakeUser("STAFF") }));
     const engineers = await Promise.all(engineerPromises);
@@ -164,7 +164,7 @@ const seedDatabase = async () => {
 
     // Create 50 packages
     console.log("Creating packages...");
-    const packagePromises = Array(50)
+    const packagePromises = Array(1)
       .fill()
       .map(() => prisma.package.create({ data: generateFakePackage() }));
     const packages = await Promise.all(packagePromises);
@@ -172,9 +172,10 @@ const seedDatabase = async () => {
 
     // Create 1000 orders
     console.log("Creating orders...");
-    const startDate = new Date(2014, 0, 1);
+    // const startDate = new Date(2024, 0, 1);
+    const startDate = new Date();
     const endDate = new Date();
-    const orderPromises = Array(1000)
+    const orderPromises = Array(30)
       .fill()
       .map(() => {
         const fakeOrder = generateFakeOrder(startDate, endDate);

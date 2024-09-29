@@ -115,23 +115,85 @@ export const getOrders = cache(
   }
 );
 
-export const dashboardOrders = async () => {
+export const getTodayStats = async () => {
   const today = new Date();
   const yesterday = subDays(today, 1);
+
+  try {
+    const [todayOrders, yesterdayOrders] = await Promise.all([
+      prisma.order.findMany({
+        where: {
+          date: {
+            gte: startOfDay(today),
+            lte: endOfDay(today),
+          },
+        },
+        select: {
+          id: true,
+          status: true,
+          totalPrice: true,
+        },
+      }),
+      prisma.order.findMany({
+        where: {
+          date: {
+            gte: startOfDay(yesterday),
+            lt: startOfDay(today),
+          },
+        },
+        select: {
+          id: true,
+          status: true,
+          totalPrice: true,
+        },
+      }),
+    ]);
+
+    const todayTotalOrders = todayOrders.length;
+    const yesterdayTotalOrders = yesterdayOrders.length;
+    const todayCompletedOrders = todayOrders.filter(
+      (order) => order.status === OrderStatus.COMPLETED
+    ).length;
+    const yesterdayCompletedOrders = yesterdayOrders.filter(
+      (order) => order.status === OrderStatus.COMPLETED
+    ).length;
+    const todayEarnings = todayOrders.reduce(
+      (sum, order) => sum + order.totalPrice,
+      0
+    );
+    const yesterdayEarnings = yesterdayOrders.reduce(
+      (sum, order) => sum + order.totalPrice,
+      0
+    );
+
+    return {
+      todayTotalOrders,
+      yesterdayTotalOrders,
+      todayCompletedOrders,
+      yesterdayCompletedOrders,
+      todayEarnings,
+      yesterdayEarnings,
+    };
+  } catch (error) {
+    console.error("Error fetching today's stats:", error);
+    throw error;
+  }
+};
+
+export const getTodayOrders = async () => {
+  const today = new Date();
 
   try {
     const orders = await prisma.order.findMany({
       where: {
         date: {
-          gte: startOfDay(yesterday),
+          gte: startOfDay(today),
           lte: endOfDay(today),
         },
-
         status: {
           notIn: [OrderStatus.CANCELLED, OrderStatus.COMPLETED],
         },
       },
-
       select: {
         id: true,
         invoice: true,
@@ -147,22 +209,9 @@ export const dashboardOrders = async () => {
       },
     });
 
-    const todayOrders = orders.filter(
-      (order) =>
-        order.date >= startOfDay(today) && order.date <= endOfDay(today)
-    );
-
-    const yesterdayOrders = orders.filter(
-      (order) =>
-        order.date >= startOfDay(yesterday) && order.date < startOfDay(today)
-    );
-
-    return {
-      todayOrders,
-      yesterdayOrders,
-    };
+    return orders;
   } catch (error) {
-    console.error("Error fetching dashboard orders:", error);
+    console.error("Error fetching today's orders:", error);
     throw error;
   }
 };

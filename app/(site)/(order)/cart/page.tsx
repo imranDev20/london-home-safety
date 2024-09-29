@@ -39,7 +39,9 @@ export default function CartPage() {
                         <div className="flex items-center">
                           <Home className="w-5 h-5 mr-2 text-primary" />
                           <span className="text-gray-900 capitalize">
-                            {`For ${item.propertyType.toLowerCase()} Property`}
+                            {`For ${item.propertyType
+                              .toLowerCase()
+                              .replace("_", " ")} Property`}
                           </span>
                         </div>
                       </div>
