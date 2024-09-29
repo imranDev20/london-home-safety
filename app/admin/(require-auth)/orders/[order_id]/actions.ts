@@ -28,18 +28,61 @@ export const getEngineersForOrder = cache(async () => {
   }
 });
 
-export async function updateOrder(orderId: string, assignedEngineerId: string) {
+interface UpdateOrderParams {
+  orderId: string;
+  assignedEngineerId?: string;
+  orderStatus?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+}
+
+export async function updateOrder({
+  orderId,
+  assignedEngineerId,
+  orderStatus,
+  paymentStatus,
+}: UpdateOrderParams) {
   try {
     const currentOrder = await prisma.order.findUnique({
-      where: {
-        id: orderId,
-      },
+      where: { id: orderId },
       select: {
         assignedEngineerId: true,
+        status: true,
+        paymentStatus: true,
       },
     });
 
-    if (currentOrder?.assignedEngineerId === assignedEngineerId) {
+    if (!currentOrder) {
+      return {
+        message: "Order not found",
+        success: false,
+      };
+    }
+
+    const updateData: any = {};
+    let hasChanges = false;
+
+    if (
+      assignedEngineerId !== undefined &&
+      assignedEngineerId !== currentOrder.assignedEngineerId
+    ) {
+      updateData.assignedEngineerId = assignedEngineerId;
+      hasChanges = true;
+    }
+
+    if (orderStatus !== undefined && orderStatus !== currentOrder.status) {
+      updateData.status = orderStatus;
+      hasChanges = true;
+    }
+
+    if (
+      paymentStatus !== undefined &&
+      paymentStatus !== currentOrder.paymentStatus
+    ) {
+      updateData.paymentStatus = paymentStatus;
+      hasChanges = true;
+    }
+
+    if (!hasChanges) {
       return {
         message: "No changes detected. Order update skipped.",
         success: false,
@@ -47,16 +90,11 @@ export async function updateOrder(orderId: string, assignedEngineerId: string) {
     }
 
     const updatedOrder = await prisma.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        assignedEngineerId: assignedEngineerId,
-      },
+      where: { id: orderId },
+      data: updateData,
     });
 
-    revalidatePath(`/admin/orders`);
-    revalidatePath(`/admin/orders/${updatedOrder.id}`);
+    revalidatePath("/admin", "layout");
 
     return {
       message: "Order updated successfully!",
@@ -65,58 +103,6 @@ export async function updateOrder(orderId: string, assignedEngineerId: string) {
     };
   } catch (error) {
     console.error("Error updating order:", error);
-    return handlePrismaError(error);
-  }
-}
-
-export async function updateOrderStatus(orderId: string, orderStatus: string) {
-  try {
-    const updatedOrder = await prisma.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        status: orderStatus as OrderStatus,
-      },
-    });
-
-    revalidatePath(`/admin/orders`);
-    revalidatePath(`/admin/orders/${updatedOrder.id}`);
-
-    return {
-      message: "Order status updated successfully!",
-      data: updatedOrder,
-      success: true,
-    };
-  } catch (error) {
-    console.error("Error updating order status:", error);
-    return handlePrismaError(error);
-  }
-}
-export async function updatePaymentStatus(
-  orderId: string,
-  paymentStatus: string
-) {
-  try {
-    const updatedOrder = await prisma.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        paymentStatus: paymentStatus as PaymentStatus,
-      },
-    });
-
-    revalidatePath(`/admin/orders`);
-    revalidatePath(`/admin/orders/${updatedOrder.id}`);
-
-    return {
-      message: "Order payment status updated successfully!",
-      data: updatedOrder,
-      success: true,
-    };
-  } catch (error) {
-    console.error("Error updating order payment status:", error);
     return handlePrismaError(error);
   }
 }

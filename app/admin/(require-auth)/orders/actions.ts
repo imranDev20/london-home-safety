@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus, Prisma, Role } from "@prisma/client";
+import { OrderStatus, PaymentStatus, Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
@@ -19,6 +19,7 @@ import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
 import { unstable_cache as cache } from "next/cache";
 import { handlePrismaError } from "@/lib/prisma-error";
 import { generateInvoiceTemplate } from "@/lib/generate-invoice";
+import { subDays, startOfDay, endOfDay } from "date-fns";
 
 type OrderWithUser = Prisma.OrderGetPayload<{
   include: {
@@ -113,6 +114,58 @@ export const getOrders = cache(
     }
   }
 );
+
+export const dashboardOrders = async () => {
+  const today = new Date();
+  const yesterday = subDays(today, 1);
+
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        date: {
+          gte: startOfDay(yesterday),
+          lte: endOfDay(today),
+        },
+
+        status: {
+          notIn: [OrderStatus.CANCELLED, OrderStatus.COMPLETED],
+        },
+      },
+
+      select: {
+        id: true,
+        invoice: true,
+        inspectionTime: true,
+        status: true,
+        paymentStatus: true,
+        totalPrice: true,
+        date: true,
+        createdAt: true,
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
+
+    const todayOrders = orders.filter(
+      (order) =>
+        order.date >= startOfDay(today) && order.date <= endOfDay(today)
+    );
+
+    const yesterdayOrders = orders.filter(
+      (order) =>
+        order.date >= startOfDay(yesterday) && order.date < startOfDay(today)
+    );
+
+    return {
+      todayOrders,
+      yesterdayOrders,
+    };
+  } catch (error) {
+    console.error("Error fetching dashboard orders:", error);
+    throw error;
+  }
+};
 
 export const getOrderById = cache(async (orderId: string) => {
   try {

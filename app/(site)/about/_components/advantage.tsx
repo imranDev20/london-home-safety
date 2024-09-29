@@ -1,39 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { ADVANTAGES } from "@/shared/data";
 import { motion } from "framer-motion";
+import useIntersectionObserver from "@/hooks/use-intersection-observer";
 
 export default function Advantages() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1,
-      }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
+  const [sectionRef, inView] = useIntersectionObserver({
+    threshold: 0.1,
+  });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -66,7 +42,7 @@ export default function Advantages() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
-          animate={isVisible ? "visible" : "hidden"}
+          animate={inView ? "visible" : "hidden"}
           variants={containerVariants}
           className="text-center mb-20"
         >
@@ -105,7 +81,7 @@ export default function Advantages() {
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
           initial="hidden"
-          animate={isVisible ? "visible" : "hidden"}
+          animate={inView ? "visible" : "hidden"}
           variants={containerVariants}
         >
           {ADVANTAGES?.map((advantage) => (
