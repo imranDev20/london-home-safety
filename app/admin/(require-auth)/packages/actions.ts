@@ -130,6 +130,7 @@ export async function updatePackage(
         name: data.name ?? undefined,
         description: data.description ?? undefined,
         type: data.type ?? undefined,
+        priceType: data.priceType ?? undefined,
         price:
           data.price !== undefined
             ? typeof data.price === "number"

@@ -71,32 +71,32 @@ export default function PackageForm({
     defaultValues: {
       name: "",
       description: "",
-      type: undefined,
-      category: undefined,
+      type: packageDetails?.type || undefined,
+      category: packageDetails?.category || undefined,
       price: "",
-      priceType: "FIXED",
-      serviceName: "",
+      priceType: packageDetails?.priceType || "FIXED",
+      serviceName: packageDetails?.serviceName || '',
       propertyType: "RESIDENTIAL",
-      residentialType: undefined,
-      commercialType: undefined,
+      residentialType: packageDetails?.residentialType || undefined,
+      commercialType: packageDetails?.commercialType || undefined,
       unitType: "",
     },
   });
 
-  const { control, handleSubmit, watch } = form;
+  const { control, handleSubmit, watch, reset } = form;
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
     if (packageDetails) {
-      form.reset({
+      reset({
         name: packageDetails.name,
-        description: packageDetails.description || undefined,
+        description: packageDetails.description || "",
         type: packageDetails.type || undefined,
         category: packageDetails.category || undefined,
         price: packageDetails.price.toString(),
-        priceType: packageDetails.priceType || undefined,
+        priceType: packageDetails.priceType || "FIXED",
         serviceName: packageDetails.serviceName || "",
         propertyType: packageDetails.propertyType || "RESIDENTIAL",
         residentialType: packageDetails.residentialType || undefined,
@@ -104,7 +104,7 @@ export default function PackageForm({
         unitType: packageDetails.unitType || "",
       });
     }
-  }, [packageDetails, form]);
+  }, [packageDetails, reset]);
 
   const onSubmit: SubmitHandler<PackageFormInputType> = async (data) => {
     startTransition(async () => {
@@ -166,7 +166,9 @@ export default function PackageForm({
                 className="h-9 w-full text-sm font-medium flex"
               >
                 {!isPending && <Check className="mr-2 h-4 w-4" />}
-                Create Package
+                {
+                  packageDetails ? "Update Package" : "Create Package"
+                } 
               </LoadingButton>
             </div>
           </div>
@@ -263,7 +265,7 @@ export default function PackageForm({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select package category" />
+                      <SelectValue placeholder="Select service name" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
