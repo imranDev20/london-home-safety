@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // directUrl = env("DIRECT_URL")
 }
 
@@ -83,6 +83,8 @@ model Package {
   commercialType  CommercialType?
   unitType        String?
   price           Float
+  extraUnitPrice  Float?
+  minQuantity     Int?
   priceType       PriceType        @default(FIXED)
   orderId         String?
   order           Order?           @relation(fields: [orderId], references: [id])

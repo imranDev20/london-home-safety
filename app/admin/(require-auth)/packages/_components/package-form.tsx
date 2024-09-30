@@ -74,6 +74,8 @@ export default function PackageForm({
       type: packageDetails?.type || undefined,
       category: packageDetails?.category || undefined,
       price: "",
+      minQuantity:"",
+      extraUnitPrice: "",
       priceType: packageDetails?.priceType || "FIXED",
       serviceName: packageDetails?.serviceName || '',
       propertyType: "RESIDENTIAL",
@@ -96,6 +98,8 @@ export default function PackageForm({
         type: packageDetails.type || undefined,
         category: packageDetails.category || undefined,
         price: packageDetails.price.toString(),
+        minQuantity: packageDetails?.minQuantity?.toString() ??  "",
+        extraUnitPrice: packageDetails?.extraUnitPrice?.toString() ?? "",
         priceType: packageDetails.priceType || "FIXED",
         serviceName: packageDetails.serviceName || "",
         propertyType: packageDetails.propertyType || "RESIDENTIAL",
@@ -108,6 +112,7 @@ export default function PackageForm({
 
   const onSubmit: SubmitHandler<PackageFormInputType> = async (data) => {
     startTransition(async () => {
+      
       const result = packageDetails
         ? await updatePackage(packageDetails.id, data)
         : await createPackage(data);
@@ -167,7 +172,7 @@ export default function PackageForm({
               >
                 {!isPending && <Check className="mr-2 h-4 w-4" />}
                 {
-                  packageDetails ? "Update Package" : "Create Package"
+                  isUpdateMode ? "Update Package" : "Create Package"
                 } 
               </LoadingButton>
             </div>
@@ -220,7 +225,7 @@ export default function PackageForm({
             name="priceType"
             render={({ field }) => (
               <FormItem className="col-span-12 md:col-span-6">
-                <FormLabel className="text-sm font-medium">Price</FormLabel>
+                <FormLabel className="text-sm font-medium">Price Type</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={(value) => {
@@ -243,6 +248,40 @@ export default function PackageForm({
                       ))}
                     </SelectContent>
                   </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={control}
+            name="minQuantity"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6">
+                <FormLabel className="text-sm font-medium">Minimum Quantity</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="w-full"
+                    placeholder="Enter minimum quantity"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={control}
+            name="extraUnitPrice"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6">
+                <FormLabel className="text-sm font-medium">Unit Price</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="w-full"
+                    placeholder="Enter unit price"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
