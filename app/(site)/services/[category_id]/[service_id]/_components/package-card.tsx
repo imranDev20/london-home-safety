@@ -119,7 +119,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
         </label>
       </Card>
 
-      {selectedPackage?.id === pack.id && (
+      {(selectedPackage?.id === pack.id && selectedPackage.isAdditionalPackage) && (
         <>
           <Separator />
           <Card className="flex justify-between py-2 px-4">

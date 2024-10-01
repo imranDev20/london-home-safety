@@ -90,6 +90,7 @@ export async function createPackage(data: PackageFormInputType) {
         name: data.name,
         type: data.type,
         description: data.description,
+        isAdditionalPackage: data.isAdditionalPackage,
         price:
           typeof data.price === "number" ? data.price : parseFloat(data.price),
           extraUnitPrice: 
@@ -140,6 +141,7 @@ export async function updatePackage(
       data: {
         name: data.name ?? undefined,
         description: data.description ?? undefined,
+        isAdditionalPackage: data.isAdditionalPackage,
         type: data.type ?? undefined,
         priceType: data.priceType ?? undefined,
         price:

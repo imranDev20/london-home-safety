@@ -41,6 +41,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { createPackage, updatePackage } from "../actions";
 import { PackageFormInputType, packageSchema } from "../schema";
 import { Package } from "@prisma/client";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const FormSection = ({
   title,
@@ -71,13 +72,14 @@ export default function PackageForm({
     defaultValues: {
       name: "",
       description: "",
+      isAdditionalPackage: packageDetails?.isAdditionalPackage ?? false,
       type: packageDetails?.type || undefined,
       category: packageDetails?.category || undefined,
       price: "",
-      minQuantity:"",
+      minQuantity: "",
       extraUnitPrice: "",
       priceType: packageDetails?.priceType || "FIXED",
-      serviceName: packageDetails?.serviceName || '',
+      serviceName: packageDetails?.serviceName || "",
       propertyType: "RESIDENTIAL",
       residentialType: packageDetails?.residentialType || undefined,
       commercialType: packageDetails?.commercialType || undefined,
@@ -95,10 +97,11 @@ export default function PackageForm({
       reset({
         name: packageDetails.name,
         description: packageDetails.description || "",
+        isAdditionalPackage: packageDetails.isAdditionalPackage,
         type: packageDetails.type || undefined,
         category: packageDetails.category || undefined,
         price: packageDetails.price.toString(),
-        minQuantity: packageDetails?.minQuantity?.toString() ??  "",
+        minQuantity: packageDetails?.minQuantity?.toString() ?? "",
         extraUnitPrice: packageDetails?.extraUnitPrice?.toString() ?? "",
         priceType: packageDetails.priceType || "FIXED",
         serviceName: packageDetails.serviceName || "",
@@ -112,7 +115,6 @@ export default function PackageForm({
 
   const onSubmit: SubmitHandler<PackageFormInputType> = async (data) => {
     startTransition(async () => {
-      
       const result = packageDetails
         ? await updatePackage(packageDetails.id, data)
         : await createPackage(data);
@@ -171,9 +173,7 @@ export default function PackageForm({
                 className="h-9 w-full text-sm font-medium flex"
               >
                 {!isPending && <Check className="mr-2 h-4 w-4" />}
-                {
-                  isUpdateMode ? "Update Package" : "Create Package"
-                } 
+                {isUpdateMode ? "Update Package" : "Create Package"}
               </LoadingButton>
             </div>
           </div>
@@ -225,7 +225,9 @@ export default function PackageForm({
             name="priceType"
             render={({ field }) => (
               <FormItem className="col-span-12 md:col-span-6">
-                <FormLabel className="text-sm font-medium">Price Type</FormLabel>
+                <FormLabel className="text-sm font-medium">
+                  Price Type
+                </FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={(value) => {
@@ -253,12 +255,14 @@ export default function PackageForm({
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={control}
             name="minQuantity"
             render={({ field }) => (
               <FormItem className="col-span-12 md:col-span-6">
-                <FormLabel className="text-sm font-medium">Minimum Quantity</FormLabel>
+                <FormLabel className="text-sm font-medium">
+                  Minimum Quantity
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -270,12 +274,14 @@ export default function PackageForm({
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={control}
             name="extraUnitPrice"
             render={({ field }) => (
               <FormItem className="col-span-12 md:col-span-6">
-                <FormLabel className="text-sm font-medium">Unit Price</FormLabel>
+                <FormLabel className="text-sm font-medium">
+                  Unit Price
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -284,6 +290,26 @@ export default function PackageForm({
                   />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="isAdditionalPackage"
+            render={({ field }) => (
+              <FormItem className="col-span-12  flex flex-row items-start space-x-3 space-y-0 rounded-md  p-4">
+                
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className="text-sm font-medium">
+                    Additional Package
+                  </FormLabel>
+                </div>
               </FormItem>
             )}
           />

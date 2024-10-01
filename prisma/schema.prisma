@@ -76,6 +76,7 @@ model Package {
   name            String
   description     String?
   category        PackageCategory
+  isAdditionalPackage Boolean @default(false)
   serviceName     String
   type            PackageType?
   propertyType    PropertyType
@@ -215,3 +216,4 @@ enum PriceType {
   FROM
   RANGE
 }
+
