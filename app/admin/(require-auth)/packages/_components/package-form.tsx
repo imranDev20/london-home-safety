@@ -78,7 +78,7 @@ export default function PackageForm({
       extraUnitPrice: "",
       priceType: packageDetails?.priceType || "FIXED",
       serviceName: packageDetails?.serviceName || '',
-      propertyType: "RESIDENTIAL",
+      propertyType: packageDetails?.propertyType || "RESIDENTIAL",
       residentialType: packageDetails?.residentialType || undefined,
       commercialType: packageDetails?.commercialType || undefined,
       unitType: "",
