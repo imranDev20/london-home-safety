@@ -1,3 +1,4 @@
+import React from "react";
 import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import {
