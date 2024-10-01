@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import usePackageStore from "@/hooks/use-package-store";
 import useOrderStore from "@/hooks/use-order-store";
@@ -17,15 +17,8 @@ export default function PackageCard({ pack }: { pack: Package }) {
   const isInCart = useMemo(() => {
     return cartItems.some((item) => item.id === pack.id);
   }, [cartItems, pack.id]);
- 
-  useEffect(() => {
-    if (selectedPackage?.id === pack.id && selectedPackage.minQuantity) {
-      setQuantity(selectedPackage.minQuantity);
-      calculatePrice(selectedPackage.minQuantity);
-    }
-  }, [selectedPackage, pack.id]);
 
-  const calculatePrice = (newQuantity: number) => {
+  const calculatePrice = useCallback((newQuantity: number) => {
     if (!selectedPackage) return;
     
     const basePrice = selectedPackage.price;
@@ -34,7 +27,15 @@ export default function PackageCard({ pack }: { pack: Package }) {
     const extraPrice = extraUnits * (selectedPackage.extraUnitPrice ?? 0);
     
     setCurrentPrice(basePrice + extraPrice);
-  };
+  }, [selectedPackage]);
+
+  useEffect(() => {
+    if (selectedPackage?.id === pack.id && selectedPackage.minQuantity) {
+      setQuantity(selectedPackage.minQuantity);
+      calculatePrice(selectedPackage.minQuantity);
+    }
+  }, [selectedPackage, pack.id, calculatePrice]);
+
   const handleQuantityChange = (newValue: number) => {
     const minQuantity = selectedPackage?.minQuantity ?? 1;
     if (newValue >= minQuantity) {
