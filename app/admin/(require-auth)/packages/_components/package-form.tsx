@@ -71,32 +71,36 @@ export default function PackageForm({
     defaultValues: {
       name: "",
       description: "",
-      type: undefined,
-      category: undefined,
+      type: packageDetails?.type || undefined,
+      category: packageDetails?.category || undefined,
       price: "",
-      priceType: "FIXED",
-      serviceName: "",
-      propertyType: "RESIDENTIAL",
-      residentialType: undefined,
-      commercialType: undefined,
+      minQuantity:"",
+      extraUnitPrice: "",
+      priceType: packageDetails?.priceType || "FIXED",
+      serviceName: packageDetails?.serviceName || '',
+      propertyType: packageDetails?.propertyType || "RESIDENTIAL",
+      residentialType: packageDetails?.residentialType || undefined,
+      commercialType: packageDetails?.commercialType || undefined,
       unitType: "",
     },
   });
 
-  const { control, handleSubmit, watch } = form;
+  const { control, handleSubmit, watch, reset } = form;
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
     if (packageDetails) {
-      form.reset({
+      reset({
         name: packageDetails.name,
-        description: packageDetails.description || undefined,
+        description: packageDetails.description || "",
         type: packageDetails.type || undefined,
         category: packageDetails.category || undefined,
         price: packageDetails.price.toString(),
-        priceType: packageDetails.priceType || undefined,
+        minQuantity: packageDetails?.minQuantity?.toString() ??  "",
+        extraUnitPrice: packageDetails?.extraUnitPrice?.toString() ?? "",
+        priceType: packageDetails.priceType || "FIXED",
         serviceName: packageDetails.serviceName || "",
         propertyType: packageDetails.propertyType || "RESIDENTIAL",
         residentialType: packageDetails.residentialType || undefined,
@@ -104,10 +108,11 @@ export default function PackageForm({
         unitType: packageDetails.unitType || "",
       });
     }
-  }, [packageDetails, form]);
+  }, [packageDetails, reset]);
 
   const onSubmit: SubmitHandler<PackageFormInputType> = async (data) => {
     startTransition(async () => {
+      
       const result = packageDetails
         ? await updatePackage(packageDetails.id, data)
         : await createPackage(data);
@@ -166,7 +171,9 @@ export default function PackageForm({
                 className="h-9 w-full text-sm font-medium flex"
               >
                 {!isPending && <Check className="mr-2 h-4 w-4" />}
-                Create Package
+                {
+                  isUpdateMode ? "Update Package" : "Create Package"
+                } 
               </LoadingButton>
             </div>
           </div>
@@ -218,7 +225,7 @@ export default function PackageForm({
             name="priceType"
             render={({ field }) => (
               <FormItem className="col-span-12 md:col-span-6">
-                <FormLabel className="text-sm font-medium">Price</FormLabel>
+                <FormLabel className="text-sm font-medium">Price Type</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={(value) => {
@@ -246,6 +253,40 @@ export default function PackageForm({
               </FormItem>
             )}
           />
+           <FormField
+            control={control}
+            name="minQuantity"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6">
+                <FormLabel className="text-sm font-medium">Minimum Quantity</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="w-full"
+                    placeholder="Enter minimum quantity"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={control}
+            name="extraUnitPrice"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6">
+                <FormLabel className="text-sm font-medium">Unit Price</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="w-full"
+                    placeholder="Enter unit price"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </FormSection>
 
         <FormSection title="Service Details">
@@ -263,7 +304,7 @@ export default function PackageForm({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select package category" />
+                      <SelectValue placeholder="Select service name" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
