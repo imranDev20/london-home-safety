@@ -72,17 +72,17 @@ export default function PackageForm({
     defaultValues: {
       name: "",
       description: "",
-      isAdditionalPackage: packageDetails?.isAdditionalPackage ?? false,
-      type: packageDetails?.type || undefined,
-      category: packageDetails?.category || undefined,
+      isAdditionalPackage: false,
+      type: undefined,
+      category: undefined,
       price: "",
       minQuantity: "",
       extraUnitPrice: "",
-      priceType: packageDetails?.priceType || "FIXED",
-      serviceName: packageDetails?.serviceName || "",
+      priceType: "FIXED",
+      serviceName: "",
       propertyType: "RESIDENTIAL",
-      residentialType: packageDetails?.residentialType || undefined,
-      commercialType: packageDetails?.commercialType || undefined,
+      residentialType: undefined,
+      commercialType: undefined,
       unitType: "",
     },
   });
@@ -298,7 +298,6 @@ export default function PackageForm({
             name="isAdditionalPackage"
             render={({ field }) => (
               <FormItem className="col-span-12  flex flex-row items-start space-x-3 space-y-0 rounded-md  p-4">
-                
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -325,8 +324,12 @@ export default function PackageForm({
                   Service Name
                 </FormLabel>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  onValueChange={(value) => {
+                    if (value) {
+                      field.onChange(value);
+                    }
+                  }}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -355,8 +358,12 @@ export default function PackageForm({
                   Package Category
                 </FormLabel>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  onValueChange={(value) => {
+                    if (value) {
+                      field.onChange(value);
+                    }
+                  }}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -384,8 +391,12 @@ export default function PackageForm({
                   Package Type
                 </FormLabel>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  onValueChange={(value) => {
+                    if (value) {
+                      field.onChange(value);
+                    }
+                  }}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -435,8 +446,12 @@ export default function PackageForm({
                   Property Type
                 </FormLabel>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  onValueChange={(value) => {
+                    if (value) {
+                      field.onChange(value);
+                    }
+                  }}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -475,8 +490,12 @@ export default function PackageForm({
                     Residential Type (Optional)
                   </FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                   onValueChange={(value) => {
+                    if (value) {
+                      field.onChange(value);
+                    }
+                  }}    
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -506,8 +525,12 @@ export default function PackageForm({
                     Commercial Type (Optional)
                   </FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                   onValueChange={(value) => {
+                    if (value) {
+                      field.onChange(value);
+                    }
+                  }}    
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
