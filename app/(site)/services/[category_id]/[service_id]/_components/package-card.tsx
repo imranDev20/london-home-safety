@@ -18,16 +18,19 @@ export default function PackageCard({ pack }: { pack: Package }) {
     return cartItems.some((item) => item.id === pack.id);
   }, [cartItems, pack.id]);
 
-  const calculatePrice = useCallback((newQuantity: number) => {
-    if (!selectedPackage) return;
-    
-    const basePrice = selectedPackage.price;
-    const minQuantity = selectedPackage.minQuantity ?? 1;
-    const extraUnits = Math.max(0, newQuantity - minQuantity);
-    const extraPrice = extraUnits * (selectedPackage.extraUnitPrice ?? 0);
-    
-    setCurrentPrice(basePrice + extraPrice);
-  }, [selectedPackage]);
+  const calculatePrice = useCallback(
+    (newQuantity: number) => {
+      if (!selectedPackage) return;
+
+      const basePrice = selectedPackage.price;
+      const minQuantity = selectedPackage.minQuantity ?? 1;
+      const extraUnits = Math.max(0, newQuantity - minQuantity);
+      const extraPrice = extraUnits * (selectedPackage.extraUnitPrice ?? 0);
+
+      setCurrentPrice(basePrice + extraPrice);
+    },
+    [selectedPackage]
+  );
 
   useEffect(() => {
     if (selectedPackage?.id === pack.id && selectedPackage.minQuantity) {
@@ -48,7 +51,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
     <>
       <Card
         key={pack.id}
-        className={`py-2.5 overflow-hidden border-2 transition-all hover:bg-gray-200 duration-200 relative ${
+        className={`py-2.5 overflow-hidden border-2 transition-all hover:bg-[#E8F2FB] duration-200 relative ${
           isInCart
             ? "border-gray-300 bg-gray-100 opacity-80 cursor-not-allowed"
             : "hover:border-primary"
@@ -106,63 +109,53 @@ export default function PackageCard({ pack }: { pack: Package }) {
                 isInCart ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              {pack?.description ?? ""}
+          
             </p>
           </div>
           <div
-            className={`flex-shrink-0 text-xl font-bold ml-4 ${
-              isInCart ? "text-gray-500" : "text-primary"
-            }`}
-          >
-            £{pack.price.toFixed(2)}
-          </div>
+        className={`flex-shrink-0 text-xl font-bold ml-4 flex items-center justify-end ${
+          isInCart ? "text-gray-500" : "text-primary"
+        }`}
+      >
+        {selectedPackage?.isAdditionalPackage && selectedPackage.id === pack.id && (
+          <span className="flex items-stretch h-8 mr-4 gap-1" style={{ width: "120px" }}>
+            <button
+              onClick={() => handleQuantityChange(quantity - 1)}
+              disabled={quantity <= (selectedPackage?.minQuantity ?? 1)}
+              className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent px-1"
+            >
+              <span className="text-lg font-medium select-none">−</span>
+            </button>
+            <input
+              type="number"
+              min={selectedPackage?.minQuantity ?? 1}
+              value={quantity}
+              onChange={(e) => {
+                const newValue =
+                  parseInt(e.target.value) ||
+                  selectedPackage?.minQuantity ||
+                  1;
+                handleQuantityChange(newValue);
+              }}
+              className="w-10 text-center bg-transparent rounded-md focus:outline-none text-sm font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none hover:bg-white"
+            />
+            <button
+              onClick={() => handleQuantityChange(quantity + 1)}
+              className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white px-1"
+            >
+              <span className="text-lg font-medium select-none">+</span>
+            </button>
+          </span>
+        )}
+        <span className="text-end">
+          £
+          {selectedPackage?.isAdditionalPackage && selectedPackage.id === pack.id
+            ? currentPrice.toFixed(2)
+            : pack.price.toFixed(2)}
+        </span>
+      </div>
         </label>
       </Card>
-
-      {(selectedPackage?.id === pack.id && selectedPackage.isAdditionalPackage) && (
-        <>
-          <Separator />
-          <Card className="flex justify-between py-2 px-4">
-            <div className="flex items-center justify-between w-full bg-white rounded-lg p-2">
-              <div
-                className="flex items-stretch h-10 bg-gray-100 rounded-md overflow-hidden mr-4"
-                style={{ width: "140px" }}
-              >
-                <button
-                  onClick={() => handleQuantityChange(quantity - 1)}
-                  disabled={quantity <= (selectedPackage?.minQuantity ?? 1)}
-                  className="flex-1 flex items-center justify-center text-gray-600 transition-colors duration-200 ease-in-out hover:bg-gray-200 active:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
-                >
-                  <span className="text-sm font-medium select-none">−</span>
-                </button>
-                <input
-                  type="number"
-                  min={selectedPackage?.minQuantity ?? 1}
-                  value={quantity}
-                  onChange={(e) => {
-                    const newValue = parseInt(e.target.value) || selectedPackage?.minQuantity || 1;
-                    handleQuantityChange(newValue);
-                  }}
-                  className="w-12 text-center bg-transparent border-none focus:outline-none text-sm font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                />
-                <button
-                  onClick={() => handleQuantityChange(quantity + 1)}
-                  className="flex-1 flex items-center justify-center text-gray-600 transition-colors duration-200 ease-in-out hover:bg-gray-200 active:bg-gray-300"
-                >
-                  <span className="text-sm font-medium select-none">+</span>
-                </button>
-              </div>
-              <div
-                className={`text-lg font-semibold ${
-                  isInCart ? "text-gray-500" : "text-blue-600"
-                }`}
-              >
-                £{currentPrice.toFixed(2)}
-              </div>
-            </div>
-          </Card>
-        </>
-      )}
     </>
   );
 }
