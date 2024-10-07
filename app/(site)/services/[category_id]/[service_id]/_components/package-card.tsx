@@ -1,17 +1,17 @@
 "use client";
-
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
-import usePackageStore from "@/hooks/use-package-store";
 import useOrderStore from "@/hooks/use-order-store";
+import usePackageStore from "@/hooks/use-package-store";
 import { Package } from "@prisma/client";
 import { Check, ShoppingCart } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function PackageCard({ pack }: { pack: Package }) {
   const { selectedPackage, setPackage } = usePackageStore();
   const { cartItems } = useOrderStore();
   const [quantity, setQuantity] = useState(1);
+
   const [currentPrice, setCurrentPrice] = useState(pack.price);
 
   const isInCart = useMemo(() => {
@@ -25,19 +25,38 @@ export default function PackageCard({ pack }: { pack: Package }) {
       const basePrice = selectedPackage.price;
       const minQuantity = selectedPackage.minQuantity ?? 1;
       const extraUnits = Math.max(0, newQuantity - minQuantity);
-      const extraPrice = extraUnits * (selectedPackage.extraUnitPrice ?? 0);
-
+      const extraPrice = extraUnits * (selectedPackage.extraUnitPrice ?? 1);
       setCurrentPrice(basePrice + extraPrice);
     },
     [selectedPackage]
   );
+  console.log(`selectedPackage`, selectedPackage);
 
   useEffect(() => {
-    if (selectedPackage?.id === pack.id && selectedPackage.minQuantity) {
-      setQuantity(selectedPackage.minQuantity);
-      calculatePrice(selectedPackage.minQuantity);
+    const existingInCartQuantity =
+      cartItems.find((item) => item.id === pack.id)?.quantity ?? 1;
+    if (pack?.isAdditionalPackage && pack.minQuantity) {
+      setQuantity(isInCart ? existingInCartQuantity : pack.minQuantity ?? 1);
+      calculatePrice(pack.minQuantity);
     }
-  }, [selectedPackage, pack.id, calculatePrice]);
+  }, [
+    cartItems,
+    isInCart,
+    pack.minQuantity,
+    pack?.isAdditionalPackage,
+    pack.id,
+    calculatePrice,
+    selectedPackage,
+  ]);
+  // useEffect(() => {
+  //   if(selectedPackage) {
+  //     setPackage({
+  //       ...pack,
+  //       price: selectedPackage?.isAdditionalPackage ? currentPrice : pack.price,
+  //       quantity: quantity,
+  //     });
+  //   }
+  // }, [quantity]);
 
   const handleQuantityChange = (newValue: number) => {
     const minQuantity = selectedPackage?.minQuantity ?? 1;
@@ -46,6 +65,8 @@ export default function PackageCard({ pack }: { pack: Package }) {
       calculatePrice(newValue);
     }
   };
+
+  // console.log(`selectedPackage`, selectedPackage);
 
   return (
     <>
@@ -65,9 +86,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
         )}
         <label
           htmlFor={pack.id}
-          className={`flex items-start cursor-pointer p-5 transition-all duration-200 ease-in-out ${
-            isInCart ? "pointer-events-none" : ""
-          }`}
+          className={`flex items-start cursor-pointer p-5 transition-all duration-200 ease-in-out `}
         >
           <div className="flex-shrink-0 mt-1">
             <input
@@ -79,10 +98,15 @@ export default function PackageCard({ pack }: { pack: Package }) {
               className="sr-only peer"
               onChange={() => {
                 if (!isInCart) {
-                  setPackage(pack);
+                  setPackage({
+                    ...pack,
+                    price: selectedPackage?.isAdditionalPackage
+                      ? currentPrice
+                      : pack.price,
+                    quantity: quantity,
+                  });
                 }
               }}
-              disabled={isInCart}
             />
             <div
               className={`w-6 h-6 border-2 border-primary rounded-full flex items-center justify-center peer-checked:bg-primary transition-all duration-200 ${
@@ -108,52 +132,73 @@ export default function PackageCard({ pack }: { pack: Package }) {
               className={`text-sm mt-1 ${
                 isInCart ? "text-gray-400" : "text-gray-600"
               }`}
-            >
-          
-            </p>
+            ></p>
           </div>
           <div
-        className={`flex-shrink-0 text-xl font-bold ml-4 flex items-center justify-end ${
-          isInCart ? "text-gray-500" : "text-primary"
-        }`}
-      >
-        {selectedPackage?.isAdditionalPackage && selectedPackage.id === pack.id && (
-          <span className="flex items-stretch h-8 mr-4 gap-1" style={{ width: "120px" }}>
-            <button
-              onClick={() => handleQuantityChange(quantity - 1)}
-              disabled={quantity <= (selectedPackage?.minQuantity ?? 1)}
-              className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent px-1"
-            >
-              <span className="text-lg font-medium select-none">−</span>
-            </button>
-            <input
-              type="number"
-              min={selectedPackage?.minQuantity ?? 1}
-              value={quantity}
-              onChange={(e) => {
-                const newValue =
-                  parseInt(e.target.value) ||
-                  selectedPackage?.minQuantity ||
-                  1;
-                handleQuantityChange(newValue);
-              }}
-              className="w-10 text-center bg-transparent rounded-md focus:outline-none text-sm font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none hover:bg-white"
-            />
-            <button
-              onClick={() => handleQuantityChange(quantity + 1)}
-              className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white px-1"
-            >
-              <span className="text-lg font-medium select-none">+</span>
-            </button>
-          </span>
-        )}
-        <span className="text-end">
-          £
-          {selectedPackage?.isAdditionalPackage && selectedPackage.id === pack.id
-            ? currentPrice.toFixed(2)
-            : pack.price.toFixed(2)}
-        </span>
-      </div>
+            className={`flex-shrink-0 text-xl font-bold ml-4 flex items-center justify-end ${
+              isInCart ? "text-gray-500" : "text-primary"
+            }`}
+          >
+            {pack?.isAdditionalPackage && (
+              <span
+                className="flex items-stretch h-8 mr-4 gap-1"
+                style={{ width: "120px" }}
+              >
+                <button
+                  onClick={() => {
+                    setPackage({
+                      ...pack,
+                      price: selectedPackage?.isAdditionalPackage
+                        ? currentPrice
+                        : pack.price,
+                      quantity: quantity,
+                    });
+                    handleQuantityChange(quantity - 1);
+                  }}
+                  disabled={quantity <= (pack.minQuantity ?? 1)}
+                  className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent px-1"
+                >
+                  <span className="text-lg font-medium select-none">−</span>
+                </button>
+                <input
+                  type="number"
+                  min={pack.minQuantity ?? 1}
+                  value={quantity}
+                  onChange={(e) => {
+                    const minQuantity = pack.minQuantity ?? 1;
+                    const newValue = Math.max(
+                      parseInt(e.target.value) || minQuantity,
+                      minQuantity
+                    );
+                    handleQuantityChange(newValue);
+                  }}
+                  className="w-10 text-center bg-transparent rounded-md focus:outline-none text-sm font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none hover:bg-white"
+                />
+                <button
+                  onClick={() => {
+                    setPackage({
+                      ...pack,
+                      price: selectedPackage?.isAdditionalPackage
+                        ? currentPrice
+                        : pack.price,
+                      quantity: quantity,
+                    });
+                    handleQuantityChange(quantity + 1);
+                  }}
+                  className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white px-1"
+                >
+                  <span className="text-lg font-medium select-none">+</span>
+                </button>
+              </span>
+            )}
+            <span className="text-end">
+              £
+              {selectedPackage?.isAdditionalPackage &&
+              selectedPackage.id === pack.id
+                ? currentPrice.toFixed(2)
+                : pack.price.toFixed(2)}
+            </span>
+          </div>
         </label>
       </Card>
     </>

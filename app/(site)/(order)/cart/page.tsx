@@ -11,6 +11,8 @@ import Link from "next/link";
 export default function CartPage() {
   const { cartItems, removeItem } = useOrderStore();
 
+  console.log(`cartItems`, cartItems);
+
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
