@@ -297,7 +297,7 @@ export default function PackageForm({
             control={control}
             name="isAdditionalPackage"
             render={({ field }) => (
-              <FormItem className="col-span-12  flex flex-row items-start space-x-3 space-y-0 rounded-md  p-4">
+              <FormItem className="col-span-12  flex flex-row items-start space-x-3 space-y-0 rounded-md">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -490,11 +490,11 @@ export default function PackageForm({
                     Residential Type (Optional)
                   </FormLabel>
                   <Select
-                   onValueChange={(value) => {
-                    if (value) {
-                      field.onChange(value);
-                    }
-                  }}    
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
                     value={field.value}
                   >
                     <FormControl>
@@ -525,11 +525,11 @@ export default function PackageForm({
                     Commercial Type (Optional)
                   </FormLabel>
                   <Select
-                   onValueChange={(value) => {
-                    if (value) {
-                      field.onChange(value);
-                    }
-                  }}    
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
                     value={field.value}
                   >
                     <FormControl>

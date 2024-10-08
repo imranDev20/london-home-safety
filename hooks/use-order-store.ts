@@ -23,11 +23,17 @@ export type CustomerDetails = {
   orderNotes: string;
 };
 
+export type CartItem = Package & {
+  quantity: number;
+  calculatedPrice: number;
+};
+
 interface OrderState {
-  cartItems: Package[];
+  cartItems: CartItem[];
   customerDetails: CustomerDetails;
   paymentMethod: PaymentMethod;
-  addItem: (item: Package) => void;
+  addItem: (item: Package, quantity?: number) => void;
+  updateItem: (id: string, quantity: number, price: number) => void;
   removeItem: (id: string) => void;
   clearCart: () => void;
   setCustomerDetails: (details: Partial<CustomerDetails>) => void;
@@ -60,7 +66,46 @@ const useOrderStore = create<OrderState>()(
       paymentMethod: PaymentMethod.CREDIT_CARD,
 
       addItem: (item) =>
-        set((state) => ({ cartItems: [...state.cartItems, item] })),
+        set((state) => {
+          const existingItem = state.cartItems.find((i) => i.id === item.id);
+          if (existingItem) {
+            return {
+              cartItems: state.cartItems.map((i) =>
+                i.id === item.id
+                  ? {
+                      ...i,
+                      quantity: item.quantity,
+                      calculatedPrice:
+                        i.isAdditionalPackage && i.extraUnitPrice
+                          ? i.price + (item.quantity - 1) * i.extraUnitPrice
+                          : i.price,
+                    }
+                  : i
+              ),
+            };
+          }
+          return {
+            cartItems: [
+              ...state.cartItems,
+              {
+                ...item,
+                calculatedPrice:
+                  item.isAdditionalPackage && item.extraUnitPrice
+                    ? item.price + (item.quantity - 1) * item.extraUnitPrice
+                    : item.price,
+              },
+            ],
+          };
+        }),
+
+      updateItem: (id, quantity, price) =>
+        set((state) => ({
+          cartItems: state.cartItems.map((item) =>
+            item.id === id
+              ? { ...item, quantity, calculatedPrice: price }
+              : item
+          ),
+        })),
 
       removeItem: (id) =>
         set((state) => ({
@@ -80,7 +125,7 @@ const useOrderStore = create<OrderState>()(
         set({
           cartItems: [],
           customerDetails: initialCustomerDetails,
-          paymentMethod: "CREDIT_CARD",
+          paymentMethod: PaymentMethod.CREDIT_CARD,
         }),
     }),
     {
