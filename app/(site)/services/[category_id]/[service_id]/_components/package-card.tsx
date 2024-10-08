@@ -20,18 +20,20 @@ export default function PackageCard({ pack }: { pack: Package }) {
 
   const calculatePrice = useCallback(
     (newQuantity: number) => {
-      if (!selectedPackage) return;
+      if (!selectedPackage) return pack.price;
 
       const basePrice = selectedPackage.price;
       const minQuantity = selectedPackage.minQuantity ?? 1;
       const extraUnits = Math.max(0, newQuantity - minQuantity);
       const extraPrice = extraUnits * (selectedPackage.extraUnitPrice ?? 1);
-      setCurrentPrice(basePrice + extraPrice);
+      return basePrice + extraPrice;
     },
-    [selectedPackage]
+    [selectedPackage, pack.price]
   );
-  console.log(`selectedPackage`, selectedPackage);
-
+  const existingInCartQuantity =
+  cartItems.find((item) => item.id === pack.id)?.quantity ?? 1;
+  const existingInCartPrice =
+      cartItems.find((item) => item.id === pack.id)?.price ?? 1;
   useEffect(() => {
     const existingInCartQuantity =
       cartItems.find((item) => item.id === pack.id)?.quantity ?? 1;
@@ -48,23 +50,33 @@ export default function PackageCard({ pack }: { pack: Package }) {
     calculatePrice,
     selectedPackage,
   ]);
-  // useEffect(() => {
-  //   if(selectedPackage) {
-  //     setPackage({
-  //       ...pack,
-  //       price: selectedPackage?.isAdditionalPackage ? currentPrice : pack.price,
-  //       quantity: quantity,
-  //     });
-  //   }
-  // }, [quantity]);
+  const updatePackage = useCallback(
+    (newQuantity: number, newPrice: number) => {
+      if (selectedPackage && selectedPackage.id === pack.id) {
+        setPackage({
+          ...pack,
+          price: pack.isAdditionalPackage ? newPrice : pack.price,
+          quantity: newQuantity,
+        });
+      }
+    },
+    [pack, selectedPackage, setPackage]
+  );
 
-  const handleQuantityChange = (newValue: number) => {
-    const minQuantity = selectedPackage?.minQuantity ?? 1;
-    if (newValue >= minQuantity) {
-      setQuantity(newValue);
-      calculatePrice(newValue);
-    }
-  };
+  const handleQuantityChange = useCallback(
+    (newValue: number) => {
+      const minQuantity = pack.minQuantity ?? 1;
+      if (newValue >= minQuantity) {
+        setQuantity(newValue);
+        const newPrice = calculatePrice(newValue);
+        setCurrentPrice(newPrice);
+        updatePackage(newValue, newPrice);
+      }
+    },
+    [pack.minQuantity, calculatePrice, updatePackage]
+  );
+
+  // Modify calculatePrice to return the new price
 
   // console.log(`selectedPackage`, selectedPackage);
 
@@ -167,8 +179,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
                   onChange={(e) => {
                     const minQuantity = pack.minQuantity ?? 1;
                     const newValue = Math.max(
-                      parseInt(e.target.value) || minQuantity,
-                      minQuantity
+                      parseInt(e.target.value) || minQuantity,                    
                     );
                     handleQuantityChange(newValue);
                   }}
@@ -194,9 +205,9 @@ export default function PackageCard({ pack }: { pack: Package }) {
             <span className="text-end">
               £
               {selectedPackage?.isAdditionalPackage &&
-              selectedPackage.id === pack.id
+              selectedPackage.id === pack.id 
                 ? currentPrice.toFixed(2)
-                : pack.price.toFixed(2)}
+                : (isInCart ?  existingInCartPrice.toFixed(2) : pack.price.toFixed(2))}
             </span>
           </div>
         </label>
