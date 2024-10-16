@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import { AdapterUser } from "next-auth/adapters";
 import prisma from "@/lib/prisma";
@@ -7,10 +8,45 @@ import { Role } from "@prisma/client";
 
 const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
+
   providers: [
     GoogleProvider({
       clientId: process.env.AUTH_GOOGLE_ID!,
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        console.log(user);
+
+        if (!user || user.role !== Role.ADMIN) {
+          return null;
+        }
+
+        // Direct password comparison without bcrypt
+        if (credentials.password !== user.password) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
+      },
     }),
   ],
 
@@ -22,10 +58,12 @@ const authOptions: NextAuthOptions = {
           select: { role: true, id: true },
         });
 
-        // Only allow sign in if the user exists and has the ADMIN role
         return dbUser?.role === Role.ADMIN;
       }
-      return false; // Deny sign in for any other case
+      if (account?.provider === "credentials") {
+        return user.role === Role.ADMIN;
+      }
+      return false;
     },
     async jwt({
       token,
@@ -42,13 +80,9 @@ const authOptions: NextAuthOptions = {
       if (account && account.access_token) {
         token.accessToken = account.access_token;
       }
-      if (user?.email) {
-        const dbUser = await prisma.user.findUnique({
-          where: { email: user.email },
-          select: { role: true, id: true },
-        });
-        token.role = dbUser?.role;
-        token.userId = dbUser?.id;
+      if (user) {
+        token.role = user.role;
+        token.userId = user.id;
       }
       return token;
     },
@@ -73,18 +107,15 @@ const authOptions: NextAuthOptions = {
         user: { id?: string };
       };
     },
-
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
   },
   pages: {
     signIn: "/admin/login",
-    error: "/admin/login", // Redirect to login page on error
+    error: "/admin/login",
   },
 };
 

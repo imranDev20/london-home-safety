@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,15 +21,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  TriangleAlert,
+  Key,
+  Shield,
+  Loader2,
+} from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { LoginFormValues, loginSchema } from "../schema";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -40,29 +53,28 @@ export default function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    try {
-      // Simulate API call
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+    startTransition(async () => {
+      try {
+        setServerError(null);
+        const result = await signIn("credentials", {
+          redirect: false,
+          email: data.email,
+          password: data.password,
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+        if (result?.error) {
+          setServerError(result.error);
+        } else if (result?.ok) {
+          router.push(callbackUrl || "/admin");
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          setServerError(error.message);
+        } else {
+          setServerError("An unexpected error occurred");
+        }
       }
-
-      // Handle successful login
-      console.log("Login successful");
-      setServerError(null);
-    } catch (error) {
-      if (error instanceof Error) {
-        setServerError(error.message);
-      } else {
-        setServerError("An unexpected error occurred");
-      }
-    }
+    });
   };
 
   return (
@@ -76,6 +88,7 @@ export default function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
             Enter your credentials to access the admin panel
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -137,8 +150,42 @@ export default function LoginForm({ callbackUrl }: { callbackUrl?: string }) {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Login
+
+              <Alert variant="default" className="bg-blue-50 border-blue-200">
+                <div className="flex items-center space-x-2">
+                  <Shield className="h-5 w-5 text-blue-600" />
+                  <AlertTitle className="text-blue-800 font-semibold text-lg">
+                    Admin Access
+                  </AlertTitle>
+                </div>
+                <AlertDescription className="mt-3 text-blue-700">
+                  <div className="bg-white p-3 rounded-md shadow-sm border border-blue-200">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Key className="h-4 w-4 text-blue-500" />
+                      <span className="font-medium">Email:</span>
+                      <span className="font-mono bg-gray-100 px-2 py-1 rounded text-sm">
+                        admin@example.com
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Key className="h-4 w-4 text-blue-500" />
+                      <span className="font-medium">Password:</span>
+                      <span className="font-mono bg-gray-100 px-2 py-1 rounded text-sm">
+                        password
+                      </span>
+                    </div>
+                  </div>
+                </AlertDescription>
+              </Alert>
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  "Login"
+                )}
               </Button>
             </form>
           </Form>
