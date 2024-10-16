@@ -1,13 +1,12 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus, PaymentStatus, Prisma, Role } from "@prisma/client";
+import { OrderStatus, Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
 import { jsPDF } from "jspdf";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
-import { sendEmail } from "@/lib/send-email";
 import {
   BUSINESS_NAME,
   CONGESTION_FEE,
@@ -445,27 +444,6 @@ export async function createOrder(data: CreateOrderFormInput) {
         },
       });
     });
-
-    // Email sending (outside of transaction)
-    await sendEmail({
-      fromEmail: EMAIL_ADDRESS,
-      fromName: "London Home Safety",
-      to: createdOrder.user.email ?? "",
-      subject: "Order Placed Successfully",
-      html: notifyUserOrderPlacedEmailHtml(createdOrder),
-    });
-
-    if (createdOrder.assignedEngineer) {
-      const content = `Dear ${createdOrder.assignedEngineer.name},\n\nYou have been assigned a new order. The order number is ${createdOrder.invoice}. Please review the details and proceed with the necessary steps to complete the assigned tasks. Ensure all protocols are followed, and keep the customer updated on the progress.\n\nIf you encounter any issues or need further assistance, feel free to reach out to the management team.\n\nThank you for your dedication and hard work.\n\nBest regards,\nThe ${BUSINESS_NAME} Management Team`;
-
-      await sendEmail({
-        fromEmail: EMAIL_ADDRESS,
-        fromName: "London Home Safety",
-        to: createdOrder.assignedEngineer.email,
-        subject: "New Service Order",
-        html: notifyEngineerEmailHtml(createdOrder, content),
-      });
-    }
 
     // Revalidate paths if needed
     revalidatePath("/admin", "layout");

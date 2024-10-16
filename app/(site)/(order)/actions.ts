@@ -5,11 +5,8 @@ import {
   generateInvoiceId,
   generateInvoiceTemplate,
 } from "@/lib/generate-invoice";
-import { notifyAdminOrderPlacedEmailHtml } from "@/lib/notify-admin-order-placed";
-import { placedOrderEmailHtml } from "@/lib/placed-order-html";
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/lib/prisma-error";
-import { sendEmail } from "@/lib/send-email";
 import { CONGESTION_FEE, EMAIL_ADDRESS, PARKING_FEE } from "@/shared/data";
 import { Order, Package, PaymentMethod, Prisma, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -201,28 +198,6 @@ export async function createOrder(orderData: OrderData): Promise<{
             Base64Content: invoice?.data,
           },
         ];
-
-        await sendEmail({
-          fromEmail: EMAIL_ADDRESS,
-          fromName: "London Home Safety",
-          to: createdOrder.user.email,
-          subject: "Thank You for Your Order",
-          html: placedOrderEmailHtml(
-            createdOrder.user.firstName ?? "",
-            createdOrder.invoice
-          ),
-          attachments,
-        });
-
-        // Then, send a copy to the admin
-        await sendEmail({
-          fromEmail: EMAIL_ADDRESS,
-          fromName: "London Home Safety",
-          to: EMAIL_ADDRESS, // This is the admin's email address
-          subject: `New Order Received - ${createdOrder.invoice}`,
-          html: notifyAdminOrderPlacedEmailHtml(createdOrder),
-          attachments,
-        });
 
         console.log("All steps completed successfully within the transaction");
         return createdOrder;

@@ -1,11 +1,6 @@
 "use server";
 
-import { notifyUserCancelEmailHtml } from "@/lib/notify-customer-order-cancel-email";
-import { notifyUserCompleteEmailHtml } from "@/lib/notify-customer-order-completd-email";
-import { notifyUserConfirmEmailHtml } from "@/lib/notify-customer-order-confirm-email";
 import prisma from "@/lib/prisma";
-import { sendEmail } from "@/lib/send-email";
-import { EMAIL_ADDRESS } from "@/shared/data";
 import { SendEmailDataType } from "@/types/misc";
 import { Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
@@ -205,17 +200,6 @@ export async function sendEmailToCustomerOrderConfirmation(
   emailData: SendEmailDataType
 ) {
   try {
-    await sendEmail({
-      fromEmail: EMAIL_ADDRESS,
-      fromName: "London Home Safety",
-      to: emailData.receiver,
-      subject: emailData.subject,
-      html: notifyUserConfirmEmailHtml(
-        emailData.orderDetails,
-        emailData.content
-      ),
-    });
-
     // Revalidate the necessary paths if applicable (example paths)
     revalidatePath(`/admin/orders`);
     revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
@@ -237,17 +221,6 @@ export async function sendEmailToCustomerOrderCompleted(
   emailData: SendEmailDataType
 ) {
   try {
-    await sendEmail({
-      fromEmail: EMAIL_ADDRESS,
-      fromName: "London Home Safety",
-      to: emailData.receiver,
-      subject: emailData.subject,
-      html: notifyUserCompleteEmailHtml(
-        emailData.orderDetails,
-        emailData.content
-      ),
-    });
-
     // Revalidate the necessary paths if applicable (example paths)
     revalidatePath(`/admin/orders`);
     revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
@@ -270,17 +243,6 @@ export async function sendEmailToCustomerOrderCancelled(
   emailData: SendEmailDataType
 ) {
   try {
-    await sendEmail({
-      fromEmail: EMAIL_ADDRESS,
-      fromName: "London Home Safety",
-      to: emailData.receiver,
-      subject: emailData.subject,
-      html: notifyUserCancelEmailHtml(
-        emailData.orderDetails,
-        emailData.content
-      ),
-    });
-
     // Revalidate the necessary paths if applicable (example paths)
     revalidatePath(`/admin/orders`);
     revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
