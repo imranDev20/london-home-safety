@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -76,6 +76,7 @@ model Package {
   name            String
   description     String?
   category        PackageCategory
+  isAdditionalPackage Boolean @default(false)
   serviceName     String
   type            PackageType?
   propertyType    PropertyType
@@ -83,6 +84,8 @@ model Package {
   commercialType  CommercialType?
   unitType        String?
   price           Float
+  extraUnitPrice  Float?
+  minQuantity     Int?
   priceType       PriceType        @default(FIXED)
   orderId         String?
   order           Order?           @relation(fields: [orderId], references: [id])
@@ -213,3 +216,4 @@ enum PriceType {
   FROM
   RANGE
 }
+
