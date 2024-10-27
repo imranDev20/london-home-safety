@@ -2779,538 +2779,8 @@ export const NAV_ITEMS: NavItem[] = [
   {
     label: "Blog",
     path: "/blog",
-    children: [
-      //       {
-      //         label: "Electrical Installation Condition Report",
-      //         path: "/blog",
-      //         abbr: "EICR",
-      //         Icon: EicrIcon,
-      //         image: EicrImage,
-      //         description:
-      //           "Ensure the safety and compliance of your electrical installations with our thorough EICR.",
-      //         detailedDesc: {
-      //           details:
-      //             "Regular EICR inspections help identify and rectify any issues in your electrical installations. This service is crucial for ensuring the safety and compliance of your electrical systems with legal standards. Our comprehensive reports will detail any defects or necessary repairs for both homes and businesses.",
-      //           points: [
-      //             "Identifies potential electrical hazards",
-      //             "Ensures compliance with safety regulations",
-      //             "Provides a detailed report with recommendations",
-      //           ],
-      //         },
-
-      //         pageContent: {
-      //           title: "Ensuring Electrical Safety with Expert EICR Services",
-      //           html: `
-      // <div class="max-w-4xl mx-auto ">
-      // <p class="text-lg mb-6">An Electrical Installation Condition Report (EICR) is a detailed assessment of the electrical installations in your property. It identifies any potential hazards, deficiencies, or non-compliance with current safety standards. Our certified experts at London Home Safety Limited conduct thorough EICR inspections to ensure your electrical systems are safe and up to code. Whether for residential or commercial properties, our professional EICR services provide peace of mind, knowing that your environment is secure and compliant. Trust us to deliver reliable and comprehensive EICR solutions tailored to your needs.</p>
-
-      // <div class="mb-8">
-      // <h2 class="text-2xl font-bold mb-4">Why Do You Need an EICR?</h2>
-      // <p class="mb-4">An EICR is essential for ensuring the safety of your property's electrical systems. Over time, electrical installations can deteriorate due to wear and tear, environmental conditions, or previous poor workmanship. Regular EICR inspections help identify these issues before they become serious hazards.</p>
-      // <p class="font-bold mb-2">Benefits of EICR:</p>
-      // <ul class="space-y-2">
-      //   <li class="flex items-start">
-      //     <span class="text-black font-bold mr-2">•</span>
-      //     <span><span class="font-semibold">Safety:</span> Identifies potential electrical hazards and prevents accidents such as fires or electric shocks.</span>
-      //   </li>
-      //   <li class="flex items-start">
-      //     <span class="text-black font-bold mr-2">•</span>
-      //     <span><span class="font-semibold">Compliance:</span> Ensures your property complies with current electrical safety standards.</span>
-      //   </li>
-      //   <li class="flex items-start">
-      //     <span class="text-black font-bold mr-2">•</span>
-      //     <span><span class="font-semibold">Peace of Mind:</span> Provides assurance that your electrical installations are safe and reliable.</span>
-      //   </li>
-      //   <li class="flex items-start">
-      //     <span class="text-black font-bold mr-2">•</span>
-      //     <span><span class="font-semibold">Insurance:</span> Many insurance policies require an up-to-date EICR to maintain coverage.</span>
-      //   </li>
-      // </ul>
-      // </div>
-
-      // <blockquote class="bg-blue-50 text-lg p-6 rounded-lg mb-8">
-      // <p>Did you know that outdated or faulty electrical installations can pose serious safety risks? Regular EICR inspections are essential to identify potential hazards and ensure compliance with safety standards.</p>
-      // </blockquote>
-
-      // <h2 class="text-2xl font-bold mb-4">Why Is It Required?</h2>
-      // <p class="mb-4">EICR inspections are required to ensure compliance with safety regulations and standards, particularly in rented and commercial properties. Landlords are legally obligated to ensure their properties are electrically safe, and regular EICR checks are a key part of this responsibility.</p>
-      // <p class="font-bold mb-2">Legal Requirements:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Landlords:</span> Must have an EICR conducted at least every 5 years or at the change of tenancy.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Businesses:</span> Should conduct EICR inspections regularly to comply with health and safety regulations and insurance requirements.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Homeowners:</span> While not legally required, it is recommended to have an EICR conducted every 10 years for safety and peace of mind.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">What Will It Do?</h2>
-      // <p class="mb-4">An EICR assesses the safety and condition of your electrical installations. It identifies any faults or defects that could pose a risk to the occupants.</p>
-      // <p class="font-bold mb-2">EICR Outcomes:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Identification of Defects:</span> Lists any issues with the electrical installations, such as outdated wiring or faulty components.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Risk Assessment:</span> Evaluates the level of risk associated with each defect.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Recommendations:</span> Provides guidance on necessary repairs or upgrades to ensure safety and compliance.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">Who Should Take It?</h2>
-      // <p class="mb-4">EICR inspections are recommended for various types of property owners and occupants:</p>
-      // <p class="font-bold mb-2">Who Needs an EICR:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Landlords:</span> To ensure rental properties are safe and compliant with legal standards.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Homeowners:</span> For peace of mind and to address any potential electrical issues in their homes.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Business Owners:</span> To comply with health and safety regulations and protect employees and customers.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Property Buyers/Sellers:</span> To assess the condition of the electrical installations before completing a transaction.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">What Happens During an EICR?</h2>
-      // <p class="mb-4">During an EICR inspection, a qualified electrician will perform a thorough examination of your property's electrical systems.</p>
-      // <p class="font-bold mb-2">Inspection Process:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Visual Inspection:</span> Checks for visible signs of damage or wear.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Testing:</span> Conducts tests on the electrical installations to ensure they are functioning correctly and safely.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Documentation:</span> Records the findings and provides a detailed report, including any defects and recommendations.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">What Happens Afterwards?</h2>
-      // <p class="mb-4">After the EICR inspection, you will receive a comprehensive report detailing the condition of your electrical installations and any required actions.</p>
-      // <p class="font-bold mb-2">Post-Inspection Steps:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Review Report:</span> Go through the findings with the electrician to understand the condition of your electrical systems.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Address Defects:</span> Schedule necessary repairs or upgrades as recommended in the report.</span>
-      // </li>
-      // <li class="flex items-start">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Certification:</span> Once any required work is completed, you will receive a certificate confirming that your property meets the required safety standards.</span>
-      // </li>
-      // </ul>
-
-      // <p class="mb-4">By following these steps, you can ensure that your property's electrical systems are safe, compliant, and functioning properly. Regular EICR inspections are a proactive measure to protect your property and its occupants from electrical hazards.</p>
-      // </div>
-      // `,
-      //         },
-      //       },
-
-      //       {
-      //         label: "Portable Appliance Testing",
-      //         path: "/portable-appliance-testing",
-      //         abbr: "PAT",
-      //         Icon: PatIcon,
-      //         image: PatImage,
-      //         description:
-      //           "Test the safety of your portable appliances to prevent electrical hazards with our PAT service.",
-      //         detailedDesc: {
-      //           details:
-      //             "PAT testing is essential for ensuring that all portable electrical appliances are safe to use. Our qualified technicians will inspect and test each appliance, providing you with documentation that confirms compliance with safety standards. This service helps prevent electrical hazards in both residential and commercial properties.",
-      //           points: [
-      //             "Tests the safety of portable appliances",
-      //             "Prevents electrical hazards",
-      //             "Provides certification of compliance",
-      //           ],
-      //         },
-
-      //         priceAdditionalInfo: [
-      //           {
-      //             type: "COMMERCIAL",
-      //             name: "Any extra item £2.00 each",
-      //           },
-      //         ],
-
-      //         pageContent: {
-      //           title: "Ensuring Appliance Safety with Professional PAT Testing",
-      //           html: `
-      //             <div class="max-w-4xl mx-auto ">
-      // <p class="mb-6 text-lg">
-      // Portable Appliance Testing (PAT) is a vital process to ensure that electrical appliances in your property are safe to use. Our PAT service involves thorough inspections and tests conducted by qualified technicians, ensuring compliance with safety standards and preventing potential electrical hazards.
-      // </p>
-
-      // <h2 class="text-2xl font-bold mb-4">What Appliances Need PAT Testing?</h2>
-      // <p class="mb-4">PAT testing is necessary for various types of portable electrical appliances, including but not limited to:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span>Computers and peripherals</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span>Kitchen appliances (e.g., kettles, toasters)</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span>Office equipment (e.g., printers, copiers)</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span>Power tools</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span>Extension cords and chargers</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">Who Should Get PAT Testing?</h2>
-      // <p class="mb-4">PAT testing is recommended for a wide range of property owners and users:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Landlords:</span> To ensure rental properties are safe and comply with regulations.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Homeowners:</span> For peace of mind and to ensure the safety of appliances in the home.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Business Owners:</span> To comply with health and safety regulations and protect employees and customers.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Educational Institutions:</span> To ensure the safety of students and staff.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">What Happens During PAT Testing?</h2>
-      // <p class="mb-4">During PAT testing, a qualified technician will perform a thorough examination of your portable appliances.</p>
-      // <p class="mb-2 font-bold">Inspection Process:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Pre-Testing Inspection:</span> Initial visual inspection to check for any visible damage or wear.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Electrical Testing:</span> Conducts electrical tests to ensure appliances are functioning correctly and safely.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Documentation:</span> Records the findings and provides a detailed report, including any defects and recommendations.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">What Happens After PAT Testing?</h2>
-      // <p class="mb-4">After the PAT testing, you will receive a comprehensive report detailing the condition of your appliances and any required actions.</p>
-      // <p class="mb-2 font-bold">Post-Testing Steps:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Review Report:</span> Go through the findings with the technician to understand the condition of your appliances.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Address Faults:</span> Schedule necessary repairs or replacements as recommended in the report.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Certification:</span> Once any required work is completed, you will receive a certificate confirming that your appliances meet the required safety standards.</span>
-      // </li>
-      // </ul>
-
-      // <p class="text-lg">
-      // By following these steps, you can ensure that your property's electrical appliances are safe, compliant, and functioning properly. Regular PAT testing is a proactive measure to protect your property and its occupants from electrical hazards.
-      // </p>
-      // </div>
-      //           `,
-      //         },
-      //         faqs: [
-      //           {
-      //             ques: "What types of appliances need PAT testing?",
-      //             ans: "Any portable electrical appliances that are plugged into the mains, such as computers, kitchen appliances, office equipment, power tools, and extension cords, need PAT testing to ensure they are safe to use.",
-      //           },
-      //           {
-      //             ques: "How often should PAT testing be conducted?",
-      //             ans: "The frequency of PAT testing depends on the type of appliance and its usage environment. Generally, it is recommended to test appliances annually, but high-risk environments may require more frequent testing.",
-      //           },
-      //           {
-      //             ques: "What are the benefits of regular PAT testing?",
-      //             ans: "Regular PAT testing helps prevent electrical hazards, ensures compliance with safety standards, provides documentation for insurance purposes, and gives peace of mind knowing that your appliances are safe to use.",
-      //           },
-      //           {
-      //             ques: "Who is responsible for ensuring appliances are PAT tested?",
-      //             ans: "Employers, landlords, and business owners are responsible for ensuring that all portable electrical appliances in their premises are PAT tested and safe to use.",
-      //           },
-      //           {
-      //             ques: "What does the PAT testing process involve?",
-      //             ans: "PAT testing includes a visual inspection of the appliance, an electrical test to check for safety, and documentation of the results. The appliance will receive a pass or fail label based on the findings.",
-      //           },
-      //           {
-      //             ques: "What should I do if an appliance fails the PAT test?",
-      //             ans: "If an appliance fails the PAT test, it should be removed from use immediately and either repaired by a qualified technician or replaced. A follow-up PAT test may be required after repairs.",
-      //           },
-      //           {
-      //             ques: "Is PAT testing a legal requirement?",
-      //             ans: "While PAT testing itself is not a legal requirement, ensuring electrical safety is. PAT testing is a widely accepted method for complying with electrical safety regulations in workplaces and rental properties.",
-      //           },
-      //           {
-      //             ques: "Can new appliances skip PAT testing?",
-      //             ans: "New appliances should be visually inspected before use but may not require immediate PAT testing. However, they should be included in the regular PAT testing schedule based on their usage environment.",
-      //           },
-      //         ],
-      //       },
-
-      //       {
-      //         label: "Fuse Box Installation",
-      //         path: "/fuse-box-installation",
-      //         Icon: FuseBoxIcon,
-      //         image: FuseBoxImage,
-      //         description:
-      //           "Upgrade or install a new fuse box to enhance your home's electrical safety and performance.",
-      //         detailedDesc: {
-      //           details:
-      //             "Upgrading or installing a new fuse box (consumer unit) can significantly enhance the safety and reliability of your electrical system. Our skilled electricians will ensure your fuse box meets current regulations and is capable of handling your property's electrical load, whether it's a home or a business.",
-      //           points: [
-      //             "Enhances electrical safety",
-      //             "Meets current regulations",
-      //             "Capable of handling increased electrical load",
-      //           ],
-      //         },
-
-      //         pageContent: {
-      //           title:
-      //             "Boost Electrical Safety with Professional Fuse Box Installation",
-      //           html: `
-      //            <div class="max-w-4xl mx-auto">
-      // <p class="mb-6 text-lg">
-      // A properly installed fuse box is critical for maintaining the safety and efficiency of your property's electrical system. At London Home Safety Limited, our experienced electricians provide expert fuse box installations and upgrades to meet the latest safety standards and handle the electrical demands of modern homes and businesses.
-      // </p>
-
-      // <h2 class="text-2xl font-bold mb-4">Why Upgrade Your Fuse Box?</h2>
-      // <p class="mb-4">Upgrading your fuse box can address several issues and improve the overall safety and performance of your electrical system:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Enhanced Safety:</span> Reduces the risk of electrical fires and other hazards.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Regulatory Compliance:</span> Ensures your electrical system meets current regulations.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Increased Capacity:</span> Supports the electrical load of modern appliances and devices.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Improved Reliability:</span> Minimizes the likelihood of electrical faults and power outages.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">Who Needs a Fuse Box Upgrade?</h2>
-      // <p class="mb-4">Several scenarios may necessitate a fuse box upgrade:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Older Properties:</span> Homes and businesses with outdated fuse boxes may not meet current safety standards.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Home Renovations:</span> Upgrades are often needed when adding new rooms or major appliances.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Increased Electrical Demand:</span> Properties that have seen an increase in electrical usage.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Safety Concerns:</span> Addressing frequent electrical issues or concerns about safety.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">What Happens During Fuse Box Installation?</h2>
-      // <p class="mb-4">Our professional installation process ensures your new fuse box is safely and efficiently installed:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Assessment:</span> Initial assessment of your current electrical system and fuse box.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Installation:</span> Safe removal of the old fuse box and installation of the new one.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Testing:</span> Comprehensive testing to ensure the new fuse box is functioning correctly.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Documentation:</span> Providing you with all necessary certifications and documentation.</span>
-      // </li>
-      // </ul>
-
-      // <h2 class="text-2xl font-bold mb-4">What to Expect After Installation?</h2>
-      // <p class="mb-4">After the installation of your new fuse box, you can expect several benefits:</p>
-      // <ul class="space-y-2 mb-6">
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Improved Safety:</span> Reduced risk of electrical hazards and enhanced safety for occupants.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Increased Reliability:</span> More stable and reliable electrical system performance.</span>
-      // </li>
-      // <li class="flex items-center">
-      //   <span class="text-black font-bold mr-2">•</span>
-      //   <span><span class="font-semibold">Peace of Mind:</span> Knowing that your property meets current safety standards and regulations.</span>
-      // </li>
-      // </ul>
-
-      // <p class="text-lg">
-      // By upgrading or installing a new fuse box, you are taking a proactive step towards ensuring the safety and efficiency of your property's electrical system. Contact London Home Safety Limited today to schedule your fuse box installation.
-      // </p>
-      // </div>
-      //           `,
-      //         },
-      //         faqs: [
-      //           {
-      //             ques: "Why should I upgrade my fuse box?",
-      //             ans: "Upgrading your fuse box enhances the safety and reliability of your electrical system, ensures compliance with current regulations, and supports the increased electrical load of modern appliances.",
-      //           },
-      //           {
-      //             ques: "How often should a fuse box be replaced?",
-      //             ans: "Fuse boxes should typically be inspected every 10 years for homeowners and every 5 years for rental properties. Replacement may be necessary if the fuse box is outdated or showing signs of wear.",
-      //           },
-      //           {
-      //             ques: "What are the signs that my fuse box needs replacing?",
-      //             ans: "Common signs include frequent electrical issues, such as blown fuses, tripped breakers, or flickering lights, as well as visible signs of damage or wear on the fuse box.",
-      //           },
-      //           {
-      //             ques: "How long does a fuse box installation take?",
-      //             ans: "The installation of a new fuse box typically takes a few hours, depending on the complexity of the job and the condition of the existing electrical system.",
-      //           },
-      //           {
-      //             ques: "Can I install a fuse box myself?",
-      //             ans: "No, fuse box installation should be performed by a qualified electrician to ensure safety and compliance with regulations.",
-      //           },
-      //           {
-      //             ques: "What should I do if I experience electrical issues after installation?",
-      //             ans: "If you experience any issues after installation, contact our team immediately. We will address and resolve any problems to ensure your electrical system is functioning correctly.",
-      //           },
-      //         ],
-      //       },
-      {
-        label: "Electrical Installation Condition Report (EICR)",
-        path: "/blog/eicr",
-        image: "/images/eicr.jpg", // Assume these paths for images exist
-        description:
-          "Ensure the safety and compliance of your electrical installations.",
-        detailedDesc: {
-          details:
-            "Our EICR reports help identify potential issues in your electrical installations, ensuring compliance with safety regulations.",
-          points: [
-            "Identifies potential electrical hazards",
-            "Ensures compliance with safety standards",
-            "Provides recommendations for necessary repairs",
-          ],
-        },
-      },
-      {
-        label: "Fire Alarm Testing and Maintenance",
-        path: "/blog/fire-alarm",
-        image: "/images/fire-alarm.jpg",
-        description:
-          "Comprehensive fire alarm testing and maintenance services.",
-        detailedDesc: {
-          details:
-            "Regular fire alarm testing ensures your system is fully functional and up to code, safeguarding your property.",
-          points: [
-            "Regular system testing",
-            "Full maintenance and certification",
-            "Compliance with fire safety regulations",
-          ],
-        },
-      },
-      {
-        label: "PAT Testing for Home and Business",
-        path: "/blog/pat-testing",
-        image: "/images/pat-testing.jpg",
-        description:
-          "Portable Appliance Testing (PAT) to ensure electrical safety.",
-        detailedDesc: {
-          details:
-            "We offer PAT testing services to check the safety of your appliances, crucial for both home and commercial properties.",
-          points: [
-            "Ensures appliance safety",
-            "Compliance with health and safety standards",
-            "Detailed testing reports",
-          ],
-        },
-      },
-      {
-        label: "Emergency Lighting Inspections",
-        path: "/blog/emergency-lighting",
-        image: "/images/emergency-lighting.jpg",
-        description:
-          "Emergency lighting inspection services to meet regulatory standards.",
-        detailedDesc: {
-          details:
-            "Our emergency lighting inspections ensure your systems are fully functional in case of an emergency.",
-          points: [
-            "Full system checks",
-            "Ensure compliance with building safety regulations",
-            "Detailed inspection reports",
-          ],
-        },
-      },
-      {
-        label: "Energy Efficiency Audits",
-        path: "/blog/energy-efficiency",
-        image: "/images/energy-audit.jpg",
-        description:
-          "Energy efficiency audits to help reduce energy consumption.",
-        detailedDesc: {
-          details:
-            "Our energy audits provide recommendations to improve energy efficiency in your home or business.",
-          points: [
-            "Reduce energy costs",
-            "Improve system efficiency",
-            "Environmentally-friendly solutions",
-          ],
-        },
-      },
-    ],
   },
-  { label: "Our Projects", path: "/out-projects" },
+  { label: "Our Projects", path: "/our-projects" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -3590,7 +3060,6 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-      
     },
     {
       label: "PAT Testing for Home and Business",
@@ -3598,7 +3067,7 @@ export const generateBlogData = () => {
       image: PatImage,
       description:
         "Portable Appliance Testing (PAT) to ensure electrical safety.",
-        authorName: "Alex",
+      authorName: "Alex",
       publishedDate: "March 26 2023",
       detailedDesc: {
         details:
@@ -3710,9 +3179,6 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-      
-
-
     },
     {
       label: "Emergency Lighting Inspections",
@@ -3720,7 +3186,7 @@ export const generateBlogData = () => {
       image: EmergencyLightCertificateImage,
       description:
         "Emergency lighting inspection services to meet regulatory standards.",
-        authorName: "Mr. Jhon",
+      authorName: "Mr. Jhon",
       publishedDate: "Jun 13 2023",
       detailedDesc: {
         details:
@@ -3832,8 +3298,6 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-
-      
     },
     {
       label: "Energy Efficiency Audits",
@@ -3841,12 +3305,12 @@ export const generateBlogData = () => {
       image: EmergencyLightImage,
       description:
         "Energy efficiency audits to help reduce energy consumption.",
-        authorName: "Alex Jhon",
+      authorName: "Alex Jhon",
       publishedDate: "December 24 2023",
       detailedDesc: {
         details:
           "Our energy audits provide recommendations to improve energy efficiency in your home or business.",
-          
+
         points: [
           "Reduce energy costs",
           "Improve system efficiency",
@@ -3954,13 +3418,9 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-      
     },
   ];
 };
-
-
-
 
 export const ALL_BLOGS: NavLeafItem[] =
   NAV_ITEMS.find((item) => item.label === "Blog")?.children?.flatMap(
@@ -3979,7 +3439,6 @@ export const ALL_SERVICES: NavLeafItem[] =
         categoryPath: category.path,
       }))
   ) ?? [];
-
 
 export const FAQ_HOME = [
   {
@@ -4009,6 +3468,8 @@ export const FAQ_HOME = [
       "Installing an EV charging station at home offers convenience and cost savings for electric vehicle owners. It ensures your vehicle is always ready to go and can increase the value of your property.",
   },
 ];
+
+export const blurData = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx0fHRsdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/2wBDAR0XFyAeIRweIR0hHSEdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
 
 export const BUSINESS_NAME = "London Home Safety Limited";
 export const ADDRESS =
