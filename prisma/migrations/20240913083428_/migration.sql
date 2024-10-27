@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PackageCategory" ADD VALUE 'PROPERTY_MANAGEMENT';
