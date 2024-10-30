@@ -47,7 +47,7 @@ import {
 import { format, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import { CheckoutFormInput, checkoutFormSchema } from "./schema";
+import { CheckoutFormInput, checkoutFormSchema,  } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import useOrderStore from "@/hooks/use-order-store";
@@ -58,6 +58,10 @@ import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "./_components/address-autocomplete";
+import { WoosmapAddress } from "@/types/Woosmap-prediction";
+
+
 
 const parkingOptions = [
   {
@@ -100,6 +104,8 @@ const congestionZoneOptions = [
   },
 ];
 
+
+
 const today = startOfDay(new Date());
 
 const disabledDays = (date: Date): boolean => {
@@ -118,9 +124,10 @@ export default function CheckoutPage() {
       lastName: "",
       email: "",
       phone: "",
-      street: "",
-      city: "",
       postcode: "",
+      city: "",
+      country: "",
+      // street: "", 
       date: new Date(),
       time: undefined,
       parkingOption: "FREE",
@@ -140,7 +147,8 @@ export default function CheckoutPage() {
         lastName: customerDetails.lastName ?? "",
         email: customerDetails.email ?? "",
         phone: customerDetails.phoneNumber ?? "",
-        street: customerDetails.address.street ?? "",
+        // street: customerDetails.address.street ?? "",
+        country: customerDetails.address.country ?? "",
         city: customerDetails.address.city ?? "",
         postcode: customerDetails.address.postcode ?? "",
         date: new Date(),
@@ -179,8 +187,9 @@ export default function CheckoutPage() {
   const onCheckoutSubmit: SubmitHandler<CheckoutFormInput> = async (data) => {
     setCustomerDetails({
       address: {
-        street: data.street,
+        // street: data.street ?? "",
         city: data.city,
+        country: data.country,
         postcode: data.postcode,
       },
       firstName: data.firstName,
@@ -205,6 +214,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
+      console.log('Form errors:', errors);
       toast({
         title: "Validation Error",
         description: "Please check the form for errors and try again.",
@@ -212,6 +222,16 @@ export default function CheckoutPage() {
       });
     }
   }, [errors, toast]);
+
+  //woosmap
+  const handleAddressSelect = (address: WoosmapAddress) => {
+    console.log("Selected address:", address);
+
+    // Set the values in the form using react-hook-form's setValue
+    form.setValue("postcode", address.postcode);
+  form.setValue("city", address.city);
+  form.setValue("country", address.country);
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -333,53 +353,9 @@ export default function CheckoutPage() {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Address</h2>
               <div className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="street"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Street <RequiredIndicator />
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Street address" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="city"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          City <RequiredIndicator />
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="City" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="postcode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Postcode <RequiredIndicator />
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Postcode" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                {/* woosmap */}
+                <AddressAutocomplete onAddressSelect={handleAddressSelect} />
+                
               </div>
             </Card>
 

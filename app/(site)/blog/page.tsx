@@ -2,7 +2,6 @@ import { getSettings } from "@/app/admin/(require-auth)/settings/actions";
 import PageHeader from "@/components/page-header";
 import BackgroundImage from "@/images/electric.jpg";
 import BlogItems from "./_components/blog-items";
-import BlogHome from "./_components/blog-home";
 
 
 const breadCrumbOptions = [

@@ -7,6 +7,8 @@ export default function PageHeader({
   breadCrumbOptions,
 }: PageHeaderProps) {
   const title = breadCrumbOptions.find((item) => item.isCurrentPage)?.label;
+  console.log("Title:", title);
+  
 
   return (
     <section className="relative -mt-[156px] md:-mt-[132px]">

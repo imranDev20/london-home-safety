@@ -1,4 +1,3 @@
-// components/MasonryLayout.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -25,13 +24,11 @@ export default function MasonryLayout({ masonryImage }: Props) {
     500: 1,
   };
 
-  // Extract unique categories from masonryImage
   useEffect(() => {
     const uniqueCategories = Array.from(new Set(masonryImage.map((image) => image.category)));
     setCategories(['All', ...uniqueCategories]);
   }, [masonryImage]);
 
-  // Filter images based on the selected category
   const filteredImages = selectedCategory === 'All'
     ? masonryImage
     : masonryImage.filter((image) => image.category === selectedCategory);

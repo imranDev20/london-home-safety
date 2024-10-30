@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import BlogCard from "./blog-card";
 import { SiteSettingWithRelations } from "@/types/misc";
 import { motion, useAnimation } from "framer-motion";
-import { generateBlogData } from "@/shared/data";
-import { StaticImageData } from "next/image"; // Import StaticImageData from next/image
 
-// Define a type for your blog data
+import { StaticImageData } from "next/image"; 
+import { generateBlogData } from "@/shared/blog-data";
+
 type BlogData = {
   label: string;
   path: string;
-  image: StaticImageData | string; // Adjusting to allow string if StaticImageData doesn't resolve
+  image: StaticImageData | string; 
   description: string;
   detailedDesc: {
     details: string;
@@ -28,16 +28,14 @@ export default function BlogItems({
 }: {
   siteSettings: SiteSettingWithRelations;
 }) {
-  const [blogs, setBlogs] = useState<BlogData[]>([]); // Initialize with the defined type
+  const [blogs, setBlogs] = useState<BlogData[]>([]); 
   const controls = useAnimation();
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Generate blog data before rendering
     const blogData = generateBlogData();
-    // Ensure blogData conforms to BlogData type
-    setBlogs(blogData as BlogData[]); // Use a type assertion if needed
+    setBlogs(blogData as BlogData[]); 
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -88,7 +86,6 @@ export default function BlogItems({
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map((blog, index) => (
             <BlogCard
-              siteSettings={siteSettings}
               key={blog.label}
               blog={blog}
               index={index}

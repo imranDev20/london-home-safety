@@ -1,13 +1,14 @@
 // blog-details.tsx
 "use client";
 
-import { generateBlogData } from "@/shared/data";
+
 import { SiteSettingWithRelations } from "@/types/misc";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
+import { generateBlogData } from "@/shared/blog-data";
 
 type BlogData = {
   label: string;

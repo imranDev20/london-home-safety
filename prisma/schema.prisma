@@ -28,7 +28,8 @@ model User {
 
 model Address {
   id        String   @id @default(cuid())
-  street    String
+  // street    String
+  country    String
   city      String
   postcode  String
   userId    String?  @unique
