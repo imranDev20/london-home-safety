@@ -58,8 +58,7 @@ import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
-import { AddressAutocomplete } from "./_components/address-autocomplete";
-import { WoosmapAddress } from "@/types/Woosmap-prediction";
+import AddressValidationAutocomplete from "./_components/address-validation-autocomplete";
 
 
 
@@ -132,7 +131,6 @@ export default function CheckoutPage() {
       parkingOption: "FREE",
       isInCongestionZone: false,
     },
-
   });
 
   const {
@@ -222,15 +220,17 @@ export default function CheckoutPage() {
     }
   }, [errors, toast]);
 
-  //woosmap
-  const handleAddressSelect = (address: WoosmapAddress) => {
-    console.log("Selected address:", address);
-
-    // Set the values in the form using react-hook-form's setValue
-    form.setValue("postcode", address.postcode);
-  form.setValue("city", address.city);
-  form.setValue("street", address.street);
-  };
+// Address validation/autocomplete handling
+const handleAddressSelect = (address: {
+  postcode: string;
+  borough: string;
+  city: string;
+  country: string;
+}) => {
+  form.setValue('postcode', address.postcode);
+  form.setValue('city', address.city);
+  form.setValue('street', address.borough); // Assuming 'borough' maps to 'street' here; update as needed
+};
 
   if (cartItems.length === 0) {
     return (
@@ -352,8 +352,8 @@ export default function CheckoutPage() {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Address</h2>
               <div className="space-y-6">
-                {/* woosmap */}
-                <AddressAutocomplete onAddressSelect={handleAddressSelect} />
+                {/* Ideal postcode prediction */}
+                <AddressValidationAutocomplete onAddressSelect={handleAddressSelect}/>
                 
               </div>
             </Card>

@@ -12,29 +12,82 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CheckIcon, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { log } from 'console';
 
 interface AddressAutocompleteProps {
   onAddressSelect: (address: {
     postcode: string;
+    borough: string;
     city: string;
-    street: string;
+    country: string;
   }) => void;
   defaultValue?: string;
 }
 
 interface Prediction {
-  id: string;
-  description: string;
-  properties: {
-    street_address?: string;
-    city?: string;
-    postal_code?: string;
-    country_code?: string;
-    name?: string;
-    address?: string;
-  };
+  postcode: string;
+  postcode_inward: string;
+  postcode_outward: string;
+  post_town: string;
+  dependant_locality: string;
+  thoroughfare: string;
+  building_number: string;
+  building_name: string;
+  sub_building_name: string;
+  po_box: string;
+  department_name: string;
+  organisation_name: string;
+  udprn: number;
+  umprn: string;
+  postcode_type: string;
+  su_organisation_indicator: string;
+  delivery_point_suffix: string;
+  line_1: string;
+  line_2: string;
+  line_3: string;
+  premise: string;
+  country: string;
+  county: string;
+  district: string;
+  ward: string;
+  longitude: number;
+  latitude: number;
 }
+
+const boroughData = [
+  { borough: 'Barking & Dagenham' },
+  { borough: 'Barnet' },
+  { borough: 'Bexley' },
+  { borough: 'Brent' },
+  { borough: 'Bromley' },
+  { borough: 'Camden' },
+  { borough: 'City of London' },
+  { borough: 'Croydon' },
+  { borough: 'Ealing' },
+  { borough: 'Enfield' },
+  { borough: 'Greenwich' },
+  { borough: 'Hackney' },
+  { borough: 'Hammersmith & Fulham' },
+  { borough: 'Haringey' },
+  { borough: 'Harrow' },
+  { borough: 'Havering' },
+  { borough: 'Hillingdon' },
+  { borough: 'Hounslow' },
+  { borough: 'Islington' },
+  { borough: 'Kensington & Chelsea' },
+  { borough: 'Kingston Upon Thames' },
+  { borough: 'Lambeth' },
+  { borough: 'Lewisham' },
+  { borough: 'Merton' },
+  { borough: 'Newham' },
+  { borough: 'Redbridge' },
+  { borough: 'Richmond Upon Thames' },
+  { borough: 'Southwark' },
+  { borough: 'Sutton' },
+  { borough: 'Tower Hamlets' },
+  { borough: 'Waltham Forest' },
+  { borough: 'Wandsworth' },
+  { borough: 'City of Westminster' }
+];
 
 export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   onAddressSelect,
@@ -42,14 +95,15 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(defaultValue);
+  const [borough, setBorough] = useState('');
   const [city, setCity] = useState('');
-  const [street, setStreet] = useState('');
+  const [country, setCountry] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const WOOSMAP_PUBLIC_KEY = process.env.NEXT_PUBLIC_WOOSMAP_API_KEY;
+  const IDEAL_POSTCODES_API_KEY = process.env.NEXT_PUBLIC_IDEAL_POSTCODES_API_KEY;
 
   const fetchPredictions = async (input: string) => {
     if (!input || input.length < 2) return;
@@ -58,24 +112,15 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 
     try {
       const response = await fetch(
-        `https://api.woosmap.com/localities/autocomplete?` +
-          new URLSearchParams({
-            input: input,
-            components: 'country:gb',
-            key: WOOSMAP_PUBLIC_KEY || '',
-            types: 'postal_code',
-            language: 'en'
-          })
+        `https://api.ideal-postcodes.co.uk/v1/postcodes/${input}?api_key=${IDEAL_POSTCODES_API_KEY}`
       );
-      console.log("response:", response);
-      
 
       if (!response.ok) throw new Error('Failed to fetch predictions');
 
       const data = await response.json();
-      console.log("data:", data);
-      
-      setPredictions(data.localities || []);
+      if (data.result && Array.isArray(data.result)) {
+        setPredictions(data.result);
+      }
     } catch (err) {
       console.error('Error fetching predictions:', err);
       setError('Failed to fetch suggestions');
@@ -88,39 +133,37 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     const timer = setTimeout(() => {
       if (searchTerm) fetchPredictions(searchTerm);
     }, 300);
-    // console.log("timer:", timer);
     
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const parseAddress = (description: string) => {
-    const parts = description.split(', ');
-    // console.log("parts:", parts);
-    
-    if (parts.length >= 3) {
-      return {
-        postcode: parts[0], // This will be the postcode
-        city: parts[1],
-        street: parts[2]
-      };
-    }
-    return null;
+  const formatAddress = (prediction: Prediction) => {
+    const parts = [];
+    if (prediction.line_1) parts.push(prediction.line_1);
+    if (prediction.line_2) parts.push(prediction.line_2);
+    if (prediction.post_town) parts.push(prediction.post_town);
+    if (prediction.postcode) parts.push(prediction.postcode);
+    return parts.join(', ');
   };
-  
-  const handleSelect = async (prediction: Prediction) => {
-    const addressParts = parseAddress(prediction.description);
-    if (addressParts) {
-      setValue(addressParts.postcode);
-      setCity(addressParts.city);
-      setStreet(addressParts.street);
-  
-      onAddressSelect({
-        postcode: addressParts.postcode,
-        city: addressParts.city,
-        street: addressParts.street,
-      });
-    }
+
+  const handleSelect = (prediction: Prediction) => {
+    setValue(prediction.postcode);
+    setBorough(getBoroughFromPrediction(prediction) || '');
+    setCity(prediction.post_town || '');
+    setCountry(prediction.country || 'United Kingdom');
+
+    onAddressSelect({
+      postcode: prediction.postcode,
+      borough: getBoroughFromPrediction(prediction) || '',
+      city: prediction.post_town || '',
+      country: prediction.country || 'United Kingdom',
+    });
     setOpen(false);
+  };
+
+  const getBoroughFromPrediction = (prediction: Prediction): string | null => {
+    const matchedBorough = boroughData.find(item => prediction.district?.toLowerCase() === item.borough.toLowerCase());
+    return matchedBorough?.borough || null;
   };
 
   return (
@@ -154,16 +197,16 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                   {predictions.map((prediction, index) => (
                     <CommandItem
                       key={index}
-                      value={prediction.description}
+                      value={formatAddress(prediction)}
                       onSelect={() => handleSelect(prediction)}
                     >
                       <CheckIcon
                         className={cn(
                           'mr-2 h-4 w-4',
-                          value === prediction.description ? 'opacity-100' : 'opacity-0'
+                          value === prediction.postcode ? 'opacity-100' : 'opacity-0'
                         )}
                       />
-                      {prediction.description}
+                      {formatAddress(prediction)}
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -174,11 +217,24 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
       </div>
 
       <div className="space-y-2">
+        <label className="text-sm font-medium">Borough</label>
+        {borough ? (
+          <Input 
+            placeholder="Borough"
+            value={borough}
+            readOnly
+            className="bg-gray-50"
+          />
+        ) : (
+          <p className="text-gray-500">No borough found</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
         <label className="text-sm font-medium">City</label>
         <Input 
           placeholder="City"
           value={city}
-          onChange={(e) => setCity(e.target.value)}
           readOnly
           className="bg-gray-50"
         />
@@ -187,9 +243,8 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
       <div className="space-y-2">
         <label className="text-sm font-medium">Country</label>
         <Input 
-          placeholder="Street"
-          value={street}
-          onChange={(e) => setStreet(e.target.value)}
+          placeholder="Country"
+          value={country}
           readOnly
           className="bg-gray-50"
         />
