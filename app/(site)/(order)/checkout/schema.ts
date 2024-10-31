@@ -14,11 +14,15 @@ export const checkoutFormSchema = z.object({
     .string()
     .min(1, "Phone number is required")
     .regex(/^[0-9+\-\s()]+$/, "Please enter a valid phone number"),
-    // street: z.string().min(1, "Street is required").max(200, "Street name is too long"),
-    country: z
+  street: z
     .string()
-    .min(1, "country address is required")
-    .max(200, "country address is too long"),
+    .min(1, "Street address is required")
+    .max(200, "Street address is too long"),
+
+  // street: z
+  // .string()
+  // .min(1, "country address is required")
+  // .max(200, "country address is too long"),
   city: z.string().min(1, "City is required").max(100, "City name is too long"),
   postcode: z
     .string()

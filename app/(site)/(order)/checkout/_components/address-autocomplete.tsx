@@ -17,8 +17,7 @@ interface AddressAutocompleteProps {
   onAddressSelect: (address: {
     postcode: string;
     city: string;
-    country: string;
-    street?: string;
+    street: string;
   }) => void;
   defaultValue?: string;
 }
@@ -43,7 +42,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(defaultValue);
   const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
+  const [street, setStreet] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [loading, setLoading] = useState(false);
@@ -88,115 +87,106 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   }, [searchTerm]);
 
   const parseAddress = (description: string) => {
-    // Modify this function to return only the postcode
     const parts = description.split(', ');
     if (parts.length >= 3) {
       return {
         postcode: parts[0], // This will be the postcode
         city: parts[1],
-        country: parts[2]
+        street: parts[2]
       };
     }
     return null;
   };
   
   const handleSelect = async (prediction: Prediction) => {
-    try {
-      const addressParts = parseAddress(prediction.description);
-      if (addressParts) {
-        // Set the postcode as the value
-        setValue(addressParts.postcode);
-        setCity(addressParts.city);
-        setCountry(addressParts.country);
-
-        // Pass address details back to parent
-        onAddressSelect({
-          postcode: addressParts.postcode,
-          city: addressParts.city,
-          country: addressParts.country
-        });
-      }
-      setOpen(false); // Close the popover
-    } catch (err) {
-      console.error('Error in handleSelect:', err);
-      setError('Failed to get address details');
-    }
-  };
+    const addressParts = parseAddress(prediction.description);
+    if (addressParts) {
+      setValue(addressParts.postcode);
+      setCity(addressParts.city);
+      setStreet(addressParts.street);
   
+      onAddressSelect({
+        postcode: addressParts.postcode,
+        city: addressParts.city,
+        street: addressParts.street,
+      });
+    }
+    setOpen(false);
+  };
 
   return (
     <div className="space-y-4">
-    <div className="space-y-2">
-      <label className="text-sm font-medium">Post Code</label>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-          >
-            {value || 'Search postcode...'}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0">
-          <Command>
-            <CommandInput
-              placeholder="Enter postcode..."
-              value={searchTerm}
-              onValueChange={setSearchTerm}
-            />
-            <CommandList>
-              <CommandEmpty>
-                {loading ? 'Loading...' : error || 'No postcode found.'}
-              </CommandEmpty>
-              <CommandGroup>
-                {predictions.map((prediction, index) => (
-                  <CommandItem
-                    key={index}
-                    value={prediction.description}
-                    onSelect={() => handleSelect(prediction)}
-                  >
-                    <CheckIcon
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        value === prediction.description ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
-                    {prediction.description}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Post Code</label>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-full justify-between"
+            >
+              {value || 'Search postcode...'}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[400px] p-0">
+            <Command>
+              <CommandInput
+                placeholder="Enter postcode..."
+                value={searchTerm}
+                onValueChange={setSearchTerm}
+              />
+              <CommandList>
+                <CommandEmpty>
+                  {loading ? 'Loading...' : error || 'No postcode found.'}
+                </CommandEmpty>
+                <CommandGroup>
+                  {predictions.map((prediction, index) => (
+                    <CommandItem
+                      key={index}
+                      value={prediction.description}
+                      onSelect={() => handleSelect(prediction)}
+                    >
+                      <CheckIcon
+                        className={cn(
+                          'mr-2 h-4 w-4',
+                          value === prediction.description ? 'opacity-100' : 'opacity-0'
+                        )}
+                      />
+                      {prediction.description}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
 
-    <div className="space-y-2">
-      <label className="text-sm font-medium">City</label>
-      <Input 
-        placeholder="City"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        readOnly
-        className="bg-gray-50"
-      />
-    </div>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">City</label>
+        <Input 
+          placeholder="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          readOnly
+          className="bg-gray-50"
+        />
+      </div>
 
-    <div className="space-y-2">
-      <label className="text-sm font-medium">Country</label>
-      <Input 
-        placeholder="Country"
-        value={country}
-        onChange={(e) => setCountry(e.target.value)}
-        readOnly
-        className="bg-gray-50"
-      />
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Street</label>
+        <Input 
+          placeholder="Street"
+          value={street}
+          onChange={(e) => setStreet(e.target.value)}
+          readOnly
+          className="bg-gray-50"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default AddressAutocomplete;

@@ -124,15 +124,15 @@ export default function CheckoutPage() {
       lastName: "",
       email: "",
       phone: "",
-      postcode: "",
+      street: "",
       city: "",
-      country: "",
-      // street: "", 
+      postcode: "",
       date: new Date(),
       time: undefined,
       parkingOption: "FREE",
       isInCongestionZone: false,
     },
+
   });
 
   const {
@@ -147,14 +147,14 @@ export default function CheckoutPage() {
         lastName: customerDetails.lastName ?? "",
         email: customerDetails.email ?? "",
         phone: customerDetails.phoneNumber ?? "",
-        // street: customerDetails.address.street ?? "",
-        country: customerDetails.address.country ?? "",
-        city: customerDetails.address.city ?? "",
-        postcode: customerDetails.address.postcode ?? "",
+        street: customerDetails.address?.street ?? "",
+        city: customerDetails.address?.city ?? "",
+        postcode: customerDetails.address?.postcode ?? "",
         date: new Date(),
         time: customerDetails.inspectionTime ?? "MORNING",
         parkingOption: customerDetails.parkingOptions ?? "FREE",
         isInCongestionZone: customerDetails.isCongestionZone ?? false,
+
       });
     }
   }, [reset, customerDetails]);
@@ -187,10 +187,9 @@ export default function CheckoutPage() {
   const onCheckoutSubmit: SubmitHandler<CheckoutFormInput> = async (data) => {
     setCustomerDetails({
       address: {
-        // street: data.street ?? "",
-        city: data.city,
-        country: data.country,
-        postcode: data.postcode,
+        street: data.street ?? "",
+        city: data.city ?? "",
+        postcode: data.postcode ?? "",
       },
       firstName: data.firstName,
       lastName: data.lastName,
@@ -230,7 +229,7 @@ export default function CheckoutPage() {
     // Set the values in the form using react-hook-form's setValue
     form.setValue("postcode", address.postcode);
   form.setValue("city", address.city);
-  form.setValue("country", address.country);
+  form.setValue("street", address.street);
   };
 
   if (cartItems.length === 0) {

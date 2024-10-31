@@ -8,12 +8,7 @@ import {
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type AddressType = Omit<Address, "userId" | "createdAt" | "updatedAt" | "id"> & {
-  // street?: string; // Optional street property
-  country: string;
-};
-
-
+type AddressType = Omit<Address, "userId" | "createdAt" | "updatedAt" | "id">;
 
 export type CustomerDetails = {
   firstName: string;
@@ -46,8 +41,7 @@ const initialCustomerDetails: CustomerDetails = {
   email: "",
   phoneNumber: "",
   address: {
-    // street: "", 
-    country: "",
+    street: "",
     city: "",
     postcode: "",
   },

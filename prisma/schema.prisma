@@ -28,8 +28,7 @@ model User {
 
 model Address {
   id        String   @id @default(cuid())
-  // street    String
-  country    String
+  street    String
   city      String
   postcode  String
   userId    String?  @unique
@@ -37,6 +36,7 @@ model Address {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 
 model Order {
   id                 String           @id @default(cuid())
