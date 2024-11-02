@@ -78,11 +78,11 @@ export default function PackageForm({
       price: "",
       minQuantity: "",
       extraUnitPrice: "",
-      priceType: "FIXED",
-      serviceName: "",
-      propertyType: "RESIDENTIAL",
-      residentialType: undefined,
-      commercialType: undefined,
+      priceType: packageDetails?.priceType || "FIXED",
+      serviceName: packageDetails?.serviceName || "",
+      propertyType: packageDetails?.propertyType || "RESIDENTIAL",
+      residentialType: packageDetails?.residentialType || undefined,
+      commercialType: packageDetails?.commercialType || undefined,
       unitType: "",
     },
   });
@@ -490,11 +490,11 @@ export default function PackageForm({
                     Residential Type (Optional)
                   </FormLabel>
                   <Select
-                   onValueChange={(value) => {
-                    if (value) {
-                      field.onChange(value);
-                    }
-                  }}    
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
                     value={field.value}
                   >
                     <FormControl>
@@ -525,11 +525,11 @@ export default function PackageForm({
                     Commercial Type (Optional)
                   </FormLabel>
                   <Select
-                   onValueChange={(value) => {
-                    if (value) {
-                      field.onChange(value);
-                    }
-                  }}    
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(value);
+                      }
+                    }}
                     value={field.value}
                   >
                     <FormControl>
