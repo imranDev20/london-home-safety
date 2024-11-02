@@ -25,6 +25,8 @@ export const packageSchema = z.object({
       required_error: "Price is required",
     })
     .min(1, { message: "Price cannot be empty" }),
+    extraUnitPrice: z.string().optional(),
+    minQuantity: z.string().optional(),
 
   priceType: z.nativeEnum(PriceType).optional(),
   serviceName: z
@@ -47,6 +49,7 @@ export const packageSchema = z.object({
     })
     .optional(),
   unitType: z.string().optional(),
+  isAdditionalPackage: z.boolean().optional()
 });
 
 export type PackageFormInputType = z.infer<typeof packageSchema>;
