@@ -1,3 +1,4 @@
+import React from "react";
 import { getPackages } from "../admin/(require-auth)/orders/[order_id]/actions";
 import { getSettings } from "../admin/(require-auth)/settings/actions";
 import AboutUsHome from "./_components/about-us-home";

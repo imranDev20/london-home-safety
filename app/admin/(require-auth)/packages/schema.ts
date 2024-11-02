@@ -49,6 +49,7 @@ export const packageSchema = z.object({
     })
     .optional(),
   unitType: z.string().optional(),
+  isAdditionalPackage: z.boolean().optional()
 });
 
 export type PackageFormInputType = z.infer<typeof packageSchema>;

@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -72,24 +72,25 @@ model Review {
 }
 
 model Package {
-  id              String           @id @default(cuid())
-  name            String
-  description     String?
-  category        PackageCategory
-  serviceName     String
-  type            PackageType?
-  propertyType    PropertyType
-  residentialType ResidentialType?
-  commercialType  CommercialType?
-  unitType        String?
-  price           Float
-  extraUnitPrice  Float?
-  minQuantity     Int?
-  priceType       PriceType        @default(FIXED)
-  orderId         String?
-  order           Order?           @relation(fields: [orderId], references: [id])
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id                  String           @id @default(cuid())
+  name                String
+  description         String?
+  category            PackageCategory
+  isAdditionalPackage Boolean          @default(false)
+  serviceName         String
+  type                PackageType?
+  propertyType        PropertyType
+  residentialType     ResidentialType?
+  commercialType      CommercialType?
+  unitType            String?
+  price               Float
+  extraUnitPrice      Float?
+  minQuantity         Int?
+  priceType           PriceType        @default(FIXED)
+  orderId             String?
+  order               Order?           @relation(fields: [orderId], references: [id])
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
 }
 
 model SiteSettings {
