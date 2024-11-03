@@ -58,6 +58,7 @@ import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
+import OrderSummary from "../_components/order-summary";
 
 const parkingOptions = [
   {
@@ -193,6 +194,8 @@ export default function CheckoutPage() {
       isCongestionZone: data.isInCongestionZone,
       orderNotes: data.orderNotes,
     });
+    console.log("customer details", customerDetails);
+    
 
     toast({
       title: "Success",
@@ -595,7 +598,7 @@ export default function CheckoutPage() {
 
           {/* Summary */}
           <div className="lg:col-span-4 space-y-6">
-            <Card className="p-6 sticky top-6">
+            {/* <Card className="p-6 sticky top-6">
               <h2 className="text-xl font-semibold mb-6">Summary</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -624,8 +627,15 @@ export default function CheckoutPage() {
               <Button type="submit" className="w-full mt-6 h-11 text-base">
                 Proceed to Payment
               </Button>
-            </Card>
-          </div>
+            </Card> */}
+            <OrderSummary
+            parkingOption={parkingOption}
+            isInCongestionZone={isInCongestionZone}
+            showProceedButton={true}
+            onProceedClick={form.handleSubmit(onCheckoutSubmit)}
+          />
+           </div>
+          
         </form>
       </Form>
     </div>

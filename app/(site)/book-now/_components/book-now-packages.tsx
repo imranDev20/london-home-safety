@@ -81,7 +81,7 @@ export default function BookNowPackages({ packages }: { packages: Package[] }) {
   const { cartItems, addItem } = useOrderStore();
 
   const handleAddToCart = (cartItem: Package) => {
-    addItem(cartItem);
+    addItem(cartItem, 1);
   };
 
   const isProductInCart = (id: string) =>
