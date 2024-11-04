@@ -130,7 +130,7 @@ export default function CreateOrderForm({
       return total + (selectedPackage?.price || 0);
     }, 0);
 
-    const congestionCharge = isCongestionZone ? 5 : 0;
+    const congestionCharge = isCongestionZone ? 15 : 0;
     const parkingCharge = parkingOptions !== "FREE" ? 5 : 0;
     const total = subtotal + congestionCharge + parkingCharge;
 

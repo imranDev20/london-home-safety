@@ -9,7 +9,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 // Constants for fees
-const PARKING_FEE = 10; // Example value, adjust as needed
+const PARKING_FEE = 5; // Example value, adjust as needed
 const CONGESTION_FEE = 15; // Example value, adjust as needed
 
 interface CartItem extends Package {
