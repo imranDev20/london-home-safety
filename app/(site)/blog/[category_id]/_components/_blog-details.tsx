@@ -2,7 +2,16 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const DetailsBlog = ({ currentBlog }) => {
+interface Blog {
+  label: string;
+  image: string;
+  description: string;
+  pageContent: {
+    html: string;
+  };
+}
+
+const DetailsBlog = ({ currentBlog }: { currentBlog: Blog }) => {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

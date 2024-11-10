@@ -47,7 +47,7 @@ import {
 import { format, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import { CheckoutFormInput, checkoutFormSchema,  } from "./schema";
+import { CheckoutFormInput, checkoutFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import useOrderStore from "@/hooks/use-order-store";
@@ -60,8 +60,6 @@ import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
 import { AddressAutocomplete } from "./_components/address-autocomplete";
 import { WoosmapAddress } from "@/types/Woosmap-prediction";
-
-
 
 const parkingOptions = [
   {
@@ -104,8 +102,6 @@ const congestionZoneOptions = [
   },
 ];
 
-
-
 const today = startOfDay(new Date());
 
 const disabledDays = (date: Date): boolean => {
@@ -132,7 +128,6 @@ export default function CheckoutPage() {
       parkingOption: "FREE",
       isInCongestionZone: false,
     },
-
   });
 
   const {
@@ -154,7 +149,6 @@ export default function CheckoutPage() {
         time: customerDetails.inspectionTime ?? "MORNING",
         parkingOption: customerDetails.parkingOptions ?? "FREE",
         isInCongestionZone: customerDetails.isCongestionZone ?? false,
-
       });
     }
   }, [reset, customerDetails]);
@@ -213,7 +207,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
-      console.log('Form errors:', errors);
+      console.log("Form errors:", errors);
       toast({
         title: "Validation Error",
         description: "Please check the form for errors and try again.",
@@ -226,10 +220,9 @@ export default function CheckoutPage() {
   const handleAddressSelect = (address: WoosmapAddress) => {
     console.log("Selected address:", address);
 
-    // Set the values in the form using react-hook-form's setValue
-    form.setValue("postcode", address.postcode);
-  form.setValue("city", address.city);
-  form.setValue("street", address.street);
+    form.setValue("postcode", address.postcode as string);
+    form.setValue("city", address.city as string);
+    form.setValue("street", address.street as string);
   };
 
   if (cartItems.length === 0) {
@@ -354,7 +347,6 @@ export default function CheckoutPage() {
               <div className="space-y-6">
                 {/* woosmap */}
                 <AddressAutocomplete onAddressSelect={handleAddressSelect} />
-                
               </div>
             </Card>
 

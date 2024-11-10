@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import BlogCard from "./blog-card";
 import { SiteSettingWithRelations } from "@/types/misc";
 import { motion, useAnimation } from "framer-motion";
 
-import { StaticImageData } from "next/image"; 
+import { StaticImageData } from "next/image";
 import { generateBlogData } from "@/shared/blog-data";
+import BlogCard from "./blog-card";
 
 type BlogData = {
   label: string;
   path: string;
-  image: StaticImageData | string; 
+  image: StaticImageData | string;
   description: string;
   detailedDesc: {
     details: string;
@@ -28,14 +28,14 @@ export default function BlogItems({
 }: {
   siteSettings: SiteSettingWithRelations;
 }) {
-  const [blogs, setBlogs] = useState<BlogData[]>([]); 
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
   const controls = useAnimation();
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const blogData = generateBlogData();
-    setBlogs(blogData as BlogData[]); 
+    setBlogs(blogData as BlogData[]);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -90,6 +90,7 @@ export default function BlogItems({
               blog={blog}
               index={index}
               isVisible={isVisible}
+              siteSettings={siteSettings} // Pass siteSettings here
             />
           ))}
         </div>

@@ -1,4 +1,5 @@
-import { generateBlogData } from "@/shared/data";
+import { generateBlogData } from "@/shared/blog-data";
+
 
 // This function retrieves the blog details based on the blog path
 export const getBlogDetails = (path: string) => {

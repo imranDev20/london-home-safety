@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { ALL_BLOGS } from "@/shared/data"; // Assuming this is where blog data is stored
 import { kebabToNormal } from "@/lib/utils"; // Utility to format category names
-import { SiteSettingWithRelations } from "@/types/misc"; // Assuming you have this type defined
+import { SiteSettingWithRelations } from "@/types/misc"; 
 import BlogCard from "../../_components/blog-card";
+
+
 
 export default function BlogCategory({
   categoryId: category, // Category ID passed from props

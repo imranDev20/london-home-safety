@@ -18,6 +18,7 @@ interface AddressAutocompleteProps {
     postcode: string;
     city: string;
     street: string;
+    country: string;
   }) => void;
   defaultValue?: string;
 }
@@ -100,6 +101,8 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   
   const handleSelect = async (prediction: Prediction) => {
     const addressParts = parseAddress(prediction.description);
+    const country = prediction.properties.country_code || ''; 
+    
     if (addressParts) {
       setValue(addressParts.postcode);
       setCity(addressParts.city);
@@ -109,6 +112,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         postcode: addressParts.postcode,
         city: addressParts.city,
         street: addressParts.street,
+        country,
       });
     }
     setOpen(false);

@@ -10,7 +10,9 @@ export interface WoosmapPrediction {
   }
 
   export interface WoosmapAddress {
-    postcode: string;
-    city: string;
     street: string;
+    city: string;
+    postcode: string;
+    country: string;
+  
   }
