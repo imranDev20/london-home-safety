@@ -98,7 +98,7 @@ export const notifyUserOrderPlacedEmailHtml = (
       <div class="message-box">
         <p style="font-weight: bold;">Order Summary:</p>
         <p style="margin-left: 20px;">
-          <strong>Order Number:</strong> ${orderDetails?.id}<br>
+          <strong>Order Number:</strong> ${orderDetails?.invoice}<br>
           <strong>Address:</strong> ${orderDetails?.user.address?.street}, ${
   orderDetails?.user.address?.postcode
 }, ${orderDetails?.user.address?.city}<br>

@@ -315,7 +315,7 @@ export default function EditOrderForm({
               variant="default"
             >
               {!isLoading && <Download className="mr-2 h-4 w-4" />}
-              Download Invoice
+              
             </LoadingButton>
           </div>
         </div>
@@ -392,6 +392,7 @@ export default function EditOrderForm({
             </CardContent>
           </Card>
 
+          {/* Order items */}
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Items</h2>
@@ -497,6 +498,7 @@ export default function EditOrderForm({
           </Card>
         </div>
 
+        {/* Schedule Info */}
         <div className="space-y-8">
           <Card>
             <CardContent className="p-6">
@@ -520,6 +522,7 @@ export default function EditOrderForm({
             </CardContent>
           </Card>
 
+          {/* Order Notes */}
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Notes</h2>
