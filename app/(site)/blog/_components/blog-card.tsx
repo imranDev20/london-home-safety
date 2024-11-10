@@ -2,18 +2,18 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { NavLeafItem } from "@/types/misc";
+import { NavLeafItem, SiteSettingWithRelations } from "@/types/misc";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useCallback } from "react";
 
-// Component Props
-type BlogCardProps = {
+interface BlogCardProps {
   blog: NavLeafItem;
   index: number;
   isVisible: boolean;
-};
+  siteSettings: SiteSettingWithRelations;
+}
 
 export default function BlogCard({ blog, index, isVisible }: BlogCardProps) {
   const [isHovered, setIsHovered] = useState(false);

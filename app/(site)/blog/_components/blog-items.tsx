@@ -90,6 +90,7 @@ export default function BlogItems({
               blog={blog}
               index={index}
               isVisible={isVisible}
+              siteSettings={siteSettings}
             />
           ))}
         </div>

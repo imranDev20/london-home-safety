@@ -13,4 +13,5 @@ export interface WoosmapPrediction {
     postcode: string;
     city: string;
     street: string;
+    country: string;
   }
