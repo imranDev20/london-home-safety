@@ -201,7 +201,7 @@ export default function TodaysOrders({ orders }: TodaysOrdersProps) {
               </TableCell>
               <Link href={`/admin/orders/${order.id}`} className="contents">
                 <TableCell className="w-1/4">
-                  {order.timeSlot.slotType}
+                  {order.timeSlot?.slotType}
                 </TableCell>
               </Link>
             </TableRow>

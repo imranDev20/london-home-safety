@@ -124,7 +124,7 @@ export const notifyAdminOrderPlacedEmailHtml = (
           </tr>
           <tr>
             <th>Inspection Time:</th>
-            <td>${orderDetails?.timeSlot.slotType}</td>
+            <td>${orderDetails?.timeSlot?.slotType}</td>
           </tr>
           <tr>
             <th>Total Price:</th>
