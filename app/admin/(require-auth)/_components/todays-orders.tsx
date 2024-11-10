@@ -27,7 +27,7 @@ type PartialOrder = Prisma.OrderGetPayload<{
   select: {
     id: true;
     invoice: true;
-    inspectionTime: true;
+    timeSlot: true;
     status: true;
     paymentStatus: true;
     date: true;
@@ -200,7 +200,9 @@ export default function TodaysOrders({ orders }: TodaysOrdersProps) {
                 </div>
               </TableCell>
               <Link href={`/admin/orders/${order.id}`} className="contents">
-                <TableCell className="w-1/4">{order.inspectionTime}</TableCell>
+                <TableCell className="w-1/4">
+                  {order.timeSlot?.slotType}
+                </TableCell>
               </Link>
             </TableRow>
           ))}
