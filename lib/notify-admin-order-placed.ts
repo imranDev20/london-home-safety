@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
     packages: true;
+    timeSlot: true;
     user: {
       include: {
         address: true;
@@ -123,7 +124,7 @@ export const notifyAdminOrderPlacedEmailHtml = (
           </tr>
           <tr>
             <th>Inspection Time:</th>
-            <td>${orderDetails?.inspectionTime}</td>
+            <td>${orderDetails?.timeSlot.slotType}</td>
           </tr>
           <tr>
             <th>Total Price:</th>

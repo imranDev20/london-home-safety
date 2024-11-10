@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { startOfDay, endOfDay, setHours, setMinutes } from "date-fns";
 
+// Mark this route as dynamic
+export const dynamic = "force-dynamic";
+
 const SLOT_TYPES: { [key in SlotType]: { start: number; end: number } } = {
   MORNING: { start: 8, end: 12 },
   AFTERNOON: { start: 12, end: 16 },

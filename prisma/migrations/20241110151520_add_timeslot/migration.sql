@@ -1,22 +1,7 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `inspectionTime` on the `Order` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[timeSlotId]` on the table `Order` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `timeSlotId` to the `Order` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "SlotType" AS ENUM ('8AM-12PM', '12PM-4PM', '4PM-8PM');
 
--- AlterTable
-ALTER TABLE "Order" DROP COLUMN "inspectionTime",
-ADD COLUMN     "timeSlotId" TEXT NOT NULL;
-
--- DropEnum
-DROP TYPE "InspectionTime";
-
--- CreateTable
+-- First create TimeSlot table
 CREATE TABLE "TimeSlot" (
     "id" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
@@ -27,18 +12,65 @@ CREATE TABLE "TimeSlot" (
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-
     CONSTRAINT "TimeSlot_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
+-- Add indices
 CREATE INDEX "TimeSlot_date_isBooked_isAvailable_idx" ON "TimeSlot"("date", "isBooked", "isAvailable");
-
--- CreateIndex
 CREATE UNIQUE INDEX "TimeSlot_date_slotType_key" ON "TimeSlot"("date", "slotType");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Order_timeSlotId_key" ON "Order"("timeSlotId");
+-- Add timeSlotId as nullable first
+ALTER TABLE "Order" ADD COLUMN "timeSlotId" TEXT;
 
--- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_timeSlotId_fkey" FOREIGN KEY ("timeSlotId") REFERENCES "TimeSlot"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- Create a function to map InspectionTime to SlotType
+CREATE OR REPLACE FUNCTION map_inspection_time_to_slot_type(inspection_time TEXT)
+RETURNS "SlotType" AS $$
+BEGIN
+    RETURN CASE inspection_time
+        WHEN 'MORNING' THEN '8AM-12PM'::"SlotType"
+        WHEN 'AFTERNOON' THEN '12PM-4PM'::"SlotType"
+        WHEN 'EVENING' THEN '4PM-8PM'::"SlotType"
+        ELSE '8AM-12PM'::"SlotType"
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Insert TimeSlots for existing orders
+DO $$
+DECLARE
+    order_record RECORD;
+BEGIN
+    FOR order_record IN SELECT "id", "date", "inspectionTime" FROM "Order" LOOP
+        WITH new_slot AS (
+            INSERT INTO "TimeSlot" ("id", "date", "startTime", "endTime", "slotType", "isBooked", "isAvailable", "updatedAt")
+            VALUES (
+                gen_random_uuid()::text,
+                order_record.date,
+                order_record.date,
+                order_record.date + interval '4 hours',
+                map_inspection_time_to_slot_type(order_record."inspectionTime"::text),
+                true,
+                false,
+                NOW()
+            )
+            ON CONFLICT ("date", "slotType") DO UPDATE SET
+                "isBooked" = true,
+                "isAvailable" = false
+            RETURNING id
+        )
+        UPDATE "Order"
+        SET "timeSlotId" = (SELECT id FROM new_slot)
+        WHERE id = order_record.id;
+    END LOOP;
+END $$;
+
+-- Now make timeSlotId required and add foreign key
+ALTER TABLE "Order" 
+    ALTER COLUMN "timeSlotId" SET NOT NULL,
+    ADD CONSTRAINT "Order_timeSlotId_fkey" 
+    FOREIGN KEY ("timeSlotId") REFERENCES "TimeSlot"("id") 
+    ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- Finally, drop the inspectionTime column and enum
+ALTER TABLE "Order" DROP COLUMN "inspectionTime";
+DROP TYPE "InspectionTime";
