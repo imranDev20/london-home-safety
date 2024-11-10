@@ -167,7 +167,6 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                       }
                     }}
                     disabled={disabledDays}
-                    initialFocus
                     className="w-full"
                   />
                 </div>
