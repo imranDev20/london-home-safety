@@ -18,6 +18,11 @@ export const checkoutFormSchema = z.object({
     .string()
     .min(1, "Street address is required")
     .max(200, "Street address is too long"),
+
+  // street: z
+  // .string()
+  // .min(1, "country address is required")
+  // .max(200, "country address is too long"),
   city: z.string().min(1, "City is required").max(100, "City name is too long"),
   postcode: z
     .string()
