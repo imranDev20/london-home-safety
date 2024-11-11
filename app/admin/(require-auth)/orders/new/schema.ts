@@ -67,6 +67,10 @@ export const createOrderSchema = z.object({
     required_error: "Please indicate if the property is in a congestion zone",
   }),
 
+  inspectionTime: z.enum(["MORNING", "AFTERNOON", "EVENING"], {
+    required_error: "Please select an inspection time slot",
+    invalid_type_error: "Invalid time slot selected",
+  }),
   date: z.coerce
     .date({
       required_error: "Please select a valid date",
@@ -75,8 +79,6 @@ export const createOrderSchema = z.object({
     .min(new Date(new Date().setHours(0, 0, 0, 0)), {
       message: "Inspection date must be today or in the future",
     }),
-
-  timeSlotId: z.string().min(1, "Please select your preferred time slot"),
 
   invoiceId: z.string({
     required_error: "Invoice ID is required",

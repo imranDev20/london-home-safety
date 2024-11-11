@@ -3,7 +3,6 @@ import { Prisma } from "@prisma/client";
 export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
     packages: true;
-    timeSlot: true;
     user: {
       include: {
         address: true;

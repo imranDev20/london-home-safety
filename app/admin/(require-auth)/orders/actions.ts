@@ -1,14 +1,13 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus, Prisma, Role } from "@prisma/client";
+import { OrderStatus, PaymentStatus, Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
 import { jsPDF } from "jspdf";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { sendEmail } from "@/lib/send-email";
-
 import {
   BUSINESS_NAME,
   CONGESTION_FEE,
@@ -25,7 +24,6 @@ import { subDays, startOfDay, endOfDay } from "date-fns";
 type OrderWithUser = Prisma.OrderGetPayload<{
   include: {
     packages: true;
-    timeSlot: true;
     user: {
       include: {
         address: true;
@@ -199,7 +197,7 @@ export const getTodayOrders = async () => {
       select: {
         id: true,
         invoice: true,
-        timeSlot: true,
+        inspectionTime: true,
         status: true,
         paymentStatus: true,
         date: true,
@@ -230,7 +228,6 @@ export const getOrderById = cache(async (orderId: string) => {
       },
       include: {
         assignedEngineer: true,
-        timeSlot: true,
         user: {
           include: {
             address: true,
@@ -427,7 +424,7 @@ export async function createOrder(data: CreateOrderFormInput) {
           isCongestionZone: data.isCongestionZone,
           parkingOptions: data.parkingOptions,
           date: data.date,
-          timeSlotId: data.timeSlotId,
+          inspectionTime: data.inspectionTime,
           totalPrice: totalPrice,
           invoice: data.invoiceId,
           status: "CONFIRMED",
@@ -439,7 +436,6 @@ export async function createOrder(data: CreateOrderFormInput) {
         },
         include: {
           packages: true,
-          timeSlot: true, // Include the timeSlot relation
           user: {
             include: {
               address: true,
@@ -485,6 +481,7 @@ export async function createOrder(data: CreateOrderFormInput) {
     return handlePrismaError(error);
   }
 }
+
 interface CreateUserInput {
   firstName: string;
   lastName: string;

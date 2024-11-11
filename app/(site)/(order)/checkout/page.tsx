@@ -25,17 +25,28 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectGroup,
+} from "@/components/ui/select";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   AlertCircle,
   AlertTriangle,
+  CalendarIcon,
   CheckCircle,
   Coins,
   HelpCircle,
   ParkingCircleOff,
   ParkingSquare,
 } from "lucide-react";
+import { format, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 import { CheckoutFormInput, checkoutFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -47,7 +58,7 @@ import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
-import DateSchedule from "./_components/date-schedule";
+import OrderSummary from "../_components/order-summary";
 
 const parkingOptions = [
   {
@@ -90,6 +101,12 @@ const congestionZoneOptions = [
   },
 ];
 
+const today = startOfDay(new Date());
+
+const disabledDays = (date: Date): boolean => {
+  return isBefore(date, today);
+};
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -105,8 +122,8 @@ export default function CheckoutPage() {
       street: "",
       city: "",
       postcode: "",
-      date: undefined,
-      timeSlotId: "",
+      date: new Date(),
+      time: undefined,
       parkingOption: "FREE",
       isInCongestionZone: false,
     },
@@ -127,8 +144,8 @@ export default function CheckoutPage() {
         street: customerDetails.address.street ?? "",
         city: customerDetails.address.city ?? "",
         postcode: customerDetails.address.postcode ?? "",
-        date: customerDetails.orderDate,
-        timeSlotId: customerDetails.timeSlotId ?? "",
+        date: new Date(),
+        time: customerDetails.inspectionTime ?? "MORNING",
         parkingOption: customerDetails.parkingOptions ?? "FREE",
         isInCongestionZone: customerDetails.isCongestionZone ?? false,
       });
@@ -172,16 +189,20 @@ export default function CheckoutPage() {
       email: data.email,
       phoneNumber: data.phone,
       orderDate: data.date,
-      timeSlotId: data.timeSlotId,
+      inspectionTime: data.time,
       parkingOptions: data.parkingOption,
       isCongestionZone: data.isInCongestionZone,
       orderNotes: data.orderNotes,
     });
+    console.log("customer details", customerDetails);
+    
+
     toast({
       title: "Success",
       description: "Your checkout information has been successfully submitted.",
       variant: "success",
     });
+
     router.push("/payment");
   };
 
@@ -449,8 +470,86 @@ export default function CheckoutPage() {
               </div>
             </Card>
 
-            {/* date component */}
-            <DateSchedule />
+            {/* Date and Time */}
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-6">
+                Select Date and Time
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel>
+                        Date
+                        <RequiredIndicator />
+                      </FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={disabledDays}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="time"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Select Time
+                        <RequiredIndicator />
+                      </FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          if (value) field.onChange(value);
+                        }}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="MORNING">8 AM - 12 PM</SelectItem>
+                          <SelectItem value="AFTERNOON">
+                            12 PM - 4 PM
+                          </SelectItem>
+                          <SelectItem value="EVENING">4 PM - 8 PM</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Card>
 
             {/* Order Notes */}
             <Card className="p-6">
@@ -499,7 +598,7 @@ export default function CheckoutPage() {
 
           {/* Summary */}
           <div className="lg:col-span-4 space-y-6">
-            <Card className="p-6 sticky top-6">
+            {/* <Card className="p-6 sticky top-6">
               <h2 className="text-xl font-semibold mb-6">Summary</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -528,8 +627,15 @@ export default function CheckoutPage() {
               <Button type="submit" className="w-full mt-6 h-11 text-base">
                 Proceed to Payment
               </Button>
-            </Card>
-          </div>
+            </Card> */}
+            <OrderSummary
+            parkingOption={parkingOption}
+            isInCongestionZone={isInCongestionZone}
+            showProceedButton={true}
+            onProceedClick={form.handleSubmit(onCheckoutSubmit)}
+          />
+           </div>
+          
         </form>
       </Form>
     </div>
