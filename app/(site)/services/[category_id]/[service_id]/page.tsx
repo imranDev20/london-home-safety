@@ -165,10 +165,10 @@ export default async function ServiceDetailsPage({
                       </div>
                     )}
 
-                    <BookNowButtonCompo
+                    {/* <BookNowButtonCompo
                       siteSettings={siteSettings}
                       packages={filteredPackages}
-                    />
+                    /> */}
                   </>
                 )}
 
