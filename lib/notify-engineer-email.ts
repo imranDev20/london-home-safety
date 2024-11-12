@@ -135,15 +135,15 @@ export const notifyEngineerEmailHtml = (
                 (item) => `
                 <tr>
                   <td>${item.name}</td>
-                  <td>$${item.price}</td>
+                  <td>£${item.price.toFixed(2)}</td>
                 </tr>
               `
               )
               .join("")}
             <tr class="total-row">
               <td>Total</td>
-              <td>$${orderDetails?.packages.reduce(
-                (sum, item) => sum + (parseFloat(item.price) || 0),
+              <td>£${orderDetails?.packages.reduce(
+                (sum, item) => sum + (item.price || 0), // Adjusted here
                 0
               ).toFixed(2)}</td>
             </tr>

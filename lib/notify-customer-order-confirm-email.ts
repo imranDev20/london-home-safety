@@ -120,12 +120,11 @@ export const notifyUserConfirmEmailHtml = (
           <strong>Email:</strong> ${orderDetails?.user.email}<br>
           <strong>Scheduled:</strong> ${orderDetails?.inspectionTime}, ${dayjs(orderDetails?.date).format("DD MMMM YYYY")}
         </p>
-        <p style="font-weight: bold;">Services Orderedsssssss:</p>
+        <p style="font-weight: bold;">Services Ordered:</p>
         <table class="order-table">
           <thead>
             <tr>
               <th>Item Name</th>
-              <th>Package</th>
               <th>Price</th>
             </tr>
           </thead>
@@ -134,8 +133,7 @@ export const notifyUserConfirmEmailHtml = (
               .map(
                 (item) => `
                 <tr>
-                  <td>${item.name}</td>
-                  <td>${item.category}</td>
+                  <td>${item.name} tushar</td>
                   <td>$${item.price}</td>
                 </tr>
               `
@@ -144,7 +142,7 @@ export const notifyUserConfirmEmailHtml = (
             <tr class="total-row">
               <td colspan="2">Total</td>
               <td>$${orderDetails?.packages.reduce(
-                (sum, item) => sum + (parseFloat(item.price) || 0),
+                (sum, item) => sum + (item.price || 0), // Adjusted here
                 0
               ).toFixed(2)}</td>
             </tr>
