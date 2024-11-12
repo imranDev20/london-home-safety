@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ParkingOptions } from "@prisma/client";
+import { ParkingOptions, SlotType } from "@prisma/client";
 
 export const checkoutFormSchema = z.object({
   firstName: z
@@ -72,7 +72,10 @@ export const checkoutFormSchema = z.object({
       "Service date must be today or a future date"
     ),
 
-  timeSlotId: z.string().min(1, "Please select your preferred time slot"),
+  time: z.nativeEnum(SlotType, {
+    required_error: "Please select your preferred time slot",
+    invalid_type_error: "Invalid time slot selected",
+  }),
 
   parkingOption: z.nativeEnum(ParkingOptions, {
     required_error: "Please indicate parking availability",
@@ -90,6 +93,11 @@ export const checkoutFormSchema = z.object({
     .max(500, "Notes exceed maximum length of 500 characters")
     .optional()
     .transform((val) => (val === "" ? undefined : val)),
+
+    timeSlotId: z
+    .string()
+    .min(1, "Please select a valid time slot") // Require at least one character if provided
+    .optional(),
 });
 
 export type CheckoutFormInput = z.infer<typeof checkoutFormSchema>;

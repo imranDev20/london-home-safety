@@ -32,6 +32,7 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
   };
 }>;
 
+// Invoice generation function
 export default async function generateInvoice(order: OrderWithRelation) {
   try {
     if (!order) {
@@ -44,10 +45,7 @@ export default async function generateInvoice(order: OrderWithRelation) {
     const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
     const totalPrice = cartTotal + parkingFee + congestionFee;
 
-    // Create a new PDF document
     const doc = new jsPDF();
-
-    // Generate the invoice template
     generateInvoiceTemplate(doc, {
       order,
       cartTotal,
@@ -56,7 +54,6 @@ export default async function generateInvoice(order: OrderWithRelation) {
       totalPrice,
     });
 
-    // Get the PDF as a base64 string
     const pdfBase64 = doc.output("datauristring").split(",")[1];
 
     return {
@@ -74,6 +71,7 @@ export default async function generateInvoice(order: OrderWithRelation) {
   }
 }
 
+// Order creation function
 export async function createOrder(orderData: OrderData): Promise<{
   success: boolean;
   data: Order | null;
@@ -84,7 +82,6 @@ export async function createOrder(orderData: OrderData): Promise<{
   try {
     const result = await prisma.$transaction(
       async (transactionPrisma) => {
-        // User role check
         const existingUser = await transactionPrisma.user.findUnique({
           where: { email: customerDetails.email },
           select: { id: true, role: true },
@@ -99,13 +96,12 @@ export async function createOrder(orderData: OrderData): Promise<{
           );
         }
 
-        // User upsert
         const upsertedUser = await transactionPrisma.user.upsert({
           where: { email: customerDetails.email },
           update: {
             firstName: customerDetails.firstName,
             lastName: customerDetails.lastName,
-            name: customerDetails.firstName + " " + customerDetails.lastName,
+            name: `${customerDetails.firstName} ${customerDetails.lastName}`,
             phone: customerDetails.phoneNumber,
             address: {
               update: {
@@ -119,8 +115,8 @@ export async function createOrder(orderData: OrderData): Promise<{
             firstName: customerDetails.firstName,
             lastName: customerDetails.lastName,
             email: customerDetails.email,
-            name: customerDetails.firstName + " " + customerDetails.lastName,
-            password: "12345678", // Store the hashed password
+            name: `${customerDetails.firstName} ${customerDetails.lastName}`,
+            password: "12345678", // Use hashed password in production
             phone: customerDetails.phoneNumber,
             role: Role.CUSTOMER,
             address: {
@@ -133,7 +129,6 @@ export async function createOrder(orderData: OrderData): Promise<{
           },
         });
 
-        // Package fetching and validation
         const packageIds = cartItems.map((pkg) => pkg.id);
         const packages = await transactionPrisma.package.findMany({
           where: { id: { in: packageIds } },
@@ -144,7 +139,6 @@ export async function createOrder(orderData: OrderData): Promise<{
           throw new Error("One or more packages not found");
         }
 
-        // Price calculation
         const packageTotal = packages.reduce(
           (total, pkg) => total + pkg.price,
           0
@@ -156,28 +150,32 @@ export async function createOrder(orderData: OrderData): Promise<{
           customerDetails.parkingOptions === "FREE" ? 0 : PARKING_FEE;
         const totalPrice = packageTotal + congestionFee + parkingFee;
 
-        // Order creation
         const invoiceNumber = await generateInvoiceId();
+
+        const timeSlotId = customerDetails.timeSlotId; // Ensure this is part of CustomerDetails
+
+        if (!timeSlotId) {
+          throw new Error("A valid time slot ID is required to create an order.");
+        }
 
         const createdOrder = await transactionPrisma.order.create({
           data: {
             userId: upsertedUser.id,
             propertyType: packages[0].propertyType,
-            date: customerDetails.orderDate || "",
-            timeSlotId: customerDetails.timeSlotId,
+            date: customerDetails.orderDate,
             parkingOptions: customerDetails.parkingOptions,
             isCongestionZone: customerDetails.isCongestionZone ?? false,
             orderNotes: customerDetails.orderNotes,
             totalPrice,
             invoice: invoiceNumber,
-            paymentMethod: paymentMethod,
+            paymentMethod,
             paymentStatus: paymentMethod === "CREDIT_CARD" ? "PAID" : "UNPAID",
             status: "PENDING",
+            timeSlotId,
             packages: { connect: packageIds.map((id) => ({ id })) },
           },
           include: {
             packages: true,
-            timeSlot: true,
             user: {
               include: {
                 address: true,
@@ -185,8 +183,8 @@ export async function createOrder(orderData: OrderData): Promise<{
             },
           },
         });
+        console.log("Order created with timeSlotId:", createdOrder);
 
-        // Invoice generation
         const invoice = await generateInvoice(createdOrder);
 
         if (!invoice?.data) {
@@ -194,7 +192,6 @@ export async function createOrder(orderData: OrderData): Promise<{
           throw new Error(invoice?.message);
         }
 
-        // Email sending
         const attachments = [
           {
             ContentType: "application/pdf",
@@ -215,11 +212,10 @@ export async function createOrder(orderData: OrderData): Promise<{
           attachments,
         });
 
-        // Then, send a copy to the admin
         await sendEmail({
           fromEmail: EMAIL_ADDRESS,
           fromName: "London Home Safety",
-          to: EMAIL_ADDRESS, // This is the admin's email address
+          to: EMAIL_ADDRESS,
           subject: `New Order Received - ${createdOrder.invoice}`,
           html: notifyAdminOrderPlacedEmailHtml(createdOrder),
           attachments,
@@ -229,12 +225,11 @@ export async function createOrder(orderData: OrderData): Promise<{
         return createdOrder;
       },
       {
-        maxWait: 5000, // 5 seconds max to wait for a transaction slot
-        timeout: 30000, // 30 seconds max to allow the transaction to run
+        maxWait: 5000,
+        timeout: 30000,
       }
     );
 
-    // Transaction succeeded, now we can revalidate paths
     revalidatePath("/admin", "layout");
 
     return {
