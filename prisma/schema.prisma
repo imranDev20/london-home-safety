@@ -37,6 +37,7 @@ model Address {
   updatedAt DateTime @updatedAt
 }
 
+
 model Order {
   id                 String           @id @default(cuid())
   userId             String
@@ -48,8 +49,7 @@ model Order {
   paymentMethod      PaymentMethod    @default(CREDIT_CARD)
   parkingOptions     ParkingOptions   @default(NO)
   isCongestionZone   Boolean
-  timeSlotId         String           @unique // Reference to the booked time slot
-  timeSlot           TimeSlot         @relation(fields: [timeSlotId], references: [id])
+  inspectionTime     InspectionTime
   date               DateTime
   orderNotes         String?
   totalPrice         Float
@@ -58,6 +58,7 @@ model Order {
   residentialType    ResidentialType?
   commercialType     CommercialType?
   packages           Package[]
+  timeSlot           TimeSlot?        @relation("OrderTimeSlot") // Relation without fields or references attributes
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 }
@@ -70,13 +71,15 @@ model TimeSlot {
   slotType    SlotType // Type of slot (MORNING, AFTERNOON, EVENING)
   isBooked    Boolean  @default(false)
   isAvailable Boolean  @default(true)
-  order       Order? // Optional relation to Order if booked
+  orderId     String?  @unique // Ensures a one-to-one relationship
+  order       Order?   @relation("OrderTimeSlot", fields: [orderId], references: [id]) // Define relation here
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@unique([date, slotType]) // Ensure unique combination of date and slot type
   @@index([date, isBooked, isAvailable]) // Index for faster queries
 }
+
 
 model Review {
   id        String   @id @default(cuid())
@@ -210,6 +213,12 @@ enum ParkingOptions {
   PAID
   FREE
   NO
+}
+
+enum InspectionTime {
+  MORNING
+  AFTERNOON
+  EVENING
 }
 
 enum PackageCategory {

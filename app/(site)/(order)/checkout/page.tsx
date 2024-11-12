@@ -43,6 +43,7 @@ import { Textarea } from "@/components/ui/textarea";
 import DateSchedule from "./_components/date-schedule";
 import CheckoutEmptyState from "./_components/checkout-empty-state";
 import AddressValidationAutocomplete from "./_components/address-validation-autocomplete";
+import OrderSummary from "../_components/order-summary";
 
 const parkingOptions = [
   {
@@ -172,6 +173,7 @@ export default function CheckoutPage() {
       isCongestionZone: data.isInCongestionZone,
       orderNotes: data.orderNotes,
     });
+
     toast({
       title: "Success",
       description: "Your checkout information has been successfully submitted.",
@@ -460,40 +462,15 @@ export default function CheckoutPage() {
             </div>
 
             {/* Summary */}
-            <div className="lg:col-span-4 space-y-6">
-              <Card className="p-6 sticky top-6">
-                <h2 className="text-xl font-semibold mb-6">Summary</h2>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Service Price:</span>
-                    <span className="text-gray-900">
-                      £{cartTotal.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Parking Fee:</span>
-                    <span className="text-gray-900">£{parkingFee}.00</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Congestion Zone Fee:</span>
-                    <span className="text-gray-900">£{congestionFee}.00</span>
-                  </div>
-                  <Separator className="my-4" />
-                  <div className="flex justify-between items-center text-xl font-semibold">
-                    <span>Total Price:</span>
-                    <span>
-                      £{totalPrice.toFixed(2)}{" "}
-                      <span className="text-body font-normal text-sm">
-                        (inc. Tax)
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <Button type="submit" className="w-full mt-6 h-11 text-base">
-                  Proceed to Payment
-                </Button>
-              </Card>
-            </div>
+          <div className="lg:col-span-4 space-y-6">
+            <OrderSummary
+            parkingOption={parkingOption}
+            isInCongestionZone={isInCongestionZone}
+            showProceedButton={true}
+            onProceedClick={form.handleSubmit(onCheckoutSubmit)}
+          />
+           </div>
+          
           </form>
         </Form>
       </div>

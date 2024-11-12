@@ -164,7 +164,7 @@ export async function createOrder(orderData: OrderData): Promise<{
             userId: upsertedUser.id,
             propertyType: packages[0].propertyType,
             date: customerDetails.orderDate || "",
-            timeSlotId: customerDetails.timeSlotId,
+            time
             parkingOptions: customerDetails.parkingOptions,
             isCongestionZone: customerDetails.isCongestionZone ?? false,
             orderNotes: customerDetails.orderNotes,
