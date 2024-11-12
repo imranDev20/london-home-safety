@@ -1,9 +1,9 @@
 import {
   Address,
-  InspectionTime,
   Package,
   ParkingOptions,
   PaymentMethod,
+  SlotType,
 } from "@prisma/client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -18,8 +18,8 @@ export type CustomerDetails = {
   address: AddressType;
   isCongestionZone: boolean | undefined;
   parkingOptions: ParkingOptions | undefined;
-  orderDate: Date;
-  inspectionTime: InspectionTime | undefined;
+  orderDate: Date | undefined;
+  timeSlotId: string;
   orderNotes: string;
 };
 
@@ -47,8 +47,8 @@ const initialCustomerDetails: CustomerDetails = {
   },
   isCongestionZone: undefined,
   parkingOptions: undefined,
-  orderDate: new Date(),
-  inspectionTime: undefined,
+  orderDate: undefined,
+  timeSlotId: "",
   orderNotes: "",
 };
 

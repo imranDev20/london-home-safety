@@ -373,7 +373,7 @@ export default function CreateOrderForm({
                 <div className="col-span-3">
                   <FormField
                     control={control}
-                    name="inspectionTime"
+                    name="timeSlotId"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Inspection Time</FormLabel>

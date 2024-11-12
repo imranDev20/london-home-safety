@@ -14,7 +14,7 @@ export default async function Contact({
   const siteSettingTime = await getSettings();
 
   return (
-    <div className="bg-slate-200 py-12 sm:py-16 md:py-24">
+    <div className="bg-slate-200 py-12 sm:py-16 md:py-24" id="contact">
       <h2 className="mb-16 text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight text-center">
         Get in Touch with
         <span className="text-primary block mt-2">
