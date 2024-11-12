@@ -42,6 +42,7 @@ import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
 import DateSchedule from "./_components/date-schedule";
 import CheckoutEmptyState from "./_components/checkout-empty-state";
+import AddressValidationAutocomplete from "./_components/address-validation-autocomplete";
 
 const parkingOptions = [
   {
@@ -157,9 +158,9 @@ export default function CheckoutPage() {
   const onCheckoutSubmit: SubmitHandler<CheckoutFormInput> = async (data) => {
     setCustomerDetails({
       address: {
-        street: data.street,
-        city: data.city,
-        postcode: data.postcode,
+        street: data.street ?? "",
+        city: data.city ?? "",
+        postcode: data.postcode ?? "",
       },
       firstName: data.firstName,
       lastName: data.lastName,
@@ -181,6 +182,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
+      console.log("Form errors:", errors);
       toast({
         title: "Validation Error",
         description: "Please check the form for errors and try again.",

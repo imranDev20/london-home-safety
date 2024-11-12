@@ -3,7 +3,6 @@ import {
   Package,
   ParkingOptions,
   PaymentMethod,
-  SlotType,
 } from "@prisma/client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
