@@ -1,10 +1,17 @@
 import { Package, PropertyType } from "@prisma/client";
 import { create } from "zustand";
 
+type CartItem = {
+  id: string;
+  package: Package;
+  quantity: number;
+  price: number;
+};
+
 interface PackageState {
-  selectedPackage: Package | null;
+  selectedPackage: CartItem | null;
   propertyType: PropertyType;
-  setPackage: (pack: Package | null) => void;
+  setPackage: (item: CartItem | null) => void;
   setPropertyType: (type: PropertyType) => void;
   reset: () => void;
 }

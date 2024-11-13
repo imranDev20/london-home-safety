@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -6,24 +6,28 @@ import useOrderStore from "@/hooks/use-order-store";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 
 interface OrderSummaryProps {
-    parkingOption: "FREE" | "PAID"  | "NO";
-    isInCongestionZone: boolean;
-    showProceedButton?: boolean;
-    onProceedClick?: () => void; 
-  }
-  
-  const OrderSummary: React.FC<OrderSummaryProps> = ({ 
-    parkingOption, 
-    isInCongestionZone, 
-    showProceedButton = true,
-    onProceedClick
-  }) => {
-    const { cartItems } = useOrderStore();
-  const servicePrice = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
-  
+  parkingOption: "FREE" | "PAID" | "NO";
+  isInCongestionZone: boolean;
+  showProceedButton?: boolean;
+  onProceedClick?: () => void;
+}
+
+const OrderSummary: React.FC<OrderSummaryProps> = ({
+  parkingOption,
+  isInCongestionZone,
+  showProceedButton = true,
+  onProceedClick,
+}) => {
+  const { cartItems } = useOrderStore();
+  const servicePrice = cartItems.reduce((sum, cartItem) => {
+    // If totalPrice is available use it, otherwise calculate from base price and quantity
+    const cartItemTotal = cartItem.price * cartItem.quantity;
+    return sum + cartItemTotal;
+  }, 0);
+
   const parkingFee = parkingOption === "FREE" ? 0 : PARKING_FEE;
   const congestionFee = isInCongestionZone ? CONGESTION_FEE : 0;
-  
+
   const totalPrice = servicePrice + parkingFee + congestionFee;
 
   return (
@@ -58,10 +62,7 @@ interface OrderSummaryProps {
       </div>
 
       {showProceedButton && (
-        <Button 
-          onClick={onProceedClick} 
-          className="w-full mt-6 h-11 text-base"
-        >
+        <Button onClick={onProceedClick} className="w-full mt-6 h-11 text-base">
           Proceed to Payment
         </Button>
       )}

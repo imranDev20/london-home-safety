@@ -35,7 +35,7 @@ export default function BookNowButtonCompo({
     setShowAlert(false);
 
     if (!isInCart) {
-      addItem(selectedPackage, 1);
+      addItem(selectedPackage);
       setPackage(null);
       startTransition(() => {
         router.push(`/cart`);
