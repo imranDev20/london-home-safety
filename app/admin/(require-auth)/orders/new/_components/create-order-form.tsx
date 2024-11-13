@@ -226,6 +226,7 @@ export default function CreateOrderForm({
             </p>
           </div>
 
+          {/* Customer Information */}
           <Card>
             <CardHeader>
               <CardTitle>Customer Information</CardTitle>
@@ -316,6 +317,7 @@ export default function CreateOrderForm({
             </CardContent>
           </Card>
 
+          {/* Inspection Details */}
           <Card>
             <CardHeader>
               <CardTitle>Inspection Details</CardTitle>
@@ -480,6 +482,7 @@ export default function CreateOrderForm({
             </CardContent>
           </Card>
 
+          {/* Property Information */}
           <Card>
             <CardHeader>
               <CardTitle>Property Information</CardTitle>
@@ -686,6 +689,7 @@ export default function CreateOrderForm({
             </CardContent>
           </Card>
 
+          {/* Services */}
           <Card>
             <CardHeader>
               <CardTitle>Services</CardTitle>
@@ -753,6 +757,7 @@ export default function CreateOrderForm({
             </CardContent>
           </Card>
 
+          {/* Payment Information */}
           <Card>
             <CardHeader>
               <CardTitle>Payment Information</CardTitle>
