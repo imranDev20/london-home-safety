@@ -1,14 +1,31 @@
 "use client";
 
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import useOrderStore from "@/hooks/use-order-store";
-import { X, ShoppingCart, Home, Wrench, Plus, Minus } from "lucide-react";
+import { X, ShoppingCart, Home, Wrench, Plus, Minus, Loader2 } from "lucide-react";
+
 import Link from "next/link";
 import OrderSummary from "../_components/order-summary";
 import { useRouter } from "next/navigation";
+
+const EmptyCartCard = () => (
+  <Card className="p-6 text-center">
+    <ShoppingCart className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+    <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
+    <p className="text-gray-600 mb-4">
+      Looks like you haven&apos;t added anything to your cart yet.
+    </p>
+    <Link href="/book-now">
+      <Button variant="outline" className="mt-2">
+        Start Shopping
+      </Button>
+    </Link>
+  </Card>
+);
 
 export default function CartPage() {
   const { cartItems, removeItem, updateItemQuantity } = useOrderStore();
@@ -22,6 +39,21 @@ export default function CartPage() {
       updateItemQuantity(itemId, newQuantity);
     }
   };
+  const [hydrated, setHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  // Show loading spinner while hydrating
+  if (!hydrated) {
+    return (
+      <div className="container mx-auto py-8 max-w-screen-xl px-4 md:px-8 lg:px-16 min-h-[calc(100vh_-_300px)] flex flex-col justify-center items-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-gray-600">Loading your cart...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 max-w-screen-xl px-4 md:px-8 lg:px-16">
@@ -38,7 +70,6 @@ export default function CartPage() {
                   <div className="flex h-full">
                     <div className="flex-grow space-y-3">
                       <h3 className="font-semibold text-lg">{item.name}</h3>
-
                       <div className="flex flex-col space-y-2">
                         <div className="flex items-center">
                           <Wrench className="w-5 h-5 mr-2 text-primary" />
@@ -85,7 +116,6 @@ export default function CartPage() {
                         </div>
                       </div>
                     </div>
-
                     <div className="flex flex-col justify-between items-end ml-4 min-h-[100px]">
                       <p className="font-bold text-primary text-lg">
                         £{item.totalPrice.toFixed(2)}
@@ -104,18 +134,7 @@ export default function CartPage() {
               ))}
             </div>
           ) : (
-            <Card className="p-6 text-center">
-              <ShoppingCart className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
-              <p className="text-gray-600 mb-4">
-                Looks like you haven&apos;t added anything to your cart yet.
-              </p>
-              <Link href="/book-now">
-                <Button variant="outline" className="mt-2">
-                  Start Shopping
-                </Button>
-              </Link>
-            </Card>
+            <EmptyCartCard />
           )}
         </div>
 
@@ -157,12 +176,6 @@ export default function CartPage() {
                   Checkout Now
                 </Button>
               </Link>
-              {/* <OrderSummary
-  parkingOption="FREE"
-  isInCongestionZone={false}
-  showProceedButton={true}
-  onProceedClick={() => router.push('/checkout')}
-/> */}
             </div>
           </Card>
         </div>

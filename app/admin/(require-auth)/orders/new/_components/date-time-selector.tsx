@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -15,16 +16,19 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  Calendar as CalendarIcon,
+  CalendarIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
-import { SlotType, TimeSlot } from "@prisma/client";
-import { CheckoutFormInput } from "../schema";
+import { SlotType } from "@prisma/client";
 
-interface DateTimeSelectorProps {
-  disabledDays?: Date[];
+interface TimeSlot {
+  id: string;
+  date: Date;
+  slotType: SlotType;
+  isAvailable: boolean;
+  isBooked: boolean;
 }
 
 const RequiredIndicator = () => <span className="text-destructive">*</span>;
@@ -48,23 +52,25 @@ const APPOINTMENT_SESSIONS = {
     icon: Sunset,
     color: "text-blue-500",
   },
-};
+} as const;
 
-function AppointmentSessionCard({
-  slot,
-  selected,
-  onSelect,
-}: {
-  slot: TimeSlot;
+interface AppointmentSessionCardProps {
+  timeSlot: TimeSlot;
   selected: boolean;
   onSelect: (slotId: string) => void;
-}) {
-  const isDisabled = !slot.isAvailable || slot.isBooked;
-  const info = APPOINTMENT_SESSIONS[slot.slotType];
+}
+
+function AppointmentSessionCard({
+  timeSlot,
+  selected,
+  onSelect,
+}: AppointmentSessionCardProps) {
+  const info = APPOINTMENT_SESSIONS[timeSlot.slotType];
   const Icon = info.icon;
+  const isDisabled = !timeSlot.isAvailable || timeSlot.isBooked;
 
   const getStatusDisplay = () => {
-    if (slot.isBooked) {
+    if (timeSlot.isBooked) {
       return (
         <div className="flex items-center text-red-500 gap-1 ml-auto">
           <CalendarIcon className="w-4 h-4" />
@@ -72,7 +78,7 @@ function AppointmentSessionCard({
         </div>
       );
     }
-    if (!slot.isAvailable) {
+    if (!timeSlot.isAvailable) {
       return (
         <div className="flex items-center text-red-500 gap-1 ml-auto">
           <XCircle className="w-4 h-4" />
@@ -94,7 +100,7 @@ function AppointmentSessionCard({
   return (
     <button
       type="button"
-      onClick={() => !isDisabled && onSelect(slot.id)}
+      onClick={() => !isDisabled && onSelect(timeSlot.id)}
       disabled={isDisabled}
       className={cn(
         "relative w-full p-4 rounded-lg border-2 transition-all duration-200",
@@ -131,24 +137,30 @@ function AppointmentSessionCard({
   );
 }
 
-export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
-  const form = useFormContext<CheckoutFormInput>();
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
+interface CreateOrderFormInput {
+  date: Date;
+  timeSlotId: string;
+}
+
+export default function DateTimeSelector() {
+  const form = useFormContext<CreateOrderFormInput>();
   const [isLoading, setIsLoading] = useState(false);
+  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
 
   const fetchTimeSlots = async (date: Date) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       const response = await fetch(
         `/api/time-slots?date=${date.toISOString()}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch appointment sessions");
+        throw new Error("Failed to fetch time slots");
       }
       const slots = await response.json();
       setTimeSlots(slots);
     } catch (error) {
-      console.error("Error fetching appointment sessions:", error);
+      console.error("Error fetching time slots:", error);
+      setTimeSlots([]);
     } finally {
       setIsLoading(false);
     }
@@ -158,7 +170,7 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
 
   return (
     <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-6">Schedule Your Appointment</h2>
+      <h2 className="text-xl font-semibold mb-6">Schedule Your Inspection</h2>
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <FormLabel>
@@ -181,7 +193,9 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                         form.setValue("timeSlotId", "");
                       }
                     }}
-                    disabled={disabledDays}
+                    disabled={(date) =>
+                      date < new Date(new Date().setHours(0, 0, 0, 0))
+                    }
                     className="w-full"
                   />
                 </div>
@@ -224,7 +238,7 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                     {timeSlots.map((slot) => (
                       <AppointmentSessionCard
                         key={slot.id}
-                        slot={slot}
+                        timeSlot={slot}
                         selected={field.value === slot.id}
                         onSelect={(slotId) => field.onChange(slotId)}
                       />
