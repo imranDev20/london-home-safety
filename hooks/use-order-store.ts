@@ -7,10 +7,8 @@ import {
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-
-const PARKING_FEE = 10; 
+const PARKING_FEE = 10;
 const CONGESTION_FEE = 15;
-
 
 interface CartItem extends Package {
   quantity: number;
@@ -31,7 +29,6 @@ export type CustomerDetails = {
   timeSlotId: string;
   orderNotes: string;
 };
-
 interface OrderSummary {
   subtotal: number;
   parkingFee: number;
@@ -44,6 +41,17 @@ interface OrderSummary {
   }>;
 }
 
+interface OrderSummary {
+  subtotal: number;
+  parkingFee: number;
+  congestionFee: number;
+  total: number;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+}
 
 interface OrderState {
   cartItems: CartItem[];
@@ -95,11 +103,11 @@ const useOrderStore = create<OrderState>()(
 
       calculateSummary: () => {
         const state = get();
-        
-        const items = state.cartItems.map(item => ({
+
+        const items = state.cartItems.map((item) => ({
           name: item.name,
           quantity: item.quantity,
-          price: item.totalPrice
+          price: item.totalPrice,
         }));
 
         const subtotal = state.cartItems.reduce(
@@ -107,11 +115,12 @@ const useOrderStore = create<OrderState>()(
           0
         );
 
-        const parkingFee = 
+        const parkingFee =
           state.customerDetails.parkingOptions === "FREE" ? 0 : PARKING_FEE;
-        
-        const congestionFee = 
-          state.customerDetails.isCongestionZone ? CONGESTION_FEE : 0;
+
+        const congestionFee = state.customerDetails.isCongestionZone
+          ? CONGESTION_FEE
+          : 0;
         const total = subtotal + parkingFee + congestionFee;
 
         const summary = {
@@ -139,16 +148,18 @@ const useOrderStore = create<OrderState>()(
         get().calculateSummary();
       },
 
-      
       updateItemQuantity: (id, quantity) => {
         set((state) => ({
           cartItems: state.cartItems.map((item) => {
             if (item.id === id) {
               const basePrice = item.price;
-              const extraUnits = Math.max(0, quantity - (item.minQuantity ?? 1));
+              const extraUnits = Math.max(
+                0,
+                quantity - (item.minQuantity ?? 1)
+              );
               const extraPrice = extraUnits * (item.extraUnitPrice ?? 0);
               const totalPrice = basePrice + extraPrice;
-              
+
               return { ...item, quantity, totalPrice };
             }
             return item;
@@ -175,12 +186,14 @@ const useOrderStore = create<OrderState>()(
 
       setPaymentMethod: (method) => set({ paymentMethod: method }),
 
-      resetOrder: () =>
+      resetOrder: () => {
         set({
           cartItems: [],
           customerDetails: initialCustomerDetails,
           paymentMethod: "CREDIT_CARD",
-        }),
+          summary: initialSummary,
+        });
+      },
     }),
     {
       name: "order-storage",

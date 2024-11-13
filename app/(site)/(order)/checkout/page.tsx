@@ -40,10 +40,10 @@ import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
+import OrderSummary from "../_components/order-summary";
 import DateSchedule from "./_components/date-schedule";
 import CheckoutEmptyState from "./_components/checkout-empty-state";
 import AddressValidationAutocomplete from "./_components/address-validation-autocomplete";
-import OrderSummary from "../_components/order-summary";
 
 const parkingOptions = [
   {
@@ -462,15 +462,14 @@ export default function CheckoutPage() {
             </div>
 
             {/* Summary */}
-          <div className="lg:col-span-4 space-y-6">
-            <OrderSummary
-            parkingOption={parkingOption}
-            isInCongestionZone={isInCongestionZone}
-            showProceedButton={true}
-            onProceedClick={form.handleSubmit(onCheckoutSubmit)}
-          />
-           </div>
-          
+            <div className="lg:col-span-4 space-y-6">
+              <OrderSummary
+                parkingOption={parkingOption}
+                isInCongestionZone={isInCongestionZone}
+                showProceedButton={true}
+                onProceedClick={form.handleSubmit(onCheckoutSubmit)}
+              />
+            </div>
           </form>
         </Form>
       </div>
