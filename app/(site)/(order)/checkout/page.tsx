@@ -43,6 +43,7 @@ import { Textarea } from "@/components/ui/textarea";
 import OrderSummary from "../_components/order-summary";
 import DateSchedule from "./_components/date-schedule";
 import CheckoutEmptyState from "./_components/checkout-empty-state";
+import AddressValidationAutocomplete from "./_components/address-validation-autocomplete";
 
 const parkingOptions = [
   {
@@ -191,6 +192,18 @@ export default function CheckoutPage() {
     }
   }, [errors, toast]);
 
+  // Address validation/autocomplete handling
+const handleAddressSelect = (address: {
+  postcode: string;
+  borough: string;
+  city: string;
+  country: string;
+}) => {
+  form.setValue('postcode', address.postcode);
+  form.setValue('city', address.city);
+  form.setValue('street', address.borough); // Assuming 'borough' maps to 'street' here; update as needed
+};
+
   return (
     <CheckoutEmptyState>
       <div className="container max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 py-8">
@@ -271,57 +284,13 @@ export default function CheckoutPage() {
 
               {/* Address */}
               <Card className="p-6">
-                <h2 className="text-xl font-semibold mb-6">Address</h2>
-                <div className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="street"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Street <RequiredIndicator />
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Street address" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="city"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            City <RequiredIndicator />
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="City" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="postcode"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            Postcode <RequiredIndicator />
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="Postcode" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-              </Card>
+              <h2 className="text-xl font-semibold mb-6">Address</h2>
+              <div className="space-y-6">
+                {/* Ideal postcode prediction */}
+                <AddressValidationAutocomplete onAddressSelect={handleAddressSelect}/>
+                
+              </div>
+            </Card>
 
               {/* Congestion Zone */}
               <Card className="p-6">
