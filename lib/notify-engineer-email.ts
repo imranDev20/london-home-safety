@@ -119,7 +119,9 @@ export const notifyEngineerEmailHtml = (
           <strong>Address:</strong> ${orderDetails?.user.address?.street}, ${orderDetails?.user.address?.postcode}, ${orderDetails?.user.address?.city}<br>
           <strong>Phone:</strong> ${orderDetails?.user.phone}<br>
           <strong>Email:</strong> ${orderDetails?.user.email}<br>
-          <strong>Scheduled:</strong> ${orderDetails?.inspectionTime}, ${dayjs(orderDetails?.date).format("DD MMMM YYYY")}
+          <strong>Scheduled:</strong> ${
+            orderDetails?.timeSlot?.slotType
+          }, ${dayjs(orderDetails?.date).format("DD MMMM YYYY")}
         </p>
         <p style="font-weight: bold;">Order Details:</p>
         <table class="order-table">

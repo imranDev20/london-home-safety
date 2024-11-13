@@ -116,9 +116,9 @@ export const notifyUserOrderPlacedEmailHtml = (
 }, ${orderDetails?.user.address?.city}<br>
           <strong>Phone:</strong> ${orderDetails?.user.phone}<br>
           <strong>Email:</strong> ${orderDetails?.user.email}<br>
-          <strong>Scheduled:</strong> ${orderDetails?.inspectionTime}, ${dayjs(
-  orderDetails?.date
-).format("DD MMMM YYYY")}
+          <strong>Scheduled:</strong> ${
+            orderDetails?.timeSlot?.slotType
+          }, ${dayjs(orderDetails?.date).format("DD MMMM YYYY")}
         </p>
         <p style="font-weight: bold;">Services Ordered:</p>
         <table class="order-table">

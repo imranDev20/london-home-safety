@@ -515,7 +515,7 @@ export default function EditOrderForm({
                 <div className="flex items-center gap-3">
                   <Clock className="h-5 w-5 text-gray-500" />
                   <span className="text-sm">
-                    {orderDetails?.inspectionTime ?? "Time not set"}
+                    {orderDetails?.timeSlot?.slotType ?? "Time not set"}
                   </span>
                 </div>
               </div>
