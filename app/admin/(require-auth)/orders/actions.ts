@@ -21,6 +21,7 @@ import { unstable_cache as cache } from "next/cache";
 import { handlePrismaError } from "@/lib/prisma-error";
 import { generateInvoiceTemplate } from "@/lib/generate-invoice";
 import { subDays, startOfDay, endOfDay } from "date-fns";
+import { calculatePackagePrice } from "@/lib/utils";
 
 type OrderWithUser = Prisma.OrderGetPayload<{
   include: {
@@ -231,12 +232,16 @@ export const getOrderById = cache(async (orderId: string) => {
       include: {
         assignedEngineer: true,
         timeSlot: true,
+        cartItems: {
+          include: {
+            package: true,
+          },
+        },
         user: {
           include: {
             address: true,
           },
         },
-        packages: true,
       },
     });
 
@@ -391,6 +396,11 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
     const validatedData = createOrderSchema.parse(data);
     const packageIds = validatedData.packages.map((pkg) => pkg.packageId);
 
+    const packageQuantities = validatedData.packages.reduce((acc, pkg) => {
+      acc[pkg.packageId] = pkg.quantity || 1;
+      return acc;
+    }, {} as Record<string, number>);
+
     let createdOrder: OrderWithUser;
 
     // Database transaction
@@ -409,15 +419,12 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
           throw new Error("Selected time slot is no longer available");
         }
 
-        // Get package prices
+        // Get packages with their details
         const packages = await prismaTransaction.package.findMany({
           where: {
             id: {
               in: packageIds,
             },
-          },
-          select: {
-            price: true,
           },
         });
 
@@ -425,10 +432,19 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
           throw new Error("One or more packages not found");
         }
 
-        const packageTotal = packages.reduce(
-          (total, pkg) => total + pkg.price,
-          0
-        );
+        // Calculate total price including package prices and additional fees
+        const packageTotal = packages.reduce((total, pkg) => {
+          const quantity = packageQuantities[pkg.id] || 1;
+          let packagePrice = pkg.price;
+
+          // Calculate additional unit prices if applicable
+          if (pkg.isAdditionalPackage && quantity > (pkg.minQuantity || 1)) {
+            const extraUnits = quantity - (pkg.minQuantity || 1);
+            packagePrice += extraUnits * (pkg.extraUnitPrice || 0);
+          }
+
+          return total + packagePrice;
+        }, 0);
 
         const totalPrice =
           packageTotal +
@@ -446,7 +462,7 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
           },
         });
 
-        // Create the order
+        // Create the order with cart items
         return await prismaTransaction.order.create({
           data: {
             userId: data.userId,
@@ -462,12 +478,23 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
             status: "CONFIRMED",
             paymentStatus: "UNPAID",
             paymentMethod: data.paymentMethod,
-            packages: {
-              connect: data.packages.map((pack) => ({ id: pack.packageId })),
+            cartItems: {
+              create: packages.map((pkg) => ({
+                packageId: pkg.id,
+                quantity: packageQuantities[pkg.id] || 1,
+                price: calculatePackagePrice(
+                  pkg,
+                  packageQuantities[pkg.id] || 1
+                ),
+              })),
             },
           },
           include: {
-            packages: true,
+            cartItems: {
+              include: {
+                package: true,
+              },
+            },
             timeSlot: true,
             user: {
               include: {

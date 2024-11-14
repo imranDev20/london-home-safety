@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import React from "react";
 import {
@@ -59,7 +61,6 @@ export default function CartDrawer() {
 
     const minQuantity = item.package.minQuantity ?? 1;
 
-    // Ensure newQuantity is not less than minQuantity
     if (newQuantity >= minQuantity) {
       updateItemQuantity(itemId, newQuantity);
     }
@@ -115,13 +116,12 @@ export default function CartDrawer() {
                       </div>
                     </div>
 
-                    {/* Quantity Controls */}
                     {item.package.isAdditionalPackage && (
-                      <div className="flex items-center justify-between mt-2">
-                        <div
-                          className="flex items-stretch h-8 gap-1"
-                          style={{ width: "120px" }}
-                        >
+                      <div className="flex items-center gap-4 pt-2">
+                        <span className="text-sm text-gray-600 font-medium whitespace-nowrap">
+                          Quantity:
+                        </span>
+                        <div className="relative flex items-stretch h-10 rounded-lg bg-gray-50/80 ring-1 ring-gray-200 p-1 hover:ring-primary/30 transition-all duration-200">
                           <button
                             onClick={() =>
                               handleQuantityChange(item.id, item.quantity - 1)
@@ -129,32 +129,34 @@ export default function CartDrawer() {
                             disabled={
                               item.quantity <= (item.package.minQuantity ?? 1)
                             }
-                            className="flex-1 flex items-center justify-center text-primary border border-primary rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent px-1"
+                            className="w-9 flex items-center justify-center rounded-md text-primary hover:bg-white hover:shadow-sm transition-all duration-200 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:shadow-none"
                           >
-                            <Minus size={16} />
+                            <Minus className="w-4 h-4" />
                           </button>
-                          <input
-                            type="number"
-                            min={item.package.minQuantity ?? 1}
-                            value={item.quantity}
-                            onChange={(e) => {
-                              const newValue = Math.max(
-                                parseInt(e.target.value) ||
-                                  item.package.minQuantity ||
-                                  1,
-                                item.package.minQuantity ?? 1
-                              );
-                              handleQuantityChange(item.id, newValue);
-                            }}
-                            className="w-10 text-center bg-transparent rounded-md focus:outline-none text-sm font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none hover:bg-white"
-                          />
+                          <div className="relative">
+                            <input
+                              type="number"
+                              min={item.package.minQuantity ?? 1}
+                              value={item.quantity}
+                              onChange={(e) => {
+                                const newValue = Math.max(
+                                  parseInt(e.target.value) ||
+                                    item.package.minQuantity ||
+                                    1,
+                                  item.package.minQuantity ?? 1
+                                );
+                                handleQuantityChange(item.id, newValue);
+                              }}
+                              className="w-12 h-full text-center bg-transparent font-medium text-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-0 rounded-md transition-all duration-200"
+                            />
+                          </div>
                           <button
                             onClick={() =>
                               handleQuantityChange(item.id, item.quantity + 1)
                             }
-                            className="flex-1 flex items-center justify-center text-primary border border-primary rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white px-1"
+                            className="w-9 flex items-center justify-center rounded-md text-primary hover:bg-white hover:shadow-sm transition-all duration-200"
                           >
-                            <Plus size={16} />
+                            <Plus className="w-4 h-4" />
                           </button>
                         </div>
                       </div>

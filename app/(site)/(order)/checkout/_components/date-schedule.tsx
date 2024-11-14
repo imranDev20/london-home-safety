@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+
 import { Calendar } from "@/components/ui/calendar";
 import {
   FormField,
@@ -17,11 +18,12 @@ import {
   XCircle,
   Calendar as CalendarIcon,
 } from "lucide-react";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
-import { SlotType, TimeSlot } from "@prisma/client";
+import { TimeSlot } from "@prisma/client";
 import { CheckoutFormInput } from "../schema";
+import useOrderStore from "@/hooks/use-order-store";
+import { useQuery } from "@tanstack/react-query";
 
 interface DateTimeSelectorProps {
   disabledDays?: Date[];
@@ -131,30 +133,23 @@ function AppointmentSessionCard({
   );
 }
 
+const fetchTimeSlots = async (date: Date): Promise<TimeSlot[]> => {
+  const response = await fetch(`/api/time-slots?date=${date.toISOString()}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch appointment sessions");
+  }
+  return response.json();
+};
+
 export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
   const form = useFormContext<CheckoutFormInput>();
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const fetchTimeSlots = async (date: Date) => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(
-        `/api/time-slots?date=${date.toISOString()}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch appointment sessions");
-      }
-      const slots = await response.json();
-      setTimeSlots(slots);
-    } catch (error) {
-      console.error("Error fetching appointment sessions:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const selectedDate = form.watch("date");
+
+  const { data: timeSlots = [], isLoading } = useQuery({
+    queryKey: ["timeSlots", selectedDate],
+    queryFn: () => fetchTimeSlots(selectedDate),
+    enabled: !!selectedDate,
+  });
 
   return (
     <Card className="p-6">
@@ -177,7 +172,6 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                     onSelect={(date) => {
                       field.onChange(date);
                       if (date) {
-                        fetchTimeSlots(date);
                         form.setValue("timeSlotId", "");
                       }
                     }}
@@ -186,9 +180,20 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                   />
                 </div>
                 {field.value && (
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Selected: {format(field.value, "EEEE, MMMM do, yyyy")}
-                  </p>
+                  <div className="flex items-center gap-2 mt-3 p-2 bg-primary/5 border border-primary/10 rounded-md">
+                    <CalendarIcon className="w-4 h-4 text-primary" />
+                    <p className="text-sm font-medium">
+                      Selected:{" "}
+                      <span className="text-primary">
+                        {field.value.toLocaleDateString("en-US", {
+                          weekday: "long",
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </p>
+                  </div>
                 )}
                 <FormMessage />
               </FormItem>
@@ -211,9 +216,33 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                     Please select your preferred date first
                   </p>
                 ) : isLoading ? (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Loading available sessions...</span>
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((index) => (
+                      <div
+                        key={index}
+                        className="animate-pulse rounded-lg border-2 border-gray-100 h-[80px] p-4 flex items-center"
+                      >
+                        <div className="flex items-center gap-4 w-full">
+                          <div className="rounded-full bg-gray-200 h-10 w-10 flex-shrink-0" />
+                          <div className="flex-1 space-y-3">
+                            <div className="h-4 bg-gray-200 rounded w-1/3" />
+                            <div className="flex items-center gap-2">
+                              <div className="h-3 bg-gray-200 rounded w-1/4" />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="h-4 w-4 bg-gray-200 rounded-full" />
+                            <div className="h-3 bg-gray-200 rounded w-20" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-center text-sm text-muted-foreground mt-4 gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span className="font-medium">
+                        Loading available sessions...
+                      </span>
+                    </div>
                   </div>
                 ) : timeSlots.length === 0 ? (
                   <p className="text-sm text-muted-foreground">

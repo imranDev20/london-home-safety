@@ -225,8 +225,13 @@ export const calculateSubtotal = (packages: Package[]) => {
     .reduce((total, pack) => total + (pack.price || 0), 0)
     .toFixed(2);
 };
+
 export const calculateTotal = (orderDetails: OrderWithRelation) => {
-  let total = parseFloat(calculateSubtotal(orderDetails.packages));
+  let total = parseFloat(
+    calculateSubtotal(
+      orderDetails.cartItems.map((cartItem) => cartItem.package)
+    )
+  );
   if (orderDetails.isCongestionZone) total += CONGESTION_FEE;
   if (orderDetails.parkingOptions !== "FREE") total += PARKING_FEE;
   return total.toFixed(2);
@@ -243,3 +248,12 @@ export const mergeArrays = (
     packages: arr2.filter((item2) => item2[prop2] === item1[prop1]),
   }));
 };
+
+export function calculatePackagePrice(pack: Package, quantity: number): number {
+  if (!pack.isAdditionalPackage) return pack.price;
+
+  const minQuantity = pack.minQuantity ?? 1;
+  const extraUnitsCount = Math.max(0, quantity - minQuantity);
+  const extraPrice = extraUnitsCount * (pack.extraUnitPrice ?? 0);
+  return pack.price + extraPrice;
+}

@@ -74,7 +74,6 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import SendEmailDialog from "./send-email-dialog";
 import { BUSINESS_NAME, CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
-import useOrderStore from "@/hooks/use-order-store";
 
 export default function EditOrderForm({
   orderDetails,
@@ -106,15 +105,10 @@ export default function EditOrderForm({
   );
   const [isPending, startTransition] = useTransition();
 
-  const { summary, cartItems } = useOrderStore((state) => ({
-    summary: state.summary,
-    cartItems: state.cartItems,
-  }));
-
-  useEffect(() => {
-    // Calculate the summary every time cartItems change to keep it updated
-    useOrderStore.getState().calculateSummary();
-  }, [cartItems]);
+  const subtotal = calculateSubtotal(
+    orderDetails.cartItems.map((cartItem) => cartItem.package)
+  );
+  const total = calculateTotal(orderDetails);
 
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
@@ -315,7 +309,6 @@ export default function EditOrderForm({
               variant="default"
             >
               {!isLoading && <Download className="mr-2 h-4 w-4" />}
-              
             </LoadingButton>
           </div>
         </div>
@@ -396,7 +389,7 @@ export default function EditOrderForm({
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Items</h2>
-              {orderDetails?.packages && orderDetails.packages.length > 0 ? (
+              {orderDetails?.cartItems && orderDetails.cartItems.length > 0 ? (
                 <>
                   <div className="border rounded-md">
                     <Table>
@@ -409,8 +402,11 @@ export default function EditOrderForm({
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {orderDetails.packages.map((pack) => (
-                          <PackageTableRow pack={pack} key={pack?.id} />
+                        {orderDetails.cartItems.map((cartItem) => (
+                          <PackageTableRow
+                            cartItem={cartItem}
+                            key={cartItem?.id}
+                          />
                         ))}
                       </TableBody>
                     </Table>
@@ -452,7 +448,7 @@ export default function EditOrderForm({
 
                     <div className="flex justify-between items-center">
                       <span>Subtotal:</span>
-                      <span>£{summary.subtotal.toFixed(2)}</span>
+                      <span>£{subtotal}</span>
                     </div>
                     {orderDetails.isCongestionZone && (
                       <div className="flex justify-between">
@@ -468,16 +464,7 @@ export default function EditOrderForm({
                     )}
                     <div className="flex justify-between font-semibold">
                       <span>Total:</span>
-                      <span>
-                        £
-                        {(
-                          summary.subtotal +
-                          (orderDetails.isCongestionZone ? CONGESTION_FEE : 0) +
-                          (orderDetails.parkingOptions !== "FREE"
-                            ? PARKING_FEE
-                            : 0)
-                        ).toFixed(2)}
-                      </span>
+                      <span>£{total}</span>
                     </div>
                   </div>
                 </>

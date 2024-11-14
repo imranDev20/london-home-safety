@@ -12,7 +12,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 type AddressType = Omit<Address, "userId" | "createdAt" | "updatedAt" | "id">;
 
-type CartItem = {
+export type CartItem = {
   id: string;
   package: Package;
   quantity: number;

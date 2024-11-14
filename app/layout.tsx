@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import TanstackQueryClientProvider from "@/providers/query-client-provider";
 
 const outfit = Outfit({ subsets: ["latin"], display: "swap" });
 
@@ -126,10 +127,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <TanstackQueryClientProvider>
+          <ThemeProvider attribute="class" defaultTheme="light">
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </TanstackQueryClientProvider>
       </body>
     </html>
   );

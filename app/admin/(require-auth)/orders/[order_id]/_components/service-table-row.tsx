@@ -1,79 +1,82 @@
-//service-table-row.tsx
 import { TableCell, TableRow } from "@/components/ui/table";
-import useOrderStore from "@/hooks/use-order-store";
-import { Package } from "@prisma/client";
-import React, { useState, useEffect } from "react";
+import { Package, Prisma } from "@prisma/client";
+import React, { useState, useTransition } from "react";
 import { updatePackagePrice } from "../actions";
 
-export default function PackageTableRow({ pack }: { pack: Package }) {
-  console.log("pack", pack);
-
-  // Ensure minQuantity defaults to 1 if it's undefined
-  const minQuantity = pack.minQuantity ?? 1;
-
-  // Default to the minimum quantity if the cart item doesn't exist
-  const [quantity, setQuantity] = useState<number>(minQuantity);
-
-  const { updateItemQuantity, addItem, cartItems } = useOrderStore((state) => ({
-    updateItemQuantity: state.updateItemQuantity,
-    addItem: state.addItem,
-    cartItems: state.cartItems,
-  }));
-
-  // Find the cart item if it exists in the store
-  const existingCartItem = cartItems.find((item) => item.id === pack.id);
-
-  // Calculate total price based on quantity
-  const basePrice = pack.price;
-
-  // Ensure extraUnitPrice defaults to 0 if undefined
-  const extraUnitPrice = pack.extraUnitPrice ?? 0;
-  const extraUnits = Math.max(0, quantity - minQuantity);
-  const extraPrice = extraUnits * extraUnitPrice;
-  const totalPrice = basePrice + extraPrice;
-
-  // Handle quantity change
-  const handleQuantityChange = async (newQuantity: number) => {
-    // Ensure quantity doesn't go below minQuantity
-    if (newQuantity >= minQuantity) {
-      setQuantity(newQuantity);
-
-      // Update item quantity in the store
-      if (existingCartItem) {
-        updateItemQuantity(pack.id, newQuantity);
-      } else {
-        // If item is not in cart, add it
-        addItem(pack, newQuantity);
-      }
-
-      // Update the package price in the database
-      await updatePackagePrice(pack.id, totalPrice);
-    }
+type CartItemWithPackage = Prisma.CartItemGetPayload<{
+  include: {
+    package: true;
   };
+}>;
 
-  useEffect(() => {
-    // Sync initial quantity if item exists in cart
-    if (existingCartItem) {
-      setQuantity(existingCartItem.quantity);
-    }
-  }, [existingCartItem]);
+export default function PackageTableRow({
+  cartItem,
+  isEditable = false,
+}: {
+  cartItem: CartItemWithPackage;
+  isEditable?: boolean;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  // Get the minimum quantity from the package, defaulting to 1
+  const minQuantity = cartItem.package.minQuantity ?? 1;
+  const [quantity, setQuantity] = useState<number>(
+    cartItem.quantity ?? minQuantity
+  );
+
+  // Calculate prices
+  const basePrice = cartItem.package.price;
+  const extraUnitPrice = cartItem.package.extraUnitPrice ?? 0;
+  const extraUnits = Math.max(0, quantity - minQuantity);
+  const totalPrice = basePrice + extraUnits * extraUnitPrice;
+
+  // Handle quantity change - only used if isEditable is true
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity < minQuantity) return;
+
+    startTransition(async () => {
+      try {
+        setQuantity(newQuantity);
+        // Update the package price in the database
+        await updatePackagePrice(cartItem.id, totalPrice);
+      } catch (error) {
+        console.error("Error updating package price:", error);
+        // Revert quantity if update fails
+        setQuantity(cartItem.quantity ?? minQuantity);
+      }
+    });
+  };
 
   return (
     <TableRow>
-      <TableCell className="font-medium">
-        {pack.serviceName} - {pack.name}
-      </TableCell>
+      <TableCell className="font-medium">{cartItem.package.name}</TableCell>
       <TableCell>£{basePrice.toFixed(2)}</TableCell>
       <TableCell>
-        <input
-          type="number"
-          min={minQuantity} // Prevent going below minQuantity
-          value={quantity}
-          onChange={(e) => handleQuantityChange(Number(e.target.value))}
-          className="w-16 p-1 border border-gray-300 rounded"
-        />
+        {cartItem.package.isAdditionalPackage ? (
+          isEditable ? (
+            <input
+              type="number"
+              min={minQuantity}
+              value={quantity}
+              onChange={(e) => handleQuantityChange(Number(e.target.value))}
+              disabled={isPending}
+              className="w-16 p-1 border border-gray-300 rounded"
+            />
+          ) : (
+            <span>{quantity}</span>
+          )
+        ) : (
+          <span className="text-gray-500">Standard</span>
+        )}
       </TableCell>
-      <TableCell>£{totalPrice.toFixed(2)}</TableCell>
+      <TableCell>
+        <div className="flex items-center gap-2">
+          £{totalPrice.toFixed(2)}
+          {isPending && (
+            <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
+          )}
+        </div>
+      </TableCell>
     </TableRow>
   );
 }
