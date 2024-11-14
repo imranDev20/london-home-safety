@@ -151,7 +151,7 @@ export default async function ServiceDetailsPage({
                     </div>
 
                     {/* Add the additional pricing information here */}
-                    {/* {currentService?.priceAdditionalInfo && (
+                    {currentService?.priceAdditionalInfo && (
                       <div className="mt-4 mb-6">
                         <ul className="list-disc pl-5 space-y-1">
                           {currentService.priceAdditionalInfo
@@ -168,7 +168,7 @@ export default async function ServiceDetailsPage({
                     <BookNowButtonCompo
                       siteSettings={siteSettings}
                       packages={filteredPackages}
-                    /> */}
+                    />
                   </>
                 )}
 

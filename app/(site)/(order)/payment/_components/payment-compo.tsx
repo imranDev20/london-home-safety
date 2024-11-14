@@ -22,8 +22,9 @@ import React, { useEffect, useState, useTransition } from "react";
 import { createOrder } from "../../actions";
 import PaymentResult from "./payment-result";
 import StripePaymentElement from "./stripe-payment-element";
-import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { useRouter } from "next/navigation";
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import OrderSummary from "../../_components/order-summary";
 
 export default function PaymentCompo({
   redirectStatus,
@@ -33,29 +34,29 @@ export default function PaymentCompo({
   const [stripePromise, setStripePromise] =
     useState<Promise<Stripe | null> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] =
-    useState<PaymentMethod>("CREDIT_CARD");
   const { toast } = useToast();
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [isPending, startTransition] = useTransition();
-  const { cartItems, customerDetails, clearCart, resetOrder, summary } =
-    useOrderStore();
   const {
-    subtotal: cartTotal,
-    parkingFee,
-    congestionFee,
-    total: totalPrice,
-  } = summary;
+    cartItems,
+    customerDetails,
+    clearCart,
+    resetOrder,
+    paymentMethod,
+    setPaymentMethod,
+  } = useOrderStore();
+
   const isNonCreditCardPayment =
     paymentMethod === "BANK_TRANSFER" || paymentMethod === "CASH_TO_ENGINEER";
 
-  // const parkingFee =
-  //   customerDetails.parkingOptions !== "FREE" ? PARKING_FEE : 0;
-  // const congestionFee = customerDetails.isCongestionZone ? CONGESTION_FEE : 0;
-  // const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-  // const totalPrice = cartTotal + parkingFee + congestionFee;
+  // Calculate prices based on customer details and cart items
+  const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+  const parkingFee =
+    customerDetails.parkingOptions === "FREE" ? 0 : PARKING_FEE;
+  const congestionFee = customerDetails.isCongestionZone ? CONGESTION_FEE : 0;
+  const totalPrice = cartTotal + parkingFee + congestionFee;
 
   useEffect(() => {
     if (customerDetails && cartItems.length > 0) {
@@ -105,11 +106,7 @@ export default function PaymentCompo({
     setPaymentMethod(value);
   };
 
-  const handleSubmit = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-
+  const handleSubmit = async () => {
     startTransition(async () => {
       if (paymentMethod === "CREDIT_CARD") {
         throw new Error("Wrong method selected for this action");
@@ -314,51 +311,25 @@ export default function PaymentCompo({
 
             {/* Summary Sidebar */}
             <div className="w-full lg:w-1/3 space-y-5">
-              <Card className="p-6 sticky top-6">
-                <h2 className="text-xl font-semibold mb-6">Summary</h2>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Service Price:</span>
-                    <span className="text-gray-900">
-                      £{cartTotal.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Parking Fee:</span>
-                    <span className="text-gray-900">
-                      £{parkingFee.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Congestion Zone Fee:</span>
-                    <span className="text-gray-900">
-                      £{congestionFee.toFixed(2)}
-                    </span>
-                  </div>
-                  <Separator className="my-4" />
-                  <div className="flex justify-between items-center text-xl font-semibold">
-                    <span>Total Price:</span>
-                    <span>
-                      £{totalPrice.toFixed(2)}{" "}
-                      <span className="text-body font-normal text-sm">
-                        (inc. Tax)
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </Card>
+              <OrderSummary
+                isInCongestionZone={customerDetails.isCongestionZone}
+                parkingOption={customerDetails.parkingOptions}
+                showProceedButton={true}
+                onProceedClick={handleSubmit}
+                isPending={isPending}
+              />
 
-              {isNonCreditCardPayment && (
+              {/* {isNonCreditCardPayment && (
                 <LoadingButton
                   type="submit"
-                  className="w-full flex items-center justify-center space-x-2"
+                  className="w-full flex items-center justify-center space-x-2 py-2 h-11"
                   onClick={handleSubmit}
                   loading={isPending}
                 >
                   {!isPending && <ShoppingCart size={20} />}
                   <span>Confirm & Order</span>
                 </LoadingButton>
-              )}
+              )} */}
             </div>
           </div>
         ) : (

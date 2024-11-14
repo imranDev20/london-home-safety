@@ -111,10 +111,10 @@ export const notifyUserCompleteEmailHtml = (
         </p>
         <p style="font-weight: bold;">Services Completed:</p>
         <ul style="margin-left: 20px;">
-          ${orderDetails?.packages
+          ${orderDetails?.cartItems
             .map(
               (item) =>
-                `<li>${item.name} - ${item.category}: ${item.price}</li>`
+                `<li> ${item.package.serviceName} - ${item.package.name}: ${item.price}</li>`
             )
             .join("")}
         </ul>

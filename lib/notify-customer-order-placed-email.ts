@@ -1,9 +1,10 @@
 import { ADDRESS, BUSINESS_NAME, PHONE_NO, WEBSITE_URL } from "@/shared/data";
 import { OrderWithRelation } from "@/types/order";
 import dayjs from "dayjs";
+import { calculateTotal } from "./utils";
 
 export const notifyUserOrderPlacedEmailHtml = (
-  orderDetails: OrderWithRelation | null
+  orderDetails: OrderWithRelation
 ) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -129,21 +130,19 @@ export const notifyUserOrderPlacedEmailHtml = (
             </tr>
           </thead>
           <tbody>
-            ${orderDetails?.packages
+            ${orderDetails?.cartItems
               .map(
-                (item) => `
+                (cartItem) => `
                 <tr>
-                  <td>${item.name}</td>
-                  <td>£${item.price.toFixed(2)}</td>
+                  <td>${cartItem.package.name}</td>
+                  <td>£${cartItem.price.toFixed(2)}</td>
                 </tr>
               `
               )
               .join("")}
             <tr class="total-row">
               <td>Total</td>
-              <td>£${orderDetails?.packages
-                .reduce((sum, item) => sum + (item.price || 0), 0)
-                .toFixed(2)}</td>
+              <td>£${calculateTotal(orderDetails)}</td>
             </tr>
           </tbody>
         </table>

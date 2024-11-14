@@ -1,0 +1,135 @@
+import { useFormContext } from "react-hook-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Button } from "@/components/ui/button";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { CreateOrderFormInput } from "../schema";
+import { CustomerWithRelation } from "@/types/customer";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import CreateUser from "./create-user";
+
+interface CustomerInfoProps {
+  customers: CustomerWithRelation[];
+}
+
+export default function CustomerInfo({ customers }: CustomerInfoProps) {
+  const { control } = useFormContext<CreateOrderFormInput>();
+  const [openUserComboBox, setOpenUserComboBox] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerName, setCustomerName] = useState("");
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Customer Information</CardTitle>
+        <CardDescription>
+          Provide the customer&apos;s details or create a new customer profile.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-4 sm:grid-cols-12">
+          <div className="col-span-4">
+            <FormField
+              control={control}
+              name="userId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select Customer</FormLabel>
+                  <FormControl>
+                    <Popover
+                      open={openUserComboBox}
+                      onOpenChange={setOpenUserComboBox}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={openUserComboBox}
+                          className="w-full justify-between"
+                        >
+                          {field.value ? (
+                            customers?.find(
+                              (customer) => customer.id === field.value
+                            )?.email
+                          ) : (
+                            <span className="text-muted-foreground">
+                              Select a customer
+                            </span>
+                          )}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[350px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search customers..." />
+                          <CommandList>
+                            <CommandEmpty>No customers found.</CommandEmpty>
+                            <CommandGroup>
+                              {customers?.map((customer) => (
+                                <CommandItem
+                                  key={customer.id}
+                                  value={customer.email}
+                                  onSelect={() => {
+                                    field.onChange(customer.id);
+                                    setCustomerEmail(customer.email);
+                                    setCustomerName(customer.name ?? "");
+                                    setOpenUserComboBox(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      field.value === customer.id
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {customer.email}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="col-span-2 mt-8">
+            <CreateUser userType="CUSTOMER" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

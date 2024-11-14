@@ -43,6 +43,7 @@ import { Textarea } from "@/components/ui/textarea";
 import OrderSummary from "../_components/order-summary";
 import DateSchedule from "./_components/date-schedule";
 import CheckoutEmptyState from "./_components/checkout-empty-state";
+import AddressValidationAutocomplete from "./_components/address-validation-autocomplete";
 
 const parkingOptions = [
   {
@@ -122,7 +123,7 @@ export default function CheckoutPage() {
         street: customerDetails.address.street ?? "",
         city: customerDetails.address.city ?? "",
         postcode: customerDetails.address.postcode ?? "",
-        date: customerDetails.orderDate,
+        date: new Date(customerDetails.orderDate ?? ""),
         timeSlotId: customerDetails.timeSlotId ?? "",
         parkingOption: customerDetails.parkingOptions ?? "FREE",
         isInCongestionZone: customerDetails.isCongestionZone ?? false,
@@ -140,11 +141,6 @@ export default function CheckoutPage() {
   const handleCongestionChange = (value: string) => {
     form.setValue("isInCongestionZone", value === "yes");
   };
-
-  const parkingFee = parkingOption === "FREE" ? 0 : PARKING_FEE;
-  const congestionFee = isInCongestionZone ? CONGESTION_FEE : 0;
-  const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-  const totalPrice = cartTotal + parkingFee + congestionFee;
 
   const infoItems = [
     "Contact details for access (if different from main contact)",
@@ -166,12 +162,13 @@ export default function CheckoutPage() {
       lastName: data.lastName,
       email: data.email,
       phoneNumber: data.phone,
-      orderDate: data.date,
+      orderDate: new Date(data.date),
       timeSlotId: data.timeSlotId,
       parkingOptions: data.parkingOption,
       isCongestionZone: data.isInCongestionZone,
       orderNotes: data.orderNotes,
     });
+
     toast({
       title: "Success",
       description: "Your checkout information has been successfully submitted.",
@@ -461,17 +458,16 @@ export default function CheckoutPage() {
 
             {/* Summary */}
             <div className="lg:col-span-4 space-y-6">
-            <OrderSummary
-            parkingOption={parkingOption}
-            isInCongestionZone={isInCongestionZone}
-            showProceedButton={true}
-            onProceedClick={form.handleSubmit(onCheckoutSubmit)}
-          />
-           </div>
-          
-        </form>
-      </Form>
-    </div>
+              <OrderSummary
+                isInCongestionZone={isInCongestionZone}
+                parkingOption={parkingOption}
+                showProceedButton={true}
+                onProceedClick={form.handleSubmit(onCheckoutSubmit)}
+              />
+            </div>
+          </form>
+        </Form>
+      </div>
     </CheckoutEmptyState>
   );
 }

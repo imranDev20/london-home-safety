@@ -115,7 +115,9 @@ export const notifyUserConfirmEmailHtml = (
         <p style="font-weight: bold;">Order Summary:</p>
         <p style="margin-left: 20px;">
           <strong>Order Number:</strong> ${orderDetails?.invoice}<br>
-          <strong>Address:</strong> ${orderDetails?.user.address?.street}, ${orderDetails?.user.address?.postcode}, ${orderDetails?.user.address?.city}<br>
+          <strong>Address:</strong> ${orderDetails?.user.address?.street}, ${
+  orderDetails?.user.address?.postcode
+}, ${orderDetails?.user.address?.city}<br>
           <strong>Phone:</strong> ${orderDetails?.user.phone}<br>
           <strong>Email:</strong> ${orderDetails?.user.email}<br>
           <strong>Scheduled:</strong> ${
@@ -131,11 +133,11 @@ export const notifyUserConfirmEmailHtml = (
             </tr>
           </thead>
           <tbody>
-            ${orderDetails?.packages
+            ${orderDetails?.cartItems
               .map(
                 (item) => `
                 <tr>
-                  <td>${item.name} tushar</td>
+                  <td>${item.package.name} tushar</td>
                   <td>$${item.price}</td>
                 </tr>
               `
@@ -143,10 +145,12 @@ export const notifyUserConfirmEmailHtml = (
               .join("")}
             <tr class="total-row">
               <td colspan="2">Total</td>
-              <td>$${orderDetails?.packages.reduce(
-                (sum, item) => sum + (item.price || 0), // Adjusted here
-                0
-              ).toFixed(2)}</td>
+              <td>$${orderDetails?.cartItems
+                .reduce(
+                  (sum, item) => sum + (item.price || 0), // Adjusted here
+                  0
+                )
+                .toFixed(2)}</td>
             </tr>
           </tbody>
         </table>

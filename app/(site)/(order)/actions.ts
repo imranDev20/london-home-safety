@@ -1,6 +1,6 @@
 "use server";
 
-import { CustomerDetails } from "@/hooks/use-order-store";
+import { CartItem, CustomerDetails } from "@/hooks/use-order-store";
 import {
   generateInvoiceId,
   generateInvoiceTemplate,
@@ -17,7 +17,7 @@ import { jsPDF } from "jspdf";
 
 type OrderData = {
   customerDetails: CustomerDetails;
-  cartItems: Package[];
+  cartItems: CartItem[];
   paymentMethod: PaymentMethod;
 };
 
