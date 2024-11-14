@@ -19,7 +19,7 @@ import {
 import useOrderStore from "@/hooks/use-order-store";
 import { useSheetStore } from "@/hooks/use-sheet-store";
 import { NON_INVERTED_ROUTES } from "@/lib/constants";
-import { Home, ShoppingBasket, Wrench, X } from "lucide-react";
+import { Home, Minus, Plus, ShoppingBasket, Wrench, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -43,7 +43,7 @@ const useMediaQuery = (query: string) => {
 };
 
 export default function CartDrawer() {
-  const { cartItems, removeItem } = useOrderStore();
+  const { cartItems, removeItem, updateItemQuantity } = useOrderStore();
   const { isOpen, setIsOpen } = useSheetStore();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const pathname = usePathname();
@@ -51,6 +51,12 @@ export default function CartDrawer() {
   const isTransparent = !NON_INVERTED_ROUTES.some((route) =>
     pathname.startsWith(`/${route}`)
   );
+
+  const handleQuantityChange = (itemId: string, newQuantity: number, minQuantity: number = 1) => {
+    if (newQuantity >= minQuantity) {
+      updateItemQuantity(itemId, newQuantity);
+    }
+  };
 
   const CartTrigger = (
     <Button
@@ -101,9 +107,44 @@ export default function CartDrawer() {
                         </span>
                       </div>
                     </div>
-                    <p className="font-bold text-primary">
-                      £{item?.price.toFixed(2)}
-                    </p>
+                    
+                    {/* Quantity Controls */}
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-stretch h-8 gap-1" style={{ width: "120px" }}>
+                        <button
+                          onClick={() =>
+                            handleQuantityChange(
+                              item.id,
+                              item.quantity - 1,
+                              item.minQuantity ?? 1 // Default to 1 if minQuantity is null
+                            )
+                          }
+                          disabled={item.quantity <= (item.minQuantity ?? 1)}
+                          className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent px-1"
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <input
+                          type="number"
+                          min={item.minQuantity ?? 1} // Default to 1 if minQuantity is null
+                          value={item.quantity}
+                          onChange={(e) => {
+                            const newValue = parseInt(e.target.value) || item.minQuantity || 1;
+                            handleQuantityChange(item.id, newValue, item.minQuantity ?? 1);
+                          }}
+                          className="w-10 text-center bg-transparent rounded-md focus:outline-none text-sm font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none hover:bg-white"
+                        />
+                        <button
+                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                          className="flex-1 flex items-center justify-center text-[#1A7EDB] border border-[#1A7EDB] rounded-md transition-colors duration-200 ease-in-out hover:bg-white active:bg-white px-1"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                      <p className="font-bold text-primary">
+                        £{item?.totalPrice?.toFixed(2) ?? '0.00'}
+                      </p>
+                    </div>
                   </div>
                   <button
                     className="text-gray-400 p-2 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200 self-start"
@@ -147,7 +188,7 @@ export default function CartDrawer() {
             <span className="font-medium">Total:</span>
             <span className="font-bold">
               £
-              {cartItems.reduce((sum, item) => sum + item?.price, 0).toFixed(2)}
+              {cartItems.reduce((sum, item) => sum + (item?.totalPrice ?? 0), 0).toFixed(2)}
             </span>
           </div>
 

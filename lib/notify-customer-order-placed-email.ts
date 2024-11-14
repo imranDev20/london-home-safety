@@ -39,9 +39,6 @@ export const notifyUserOrderPlacedEmailHtml = (
       margin: 0;
       font-size: 28px;
     }
-    .header img {
-      margin-bottom: 20px;
-    }
     .content {
       padding: 20px;
     }
@@ -70,12 +67,27 @@ export const notifyUserOrderPlacedEmailHtml = (
     .footer a:hover {
       text-decoration: underline;
     }
-    ul {
-      list-style: none;
-      padding: 0;
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
     }
-    ul li {
-      padding: 5px 0;
+    .order-table th,
+    .order-table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    .order-table th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    .order-table tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    .total-row {
+      font-weight: bold;
+      background-color: #f0f0f0 !important;
     }
     @media (max-width: 600px) {
       .container {
@@ -98,24 +110,43 @@ export const notifyUserOrderPlacedEmailHtml = (
       <div class="message-box">
         <p style="font-weight: bold;">Order Summary:</p>
         <p style="margin-left: 20px;">
-          <strong>Order Number:</strong> ${orderDetails?.id}<br>
+          <strong>Order Number:</strong> ${orderDetails?.invoice}<br>
           <strong>Address:</strong> ${orderDetails?.user.address?.street}, ${
   orderDetails?.user.address?.postcode
 }, ${orderDetails?.user.address?.city}<br>
           <strong>Phone:</strong> ${orderDetails?.user.phone}<br>
           <strong>Email:</strong> ${orderDetails?.user.email}<br>
-          <strong>Scheduled:</strong> ${orderDetails?.inspectionTime}, ${dayjs(
-  orderDetails?.date
-).format("DD MMMM YYYY")}
+          <strong>Scheduled:</strong> ${
+            orderDetails?.timeSlot?.slotType
+          }, ${dayjs(orderDetails?.date).format("DD MMMM YYYY")}
         </p>
         <p style="font-weight: bold;">Services Ordered:</p>
-        <ul style="margin-left: 20px;">
-          ${orderDetails?.packages
-            .map(
-              (item) => `<li>${item.name} - ${item.category} ${item.price}</li>`
-            )
-            .join("")}
-        </ul>
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Service Name</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orderDetails?.packages
+              .map(
+                (item) => `
+                <tr>
+                  <td>${item.name}</td>
+                  <td>£${item.price.toFixed(2)}</td>
+                </tr>
+              `
+              )
+              .join("")}
+            <tr class="total-row">
+              <td>Total</td>
+              <td>£${orderDetails?.packages
+                .reduce((sum, item) => sum + (item.price || 0), 0)
+                .toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <p style="margin-top: 20px;">
         We will notify you once your order is complete. If you have any questions or need further assistance, please don't hesitate to contact us.
@@ -126,7 +157,7 @@ export const notifyUserOrderPlacedEmailHtml = (
       </p>
     </div>
     <div class="footer">
-    <p>${BUSINESS_NAME} | ${PHONE_NO} | ${ADDRESS}</p>
+      <p>${BUSINESS_NAME} | ${PHONE_NO} | ${ADDRESS}</p>
       <p><a href="https://${WEBSITE_URL}">${WEBSITE_URL}</a></p>
     </div>
   </div>

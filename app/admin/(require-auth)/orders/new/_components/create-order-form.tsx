@@ -62,9 +62,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { createOrder } from "../../actions";
+import { createOrderByAdmin } from "../../actions";
 import { CreateOrderFormInput, createOrderSchema } from "../schema";
 import CreateUser from "./create-user";
+import DateTimeSelector from "./date-time-selector";
 
 export default function CreateOrderForm({
   customers,
@@ -130,7 +131,7 @@ export default function CreateOrderForm({
       return total + (selectedPackage?.price || 0);
     }, 0);
 
-    const congestionCharge = isCongestionZone ? 5 : 0;
+    const congestionCharge = isCongestionZone ? 15 : 0;
     const parkingCharge = parkingOptions !== "FREE" ? 5 : 0;
     const total = subtotal + congestionCharge + parkingCharge;
 
@@ -142,7 +143,7 @@ export default function CreateOrderForm({
   ) => {
     startTransition(async () => {
       try {
-        const result = await createOrder(data);
+        const result = await createOrderByAdmin(data);
 
         if (result.success) {
           toast({
@@ -226,6 +227,7 @@ export default function CreateOrderForm({
             </p>
           </div>
 
+          {/* Customer Information */}
           <Card>
             <CardHeader>
               <CardTitle>Customer Information</CardTitle>
@@ -316,6 +318,7 @@ export default function CreateOrderForm({
             </CardContent>
           </Card>
 
+          {/* Inspection Details */}
           <Card>
             <CardHeader>
               <CardTitle>Inspection Details</CardTitle>
@@ -325,161 +328,81 @@ export default function CreateOrderForm({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-12">
-                <div className="col-span-3">
-                  <FormField
-                    control={control}
-                    name="date"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Inspection Date</FormLabel>
-                        <Popover>
+              <DateTimeSelector />
+
+              {/* Engineer selection */}
+              <div className="mt-6">
+                <FormField
+                  control={control}
+                  name="assignedEngineer"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Assigned Engineer</FormLabel>
+                      <FormControl>
+                        <Popover
+                          open={openEngineerComboBox}
+                          onOpenChange={setOpenEngineerComboBox}
+                        >
                           <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={openEngineerComboBox}
+                              className="w-full justify-between"
+                            >
+                              {field.value ? (
+                                engineers?.find(
+                                  (engineer) => engineer.id === field.value
+                                )?.email
+                              ) : (
+                                <span className="text-muted-foreground">
+                                  Select an engineer
+                                </span>
+                              )}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) =>
-                                date < new Date(new Date().setHours(0, 0, 0, 0))
-                              }
-                              initialFocus
-                            />
+                          <PopoverContent className="w-[250px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search engineers..." />
+                              <CommandList>
+                                <CommandEmpty>No engineers found.</CommandEmpty>
+                                <CommandGroup>
+                                  {engineers?.map((engineer) => (
+                                    <CommandItem
+                                      key={engineer.id}
+                                      value={engineer.email}
+                                      onSelect={() => {
+                                        field.onChange(engineer.id);
+                                        setOpenEngineerComboBox(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          field.value === engineer.id
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {engineer.email}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
                           </PopoverContent>
                         </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="col-span-3">
-                  <FormField
-                    control={control}
-                    name="inspectionTime"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Inspection Time</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select inspection time" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="MORNING">
-                              08:00 AM - 12:00 PM
-                            </SelectItem>
-                            <SelectItem value="AFTERNOON">
-                              12:00 PM - 04:00 PM
-                            </SelectItem>
-                            <SelectItem value="EVENING">
-                              04:00 PM - 08:00 PM
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="col-span-6 sm:block hidden"></div>
-
-                <div className="col-span-3">
-                  <FormField
-                    control={control}
-                    name="assignedEngineer"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Assigned Engineer</FormLabel>
-                        <FormControl>
-                          <Popover
-                            open={openEngineerComboBox}
-                            onOpenChange={setOpenEngineerComboBox}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={openEngineerComboBox}
-                                className="w-full justify-between"
-                              >
-                                {field.value ? (
-                                  engineers?.find(
-                                    (engineer) => engineer.id === field.value
-                                  )?.email
-                                ) : (
-                                  <span className="text-muted-foreground">
-                                    Select an engineer
-                                  </span>
-                                )}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[250px] p-0">
-                              <Command>
-                                <CommandInput placeholder="Search engineers..." />
-                                <CommandList>
-                                  <CommandEmpty>
-                                    No engineers found.
-                                  </CommandEmpty>
-                                  <CommandGroup>
-                                    {engineers?.map((engineer) => (
-                                      <CommandItem
-                                        key={engineer.id}
-                                        value={engineer.email}
-                                        onSelect={() => {
-                                          field.onChange(engineer.id);
-                                          setOpenEngineerComboBox(false);
-                                        }}
-                                      >
-                                        <Check
-                                          className={cn(
-                                            "mr-2 h-4 w-4",
-                                            field.value === engineer.id
-                                              ? "opacity-100"
-                                              : "opacity-0"
-                                          )}
-                                        />
-                                        {engineer.email}
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </CardContent>
           </Card>
 
+          {/* Property Information */}
           <Card>
             <CardHeader>
               <CardTitle>Property Information</CardTitle>
@@ -603,89 +526,11 @@ export default function CreateOrderForm({
                     )}
                   />
                 </div>
-
-                {form.watch("propertyType") === "RESIDENTIAL" && (
-                  <div className="col-span-4">
-                    <FormField
-                      control={form.control}
-                      name="residentialType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Residential Type (Optional)</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select residential type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="BUNGALOW">Bungalow</SelectItem>
-                              <SelectItem value="MID_TERRACED_HOUSE">
-                                Mid Terraced House
-                              </SelectItem>
-                              <SelectItem value="DETACHED_HOUSE">
-                                Detached House
-                              </SelectItem>
-                              <SelectItem value="SEMI_DETACHED_HOUSE">
-                                Semi-detached House
-                              </SelectItem>
-                              <SelectItem value="FLAT">Flat</SelectItem>
-                              <SelectItem value="APARTMENT">
-                                Apartment
-                              </SelectItem>
-                              <SelectItem value="OTHER">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-
-                {form.watch("propertyType") === "COMMERCIAL" && (
-                  <div className="col-span-4">
-                    <FormField
-                      control={form.control}
-                      name="commercialType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Commercial Type (Optional)</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select commercial type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="PUB">Pub</SelectItem>
-                              <SelectItem value="STORE">Store</SelectItem>
-                              <SelectItem value="OFFICE">Office</SelectItem>
-                              <SelectItem value="RESTAURANT">
-                                Restaurant
-                              </SelectItem>
-                              <SelectItem value="WAREHOUSE">
-                                Warehouse
-                              </SelectItem>
-                              <SelectItem value="OTHER">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
 
+          {/* Services */}
           <Card>
             <CardHeader>
               <CardTitle>Services</CardTitle>
@@ -696,7 +541,7 @@ export default function CreateOrderForm({
             <CardContent>
               {serviceFields.map((field, index) => (
                 <div key={field.id} className="grid gap-4 sm:grid-cols-12 mb-4">
-                  <div className="col-span-3">
+                  <div className="col-span-8">
                     <FormField
                       control={control}
                       name={`packages.${index}.packageId`}
@@ -713,9 +558,9 @@ export default function CreateOrderForm({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {packages?.map((service) => (
-                                <SelectItem key={service.id} value={service.id}>
-                                  {service.name}
+                              {packages?.map((pkg) => (
+                                <SelectItem key={pkg.id} value={pkg.id}>
+                                  {pkg.serviceName} - {pkg.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -753,6 +598,7 @@ export default function CreateOrderForm({
             </CardContent>
           </Card>
 
+          {/* Payment Information */}
           <Card>
             <CardHeader>
               <CardTitle>Payment Information</CardTitle>

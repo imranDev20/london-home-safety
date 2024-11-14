@@ -59,7 +59,7 @@ export default function ServiceCategories() {
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b from-blue-50 to-white"
+      className="py-24  bg-gradient-to-t from-blue-50 to-white"
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.h2

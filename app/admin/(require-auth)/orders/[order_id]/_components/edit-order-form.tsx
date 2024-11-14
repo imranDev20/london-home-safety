@@ -74,6 +74,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import SendEmailDialog from "./send-email-dialog";
 import { BUSINESS_NAME, CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import useOrderStore from "@/hooks/use-order-store";
 
 export default function EditOrderForm({
   orderDetails,
@@ -104,6 +105,16 @@ export default function EditOrderForm({
     orderDetails.paymentStatus
   );
   const [isPending, startTransition] = useTransition();
+
+  const { summary, cartItems } = useOrderStore((state) => ({
+    summary: state.summary,
+    cartItems: state.cartItems,
+  }));
+
+  useEffect(() => {
+    // Calculate the summary every time cartItems change to keep it updated
+    useOrderStore.getState().calculateSummary();
+  }, [cartItems]);
 
   const breadcrumbItems = [
     { label: "Dashboard", href: "/admin" },
@@ -255,6 +266,8 @@ export default function EditOrderForm({
     }
   };
 
+  console.log("orderDetails", orderDetails);
+
   return (
     <ContentLayout title="Edit Order">
       <DynamicBreadcrumb items={breadcrumbItems} />
@@ -302,7 +315,7 @@ export default function EditOrderForm({
               variant="default"
             >
               {!isLoading && <Download className="mr-2 h-4 w-4" />}
-              Download Invoice
+              
             </LoadingButton>
           </div>
         </div>
@@ -379,6 +392,7 @@ export default function EditOrderForm({
             </CardContent>
           </Card>
 
+          {/* Order items */}
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Items</h2>
@@ -389,9 +403,9 @@ export default function EditOrderForm({
                       <TableHeader>
                         <TableRow>
                           <TableHead>Name</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Unit</TableHead>
                           <TableHead>Price</TableHead>
+                          <TableHead>Quantity</TableHead>
+                          <TableHead>Total Price</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -438,23 +452,32 @@ export default function EditOrderForm({
 
                     <div className="flex justify-between items-center">
                       <span>Subtotal:</span>
-                      <span>£{calculateSubtotal(orderDetails.packages)}</span>
+                      <span>£{summary.subtotal.toFixed(2)}</span>
                     </div>
                     {orderDetails.isCongestionZone && (
                       <div className="flex justify-between">
                         <span>Congestion Zone Fee:</span>
-                        <span>£{CONGESTION_FEE}.00</span>
+                        <span>£{CONGESTION_FEE.toFixed(2)}</span>
                       </div>
                     )}
                     {orderDetails.parkingOptions !== "FREE" && (
                       <div className="flex justify-between">
                         <span>Parking Fee:</span>
-                        <span>£{PARKING_FEE}.00</span>
+                        <span>£{PARKING_FEE.toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between font-semibold">
                       <span>Total:</span>
-                      <span>£{calculateTotal(orderDetails)}</span>
+                      <span>
+                        £
+                        {(
+                          summary.subtotal +
+                          (orderDetails.isCongestionZone ? CONGESTION_FEE : 0) +
+                          (orderDetails.parkingOptions !== "FREE"
+                            ? PARKING_FEE
+                            : 0)
+                        ).toFixed(2)}
+                      </span>
                     </div>
                   </div>
                 </>
@@ -475,6 +498,7 @@ export default function EditOrderForm({
           </Card>
         </div>
 
+        {/* Schedule Info */}
         <div className="space-y-8">
           <Card>
             <CardContent className="p-6">
@@ -491,13 +515,14 @@ export default function EditOrderForm({
                 <div className="flex items-center gap-3">
                   <Clock className="h-5 w-5 text-gray-500" />
                   <span className="text-sm">
-                    {orderDetails?.inspectionTime ?? "Time not set"}
+                    {orderDetails?.timeSlot?.slotType ?? "Time not set"}
                   </span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
+          {/* Order Notes */}
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Notes</h2>

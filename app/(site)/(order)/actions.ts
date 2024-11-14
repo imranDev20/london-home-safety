@@ -99,6 +99,19 @@ export async function createOrder(orderData: OrderData): Promise<{
           );
         }
 
+        // Verify time slot availability
+        const timeSlot = await transactionPrisma.timeSlot.findUnique({
+          where: { id: customerDetails.timeSlotId },
+        });
+
+        if (!timeSlot) {
+          throw new Error("Selected time slot not found");
+        }
+
+        if (timeSlot.isBooked || !timeSlot.isAvailable) {
+          throw new Error("Selected time slot is no longer available");
+        }
+
         // User upsert
         const upsertedUser = await transactionPrisma.user.upsert({
           where: { email: customerDetails.email },
@@ -156,6 +169,15 @@ export async function createOrder(orderData: OrderData): Promise<{
           customerDetails.parkingOptions === "FREE" ? 0 : PARKING_FEE;
         const totalPrice = packageTotal + congestionFee + parkingFee;
 
+        // Update time slot to mark it as booked
+        await transactionPrisma.timeSlot.update({
+          where: { id: customerDetails.timeSlotId },
+          data: {
+            isBooked: true,
+            isAvailable: false,
+          },
+        });
+
         // Order creation
         const invoiceNumber = await generateInvoiceId();
 
@@ -163,8 +185,8 @@ export async function createOrder(orderData: OrderData): Promise<{
           data: {
             userId: upsertedUser.id,
             propertyType: packages[0].propertyType,
-            date: customerDetails.orderDate,
-            inspectionTime: customerDetails.inspectionTime ?? "MORNING",
+            date: customerDetails.orderDate || "",
+            timeSlotId: customerDetails.timeSlotId,
             parkingOptions: customerDetails.parkingOptions,
             isCongestionZone: customerDetails.isCongestionZone ?? false,
             orderNotes: customerDetails.orderNotes,
@@ -177,6 +199,7 @@ export async function createOrder(orderData: OrderData): Promise<{
           },
           include: {
             packages: true,
+            timeSlot: true,
             user: {
               include: {
                 address: true,
@@ -218,7 +241,7 @@ export async function createOrder(orderData: OrderData): Promise<{
         await sendEmail({
           fromEmail: EMAIL_ADDRESS,
           fromName: "London Home Safety",
-          to: EMAIL_ADDRESS, // This is the admin's email address
+          to: EMAIL_ADDRESS,
           subject: `New Order Received - ${createdOrder.invoice}`,
           html: notifyAdminOrderPlacedEmailHtml(createdOrder),
           attachments,

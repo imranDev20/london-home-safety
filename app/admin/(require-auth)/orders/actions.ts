@@ -1,13 +1,14 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderStatus, PaymentStatus, Prisma, Role } from "@prisma/client";
+import { OrderStatus, Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
 import { revalidatePath } from "next/cache";
 import { jsPDF } from "jspdf";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { sendEmail } from "@/lib/send-email";
+
 import {
   BUSINESS_NAME,
   CONGESTION_FEE,
@@ -24,6 +25,7 @@ import { subDays, startOfDay, endOfDay } from "date-fns";
 type OrderWithUser = Prisma.OrderGetPayload<{
   include: {
     packages: true;
+    timeSlot: true;
     user: {
       include: {
         address: true;
@@ -197,7 +199,7 @@ export const getTodayOrders = async () => {
       select: {
         id: true,
         invoice: true,
-        inspectionTime: true,
+        timeSlot: true,
         status: true,
         paymentStatus: true,
         date: true,
@@ -228,6 +230,7 @@ export const getOrderById = cache(async (orderId: string) => {
       },
       include: {
         assignedEngineer: true,
+        timeSlot: true,
         user: {
           include: {
             address: true,
@@ -383,7 +386,7 @@ export default async function generateInvoice(orderId: string) {
   }
 }
 
-export async function createOrder(data: CreateOrderFormInput) {
+export async function createOrderByAdmin(data: CreateOrderFormInput) {
   try {
     const validatedData = createOrderSchema.parse(data);
     const packageIds = validatedData.packages.map((pkg) => pkg.packageId);
@@ -391,62 +394,97 @@ export async function createOrder(data: CreateOrderFormInput) {
     let createdOrder: OrderWithUser;
 
     // Database transaction
-    createdOrder = await prisma.$transaction(async (prismaTransaction) => {
-      const packages = await prismaTransaction.package.findMany({
-        where: {
-          id: {
-            in: packageIds,
-          },
-        },
-        select: {
-          price: true,
-        },
-      });
+    createdOrder = await prisma.$transaction(
+      async (prismaTransaction) => {
+        // Verify time slot availability first
+        const timeSlot = await prismaTransaction.timeSlot.findUnique({
+          where: { id: data.timeSlotId },
+        });
 
-      const packageTotal = packages.reduce(
-        (total, pkg) => total + pkg.price,
-        0
-      );
+        if (!timeSlot) {
+          throw new Error("Selected time slot not found");
+        }
 
-      const totalPrice =
-        packageTotal +
-        (data.isCongestionZone ? 5 : 0) +
-        (data.parkingOptions === "NO" || data.parkingOptions === "PAID"
-          ? 5
-          : 0);
+        if (timeSlot.isBooked || !timeSlot.isAvailable) {
+          throw new Error("Selected time slot is no longer available");
+        }
 
-      return await prismaTransaction.order.create({
-        data: {
-          userId: data.userId,
-          assignedEngineerId: data.assignedEngineer,
-          propertyType: data.propertyType,
-          residentialType: data.residentialType,
-          isCongestionZone: data.isCongestionZone,
-          parkingOptions: data.parkingOptions,
-          date: data.date,
-          inspectionTime: data.inspectionTime,
-          totalPrice: totalPrice,
-          invoice: data.invoiceId,
-          status: "CONFIRMED",
-          paymentStatus: "UNPAID",
-          paymentMethod: data.paymentMethod,
-          packages: {
-            connect: data.packages.map((pack) => ({ id: pack.packageId })),
-          },
-        },
-        include: {
-          packages: true,
-          user: {
-            include: {
-              address: true,
+        // Get package prices
+        const packages = await prismaTransaction.package.findMany({
+          where: {
+            id: {
+              in: packageIds,
             },
           },
-          assignedEngineer: true,
-        },
-      });
-    });
+          select: {
+            price: true,
+          },
+        });
 
-    // Email sending (outside of transaction)
+        if (packages.length !== packageIds.length) {
+          throw new Error("One or more packages not found");
+        }
+
+        const packageTotal = packages.reduce(
+          (total, pkg) => total + pkg.price,
+          0
+        );
+
+        const totalPrice =
+          packageTotal +
+          (data.isCongestionZone ? CONGESTION_FEE : 0) +
+          (data.parkingOptions === "NO" || data.parkingOptions === "PAID"
+            ? PARKING_FEE
+            : 0);
+
+        // Update time slot to mark it as booked
+        await prismaTransaction.timeSlot.update({
+          where: { id: data.timeSlotId },
+          data: {
+            isBooked: true,
+            isAvailable: false,
+          },
+        });
+
+        // Create the order
+        return await prismaTransaction.order.create({
+          data: {
+            userId: data.userId,
+            assignedEngineerId: data.assignedEngineer,
+            propertyType: data.propertyType,
+            residentialType: data.residentialType,
+            isCongestionZone: data.isCongestionZone,
+            parkingOptions: data.parkingOptions,
+            date: data.date,
+            timeSlotId: data.timeSlotId,
+            totalPrice: totalPrice,
+            invoice: data.invoiceId,
+            status: "CONFIRMED",
+            paymentStatus: "UNPAID",
+            paymentMethod: data.paymentMethod,
+            packages: {
+              connect: data.packages.map((pack) => ({ id: pack.packageId })),
+            },
+          },
+          include: {
+            packages: true,
+            timeSlot: true,
+            user: {
+              include: {
+                address: true,
+              },
+            },
+            assignedEngineer: true,
+          },
+        });
+      },
+      {
+        maxWait: 5000, // 5 seconds max to wait for a transaction slot
+        timeout: 30000, // 30 seconds max to allow the transaction to run
+      }
+    );
+
+    // Email notifications (outside transaction)
     await sendEmail({
       fromEmail: EMAIL_ADDRESS,
       fromName: "London Home Safety",
@@ -467,7 +505,7 @@ export async function createOrder(data: CreateOrderFormInput) {
       });
     }
 
-    // Revalidate paths if needed
+    // Revalidate paths
     revalidatePath("/admin", "layout");
 
     return {
@@ -478,6 +516,7 @@ export async function createOrder(data: CreateOrderFormInput) {
       emailSuccess: true,
     };
   } catch (error) {
+    // If there's an error, the transaction will automatically roll back
     return handlePrismaError(error);
   }
 }

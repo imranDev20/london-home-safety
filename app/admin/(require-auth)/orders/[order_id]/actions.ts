@@ -4,12 +4,13 @@ import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/lib/prisma-error";
 import {
   OrderStatus,
-  Package,
   PaymentStatus,
   PropertyType,
-} from "@prisma/client";
+  Package, // Correct import from @prisma/client
+} from "@prisma/client"; // Import the correct types directly from @prisma/client
 import { revalidatePath, unstable_cache as cache } from "next/cache";
 
+// Fetch engineers for a specific order
 export const getEngineersForOrder = cache(async () => {
   try {
     const engineers = await prisma.user.findMany({
@@ -28,6 +29,7 @@ export const getEngineersForOrder = cache(async () => {
   }
 });
 
+// Interface to define the expected parameters for updating orders
 interface UpdateOrderParams {
   orderId: string;
   assignedEngineerId?: string;
@@ -35,6 +37,7 @@ interface UpdateOrderParams {
   paymentStatus?: PaymentStatus;
 }
 
+// Update order function
 export async function updateOrder({
   orderId,
   assignedEngineerId,
@@ -61,10 +64,8 @@ export async function updateOrder({
     const updateData: any = {};
     let hasChanges = false;
 
-    if (
-      assignedEngineerId !== undefined &&
-      assignedEngineerId !== currentOrder.assignedEngineerId
-    ) {
+    // Check for changes and prepare data to be updated
+    if (assignedEngineerId !== undefined && assignedEngineerId !== currentOrder.assignedEngineerId) {
       updateData.assignedEngineerId = assignedEngineerId;
       hasChanges = true;
     }
@@ -74,10 +75,7 @@ export async function updateOrder({
       hasChanges = true;
     }
 
-    if (
-      paymentStatus !== undefined &&
-      paymentStatus !== currentOrder.paymentStatus
-    ) {
+    if (paymentStatus !== undefined && paymentStatus !== currentOrder.paymentStatus) {
       updateData.paymentStatus = paymentStatus;
       hasChanges = true;
     }
@@ -107,6 +105,7 @@ export async function updateOrder({
   }
 }
 
+// Fetch customers
 export const getCustomers = cache(async () => {
   try {
     const users = await prisma.user.findMany({
@@ -122,6 +121,7 @@ export const getCustomers = cache(async () => {
   }
 });
 
+// Fetch engineers
 export const getEngineers = cache(async () => {
   try {
     const engineers = await prisma.user.findMany({
@@ -133,15 +133,14 @@ export const getEngineers = cache(async () => {
     });
     return engineers;
   } catch (error) {
-    console.error("Error fetching engineer:", error);
-    throw new Error("Failed to fetch engineer");
+    console.error("Error fetching engineers:", error);
+    throw new Error("Failed to fetch engineers");
   }
 });
 
+// Fetch packages for a given property type
 export const getPackages = cache(async (propertyType?: PropertyType) => {
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
-
     const packages = await prisma.package.findMany({
       where: {
         propertyType,
@@ -150,31 +149,67 @@ export const getPackages = cache(async (propertyType?: PropertyType) => {
         price: "asc",
       },
     });
-
     return packages;
   } catch (error) {
-    console.error("Error fetching services:", error);
-    throw new Error("Failed to fetch services");
+    console.error("Error fetching packages:", error);
+    throw new Error("Failed to fetch packages");
   }
 });
 
+// Fetch package by ID
 export const getPackageById = cache(
-  async (packageId: string): Promise<Package[]> => {
+  async (packageId: string): Promise<Package[]> => { // Correct return type
     try {
-      const packages = await prisma.package.findUnique({
+      const packageData = await prisma.package.findUnique({
         where: {
           id: packageId,
         },
       });
 
-      if (!packages) {
+      if (!packageData) {
         return []; // Return an empty array if no package is found
       }
 
-      return [packages]; // Return an array with the single package
+      return [packageData]; // Return an array with the single package
     } catch (error) {
       console.error("Error fetching package:", error);
       throw new Error("Failed to fetch package");
     }
   }
 );
+
+// // Function for updating package price
+// export async function updatePackagePrice(packageId: string, price: number) {
+//   try {
+//     const updatedPackage = await prisma.package.update({
+//       where: { id: packageId },
+//       data: { price },
+//     });
+//     return {
+//       message: "Package price updated successfully!",
+//       data: updatedPackage,
+//       success: true,
+//     };
+//   } catch (error) {
+//     console.error("Error updating package price:", error);
+//     return handlePrismaError(error);
+//   }
+// }
+
+// actions.ts
+export async function updatePackagePrice(packageId: string, price: number) {
+  try {
+    const updatedPackage = await prisma.package.update({
+      where: { id: packageId },
+      data: { price },
+    });
+    return {
+      message: "Package price updated successfully!",
+      data: updatedPackage,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error updating package price:", error);
+    return handlePrismaError(error);
+  }
+}

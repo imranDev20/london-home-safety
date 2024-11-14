@@ -40,15 +40,22 @@ export default function PaymentCompo({
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [isPending, startTransition] = useTransition();
-  const { cartItems, customerDetails, clearCart, resetOrder } = useOrderStore();
+  const { cartItems, customerDetails, clearCart, resetOrder, summary } =
+    useOrderStore();
+  const {
+    subtotal: cartTotal,
+    parkingFee,
+    congestionFee,
+    total: totalPrice,
+  } = summary;
   const isNonCreditCardPayment =
     paymentMethod === "BANK_TRANSFER" || paymentMethod === "CASH_TO_ENGINEER";
 
-  const parkingFee =
-    customerDetails.parkingOptions !== "FREE" ? PARKING_FEE : 0;
-  const congestionFee = customerDetails.isCongestionZone ? CONGESTION_FEE : 0;
-  const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-  const totalPrice = cartTotal + parkingFee + congestionFee;
+  // const parkingFee =
+  //   customerDetails.parkingOptions !== "FREE" ? PARKING_FEE : 0;
+  // const congestionFee = customerDetails.isCongestionZone ? CONGESTION_FEE : 0;
+  // const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+  // const totalPrice = cartTotal + parkingFee + congestionFee;
 
   useEffect(() => {
     if (customerDetails && cartItems.length > 0) {
@@ -318,11 +325,15 @@ export default function PaymentCompo({
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Parking Fee:</span>
-                    <span className="text-gray-900">£{parkingFee}.00</span>
+                    <span className="text-gray-900">
+                      £{parkingFee.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Congestion Zone Fee:</span>
-                    <span className="text-gray-900">£{congestionFee}.00</span>
+                    <span className="text-gray-900">
+                      £{congestionFee.toFixed(2)}
+                    </span>
                   </div>
                   <Separator className="my-4" />
                   <div className="flex justify-between items-center text-xl font-semibold">
