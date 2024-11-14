@@ -1,4 +1,4 @@
-import { PaymentMethod } from "@prisma/client";
+import { ParkingOptions, PaymentMethod, PropertyType } from "@prisma/client";
 import { z } from "zod";
 
 export const createOrderSchema = z.object({
@@ -18,51 +18,32 @@ export const createOrderSchema = z.object({
     .optional()
     .nullable(),
 
-  propertyType: z.enum(["RESIDENTIAL", "COMMERCIAL"], {
+  propertyType: z.nativeEnum(PropertyType, {
     required_error: "Please select a property type",
     invalid_type_error: "Invalid property type selected",
   }),
 
-  residentialType: z
-    .enum(
-      [
-        "BUNGALOW",
-        "MID_TERRACED_HOUSE",
-        "DETACHED_HOUSE",
-        "SEMI_DETACHED_HOUSE",
-        "FLAT",
-        "APARTMENT",
-        "OTHER",
-      ],
-      {
-        required_error: "Please select a resident type",
-        invalid_type_error: "Invalid resident type selected",
-      }
-    )
-    .optional(),
-
-  commercialType: z
-    .enum(["PUB", "STORE", "OFFICE", "RESTAURANT", "WAREHOUSE", "OTHER"], {
-      required_error: "Please select a commercial property type",
-      invalid_type_error: "Invalid commercial property selected",
-    })
-    .optional(),
-
-  packages: z
+  cartItems: z
     .array(
       z.object({
         packageId: z.string().cuid({
           message: "Please select a valid package",
+        }),
+        quantity: z.number().int().positive().default(1),
+        price: z.number().positive({
+          message: "Price must be a positive number",
         }),
       })
     )
     .min(1, {
       message: "At least one service must be selected",
     }),
-  parkingOptions: z.enum(["PAID", "FREE", "NO"], {
+
+  parkingOptions: z.nativeEnum(ParkingOptions, {
     required_error: "Please select a parking option",
     invalid_type_error: "Invalid parking option selected",
   }),
+
   isCongestionZone: z.boolean({
     required_error: "Please indicate if the property is in a congestion zone",
   }),
@@ -81,6 +62,7 @@ export const createOrderSchema = z.object({
   invoiceId: z.string({
     required_error: "Invoice ID is required",
   }),
+
   paymentMethod: z.nativeEnum(PaymentMethod, {
     required_error: "Please select a payment method",
     invalid_type_error: "Invalid payment method selected",

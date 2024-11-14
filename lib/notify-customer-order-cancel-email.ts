@@ -111,9 +111,10 @@ export const notifyUserCancelEmailHtml = (
         </p>
         <p style="font-weight: bold;">Services Cancelled:</p>
         <ul style="margin-left: 20px;">
-          ${orderDetails?.packages
+          ${orderDetails?.cartItems
             .map(
-              (item) => `<li>${item.name} - ${item.category} ${item.price}</li>`
+              (item) =>
+                `<li>${item.package.serviceName} - ${item.package.name} ${item.price}</li>`
             )
             .join("")}
         </ul>

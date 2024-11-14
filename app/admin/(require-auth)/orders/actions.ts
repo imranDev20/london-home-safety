@@ -23,9 +23,13 @@ import { generateInvoiceTemplate } from "@/lib/generate-invoice";
 import { subDays, startOfDay, endOfDay } from "date-fns";
 import { calculatePackagePrice } from "@/lib/utils";
 
-type OrderWithUser = Prisma.OrderGetPayload<{
+type OrderWithRelations = Prisma.OrderGetPayload<{
   include: {
-    packages: true;
+    cartItems: {
+      include: {
+        package: true;
+      };
+    };
     timeSlot: true;
     user: {
       include: {
@@ -394,14 +398,14 @@ export default async function generateInvoice(orderId: string) {
 export async function createOrderByAdmin(data: CreateOrderFormInput) {
   try {
     const validatedData = createOrderSchema.parse(data);
-    const packageIds = validatedData.packages.map((pkg) => pkg.packageId);
+    const packageIds = validatedData.cartItems.map((item) => item.packageId);
 
-    const packageQuantities = validatedData.packages.reduce((acc, pkg) => {
-      acc[pkg.packageId] = pkg.quantity || 1;
+    const packageQuantities = validatedData.cartItems.reduce((acc, item) => {
+      acc[item.packageId] = item.quantity || 1;
       return acc;
     }, {} as Record<string, number>);
 
-    let createdOrder: OrderWithUser;
+    let createdOrder: OrderWithRelations;
 
     // Database transaction
     createdOrder = await prisma.$transaction(
@@ -432,8 +436,8 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
           throw new Error("One or more packages not found");
         }
 
-        // Calculate total price including package prices and additional fees
-        const packageTotal = packages.reduce((total, pkg) => {
+        // Create cart items with calculated prices
+        const cartItems = packages.map((pkg) => {
           const quantity = packageQuantities[pkg.id] || 1;
           let packagePrice = pkg.price;
 
@@ -443,8 +447,18 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
             packagePrice += extraUnits * (pkg.extraUnitPrice || 0);
           }
 
-          return total + packagePrice;
-        }, 0);
+          return {
+            packageId: pkg.id,
+            quantity: quantity,
+            price: packagePrice,
+          };
+        });
+
+        // Calculate total price from cart items and additional fees
+        const packageTotal = cartItems.reduce(
+          (total, item) => total + item.price,
+          0
+        );
 
         const totalPrice =
           packageTotal +
@@ -468,7 +482,6 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
             userId: data.userId,
             assignedEngineerId: data.assignedEngineer,
             propertyType: data.propertyType,
-            residentialType: data.residentialType,
             isCongestionZone: data.isCongestionZone,
             parkingOptions: data.parkingOptions,
             date: data.date,
@@ -479,14 +492,9 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
             paymentStatus: "UNPAID",
             paymentMethod: data.paymentMethod,
             cartItems: {
-              create: packages.map((pkg) => ({
-                packageId: pkg.id,
-                quantity: packageQuantities[pkg.id] || 1,
-                price: calculatePackagePrice(
-                  pkg,
-                  packageQuantities[pkg.id] || 1
-                ),
-              })),
+              createMany: {
+                data: cartItems,
+              },
             },
           },
           include: {
@@ -521,14 +529,12 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
     });
 
     if (createdOrder.assignedEngineer) {
-      const content = `Dear ${createdOrder.assignedEngineer.name},\n\nYou have been assigned a new order. The order number is ${createdOrder.invoice}. Please review the details and proceed with the necessary steps to complete the assigned tasks. Ensure all protocols are followed, and keep the customer updated on the progress.\n\nIf you encounter any issues or need further assistance, feel free to reach out to the management team.\n\nThank you for your dedication and hard work.\n\nBest regards,\nThe ${BUSINESS_NAME} Management Team`;
-
       await sendEmail({
         fromEmail: EMAIL_ADDRESS,
         fromName: "London Home Safety",
         to: createdOrder.assignedEngineer.email,
         subject: "New Service Order",
-        html: notifyEngineerEmailHtml(createdOrder, content),
+        html: notifyEngineerEmailHtml(createdOrder),
       });
     }
 
