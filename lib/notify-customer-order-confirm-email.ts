@@ -3,8 +3,7 @@ import { OrderWithRelation } from "@/types/order";
 import dayjs from "dayjs";
 
 export const notifyUserConfirmEmailHtml = (
-  orderDetails: OrderWithRelation | null,
-  content: string
+  orderDetails: OrderWithRelation | null
 ) => `
 <!DOCTYPE html>
 <html lang="en">

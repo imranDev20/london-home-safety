@@ -210,10 +210,7 @@ export async function sendEmailToCustomerOrderConfirmation(
       fromName: "London Home Safety",
       to: emailData.receiver,
       subject: emailData.subject,
-      html: notifyUserConfirmEmailHtml(
-        emailData.orderDetails,
-        emailData.content
-      ),
+      html: notifyUserConfirmEmailHtml(emailData.orderDetails),
     });
 
     // Revalidate the necessary paths if applicable (example paths)
