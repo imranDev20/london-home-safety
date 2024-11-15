@@ -167,7 +167,11 @@ export const getCustomerById = cache(async (customerId: string) => {
         address: true,
         orders: {
           include: {
-            packages: true,
+            cartItems: {
+              include: {
+                package: true,
+              },
+            },
           },
         },
       },
@@ -191,7 +195,11 @@ export const getOrdersByUsers = cache(async (userId: string) => {
         userId: userId,
       },
       include: {
-        packages: true,
+        cartItems: {
+          include: {
+            package: true,
+          },
+        },
       },
     });
     return orders;
@@ -239,10 +247,7 @@ export async function sendEmailToCustomerOrderCompleted(
       fromName: "London Home Safety",
       to: emailData.receiver,
       subject: emailData.subject,
-      html: notifyUserCompleteEmailHtml(
-        emailData.orderDetails,
-        emailData.content
-      ),
+      html: notifyUserCompleteEmailHtml(emailData.orderDetails),
     });
 
     // Revalidate the necessary paths if applicable (example paths)

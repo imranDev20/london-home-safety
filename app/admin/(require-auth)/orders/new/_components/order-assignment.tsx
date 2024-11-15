@@ -47,8 +47,6 @@ export default function OrderAssignment({
   const { control } = useFormContext<CreateOrderFormInput>();
   const [openUserComboBox, setOpenUserComboBox] = useState(false);
   const [openEngineerComboBox, setOpenEngineerComboBox] = useState(false);
-  const [customerEmail, setCustomerEmail] = useState("");
-  const [customerName, setCustomerName] = useState("");
 
   return (
     <Card>
@@ -67,7 +65,10 @@ export default function OrderAssignment({
               name="userId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Select Customer</FormLabel>
+                  <FormLabel className="flex gap-1">
+                    Select Customer
+                    <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Popover
                       open={openUserComboBox}
@@ -107,8 +108,6 @@ export default function OrderAssignment({
                                   value={customer.email}
                                   onSelect={() => {
                                     field.onChange(customer.id);
-                                    setCustomerEmail(customer.email);
-                                    setCustomerName(customer.name ?? "");
                                     setOpenUserComboBox(false);
                                   }}
                                 >
@@ -148,7 +147,7 @@ export default function OrderAssignment({
               name="assignedEngineer"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Assigned Engineer</FormLabel>
+                  <FormLabel>Assigned Engineer (Optional)</FormLabel>
                   <FormControl>
                     <Popover
                       open={openEngineerComboBox}

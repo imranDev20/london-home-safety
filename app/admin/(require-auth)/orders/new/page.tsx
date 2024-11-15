@@ -2,6 +2,7 @@ import { generateInvoiceId } from "@/lib/generate-invoice";
 import { getCustomers, getEngineers, getPackages } from "../[order_id]/actions";
 import CreateOrderForm from "./_components/create-order-form";
 import { ContentLayout } from "../../_components/content-layout";
+import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 
 export default async function AdminCreateOrderPage() {
   const customers = await getCustomers();
@@ -9,8 +10,24 @@ export default async function AdminCreateOrderPage() {
   const packages = await getPackages();
   const invoiceId = await generateInvoiceId();
 
+  const breadcrumbItems = [
+    {
+      label: "Dashboard",
+      href: "/admin",
+    },
+    {
+      label: "Orders",
+      href: "/admin/orders",
+    },
+    {
+      label: "Create Order",
+      isCurrentPage: true,
+    },
+  ];
+
   return (
     <ContentLayout title="Create Order">
+      <DynamicBreadcrumb items={breadcrumbItems} />
       <CreateOrderForm
         customers={customers}
         engineers={engineers}

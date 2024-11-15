@@ -1,7 +1,5 @@
 "use client";
 
-import { ContentLayout } from "@/app/admin/(require-auth)/_components/content-layout";
-import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -56,7 +54,6 @@ import {
   Map,
   Package,
   Phone,
-  ShoppingBag,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
@@ -74,6 +71,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import SendEmailDialog from "./send-email-dialog";
 import { BUSINESS_NAME, CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import EngineerSelection from "./engineer-selection";
 
 export default function EditOrderForm({
   orderDetails,
@@ -109,16 +107,6 @@ export default function EditOrderForm({
     orderDetails.cartItems.map((cartItem) => cartItem.package)
   );
   const total = calculateTotal(orderDetails);
-
-  const breadcrumbItems = [
-    { label: "Dashboard", href: "/admin" },
-    { label: "Orders", href: "/admin/orders" },
-    {
-      label: `Edit ${orderDetails?.invoice}`,
-      href: `/admin/orders/${orderDetails?.invoice}`,
-      isCurrentPage: true,
-    },
-  ];
 
   const handleUpdateOrderStatus = (value: OrderStatus) => {
     startTransition(async () => {
@@ -263,9 +251,7 @@ export default function EditOrderForm({
   console.log("orderDetails", orderDetails);
 
   return (
-    <ContentLayout title="Edit Order">
-      <DynamicBreadcrumb items={breadcrumbItems} />
-
+    <>
       <div className="mb-6 mt-7">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center mb-2">
@@ -320,70 +306,10 @@ export default function EditOrderForm({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Assigned Engineers</h2>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Popover
-                  open={openAssignedEngineers}
-                  onOpenChange={setOpenAssignedEngineers}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={openAssignedEngineers}
-                      className="w-full sm:w-[400px] justify-between"
-                    >
-                      {selectedEngineer
-                        ? engineers?.find(
-                            (engineer) => engineer.id === selectedEngineer
-                          )?.name
-                        : "Select engineer"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Search engineer..." />
-                      <CommandList>
-                        <CommandEmpty>No engineer found.</CommandEmpty>
-                        <CommandGroup>
-                          {engineers?.map((engineer) => (
-                            <CommandItem
-                              value={
-                                engineer.firstName + " " + engineer.lastName
-                              }
-                              key={engineer.id}
-                              onSelect={() => handleSelectEngineer(engineer.id)}
-                              onChange={() =>
-                                handleSelectEngineerEmail(engineer.email)
-                              }
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  engineer.id === selectedEngineer
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {engineer.firstName + " " + engineer.lastName}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <SendEmailDialog
-                  engineerEmail={selectedEngineerEmail}
-                  orderDetails={orderDetails}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <EngineerSelection
+            engineers={engineers}
+            orderDetails={orderDetails}
+          />
 
           {/* Order items */}
           <Card>
@@ -569,18 +495,7 @@ export default function EditOrderForm({
                 )}
                 <span>{orderDetails?.propertyType || "N/A"}</span>
               </div>
-              {orderDetails?.propertyType === "RESIDENTIAL" && (
-                <div className="flex items-center gap-2">
-                  <Bed className="h-5 w-5 text-gray-500" />
-                  <span>{orderDetails?.residentialType || "N/A"}</span>
-                </div>
-              )}
-              {orderDetails?.propertyType === "COMMERCIAL" && (
-                <div className="flex items-center gap-2">
-                  <ShoppingBag className="h-5 w-5 text-gray-500" />
-                  <span>{orderDetails?.commercialType || "N/A"}</span>
-                </div>
-              )}
+
               <div className="flex items-center gap-2">
                 <CarFront className="h-5 w-5 text-gray-500" />
                 <span>
@@ -611,6 +526,6 @@ export default function EditOrderForm({
           </CardContent>
         </Card>
       </div>
-    </ContentLayout>
+    </>
   );
 }

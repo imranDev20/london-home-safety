@@ -25,7 +25,10 @@ export default function PropertyInfo() {
         <div className="grid gap-8">
           {/* Property Type */}
           <div className="space-y-4">
-            <h3 className="font-medium text-gray-900">Property Type</h3>
+            <h3 className="font-medium text-gray-900 flex gap-1">
+              Property Type
+              <span className="text-destructive">*</span>
+            </h3>
             <FormField
               control={control}
               name="propertyType"
@@ -78,7 +81,10 @@ export default function PropertyInfo() {
 
           {/* Parking Options */}
           <div className="space-y-4">
-            <h3 className="font-medium text-gray-900">Parking Availability</h3>
+            <h3 className="font-medium text-gray-900 flex gap-1">
+              Parking Availability
+              <span className="text-destructive">*</span>
+            </h3>{" "}
             <FormField
               control={control}
               name="parkingOptions"
@@ -150,7 +156,10 @@ export default function PropertyInfo() {
 
           {/* Congestion Zone */}
           <div className="space-y-4">
-            <h3 className="font-medium text-gray-900">Congestion Zone</h3>
+            <h3 className="font-medium text-gray-900 flex gap-1">
+              Congestion Zone
+              <span className="text-destructive">*</span>
+            </h3>{" "}
             <FormField
               control={control}
               name="isCongestionZone"
