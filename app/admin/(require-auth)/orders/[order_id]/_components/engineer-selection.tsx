@@ -124,7 +124,7 @@ export default function EngineerSelection({
                 variant="outline"
                 role="combobox"
                 aria-expanded={openAssignedEngineers}
-                className="w-full sm:w-[400px] justify-between h-10"
+                className="w-full justify-between h-10"
               >
                 {selectedEngineer
                   ? `${currentEngineer?.firstName} ${currentEngineer?.lastName}`
@@ -132,7 +132,7 @@ export default function EngineerSelection({
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[400px] p-0">
+            <PopoverContent className=" p-0">
               <Command>
                 <CommandInput placeholder="Search engineer..." />
                 <CommandList>

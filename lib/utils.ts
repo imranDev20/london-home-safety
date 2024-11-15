@@ -257,3 +257,55 @@ export function calculatePackagePrice(pack: Package, quantity: number): number {
   const extraPrice = extraUnitsCount * (pack.extraUnitPrice ?? 0);
   return pack.price + extraPrice;
 }
+
+export function toTitleCase(text: string): string {
+  // Split into words, filter out empty strings
+  const words = text
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((word) => word.length > 0);
+
+  // Define articles, conjunctions, and prepositions that should remain lowercase
+  // unless they're the first or last word
+  const minor = [
+    "a",
+    "an",
+    "the",
+    "and",
+    "but",
+    "or",
+    "for",
+    "nor",
+    "as",
+    "at",
+    "by",
+    "in",
+    "of",
+    "on",
+    "to",
+    "up",
+    "yet",
+    "so",
+  ];
+
+  return words
+    .map((word, index) => {
+      // Always capitalize first and last words
+      if (index === 0 || index === words.length - 1) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+
+      // Keep minor words lowercase unless they follow a colon or semicolon
+      if (
+        minor.includes(word) &&
+        !words[index - 1].endsWith(":") &&
+        !words[index - 1].endsWith(";")
+      ) {
+        return word;
+      }
+
+      // Capitalize the first letter of other words
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+}
