@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LoadingButton } from "@/components/ui/loading-button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import useOrderStore from "@/hooks/use-order-store";
@@ -47,9 +46,6 @@ export default function PaymentCompo({
     paymentMethod,
     setPaymentMethod,
   } = useOrderStore();
-
-  const isNonCreditCardPayment =
-    paymentMethod === "BANK_TRANSFER" || paymentMethod === "CASH_TO_ENGINEER";
 
   // Calculate prices based on customer details and cart items
   const cartTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
@@ -318,18 +314,6 @@ export default function PaymentCompo({
                 onProceedClick={handleSubmit}
                 isPending={isPending}
               />
-
-              {/* {isNonCreditCardPayment && (
-                <LoadingButton
-                  type="submit"
-                  className="w-full flex items-center justify-center space-x-2 py-2 h-11"
-                  onClick={handleSubmit}
-                  loading={isPending}
-                >
-                  {!isPending && <ShoppingCart size={20} />}
-                  <span>Confirm & Order</span>
-                </LoadingButton>
-              )} */}
             </div>
           </div>
         ) : (

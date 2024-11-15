@@ -49,31 +49,31 @@ model Order {
   parkingOptions     ParkingOptions @default(NO)
   isCongestionZone   Boolean
   timeSlotId         String         @unique
-  timeSlot           TimeSlot       @relation(fields: [timeSlotId], references: [id])
+  timeSlot           TimeSlot       @relation(fields: [timeSlotId], references: [id], onDelete: Cascade)
   date               DateTime
   orderNotes         String?
   totalPrice         Float
   invoice            String         @unique
   propertyType       PropertyType
-  cartItems          CartItem[] // Add this new relation
+  cartItems          CartItem[]
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 }
 
 model TimeSlot {
   id          String   @id @default(cuid())
-  date        DateTime // The date of the slot
-  startTime   DateTime // Start time of the slot
-  endTime     DateTime // End time of the slot
-  slotType    SlotType // Type of slot (MORNING, AFTERNOON, EVENING)
+  date        DateTime
+  startTime   DateTime
+  endTime     DateTime
+  slotType    SlotType
   isBooked    Boolean  @default(false)
   isAvailable Boolean  @default(true)
   order       Order? // Optional relation to Order if booked
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@unique([date, slotType]) // Ensure unique combination of date and slot type
-  @@index([date, isBooked, isAvailable]) // Index for faster queries
+  @@unique([date, slotType])
+  @@index([date, isBooked, isAvailable])
 }
 
 model Review {

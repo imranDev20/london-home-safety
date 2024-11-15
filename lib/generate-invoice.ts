@@ -45,14 +45,20 @@ export async function generateInvoiceId() {
   return `INV${paddedNumericPart}${alphabetPart}`;
 }
 
-type OrderWithRelation = Prisma.OrderGetPayload<{
+export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
+    cartItems: {
+      include: {
+        package: true;
+      };
+    };
+    timeSlot: true;
     user: {
       include: {
         address: true;
       };
     };
-    packages: true;
+    assignedEngineer: true;
   };
 }>;
 
@@ -155,7 +161,7 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   doc.setTextColor(darkGray);
   doc.setFont("helvetica", "normal");
 
-  order.packages.forEach((pkg, index) => {
+  order.cartItems.forEach((pkg, index) => {
     const isEven = index % 2 === 0;
     if (isEven) {
       doc.setFillColor(lightGray);
@@ -164,7 +170,7 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
     }
     doc.rect(20, yPos - 5, 170, 10, "F");
 
-    const description = `${pkg.serviceName}: ${pkg.name}`;
+    const description = `${pkg.package.serviceName}: ${pkg.package.name}`;
     yPos = wrapText(doc, description, 25, yPos, 130, 10);
     doc.text(`£${pkg.price.toFixed(2)}`, 185, yPos, { align: "right" });
     yPos += 15;

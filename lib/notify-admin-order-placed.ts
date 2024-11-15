@@ -4,13 +4,18 @@ import dayjs from "dayjs";
 
 export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
-    packages: true;
+    cartItems: {
+      include: {
+        package: true;
+      };
+    };
     timeSlot: true;
     user: {
       include: {
         address: true;
       };
     };
+    assignedEngineer: true;
   };
 }>;
 
@@ -184,15 +189,13 @@ export const notifyAdminOrderPlacedEmailHtml = (
         <table>
           <tr>
             <th>Service Name</th>
-            <th>Category</th>
             <th>Price</th>
           </tr>
-          ${orderDetails?.packages
+          ${orderDetails?.cartItems
             .map(
               (item) => `
             <tr>
-              <td>${item.name}</td>
-              <td>${item.category}</td>
+              <td>${item.package.name}</td>
               <td>£${item.price.toFixed(2)}</td>
             </tr>
           `
