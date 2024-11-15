@@ -27,7 +27,14 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { Plus, Minus, Trash, Check, ChevronsUpDown } from "lucide-react";
+import {
+  Plus,
+  Minus,
+  Trash,
+  Check,
+  ChevronsUpDown,
+  Package as PackageIcon,
+} from "lucide-react";
 import { CreateOrderFormInput } from "../schema";
 import { Package } from "@prisma/client";
 import { useFieldArray } from "react-hook-form";
@@ -99,22 +106,36 @@ export default function ServicesInfo({ packages }: ServicesInfoProps) {
                               variant="outline"
                               role="combobox"
                               aria-expanded={openPopoverIndexes[index]}
-                              className="w-full justify-between"
+                              className="w-full justify-between h-auto py-3"
                             >
-                              {field.value ? (
-                                (() => {
-                                  const selectedPackage = packages?.find(
-                                    (pkg) => pkg.id === field.value
-                                  );
-                                  return selectedPackage
-                                    ? `${selectedPackage.serviceName} - ${selectedPackage.name}`
-                                    : null;
-                                })()
-                              ) : (
-                                <span className="text-muted-foreground">
-                                  Select a service
-                                </span>
-                              )}
+                              <div className="flex items-start gap-2">
+                                {field.value ? (
+                                  (() => {
+                                    const selectedPackage = packages?.find(
+                                      (pkg) => pkg.id === field.value
+                                    );
+                                    return selectedPackage ? (
+                                      <div className="flex flex-col items-start text-left">
+                                        <span className="text-sm font-medium">
+                                          {selectedPackage.name}
+                                        </span>
+                                        <span className="text-xs text-muted-foreground">
+                                          {selectedPackage.serviceName}
+                                        </span>
+                                      </div>
+                                    ) : null;
+                                  })()
+                                ) : (
+                                  <div className="flex flex-col items-start text-left">
+                                    <span className="text-sm">
+                                      Choose a service
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      Select from available packages
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </PopoverTrigger>
@@ -123,39 +144,62 @@ export default function ServicesInfo({ packages }: ServicesInfoProps) {
                               <CommandInput placeholder="Search services..." />
                               <CommandList>
                                 <CommandEmpty>No services found.</CommandEmpty>
-                                <CommandGroup>
-                                  {packages?.map((pkg) => (
-                                    <CommandItem
-                                      key={pkg.id}
-                                      value={pkg.serviceName + " " + pkg.name}
-                                      onSelect={() => {
-                                        field.onChange(pkg.id);
-                                        const quantity = pkg.isAdditionalPackage
-                                          ? pkg.minQuantity ?? 1
-                                          : 1;
-                                        setValue(
-                                          `cartItems.${index}.quantity`,
-                                          quantity
-                                        );
-                                        setValue(
-                                          `cartItems.${index}.price`,
-                                          calculatePackagePrice(pkg, quantity)
-                                        );
-                                        togglePopover(index, false);
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          field.value === pkg.id
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                      {pkg.serviceName} - {pkg.name}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
+                                {/* Group packages by serviceName */}
+                                {Array.from(
+                                  new Set(
+                                    packages?.map((pkg) => pkg.serviceName)
+                                  )
+                                ).map((serviceName) => (
+                                  <CommandGroup
+                                    key={serviceName}
+                                    heading={serviceName}
+                                  >
+                                    {packages
+                                      ?.filter(
+                                        (pkg) => pkg.serviceName === serviceName
+                                      )
+                                      .map((pkg) => (
+                                        <CommandItem
+                                          key={pkg.id}
+                                          value={
+                                            pkg.serviceName + " " + pkg.name
+                                          }
+                                          onSelect={() => {
+                                            field.onChange(pkg.id);
+                                            const quantity =
+                                              pkg.isAdditionalPackage
+                                                ? pkg.minQuantity ?? 1
+                                                : 1;
+                                            setValue(
+                                              `cartItems.${index}.quantity`,
+                                              quantity
+                                            );
+                                            setValue(
+                                              `cartItems.${index}.price`,
+                                              calculatePackagePrice(
+                                                pkg,
+                                                quantity
+                                              )
+                                            );
+                                            togglePopover(index, false);
+                                          }}
+                                          className="pl-8 py-2"
+                                        >
+                                          <Check
+                                            className={cn(
+                                              "mr-2 h-4 w-4",
+                                              field.value === pkg.id
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                            )}
+                                          />
+                                          <span className="text-sm">
+                                            {pkg.name}
+                                          </span>
+                                        </CommandItem>
+                                      ))}
+                                  </CommandGroup>
+                                ))}
                               </CommandList>
                             </Command>
                           </PopoverContent>
@@ -254,7 +298,7 @@ export default function ServicesInfo({ packages }: ServicesInfoProps) {
                   size="icon"
                   onClick={() => remove(index)}
                   disabled={fields.length === 1}
-                  className="mt-8"
+                  className="sm:mt-11"
                 >
                   <Trash className="h-4 w-4" />
                 </Button>

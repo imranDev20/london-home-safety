@@ -3,19 +3,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import {
   Select,
   SelectContent,
@@ -47,6 +35,7 @@ import dayjs from "dayjs";
 import {
   Bed,
   Building,
+  CalendarClock,
   CalendarDays,
   CarFront,
   Check,
@@ -61,6 +50,7 @@ import {
   Package,
   Phone,
   Wallet,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
@@ -73,10 +63,8 @@ import generateInvoice from "../../actions";
 import { updateOrder } from "../actions";
 import PackageTableRow from "./package-table-row";
 
-import { Badge } from "@/components/ui/badge";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
-import SendEmailDialog from "./send-email-dialog";
 import { BUSINESS_NAME, CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import EngineerSelection from "./engineer-selection";
 
@@ -110,9 +98,7 @@ export default function EditOrderForm({
   );
   const [isPending, startTransition] = useTransition();
 
-  const subtotal = calculateSubtotal(
-    orderDetails.cartItems.map((cartItem) => cartItem.package)
-  );
+  const subtotal = calculateSubtotal(orderDetails);
   const total = calculateTotal(orderDetails);
 
   const handleUpdateOrderStatus = (value: OrderStatus) => {
@@ -233,33 +219,17 @@ export default function EditOrderForm({
   return (
     <>
       <div className="mb-6 mt-7">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">{`Edit Order #${orderDetails.invoice}`}</h1>
-          <div className="flex gap-3">
-            <LoadingButton
-              onClick={handleDownloadInvoice}
-              disabled={isLoading}
-              loading={isLoading}
-              className="h-9 text-sm font-medium flex"
-            >
-              {!isLoading && <Download className="mr-2 h-4 w-4" />}
-              Download Invoice
-            </LoadingButton>
-          </div>
-        </div>
-
-        {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center mb-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex items-center gap-3">
             <Link href="/admin/orders">
-              <Button variant="outline" size="icon" className="h-7 w-7 mr-2">
-                <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Back</span>
+              <Button variant="outline" size="icon" className="h-9 w-9">
+                <ChevronLeft className="h-5 w-5" />
+                <span className="sr-only">Back to Orders</span>
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold">Edit {orderDetails?.invoice}</h1>
+            <h1 className="text-2xl font-bold">{`Edit Order #${orderDetails.invoice}`}</h1>
           </div>
-
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full sm:w-auto">
             <Select
               value={status as OrderStatus}
               onValueChange={(value) => {
@@ -268,7 +238,7 @@ export default function EditOrderForm({
                 }
               }}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Update Status" />
               </SelectTrigger>
               <SelectContent>
@@ -283,26 +253,20 @@ export default function EditOrderForm({
             </Select>
 
             <LoadingButton
-              type="button"
+              onClick={handleDownloadInvoice}
               disabled={isLoading}
               loading={isLoading}
-              className="text-sm h-9 font-medium flex items-center"
-              onClick={handleDownloadInvoice}
-              variant="default"
+              className="h-9 text-sm font-medium flex whitespace-nowrap"
             >
               {!isLoading && <Download className="mr-2 h-4 w-4" />}
               Download Invoice
             </LoadingButton>
           </div>
         </div>
-        <Badge variant="outline">
-          Placed:{" "}
-          {dayjs(new Date(orderDetails.createdAt)).format("DD-MM-YYYY HH:mm A")}
-        </Badge> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-6">
           <EngineerSelection
             engineers={engineers}
             orderDetails={orderDetails}
@@ -436,10 +400,19 @@ export default function EditOrderForm({
               )}
             </CardContent>
           </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Order Notes</h2>
+              <p className="text-gray-700">
+                {orderDetails?.orderNotes || "No notes available"}
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Schedule Info */}
-        <div className="space-y-8">
+        <div className="space-y-6">
+          {/* Schedule Info */}
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-6">Schedule Info</h2>
@@ -475,142 +448,140 @@ export default function EditOrderForm({
                     </p>
                   </div>
                 </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <CalendarClock className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Order Placed</p>
+                    <p className="font-medium">
+                      {dayjs(new Date(orderDetails.createdAt)).format(
+                        "DD MMM YYYY, HH:mm A"
+                      )}
+                    </p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Order Notes */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Order Notes</h2>
-              <p className="text-gray-700">
-                {orderDetails?.orderNotes || "No notes available"}
-              </p>
+              <h2 className="text-xl font-semibold mb-6">Customer Details</h2>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-primary text-white">
+                        {orderDetails?.user?.name?.charAt(0) ?? "A"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="ml-4">
+                    <p className="font-medium">{`${orderDetails?.user.firstName} ${orderDetails.user.lastName}`}</p>
+                    <p className="text-sm text-gray-500">
+                      {orderDetails?.user.email}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Phone className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Phone Number</p>
+                    <p className="font-medium">
+                      {orderDetails?.user?.phone || "N/A"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Map className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Address</p>
+                    <p className="font-medium">
+                      {orderDetails?.user?.address?.street &&
+                        `${orderDetails.user.address.street}, `}
+                      {orderDetails?.user?.address?.city &&
+                        `${orderDetails.user.address.city} `}
+                      {orderDetails?.user?.address?.postcode}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Property Details</h2>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    {orderDetails?.propertyType === "RESIDENTIAL" ? (
+                      <Home className="h-5 w-5 text-primary" />
+                    ) : (
+                      <Building className="h-5 w-5 text-primary" />
+                    )}
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Property Type</p>
+                    <p className="font-medium">
+                      {toTitleCase(orderDetails?.propertyType) || "N/A"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <CarFront className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Parking Status</p>
+                    <p className="font-medium">
+                      {orderDetails?.parkingOptions === "PAID"
+                        ? "Paid Parking Available"
+                        : orderDetails?.parkingOptions === "NO"
+                        ? "No Parking Available"
+                        : "Free Parking Available"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Copyright className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">
+                      Congestion Zone
+                    </p>
+                    <p className="font-medium">
+                      {orderDetails?.isCongestionZone
+                        ? "In Congestion Zone"
+                        : "Outside Congestion Zone"}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
-      </div>
-
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-6">Customer Details</h2>
-            <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <div className="flex items-center">
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Avatar className="h-10 w-10">
-                    <AvatarFallback className="bg-primary text-white">
-                      {orderDetails?.user?.name?.charAt(0) ?? "A"}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="ml-4">
-                  <p className="font-medium">{`${orderDetails?.user.firstName} ${orderDetails.user.lastName}`}</p>
-                  <p className="text-sm text-gray-500">
-                    {orderDetails?.user.email}
-                  </p>
-                </div>
-              </div>
-
-              <div className="h-px bg-gray-200" />
-
-              <div className="flex items-center">
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Phone className="h-5 w-5 text-primary" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm text-gray-500 mb-1">Phone Number</p>
-                  <p className="font-medium">
-                    {orderDetails?.user?.phone || "N/A"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="h-px bg-gray-200" />
-
-              <div className="flex items-center">
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Map className="h-5 w-5 text-primary" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm text-gray-500 mb-1">Address</p>
-                  <p className="font-medium">
-                    {orderDetails?.user?.address?.street &&
-                      `${orderDetails.user.address.street}, `}
-                    {orderDetails?.user?.address?.city &&
-                      `${orderDetails.user.address.city} `}
-                    {orderDetails?.user?.address?.postcode}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-6">Property Details</h2>
-            <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <div className="flex items-center">
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  {orderDetails?.propertyType === "RESIDENTIAL" ? (
-                    <Home className="h-5 w-5 text-primary" />
-                  ) : (
-                    <Building className="h-5 w-5 text-primary" />
-                  )}
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm text-gray-500 mb-1">Property Type</p>
-                  <p className="font-medium">
-                    {toTitleCase(orderDetails?.propertyType) || "N/A"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="h-px bg-gray-200" />
-
-              <div className="flex items-center">
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <CarFront className="h-5 w-5 text-primary" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm text-gray-500 mb-1">Parking Status</p>
-                  <p className="font-medium">
-                    {orderDetails?.parkingOptions === "PAID"
-                      ? "Paid Parking Available"
-                      : orderDetails?.parkingOptions === "NO"
-                      ? "No Parking Available"
-                      : "Free Parking Available"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="h-px bg-gray-200" />
-
-              <div className="flex items-center">
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Copyright className="h-5 w-5 text-primary" />
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm text-gray-500 mb-1">Congestion Zone</p>
-                  <p className="font-medium">
-                    {orderDetails?.isCongestionZone
-                      ? "In Congestion Zone"
-                      : "Outside Congestion Zone"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Order Activity</h2>
-            {/* Add order activity content here */}
-            <p className="text-gray-500">No recent activity</p>
-          </CardContent>
-        </Card>
       </div>
     </>
   );

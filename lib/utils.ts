@@ -220,18 +220,14 @@ export function display12HourValue(hours: number) {
   return `0${hours % 12}`;
 }
 
-export const calculateSubtotal = (packages: Package[]) => {
-  return packages
-    .reduce((total, pack) => total + (pack.price || 0), 0)
+export const calculateSubtotal = (orderDetails: OrderWithRelation) => {
+  return orderDetails.cartItems
+    .reduce((total, item) => total + (item.price || 0), 0)
     .toFixed(2);
 };
 
 export const calculateTotal = (orderDetails: OrderWithRelation) => {
-  let total = parseFloat(
-    calculateSubtotal(
-      orderDetails.cartItems.map((cartItem) => cartItem.package)
-    )
-  );
+  let total = parseFloat(calculateSubtotal(orderDetails));
   if (orderDetails.isCongestionZone) total += CONGESTION_FEE;
   if (orderDetails.parkingOptions !== "FREE") total += PARKING_FEE;
   return total.toFixed(2);
