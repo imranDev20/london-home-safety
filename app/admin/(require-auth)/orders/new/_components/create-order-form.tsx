@@ -40,7 +40,6 @@ export default function CreateOrderForm({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
       propertyType: "RESIDENTIAL",
-      isCongestionZone: undefined,
       cartItems: [{ packageId: "", price: 0, quantity: 1 }],
       invoiceId: invoiceId,
     },
@@ -124,7 +123,7 @@ export default function CreateOrderForm({
         <DateTimeSelector />
         <PropertyInfo />
         <ServicesInfo packages={packages} />
-        <PaymentInfo />
+        <PaymentInfo packages={packages} />
       </form>
     </Form>
   );
