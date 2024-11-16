@@ -38,9 +38,6 @@ export const getPackages = cache(
           where: whereClause,
           skip,
           take: pageSize,
-          include: {
-            order: true,
-          },
         }),
         prisma.package.count({ where: whereClause }),
       ]);
@@ -93,25 +90,21 @@ export async function createPackage(data: PackageFormInputType) {
         isAdditionalPackage: data.isAdditionalPackage,
         price:
           typeof data.price === "number" ? data.price : parseFloat(data.price),
-          extraUnitPrice: 
-          typeof data.extraUnitPrice === "number" 
-            ? data.extraUnitPrice 
-            : data.extraUnitPrice 
-              ? parseFloat(data.extraUnitPrice) 
-              : null,
-              minQuantity: 
-              typeof data.minQuantity === "number" 
-                ? data.minQuantity 
-                : data.minQuantity 
-                  ? parseInt(data.minQuantity) 
-                  : null,
+        extraUnitPrice:
+          typeof data.extraUnitPrice === "number"
+            ? data.extraUnitPrice
+            : data.extraUnitPrice
+            ? parseFloat(data.extraUnitPrice)
+            : null,
+        minQuantity:
+          typeof data.minQuantity === "number"
+            ? data.minQuantity
+            : data.minQuantity
+            ? parseInt(data.minQuantity)
+            : null,
         serviceName: data.serviceName,
         category: data.category,
         propertyType: data.propertyType,
-        residentialType:
-          data.propertyType === "RESIDENTIAL" ? data.residentialType : null,
-        commercialType:
-          data.propertyType === "COMMERCIAL" ? data.commercialType : null,
         unitType: data.unitType,
       },
     });
@@ -150,29 +143,21 @@ export async function updatePackage(
               ? data.price
               : parseFloat(data.price)
             : undefined,
-            extraUnitPrice: 
-            typeof data.extraUnitPrice === "number" 
-              ? data.extraUnitPrice 
-              : data.extraUnitPrice 
-                ? parseFloat(data.extraUnitPrice) 
-                : null,
-                minQuantity: 
-                typeof data.minQuantity === "number" 
-                  ? data.minQuantity 
-                  : data.minQuantity 
-                    ? parseInt(data.minQuantity) 
-                    : null,
+        extraUnitPrice:
+          typeof data.extraUnitPrice === "number"
+            ? data.extraUnitPrice
+            : data.extraUnitPrice
+            ? parseFloat(data.extraUnitPrice)
+            : null,
+        minQuantity:
+          typeof data.minQuantity === "number"
+            ? data.minQuantity
+            : data.minQuantity
+            ? parseInt(data.minQuantity)
+            : null,
         serviceName: data.serviceName ?? undefined,
         category: data.category ?? undefined,
         propertyType: data.propertyType ?? undefined,
-        residentialType:
-          data.propertyType === "RESIDENTIAL"
-            ? data.residentialType ?? undefined
-            : null,
-        commercialType:
-          data.propertyType === "COMMERCIAL"
-            ? data.commercialType ?? undefined
-            : null,
         unitType: data.unitType ?? undefined,
       },
     });

@@ -120,7 +120,7 @@ export const getEngineerById = cache(async (engineerId: string) => {
         address: true,
         assignedOrders: {
           include: {
-            packages: true,
+            cartItems: true,
           },
         },
       },

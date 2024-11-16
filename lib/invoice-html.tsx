@@ -13,7 +13,11 @@ import {
 
 type OrderWithPackages = Prisma.OrderGetPayload<{
   include: {
-    packages: true;
+    cartItems: {
+      include: {
+        package: true;
+      };
+    };
     user: {
       include: {
         address: true;
@@ -27,11 +31,11 @@ export function generateInvoiceHtml(
   cartTotal: number,
   totalPrice: number
 ) {
-  const packageRows = order.packages
+  const packageRows = order.cartItems
     .map(
       (item) => `
     <tr>
-      <td>${item.name}</td>
+      <td>${item.package.name}</td>
       <td class="amount-column">£${item.price.toFixed(2)}</td>
     </tr>
   `

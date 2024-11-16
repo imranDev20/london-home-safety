@@ -21,9 +21,13 @@ import { unstable_cache as cache } from "next/cache";
 import { handlePrismaError } from "@/lib/prisma-error";
 import { generateInvoiceTemplate } from "@/lib/generate-invoice";
 import { subDays, startOfDay, endOfDay } from "date-fns";
-import { calculatePackagePrice } from "@/lib/utils";
+import {
+  calculatePackagePrice,
+  calculateSubtotal,
+  calculateTotal,
+} from "@/lib/utils";
 
-type OrderWithRelations = Prisma.OrderGetPayload<{
+export type OrderWithRelations = Prisma.OrderGetPayload<{
   include: {
     cartItems: {
       include: {
@@ -349,7 +353,13 @@ export default async function generateInvoice(orderId: string) {
             address: true,
           },
         },
-        packages: true,
+        timeSlot: true,
+        cartItems: {
+          include: {
+            package: true,
+          },
+        },
+        assignedEngineer: true,
       },
     });
 
@@ -362,8 +372,8 @@ export default async function generateInvoice(orderId: string) {
 
     const parkingFee = order.parkingOptions === "FREE" ? 0 : PARKING_FEE;
     const congestionFee = order.isCongestionZone ? CONGESTION_FEE : 0;
-    const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
-    const totalPrice = cartTotal + parkingFee + congestionFee;
+    const cartTotal = parseFloat(calculateSubtotal(order));
+    const totalPrice = parseFloat(calculateTotal(order));
 
     // Create a new PDF document
     const doc = new jsPDF();

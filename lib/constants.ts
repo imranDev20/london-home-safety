@@ -1,11 +1,9 @@
 import {
-  CommercialType,
   OrderStatus,
   PackageCategory,
   PackageType,
   PaymentStatus,
   PropertyType,
-  ResidentialType,
 } from "@prisma/client";
 
 export const ORDER_STATUS_OPTIONS: OrderStatus[] = [
@@ -42,25 +40,6 @@ export const SERVICE_CATEGORY_OPTION: PackageCategory[] = [
 export const PROPERTY_TYPE_OPTIONS: PropertyType[] = [
   "RESIDENTIAL",
   "COMMERCIAL",
-];
-
-export const RESIDENTIAL_TYPE_OPTIONS: ResidentialType[] = [
-  "BUNGALOW",
-  "MID_TERRACED_HOUSE",
-  "DETACHED_HOUSE",
-  "SEMI_DETACHED_HOUSE",
-  "FLAT",
-  "APARTMENT",
-  "OTHER",
-];
-
-export const COMMERCIAL_TYPE_OPTIONS: CommercialType[] = [
-  "PUB",
-  "STORE",
-  "OFFICE",
-  "RESTAURANT",
-  "WAREHOUSE",
-  "OTHER",
 ];
 
 export const NON_INVERTED_ROUTES = [
