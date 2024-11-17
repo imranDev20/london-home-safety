@@ -8,11 +8,11 @@ export default async function BlogDetailsPage({
   params,
 }: {
   params: {
-    category_id: string;
+    blog_slug: string;
   };
 }) {
-  const { category_id } = params;
-  console.log("Route category_id:", category_id); // Debug log
+  const { blog_slug } = params;
+  console.log("Route category_id:", blog_slug); // Debug log
 
   const breadCrumbOptions = [
     {
@@ -20,13 +20,10 @@ export default async function BlogDetailsPage({
       path: "/blog",
     },
     {
-      label: kebabToNormal(category_id),
+      label: kebabToNormal(blog_slug),
       isCurrentPage: true,
     },
   ];
-
-  const siteSettings = await getSettings();
-  //   const packages = await getPackages();
 
   return (
     <div>
@@ -35,7 +32,7 @@ export default async function BlogDetailsPage({
         breadCrumbOptions={breadCrumbOptions}
       />
 
-      <BlogDetails siteSettings={siteSettings} categoryId={category_id} />
+      <BlogDetails />
     </div>
   );
 }

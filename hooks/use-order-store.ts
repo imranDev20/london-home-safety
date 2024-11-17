@@ -1,3 +1,4 @@
+import { AddressSource } from "@/app/(site)/(order)/checkout/schema";
 import {
   Address,
   Package,
@@ -8,8 +9,12 @@ import {
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type AddressType = Omit<Address, "userId" | "createdAt" | "updatedAt" | "id">;
-
+type AddressType = Omit<
+  Address,
+  "userId" | "createdAt" | "updatedAt" | "id"
+> & {
+  source: AddressSource;
+};
 export type CartItem = {
   id: string;
   package: Package;
@@ -54,6 +59,7 @@ const initialCustomerDetails: CustomerDetails = {
     street: "",
     city: "",
     postcode: "",
+    source: "search",
   },
   isCongestionZone: undefined,
   parkingOptions: undefined,

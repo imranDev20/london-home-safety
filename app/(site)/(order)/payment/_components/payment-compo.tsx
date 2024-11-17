@@ -15,7 +15,7 @@ import useOrderStore from "@/hooks/use-order-store";
 import { PaymentMethod } from "@prisma/client";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
-import { AlertCircle, Loader2, ShoppingCart } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState, useTransition } from "react";
 import { createOrder } from "../../actions";
