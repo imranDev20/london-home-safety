@@ -1,8 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
   Form,
   FormField,
@@ -36,7 +34,6 @@ import useOrderStore from "@/hooks/use-order-store";
 import { useEffect } from "react";
 import { ParkingOptions } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
-import Link from "next/link";
 import RequiredIndicator from "@/components/custom/required-indicator";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import { Textarea } from "@/components/ui/textarea";
@@ -100,6 +97,7 @@ export default function CheckoutPage() {
       phone: "",
       street: "",
       city: "",
+      addressSource: "search",
       postcode: "",
       date: undefined,
       timeSlotId: "",
@@ -123,6 +121,7 @@ export default function CheckoutPage() {
         street: customerDetails.address.street ?? "",
         city: customerDetails.address.city ?? "",
         postcode: customerDetails.address.postcode ?? "",
+        addressSource: customerDetails.address.source ?? "",
         date: new Date(customerDetails.orderDate ?? ""),
         timeSlotId: customerDetails.timeSlotId ?? "",
         parkingOption: customerDetails.parkingOptions ?? "FREE",
@@ -157,6 +156,7 @@ export default function CheckoutPage() {
         street: data.street ?? "",
         city: data.city ?? "",
         postcode: data.postcode ?? "",
+        source: data.addressSource,
       },
       firstName: data.firstName,
       lastName: data.lastName,
@@ -187,18 +187,6 @@ export default function CheckoutPage() {
       });
     }
   }, [errors, toast]);
-
-  // Address validation/autocomplete handling
-const handleAddressSelect = (address: {
-  postcode: string;
-  borough: string;
-  city: string;
-  country: string;
-}) => {
-  form.setValue('postcode', address.postcode);
-  form.setValue('city', address.city);
-  form.setValue('street', address.borough); // Assuming 'borough' maps to 'street' here; update as needed
-};
 
   return (
     <CheckoutEmptyState>
@@ -280,13 +268,12 @@ const handleAddressSelect = (address: {
 
               {/* Address */}
               <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-6">Address</h2>
-              <div className="space-y-6">
-                {/* Ideal postcode prediction */}
-                <AddressValidationAutocomplete onAddressSelect={handleAddressSelect}/>
-                
-              </div>
-            </Card>
+                <h2 className="text-xl font-semibold mb-6">Address</h2>
+                <div className="space-y-6">
+                  {/* Ideal postcode prediction */}
+                  <AddressValidationAutocomplete />
+                </div>
+              </Card>
 
               {/* Congestion Zone */}
               <Card className="p-6">

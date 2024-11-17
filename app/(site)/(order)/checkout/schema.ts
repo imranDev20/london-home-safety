@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { ParkingOptions } from "@prisma/client";
 
+// Create an enum for address source
+const AddressSourceEnum = z.enum(["manual", "search"]);
+export type AddressSource = z.infer<typeof AddressSourceEnum>;
+
 export const checkoutFormSchema = z.object({
   firstName: z
     .string()
@@ -61,6 +65,8 @@ export const checkoutFormSchema = z.object({
       /^[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}$/,
       "Please enter a valid UK postcode format (e.g., SW1A 1AA)"
     ),
+
+  addressSource: AddressSourceEnum.default("search"),
 
   date: z
     .date({
