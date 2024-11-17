@@ -209,15 +209,11 @@ export default function AddressAutocomplete() {
                                           : "bg-muted"
                                       )}
                                     >
-                                      <CheckCircle2
-                                        className={cn(
-                                          "h-4 w-4",
-                                          selectedAddress?.postcode ===
-                                            address.postcode
-                                            ? "text-primary"
-                                            : "text-muted-foreground"
-                                        )}
-                                      />
+                                      {isInServiceArea(address.district) ? (
+                                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                      ) : (
+                                        <XCircle className="h-4 w-4 text-red-600" />
+                                      )}
                                     </div>
                                     <div className="flex flex-col">
                                       <span className="font-medium">
