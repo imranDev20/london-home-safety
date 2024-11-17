@@ -5,8 +5,7 @@ import {
   generateInvoiceId,
   generateInvoiceTemplate,
 } from "@/lib/generate-invoice";
-import { notifyAdminOrderPlacedEmailHtml } from "@/lib/notify-admin-order-placed";
-import { placedOrderEmailHtml } from "@/lib/placed-order-html";
+import { notifyAdminOrderPlacedEmailHtml } from "@/lib/mail-templates/notify-admin-order-placed";
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/lib/prisma-error";
 import { sendEmail } from "@/lib/send-email";
@@ -15,6 +14,7 @@ import { Order, PaymentMethod, Prisma, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { jsPDF } from "jspdf";
 import { calculateSubtotal, calculateTotal } from "@/lib/utils";
+import { notifyCustomerOrderPlacedEmailHtml } from "@/lib/mail-templates/notify-customer-order-placed-email";
 
 export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
@@ -33,7 +33,7 @@ export type OrderWithRelation = Prisma.OrderGetPayload<{
   };
 }>;
 
-export default async function generateInvoice(order: OrderWithRelation) {
+export async function generateInvoice(order: OrderWithRelation) {
   try {
     if (!order) {
       console.error("No order available to generate invoice");
@@ -189,7 +189,7 @@ export async function createOrder(orderData: OrderData): Promise<{
         // Order creation
         const invoiceNumber = await generateInvoiceId();
 
-        const createdOrder = await transactionPrisma.order.create({
+        return await transactionPrisma.order.create({
           data: {
             userId: upsertedUser.id,
             propertyType: packages[0].propertyType,
@@ -226,54 +226,49 @@ export async function createOrder(orderData: OrderData): Promise<{
             assignedEngineer: true,
           },
         });
-
-        // Invoice generation
-        const invoice = await generateInvoice(createdOrder);
-
-        if (!invoice?.data) {
-          console.log(invoice);
-          throw new Error(invoice?.message);
-        }
-
-        // Email sending
-        const attachments = [
-          {
-            ContentType: "application/pdf",
-            Filename: `Invoice_${createdOrder.invoice}.pdf`,
-            Base64Content: invoice?.data,
-          },
-        ];
-
-        await sendEmail({
-          fromEmail: EMAIL_ADDRESS,
-          fromName: "London Home Safety",
-          to: createdOrder.user.email,
-          subject: "Thank You for Your Order",
-          html: placedOrderEmailHtml(
-            createdOrder.user.firstName ?? "",
-            createdOrder.invoice
-          ),
-          attachments,
-        });
-
-        // Then, send a copy to the admin
-        await sendEmail({
-          fromEmail: EMAIL_ADDRESS,
-          fromName: "London Home Safety",
-          to: EMAIL_ADDRESS,
-          subject: `New Order Received - ${createdOrder.invoice}`,
-          html: notifyAdminOrderPlacedEmailHtml(createdOrder),
-          attachments,
-        });
-
-        console.log("All steps completed successfully within the transaction");
-        return createdOrder;
       },
       {
         maxWait: 5000,
         timeout: 30000,
       }
     );
+
+    // Generate invoice outside transaction
+    try {
+      const invoice = await generateInvoice(result);
+      if (invoice?.data) {
+        const attachments = [
+          {
+            ContentType: "application/pdf",
+            Filename: `Invoice_${result.invoice}.pdf`,
+            Base64Content: invoice.data,
+          },
+        ];
+
+        // Send emails outside transaction
+        await sendEmail({
+          fromEmail: EMAIL_ADDRESS,
+          fromName: "London Home Safety",
+          to: result.user.email,
+          subject: `Order Request #${result.invoice} Received`,
+          html: notifyCustomerOrderPlacedEmailHtml(result),
+          attachments,
+        });
+
+        // Send copy to admin
+        await sendEmail({
+          fromEmail: EMAIL_ADDRESS,
+          fromName: "London Home Safety",
+          to: EMAIL_ADDRESS,
+          subject: `New Order Received - ${result.invoice}`,
+          html: notifyAdminOrderPlacedEmailHtml(result),
+          attachments,
+        });
+      }
+    } catch (emailError) {
+      // Log error but don't fail the order creation
+      console.error("Failed to send emails:", emailError);
+    }
 
     revalidatePath("/admin", "layout");
 

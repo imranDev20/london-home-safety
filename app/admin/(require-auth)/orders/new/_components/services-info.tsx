@@ -38,20 +38,11 @@ import {
 import { CreateOrderFormInput } from "../schema";
 import { Package } from "@prisma/client";
 import { useFieldArray } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { calculatePackagePrice, cn } from "@/lib/utils";
 import { useState } from "react";
 
 interface ServicesInfoProps {
   packages: Package[];
-}
-
-function calculatePackagePrice(pack: Package, quantity: number): number {
-  if (!pack.isAdditionalPackage) return pack.price;
-
-  const minQuantity = pack.minQuantity ?? 1;
-  const extraUnitsCount = Math.max(0, quantity - minQuantity);
-  const extraPrice = extraUnitsCount * (pack.extraUnitPrice ?? 0);
-  return pack.price + extraPrice;
 }
 
 export default function ServicesInfo({ packages }: ServicesInfoProps) {

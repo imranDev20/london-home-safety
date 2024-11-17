@@ -1,12 +1,14 @@
 "use server";
 
-import { notifyUserCancelEmailHtml } from "@/lib/notify-customer-order-cancel-email";
-import { notifyUserCompleteEmailHtml } from "@/lib/notify-customer-order-completd-email";
-import { notifyUserConfirmEmailHtml } from "@/lib/notify-customer-order-confirm-email";
+import { notifyCustomerOrderCancelledEmailHtml } from "@/lib/mail-templates/notify-customer-order-cancelled-email";
+import { notifyCustomerOrderCompletedEmailHtml } from "@/lib/mail-templates/notify-customer-order-completed-email";
+import { notifyCustomerOrderConfirmedEmailHtml } from "@/lib/mail-templates/notify-customer-order-confirmed-email";
+import { notifyCustomerOrderPlacedEmailHtml } from "@/lib/mail-templates/notify-customer-order-placed-email";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { SendEmailDataType } from "@/types/misc";
+import { OrderWithRelation } from "@/types/order";
 import { Prisma, Role } from "@prisma/client";
 import dayjs from "dayjs";
 import exceljs from "exceljs";
@@ -209,94 +211,60 @@ export const getOrdersByUsers = cache(async (userId: string) => {
   }
 });
 
-export async function sendEmailToCustomerOrderConfirmation(
-  emailData: SendEmailDataType
-) {
-  try {
-    await sendEmail({
-      fromEmail: EMAIL_ADDRESS,
-      fromName: "London Home Safety",
-      to: emailData.receiver,
-      subject: emailData.subject,
-      html: notifyUserConfirmEmailHtml(emailData.orderDetails),
-    });
-
-    // Revalidate the necessary paths if applicable (example paths)
-    revalidatePath(`/admin/orders`);
-    revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
-
-    return {
-      message: "Email sent successfully to customer!",
-      success: true,
-    };
-  } catch (error: any) {
-    console.error("Error sending email:", error);
-    return {
-      message:
-        "An error occurred while sending the email. Please try again later.",
-      success: false,
-    };
-  }
-}
-export async function sendEmailToCustomerOrderCompleted(
-  emailData: SendEmailDataType
-) {
-  try {
-    await sendEmail({
-      fromEmail: EMAIL_ADDRESS,
-      fromName: "London Home Safety",
-      to: emailData.receiver,
-      subject: emailData.subject,
-      html: notifyUserCompleteEmailHtml(emailData.orderDetails),
-    });
-
-    // Revalidate the necessary paths if applicable (example paths)
-    revalidatePath(`/admin/orders`);
-    revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
-
-    return {
-      message: "Email sent successfully to customer!",
-      success: true,
-    };
-  } catch (error: any) {
-    console.error("Error sending email:", error);
-    return {
-      message:
-        "An error occurred while sending the email. Please try again later.",
-      success: false,
-    };
-  }
+interface EmailData {
+  receiver: string;
+  orderDetails: OrderWithRelation;
 }
 
-export async function sendEmailToCustomerOrderCancelled(
-  emailData: SendEmailDataType
-) {
+export async function sendOrderStatusEmail(emailData: EmailData) {
   try {
+    const allowedStatuses = ["CONFIRMED", "COMPLETED", "CANCELLED"] as const;
+    type AllowedStatus = (typeof allowedStatuses)[number];
+
+    if (
+      !allowedStatuses.includes(emailData.orderDetails.status as AllowedStatus)
+    ) {
+      return { success: true, message: "No email required for this status" };
+    }
+
+    const statusSubjects: Record<AllowedStatus, string> = {
+      CONFIRMED: `Order #${emailData.orderDetails.invoice} Confirmed`,
+      COMPLETED: `Order #${emailData.orderDetails.invoice} Completed`,
+      CANCELLED: `Order #${emailData.orderDetails.invoice} Cancelled`,
+    };
+
+    const statusTemplates: Record<
+      AllowedStatus,
+      (orderDetails: any) => string
+    > = {
+      CONFIRMED: notifyCustomerOrderConfirmedEmailHtml,
+      COMPLETED: notifyCustomerOrderCompletedEmailHtml,
+      CANCELLED: notifyCustomerOrderCancelledEmailHtml,
+    };
+
     await sendEmail({
       fromEmail: EMAIL_ADDRESS,
       fromName: "London Home Safety",
       to: emailData.receiver,
-      subject: emailData.subject,
-      html: notifyUserCancelEmailHtml(
-        emailData.orderDetails,
-        emailData.content
+      subject: statusSubjects[emailData.orderDetails.status as AllowedStatus],
+      html: statusTemplates[emailData.orderDetails.status as AllowedStatus](
+        emailData.orderDetails
       ),
     });
 
-    // Revalidate the necessary paths if applicable (example paths)
     revalidatePath(`/admin/orders`);
-    revalidatePath(`/admin/orders/${emailData.orderDetails?.id}`);
+    revalidatePath(`/admin/orders/${emailData.orderDetails.id}`);
 
     return {
-      message: "Email sent successfully to customer!",
       success: true,
+      message: `Order status email sent successfully to customer!`,
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error sending email:", error);
     return {
+      success: false,
       message:
         "An error occurred while sending the email. Please try again later.",
-      success: false,
     };
   }
 }

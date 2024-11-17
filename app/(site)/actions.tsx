@@ -1,10 +1,10 @@
 "use server";
 
-import { contactAdminNotificationEmailHtml } from "@/lib/contact-admin-email";
+import { contactAdminNotificationEmailHtml } from "@/lib/mail-templates/contact-admin-email";
 import {
   contactCustomerNotificationEmailHtml,
   customerEmailSubject,
-} from "@/lib/contact-customer-email";
+} from "@/lib/mail-templates/contact-customer-email";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";

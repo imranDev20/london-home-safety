@@ -22,12 +22,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTION } from "@/lib/constants";
-import {
-  calculateSubtotal,
-  calculateTotal,
-  cn,
-  toTitleCase,
-} from "@/lib/utils";
+import { calculateSubtotal, calculateTotal, toTitleCase } from "@/lib/utils";
 import { StaffWithRelations } from "@/types/engineers";
 import { OrderWithRelation } from "@/types/order";
 
@@ -38,14 +33,13 @@ import {
   CalendarClock,
   CalendarDays,
   CarFront,
-  Check,
   ChevronLeft,
-  ChevronsUpDown,
   Clock,
   Copyright,
   CreditCard,
   Download,
   Home,
+  Loader2,
   Map,
   Package,
   Phone,
@@ -53,19 +47,15 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
-import {
-  sendEmailToCustomerOrderCancelled,
-  sendEmailToCustomerOrderCompleted,
-  sendEmailToCustomerOrderConfirmation,
-} from "../../../customers/actions";
+import { useState, useTransition } from "react";
+import { sendOrderStatusEmail } from "../../../customers/actions";
 import generateInvoice from "../../actions";
 import { updateOrder } from "../actions";
 import PackageTableRow from "./package-table-row";
 
 import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
-import { BUSINESS_NAME, CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
 import EngineerSelection from "./engineer-selection";
 
 export default function EditOrderForm({
@@ -77,20 +67,6 @@ export default function EditOrderForm({
 }) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [openAssignedEngineers, setOpenAssignedEngineers] = useState(false);
-  const [selectedEngineer, setSelectedEngineer] = useState(
-    orderDetails?.assignedEngineerId ?? ""
-  );
-  const [selectedEngineerEmail, setSelectedEngineerEmail] = useState("");
-  useEffect(() => {
-    if (orderDetails?.assignedEngineerId) {
-      engineers?.find(
-        (engineer) =>
-          engineer.id === selectedEngineer &&
-          setSelectedEngineerEmail(engineer.email)
-      );
-    }
-  }, [orderDetails?.assignedEngineerId, engineers, selectedEngineer]);
 
   const [status, setStatus] = useState<OrderStatus>(orderDetails.status);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(
@@ -103,67 +79,44 @@ export default function EditOrderForm({
 
   const handleUpdateOrderStatus = (value: OrderStatus) => {
     startTransition(async () => {
-      if (orderDetails?.id) {
-        setStatus(value);
-        const result = await updateOrder({
-          orderId: orderDetails?.id,
-          orderStatus: value,
+      if (!orderDetails?.id) return;
+
+      // Update local state and order status
+      setStatus(value);
+      const result = await updateOrder({
+        orderId: orderDetails.id,
+        orderStatus: value,
+      });
+
+      // Show update result toast
+      toast({
+        title: result.success ? "Success" : "Error",
+        description: result.message,
+        variant: result.success ? "success" : "destructive",
+      });
+
+      // Send email notifications for specific status changes
+      if (["CONFIRMED", "COMPLETED", "CANCELLED"].includes(value)) {
+        const emailResult = await sendOrderStatusEmail({
+          receiver: orderDetails.user.email,
+          orderDetails: {
+            ...orderDetails,
+            status: value,
+          },
         });
 
-        toast({
-          title: result.success ? "Success" : "Error",
-          description: result.message,
-          variant: result.success ? "success" : "destructive",
-        });
-        if (value === "CONFIRMED") {
-          const emailData = {
-            receiver: orderDetails?.user.email,
-            subject: "Order Confirmation",
-            content: `Dear ${orderDetails?.user.firstName},\n\nThank you for your order. Your order has been confirmed. Your order number is ${orderDetails?.invoice}.`,
-            orderDetails: orderDetails,
-          };
-          const response = await sendEmailToCustomerOrderConfirmation(
-            emailData
-          );
+        // Only show toast if email fails
+        if (!emailResult.success) {
           toast({
-            title: response.success ? "Success" : "Error",
-            description: response.message,
-            variant: response.success ? "success" : "destructive",
-          });
-        }
-        if (value === "COMPLETED") {
-          const emailData = {
-            receiver: orderDetails?.user.email,
-            subject: "Order Completed",
-            content: `Dear ${orderDetails?.user.firstName},\n\nWe are pleased to inform you that your order has been successfully completed. Your order number is ${orderDetails?.invoice}. If you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`,
-            orderDetails: orderDetails,
-          };
-
-          const response = await sendEmailToCustomerOrderCompleted(emailData);
-          toast({
-            title: response.success ? "Success" : "Error",
-            description: response.message,
-            variant: response.success ? "success" : "destructive",
-          });
-        }
-        if (value === "CANCELLED") {
-          const emailData = {
-            receiver: orderDetails?.user.email,
-            subject: "Order Cancelled",
-            content: `Dear ${orderDetails?.user.firstName},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
-            orderDetails: orderDetails,
-          };
-
-          const response = await sendEmailToCustomerOrderCancelled(emailData);
-          toast({
-            title: response.success ? "Success" : "Error",
-            description: response.message,
-            variant: response.success ? "success" : "destructive",
+            title: "Warning",
+            description: "Order updated but email notification failed to send",
+            variant: "destructive",
           });
         }
       }
     });
   };
+
   const handleUpdatePaymentStatus = (value: PaymentStatus) => {
     startTransition(async () => {
       if (orderDetails?.id) {
@@ -214,8 +167,6 @@ export default function EditOrderForm({
     }
   };
 
-  console.log("orderDetails", orderDetails);
-
   return (
     <>
       <div className="mb-6 mt-7">
@@ -237,9 +188,17 @@ export default function EditOrderForm({
                   handleUpdateOrderStatus(value as OrderStatus);
                 }
               }}
+              disabled={isPending}
             >
               <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="Update Status" />
+                {isPending ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Updating...</span>
+                  </div>
+                ) : (
+                  <SelectValue placeholder="Update Status" />
+                )}
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -282,14 +241,10 @@ export default function EditOrderForm({
                     <Table>
                       <TableHeader>
                         <TableRow className="hover:bg-transparent">
-                          <TableHead className="text-gray-500">Name</TableHead>
+                          <TableHead className="text-gray-500">
+                            Service Name
+                          </TableHead>
                           <TableHead className="text-gray-500">Price</TableHead>
-                          <TableHead className="text-gray-500">
-                            Quantity
-                          </TableHead>
-                          <TableHead className="text-gray-500">
-                            Total Price
-                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -338,9 +293,17 @@ export default function EditOrderForm({
                             handleUpdatePaymentStatus(value as PaymentStatus);
                           }
                         }}
+                        disabled={isPending}
                       >
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Update Payment Status" />
+                          {isPending ? (
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <span>Updating...</span>
+                            </div>
+                          ) : (
+                            <SelectValue placeholder="Update Payment Status" />
+                          )}
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>

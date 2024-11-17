@@ -65,7 +65,10 @@ export async function updateOrder({
     let hasChanges = false;
 
     // Check for changes and prepare data to be updated
-    if (assignedEngineerId !== undefined && assignedEngineerId !== currentOrder.assignedEngineerId) {
+    if (
+      assignedEngineerId !== undefined &&
+      assignedEngineerId !== currentOrder.assignedEngineerId
+    ) {
       updateData.assignedEngineerId = assignedEngineerId;
       hasChanges = true;
     }
@@ -75,7 +78,10 @@ export async function updateOrder({
       hasChanges = true;
     }
 
-    if (paymentStatus !== undefined && paymentStatus !== currentOrder.paymentStatus) {
+    if (
+      paymentStatus !== undefined &&
+      paymentStatus !== currentOrder.paymentStatus
+    ) {
       updateData.paymentStatus = paymentStatus;
       hasChanges = true;
     }
@@ -158,7 +164,8 @@ export const getPackages = cache(async (propertyType?: PropertyType) => {
 
 // Fetch package by ID
 export const getPackageById = cache(
-  async (packageId: string): Promise<Package[]> => { // Correct return type
+  async (packageId: string): Promise<Package[]> => {
+    // Correct return type
     try {
       const packageData = await prisma.package.findUnique({
         where: {
@@ -178,25 +185,6 @@ export const getPackageById = cache(
   }
 );
 
-// // Function for updating package price
-// export async function updatePackagePrice(packageId: string, price: number) {
-//   try {
-//     const updatedPackage = await prisma.package.update({
-//       where: { id: packageId },
-//       data: { price },
-//     });
-//     return {
-//       message: "Package price updated successfully!",
-//       data: updatedPackage,
-//       success: true,
-//     };
-//   } catch (error) {
-//     console.error("Error updating package price:", error);
-//     return handlePrismaError(error);
-//   }
-// }
-
-// actions.ts
 export async function updatePackagePrice(packageId: string, price: number) {
   try {
     const updatedPackage = await prisma.package.update({

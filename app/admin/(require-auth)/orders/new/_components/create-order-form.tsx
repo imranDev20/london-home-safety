@@ -25,12 +25,10 @@ export default function CreateOrderForm({
   customers,
   engineers,
   packages,
-  invoiceId,
 }: {
   customers: CustomerWithRelation[];
   engineers: StaffWithRelations[];
   packages: Package[];
-  invoiceId: string;
 }) {
   const { toast } = useToast();
   const router = useRouter();
@@ -41,7 +39,6 @@ export default function CreateOrderForm({
     defaultValues: {
       propertyType: "RESIDENTIAL",
       cartItems: [{ packageId: "", price: 0, quantity: 1 }],
-      invoiceId: invoiceId,
     },
   });
 
@@ -89,6 +86,8 @@ export default function CreateOrderForm({
       });
     }
   }, [errors, toast]);
+
+  console.log(errors);
 
   return (
     <Form {...form}>
