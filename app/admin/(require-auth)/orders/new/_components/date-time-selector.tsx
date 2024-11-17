@@ -81,7 +81,7 @@ function AppointmentSessionCard({
       return (
         <div className="flex items-center text-red-500 gap-1 ml-auto">
           <CalendarIcon className="w-4 h-4" />
-          <span className="text-xs font-medium">Already Booked</span>
+          <span className="text-xs font-medium">Booked</span>
         </div>
       );
     }
