@@ -176,7 +176,9 @@ export default function AddressAutocomplete() {
                           <CommandInput
                             placeholder="Search address by postcode..."
                             value={searchTerm}
-                            onValueChange={setSearchTerm}
+                            onValueChange={(value) =>
+                              setSearchTerm(value.toUpperCase())
+                            }
                           />
                           <CommandList>
                             <CommandEmpty className="py-6 text-center text-sm">
