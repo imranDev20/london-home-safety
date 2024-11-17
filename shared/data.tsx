@@ -2861,7 +2861,7 @@ export const NAV_ITEMS: NavItem[] = [
       },
     ],
   },
-  { label: "Our Projects", path: "/out-projects" },
+  { label: "Projects", path: "/projects" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -3141,7 +3141,6 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-      
     },
     {
       label: "PAT Testing for Home and Business",
@@ -3149,7 +3148,7 @@ export const generateBlogData = () => {
       image: PatImage,
       description:
         "Portable Appliance Testing (PAT) to ensure electrical safety.",
-        authorName: "Alex",
+      authorName: "Alex",
       publishedDate: "March 26 2023",
       detailedDesc: {
         details:
@@ -3261,9 +3260,6 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-      
-
-
     },
     {
       label: "Emergency Lighting Inspections",
@@ -3271,7 +3267,7 @@ export const generateBlogData = () => {
       image: EmergencyLightCertificateImage,
       description:
         "Emergency lighting inspection services to meet regulatory standards.",
-        authorName: "Mr. Jhon",
+      authorName: "Mr. Jhon",
       publishedDate: "Jun 13 2023",
       detailedDesc: {
         details:
@@ -3383,8 +3379,6 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-
-      
     },
     {
       label: "Energy Efficiency Audits",
@@ -3392,12 +3386,12 @@ export const generateBlogData = () => {
       image: EmergencyLightImage,
       description:
         "Energy efficiency audits to help reduce energy consumption.",
-        authorName: "Alex Jhon",
+      authorName: "Alex Jhon",
       publishedDate: "December 24 2023",
       detailedDesc: {
         details:
           "Our energy audits provide recommendations to improve energy efficiency in your home or business.",
-          
+
         points: [
           "Reduce energy costs",
           "Improve system efficiency",
@@ -3505,12 +3499,9 @@ export const generateBlogData = () => {
       </div>
       `,
       },
-      
     },
   ];
 };
-
-
 
 export const ALL_BLOGS: NavLeafItem[] =
   NAV_ITEMS.find((item) => item.label === "Blog")?.children?.flatMap(
@@ -3529,7 +3520,6 @@ export const ALL_SERVICES: NavLeafItem[] =
         categoryPath: category.path,
       }))
   ) ?? [];
-
 
 export const FAQ_HOME = [
   {
@@ -3560,7 +3550,8 @@ export const FAQ_HOME = [
   },
 ];
 
-export const blurData = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx0fHRsdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/2wBDAR0XFyAeIRweIR0hHSEdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+export const blurData =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx0fHRsdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/2wBDAR0XFyAeIRweIR0hHSEdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR3/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=";
 
 export const BUSINESS_NAME = "London Home Safety Limited";
 export const ADDRESS =
