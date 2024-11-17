@@ -28,7 +28,7 @@ export type CustomerWithOrders = Prisma.UserGetPayload<{
     address: true;
     orders: {
       include: {
-        packages: true;
+        cartItems: true;
       };
     };
   };
@@ -39,7 +39,7 @@ export type EngineerWithAssignedOrders = Prisma.UserGetPayload<{
     address: true;
     assignedOrders: {
       include: {
-        packages: true;
+        cartItems: true;
       };
     };
   };

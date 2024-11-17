@@ -24,12 +24,7 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  COMMERCIAL_TYPE_OPTIONS,
-  RESIDENTIAL_TYPE_OPTIONS,
-  SERVICE_CATEGORY_OPTION,
-  SERVICE_TYPE_OPTIONS,
-} from "@/lib/constants";
+import { SERVICE_CATEGORY_OPTION, SERVICE_TYPE_OPTIONS } from "@/lib/constants";
 import { kebabToNormal } from "@/lib/utils";
 import { ALL_SERVICES } from "@/shared/data";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -81,8 +76,6 @@ export default function PackageForm({
       priceType: packageDetails?.priceType || "FIXED",
       serviceName: packageDetails?.serviceName || "",
       propertyType: packageDetails?.propertyType || "RESIDENTIAL",
-      residentialType: packageDetails?.residentialType || undefined,
-      commercialType: packageDetails?.commercialType || undefined,
       unitType: "",
     },
   });
@@ -106,8 +99,6 @@ export default function PackageForm({
         priceType: packageDetails.priceType || "FIXED",
         serviceName: packageDetails.serviceName || "",
         propertyType: packageDetails.propertyType || "RESIDENTIAL",
-        residentialType: packageDetails.residentialType || undefined,
-        commercialType: packageDetails.commercialType || undefined,
         unitType: packageDetails.unitType || "",
       });
     }
@@ -480,76 +471,6 @@ export default function PackageForm({
             )}
           />
 
-          {watch("propertyType") === "RESIDENTIAL" && (
-            <FormField
-              control={control}
-              name="residentialType"
-              render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
-                  <FormLabel className="text-sm font-medium">
-                    Residential Type (Optional)
-                  </FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      if (value) {
-                        field.onChange(value);
-                      }
-                    }}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select residential type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {RESIDENTIAL_TYPE_OPTIONS.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {kebabToNormal(type)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-          {watch("propertyType") === "COMMERCIAL" && (
-            <FormField
-              control={control}
-              name="commercialType"
-              render={({ field }) => (
-                <FormItem className="col-span-12 md:col-span-6">
-                  <FormLabel className="text-sm font-medium">
-                    Commercial Type (Optional)
-                  </FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      if (value) {
-                        field.onChange(value);
-                      }
-                    }}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select commercial type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {COMMERCIAL_TYPE_OPTIONS.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {kebabToNormal(type)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
           <FormField
             control={control}
             name="unitType"

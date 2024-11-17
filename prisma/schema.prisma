@@ -38,45 +38,42 @@ model Address {
 }
 
 model Order {
-  id                 String           @id @default(cuid())
+  id                 String         @id @default(cuid())
   userId             String
-  user               User             @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
+  user               User           @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
   assignedEngineerId String?
-  assignedEngineer   User?            @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
-  status             OrderStatus      @default(PENDING)
-  paymentStatus      PaymentStatus    @default(UNPAID)
-  paymentMethod      PaymentMethod    @default(CREDIT_CARD)
-  parkingOptions     ParkingOptions   @default(NO)
+  assignedEngineer   User?          @relation("AssignedOrders", fields: [assignedEngineerId], references: [id])
+  status             OrderStatus    @default(PENDING)
+  paymentStatus      PaymentStatus  @default(UNPAID)
+  paymentMethod      PaymentMethod  @default(CREDIT_CARD)
+  parkingOptions     ParkingOptions @default(NO)
   isCongestionZone   Boolean
-  timeSlotId         String           @unique
-  timeSlot           TimeSlot         @relation(fields: [timeSlotId], references: [id])
+  timeSlotId         String         @unique
+  timeSlot           TimeSlot       @relation(fields: [timeSlotId], references: [id]) // Removed onDelete: Cascade
   date               DateTime
   orderNotes         String?
   totalPrice         Float
-  invoice            String           @unique
+  invoice            String         @unique
   propertyType       PropertyType
-  residentialType    ResidentialType?
-  commercialType     CommercialType?
-  packages           Package[] // Keep this for now
-  cartItems          CartItem[] // Add this new relation
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  cartItems          CartItem[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
 }
 
 model TimeSlot {
   id          String   @id @default(cuid())
-  date        DateTime // The date of the slot
-  startTime   DateTime // Start time of the slot
-  endTime     DateTime // End time of the slot
-  slotType    SlotType // Type of slot (MORNING, AFTERNOON, EVENING)
+  date        DateTime
+  startTime   DateTime
+  endTime     DateTime
+  slotType    SlotType
   isBooked    Boolean  @default(false)
   isAvailable Boolean  @default(true)
-  order       Order? // Optional relation to Order if booked
+  order       Order? // Relation field without onDelete
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@unique([date, slotType]) // Ensure unique combination of date and slot type
-  @@index([date, isBooked, isAvailable]) // Index for faster queries
+  @@unique([date, slotType])
+  @@index([date, isBooked, isAvailable])
 }
 
 model Review {
@@ -90,26 +87,22 @@ model Review {
 }
 
 model Package {
-  id                  String           @id @default(cuid())
+  id                  String          @id @default(cuid())
   name                String
   description         String?
   category            PackageCategory
   serviceName         String
   type                PackageType?
   propertyType        PropertyType
-  residentialType     ResidentialType?
-  commercialType      CommercialType?
   unitType            String?
   price               Float
-  isAdditionalPackage Boolean          @default(false)
-  extraUnitPrice      Float?           @default(0)
-  minQuantity         Int?             @default(0)
-  priceType           PriceType        @default(FIXED)
-  orderId             String? // Keep this for now
-  order               Order?           @relation(fields: [orderId], references: [id])
+  isAdditionalPackage Boolean         @default(false)
+  extraUnitPrice      Float?          @default(0)
+  minQuantity         Int?            @default(0)
+  priceType           PriceType       @default(FIXED)
   cartItems           CartItem[] // Add this new relation
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 }
 
 model CartItem {
@@ -181,25 +174,6 @@ enum PropertyType {
   HMO
   COMMUNAL_AREA
   BUSINESS_SECTOR
-}
-
-enum ResidentialType {
-  BUNGALOW
-  MID_TERRACED_HOUSE
-  DETACHED_HOUSE
-  SEMI_DETACHED_HOUSE
-  FLAT
-  APARTMENT
-  OTHER
-}
-
-enum CommercialType {
-  PUB
-  STORE
-  OFFICE
-  RESTAURANT
-  WAREHOUSE
-  OTHER
 }
 
 enum OrderStatus {

@@ -4,14 +4,38 @@ import {
   BANK_ACCOUNT_NUMBER,
   BANK_SORT_CODE,
   BUSINESS_NAME,
-  LANDLINE,
   POSTCODE,
   STREET_NAME,
 } from "@/shared/data";
-import { Order, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { jsPDF } from "jspdf";
 import path from "path";
 import fs from "fs";
+
+export type OrderWithRelation = Prisma.OrderGetPayload<{
+  include: {
+    cartItems: {
+      include: {
+        package: true;
+      };
+    };
+    timeSlot: true;
+    user: {
+      include: {
+        address: true;
+      };
+    };
+    assignedEngineer: true;
+  };
+}>;
+
+type InvoiceData = {
+  order: OrderWithRelation;
+  cartTotal: number;
+  parkingFee: number;
+  congestionFee: number;
+  totalPrice: number;
+};
 
 export async function generateInvoiceId() {
   const mostRecentOrder = await prisma.order.findFirst({
@@ -45,36 +69,17 @@ export async function generateInvoiceId() {
   return `INV${paddedNumericPart}${alphabetPart}`;
 }
 
-type OrderWithRelation = Prisma.OrderGetPayload<{
-  include: {
-    user: {
-      include: {
-        address: true;
-      };
-    };
-    packages: true;
-  };
-}>;
-
-type InvoiceData = {
-  order: OrderWithRelation;
-  cartTotal: number;
-  parkingFee: number;
-  congestionFee: number;
-  totalPrice: number;
-};
-
 export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   const { order, cartTotal, parkingFee, congestionFee, totalPrice } = data;
 
-  // Colors
-  const primaryColor = "#267ECE";
-  const secondaryColor = "#FFC527";
-  const lightGray = "#EAF3FB";
-  const darkGray = "#636B74";
+  // Colors - exactly matching the email template
+  const primaryColor = "#1c3556";
+  const backgroundColor = "#f7fafc";
+  const sectionBackground = "#f8fafc";
+  const borderColor = "#e2e8f0";
+  const bodyColor = "#000000";
   const white = "#FFFFFF";
 
-  // Fonts
   doc.setFont("helvetica");
 
   // Header
@@ -86,7 +91,6 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   const publicFolderPath = path.join(currentDir, "public");
   const imagePath = path.join(publicFolderPath, "logo.png");
 
-  // Read the image file
   const imageBuffer = fs.readFileSync(imagePath);
   const base64Image = imageBuffer.toString("base64");
   const imgData = `data:image/png;base64,${base64Image}`;
@@ -95,19 +99,44 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
 
   const rightMargin = 188;
 
+  // Invoice title - using primaryColor (#1c3556)
   doc.setTextColor(primaryColor);
   doc.setFontSize(32);
   drawBolderText(doc, "INVOICE", rightMargin, 25, { align: "right" });
 
-  doc.setTextColor(darkGray);
+  // Add PAID stamp if payment status is PAID
+  if (order.paymentStatus === "PAID") {
+    // Set stamp styles
+    doc.setTextColor("#28a745");
+
+    // Create opacity state
+    const gState = doc.GState({ opacity: 0.3 });
+    doc.setGState(gState);
+
+    doc.setFontSize(48);
+    doc.setFont("helvetica", "bold");
+
+    // Position stamp slightly below and to the left of the header
+    const stampText = "PAID";
+
+    // Draw the diagonal PAID text
+    doc.text(stampText, 45, 210, {
+      angle: 35,
+    });
+
+    // Reset opacity
+    doc.setGState(doc.GState({ opacity: 1.0 }));
+  }
+
+  // Invoice number - using black
+  doc.setTextColor(bodyColor);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
   doc.text(`#${order.invoice}`, rightMargin, 35, {
     align: "right",
   });
 
-  // Company details
-  doc.setFontSize(10);
+  // Rest of the code remains exactly the same...
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
   doc.text(BUSINESS_NAME, 130, 55);
@@ -118,9 +147,18 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   doc.text(STREET_NAME, rightMargin, 62, { align: "right" });
   doc.text(AREA_NAME, rightMargin, 69, { align: "right" });
   doc.text(`London ${POSTCODE}`, rightMargin, 76, { align: "right" });
-  doc.text(`Date: ${order.date.toLocaleDateString()}`, rightMargin, 83, {
-    align: "right",
-  });
+  doc.text(
+    `Date: ${new Date(order.date).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })}`,
+    rightMargin,
+    83,
+    {
+      align: "right",
+    }
+  );
 
   // Customer details
   doc.setFontSize(12);
@@ -147,78 +185,71 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   doc.setTextColor(white);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.text("Description", 25, tableTop + 7);
+  doc.text("Service Name", 25, tableTop + 7);
   doc.text("Amount", 185, tableTop + 7, { align: "right" });
 
   // Table content
   let yPos = tableTop + 20;
-  doc.setTextColor(darkGray);
+  doc.setTextColor(bodyColor);
   doc.setFont("helvetica", "normal");
 
-  order.packages.forEach((pkg, index) => {
+  order.cartItems.forEach((pkg, index) => {
     const isEven = index % 2 === 0;
-    if (isEven) {
-      doc.setFillColor(lightGray);
-    } else {
-      doc.setFillColor(white);
-    }
+    doc.setFillColor(isEven ? sectionBackground : white);
     doc.rect(20, yPos - 5, 170, 10, "F");
 
-    const description = `${pkg.serviceName}: ${pkg.name}`;
-    yPos = wrapText(doc, description, 25, yPos, 130, 10);
+    // Format service name - only show quantity for additional packages
+    let serviceName = `${pkg.package.serviceName} - ${pkg.package.name}`;
+    if (pkg.package.isAdditionalPackage && pkg.quantity > 1) {
+      const unitSuffix = pkg.package.unitType
+        ? ` ${pkg.package.unitType}`
+        : "items";
+      serviceName += ` (${pkg.quantity}${unitSuffix})`;
+    }
+
+    yPos = wrapText(doc, serviceName, 25, yPos, 130, 10);
     doc.text(`£${pkg.price.toFixed(2)}`, 185, yPos, { align: "right" });
     yPos += 15;
   });
 
   // Subtotal and fees
   yPos += 10;
+  doc.setDrawColor(borderColor);
   doc.line(20, yPos, 190, yPos);
   yPos += 10;
 
-  doc.setFont("helvetica", "bold");
-  doc.text("Subtotal (inc Tax):", 135, yPos);
-  doc.setFont("helvetica", "normal");
-  doc.text(`£${cartTotal.toFixed(2)}`, 190, yPos, { align: "right" });
-  yPos += 10;
-
-  if (parkingFee > 0) {
+  const addFeeLine = (label: string, amount: number) => {
     doc.setFont("helvetica", "bold");
-    doc.text("Parking Fee:", 140, yPos);
+    doc.text(label, label === "Subtotal (inc Tax):" ? 135 : 140, yPos);
     doc.setFont("helvetica", "normal");
-    doc.text(`£${parkingFee.toFixed(2)}`, 190, yPos, { align: "right" });
+    doc.text(`£${amount.toFixed(2)}`, 190, yPos, { align: "right" });
     yPos += 10;
-  }
+  };
 
-  if (congestionFee > 0) {
-    doc.setFont("helvetica", "bold");
-    doc.text("Congestion Fee:", 140, yPos);
-    doc.setFont("helvetica", "normal");
-    doc.text(`£${congestionFee.toFixed(2)}`, 190, yPos, { align: "right" });
-    yPos += 10;
-  }
+  addFeeLine("Subtotal (inc Tax):", cartTotal);
+  if (parkingFee > 0) addFeeLine("Parking Fee:", parkingFee);
+  if (congestionFee > 0) addFeeLine("Congestion Fee:", congestionFee);
 
   // Total
   yPos += 5;
   doc.setFillColor(primaryColor);
   doc.rect(120, yPos - 5, 70, 10, "F");
-  doc.setTextColor(255, 255, 255);
+  doc.setTextColor(white);
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
 
   const rectHeight = 10;
   const textDimensions = doc.getTextDimensions("Total (inc Tax):");
   const textHeight = textDimensions.h;
-
-  // Calculate the Y position to center the text vertically
   const textY = yPos - 5 + (rectHeight - textHeight) / 2 + textHeight;
 
   doc.text("Total (inc Tax):", 125, textY);
   doc.text(`£${totalPrice.toFixed(2)}`, 185, textY, { align: "right" });
 
-  // Bank details (if payment method is credit card)
-  if (order.paymentMethod !== "CREDIT_CARD") {
+  // Bank details (if payment method is not credit card)
+  if (order.paymentMethod !== "CREDIT_CARD" && order.paymentStatus !== "PAID") {
     yPos += 30;
-    doc.setTextColor(darkGray);
+    doc.setTextColor(bodyColor);
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
     doc.text("BANK DETAILS", 20, yPos);
@@ -234,7 +265,7 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   }
 
   // Footer
-  doc.setTextColor(darkGray);
+  doc.setTextColor(bodyColor);
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.text("Thank you for your business!", 105, 280, { align: "center" });

@@ -1,6 +1,6 @@
 "use server";
 
-import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
+import { notifyEngineerEmailHtml } from "@/lib/mail-templates/notify-engineer-email";
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/send-email";
 import { EMAIL_ADDRESS } from "@/shared/data";
@@ -120,7 +120,7 @@ export const getEngineerById = cache(async (engineerId: string) => {
         address: true,
         assignedOrders: {
           include: {
-            packages: true,
+            cartItems: true,
           },
         },
       },

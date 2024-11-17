@@ -5,34 +5,35 @@ import {
   generateInvoiceId,
   generateInvoiceTemplate,
 } from "@/lib/generate-invoice";
-import { notifyAdminOrderPlacedEmailHtml } from "@/lib/notify-admin-order-placed";
-import { placedOrderEmailHtml } from "@/lib/placed-order-html";
+import { notifyAdminOrderPlacedEmailHtml } from "@/lib/mail-templates/notify-admin-order-placed";
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/lib/prisma-error";
 import { sendEmail } from "@/lib/send-email";
 import { CONGESTION_FEE, EMAIL_ADDRESS, PARKING_FEE } from "@/shared/data";
-import { Order, Package, PaymentMethod, Prisma, Role } from "@prisma/client";
+import { Order, PaymentMethod, Prisma, Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { jsPDF } from "jspdf";
-
-type OrderData = {
-  customerDetails: CustomerDetails;
-  cartItems: CartItem[];
-  paymentMethod: PaymentMethod;
-};
+import { calculateSubtotal, calculateTotal } from "@/lib/utils";
+import { notifyCustomerOrderPlacedEmailHtml } from "@/lib/mail-templates/notify-customer-order-placed-email";
 
 export type OrderWithRelation = Prisma.OrderGetPayload<{
   include: {
-    packages: true;
+    cartItems: {
+      include: {
+        package: true;
+      };
+    };
+    timeSlot: true;
     user: {
       include: {
         address: true;
       };
     };
+    assignedEngineer: true;
   };
 }>;
 
-export default async function generateInvoice(order: OrderWithRelation) {
+export async function generateInvoice(order: OrderWithRelation) {
   try {
     if (!order) {
       console.error("No order available to generate invoice");
@@ -41,8 +42,8 @@ export default async function generateInvoice(order: OrderWithRelation) {
 
     const parkingFee = order.parkingOptions === "FREE" ? 0 : PARKING_FEE;
     const congestionFee = order.isCongestionZone ? CONGESTION_FEE : 0;
-    const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
-    const totalPrice = cartTotal + parkingFee + congestionFee;
+    const cartTotal = parseFloat(calculateSubtotal(order));
+    const totalPrice = parseFloat(calculateTotal(order));
 
     // Create a new PDF document
     const doc = new jsPDF();
@@ -73,6 +74,12 @@ export default async function generateInvoice(order: OrderWithRelation) {
     };
   }
 }
+
+type OrderData = {
+  customerDetails: CustomerDetails;
+  cartItems: CartItem[];
+  paymentMethod: PaymentMethod;
+};
 
 export async function createOrder(orderData: OrderData): Promise<{
   success: boolean;
@@ -133,7 +140,7 @@ export async function createOrder(orderData: OrderData): Promise<{
             lastName: customerDetails.lastName,
             email: customerDetails.email,
             name: customerDetails.firstName + " " + customerDetails.lastName,
-            password: "12345678", // Store the hashed password
+            password: "12345678",
             phone: customerDetails.phoneNumber,
             role: Role.CUSTOMER,
             address: {
@@ -147,7 +154,7 @@ export async function createOrder(orderData: OrderData): Promise<{
         });
 
         // Package fetching and validation
-        const packageIds = cartItems.map((pkg) => pkg.id);
+        const packageIds = cartItems.map((pkg) => pkg.package.id);
         const packages = await transactionPrisma.package.findMany({
           where: { id: { in: packageIds } },
           select: { price: true, propertyType: true },
@@ -158,16 +165,17 @@ export async function createOrder(orderData: OrderData): Promise<{
         }
 
         // Price calculation
-        const packageTotal = packages.reduce(
-          (total, pkg) => total + pkg.price,
+        const cartTotal = cartItems.reduce(
+          (total, cartItem) => total + cartItem.price,
           0
         );
+
         const congestionFee = customerDetails.isCongestionZone
           ? CONGESTION_FEE
           : 0;
         const parkingFee =
           customerDetails.parkingOptions === "FREE" ? 0 : PARKING_FEE;
-        const totalPrice = packageTotal + congestionFee + parkingFee;
+        const totalPrice = cartTotal + congestionFee + parkingFee;
 
         // Update time slot to mark it as booked
         await transactionPrisma.timeSlot.update({
@@ -181,7 +189,7 @@ export async function createOrder(orderData: OrderData): Promise<{
         // Order creation
         const invoiceNumber = await generateInvoiceId();
 
-        const createdOrder = await transactionPrisma.order.create({
+        return await transactionPrisma.order.create({
           data: {
             userId: upsertedUser.id,
             propertyType: packages[0].propertyType,
@@ -195,68 +203,73 @@ export async function createOrder(orderData: OrderData): Promise<{
             paymentMethod: paymentMethod,
             paymentStatus: paymentMethod === "CREDIT_CARD" ? "PAID" : "UNPAID",
             status: "PENDING",
-            packages: { connect: packageIds.map((id) => ({ id })) },
+            cartItems: {
+              create: cartItems.map((item) => ({
+                packageId: item.package.id,
+                quantity: item.quantity,
+                price: item.price,
+              })),
+            },
           },
           include: {
-            packages: true,
+            cartItems: {
+              include: {
+                package: true,
+              },
+            },
             timeSlot: true,
             user: {
               include: {
                 address: true,
               },
             },
+            assignedEngineer: true,
           },
         });
+      },
+      {
+        maxWait: 5000,
+        timeout: 30000,
+      }
+    );
 
-        // Invoice generation
-        const invoice = await generateInvoice(createdOrder);
-
-        if (!invoice?.data) {
-          console.log(invoice);
-          throw new Error(invoice?.message);
-        }
-
-        // Email sending
+    // Generate invoice outside transaction
+    try {
+      const invoice = await generateInvoice(result);
+      if (invoice?.data) {
         const attachments = [
           {
             ContentType: "application/pdf",
-            Filename: `Invoice_${createdOrder.invoice}.pdf`,
-            Base64Content: invoice?.data,
+            Filename: `Invoice_${result.invoice}.pdf`,
+            Base64Content: invoice.data,
           },
         ];
 
+        // Send emails outside transaction
         await sendEmail({
           fromEmail: EMAIL_ADDRESS,
           fromName: "London Home Safety",
-          to: createdOrder.user.email,
-          subject: "Thank You for Your Order",
-          html: placedOrderEmailHtml(
-            createdOrder.user.firstName ?? "",
-            createdOrder.invoice
-          ),
+          to: result.user.email,
+          subject: `Order Request #${result.invoice} Received`,
+          html: notifyCustomerOrderPlacedEmailHtml(result),
           attachments,
         });
 
-        // Then, send a copy to the admin
+        // Send copy to admin
         await sendEmail({
           fromEmail: EMAIL_ADDRESS,
           fromName: "London Home Safety",
           to: EMAIL_ADDRESS,
-          subject: `New Order Received - ${createdOrder.invoice}`,
-          html: notifyAdminOrderPlacedEmailHtml(createdOrder),
+          subject: `New Order Received - ${result.invoice}`,
+          html: notifyAdminOrderPlacedEmailHtml(result),
           attachments,
         });
-
-        console.log("All steps completed successfully within the transaction");
-        return createdOrder;
-      },
-      {
-        maxWait: 5000, // 5 seconds max to wait for a transaction slot
-        timeout: 30000, // 30 seconds max to allow the transaction to run
       }
-    );
+    } catch (emailError) {
+      // Log error but don't fail the order creation
+      console.error("Failed to send emails:", emailError);
+    }
 
-    // Transaction succeeded, now we can revalidate paths
     revalidatePath("/admin", "layout");
 
     return {

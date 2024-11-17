@@ -59,10 +59,6 @@ export const createOrderSchema = z.object({
 
   timeSlotId: z.string().min(1, "Please select your preferred time slot"),
 
-  invoiceId: z.string({
-    required_error: "Invoice ID is required",
-  }),
-
   paymentMethod: z.nativeEnum(PaymentMethod, {
     required_error: "Please select a payment method",
     invalid_type_error: "Invalid payment method selected",

@@ -15,22 +15,20 @@ import { useEffect, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { createOrderByAdmin } from "../../actions";
 import { CreateOrderFormInput, createOrderSchema } from "../schema";
-import CustomerInfo from "./customer-info";
-import InspectionDetails from "./inspection-details";
+import OrderAssignment from "./order-assignment";
 import PropertyInfo from "./property-info";
 import ServicesInfo from "./services-info";
 import PaymentInfo from "./payment-info";
+import DateTimeSelector from "./date-time-selector";
 
 export default function CreateOrderForm({
   customers,
   engineers,
   packages,
-  invoiceId,
 }: {
   customers: CustomerWithRelation[];
   engineers: StaffWithRelations[];
   packages: Package[];
-  invoiceId: string;
 }) {
   const { toast } = useToast();
   const router = useRouter();
@@ -41,7 +39,6 @@ export default function CreateOrderForm({
     defaultValues: {
       propertyType: "RESIDENTIAL",
       cartItems: [{ packageId: "", price: 0, quantity: 1 }],
-      invoiceId: invoiceId,
     },
   });
 
@@ -90,6 +87,8 @@ export default function CreateOrderForm({
     }
   }, [errors, toast]);
 
+  console.log(errors);
+
   return (
     <Form {...form}>
       <form
@@ -119,11 +118,12 @@ export default function CreateOrderForm({
             </LoadingButton>
           </div>
         </div>
-        <CustomerInfo customers={customers} />
-        <InspectionDetails engineers={engineers} />
+
+        <OrderAssignment customers={customers} engineers={engineers} />
+        <DateTimeSelector />
         <PropertyInfo />
         <ServicesInfo packages={packages} />
-        <PaymentInfo />
+        <PaymentInfo packages={packages} />
       </form>
     </Form>
   );

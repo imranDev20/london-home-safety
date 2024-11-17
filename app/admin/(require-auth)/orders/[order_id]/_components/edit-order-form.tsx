@@ -1,23 +1,9 @@
 "use client";
 
-import { ContentLayout } from "@/app/admin/(require-auth)/_components/content-layout";
-import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import {
   Select,
   SelectContent,
@@ -36,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTION } from "@/lib/constants";
-import { calculateSubtotal, calculateTotal, cn } from "@/lib/utils";
+import { calculateSubtotal, calculateTotal, toTitleCase } from "@/lib/utils";
 import { StaffWithRelations } from "@/types/engineers";
 import { OrderWithRelation } from "@/types/order";
 
@@ -44,36 +30,33 @@ import dayjs from "dayjs";
 import {
   Bed,
   Building,
+  CalendarClock,
   CalendarDays,
   CarFront,
-  Check,
   ChevronLeft,
-  ChevronsUpDown,
   Clock,
   Copyright,
+  CreditCard,
   Download,
   Home,
+  Loader2,
   Map,
   Package,
   Phone,
-  ShoppingBag,
+  Wallet,
+  X,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
-import {
-  sendEmailToCustomerOrderCancelled,
-  sendEmailToCustomerOrderCompleted,
-  sendEmailToCustomerOrderConfirmation,
-} from "../../../customers/actions";
+import { useState, useTransition } from "react";
+import { sendOrderStatusEmail } from "../../../customers/actions";
 import generateInvoice from "../../actions";
 import { updateOrder } from "../actions";
-import PackageTableRow from "./service-table-row";
+import PackageTableRow from "./package-table-row";
 
-import { Badge } from "@/components/ui/badge";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
-import SendEmailDialog from "./send-email-dialog";
-import { BUSINESS_NAME, CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import EngineerSelection from "./engineer-selection";
 
 export default function EditOrderForm({
   orderDetails,
@@ -84,20 +67,6 @@ export default function EditOrderForm({
 }) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [openAssignedEngineers, setOpenAssignedEngineers] = useState(false);
-  const [selectedEngineer, setSelectedEngineer] = useState(
-    orderDetails?.assignedEngineerId ?? ""
-  );
-  const [selectedEngineerEmail, setSelectedEngineerEmail] = useState("");
-  useEffect(() => {
-    if (orderDetails?.assignedEngineerId) {
-      engineers?.find(
-        (engineer) =>
-          engineer.id === selectedEngineer &&
-          setSelectedEngineerEmail(engineer.email)
-      );
-    }
-  }, [orderDetails?.assignedEngineerId, engineers, selectedEngineer]);
 
   const [status, setStatus] = useState<OrderStatus>(orderDetails.status);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(
@@ -105,84 +74,49 @@ export default function EditOrderForm({
   );
   const [isPending, startTransition] = useTransition();
 
-  const subtotal = calculateSubtotal(
-    orderDetails.cartItems.map((cartItem) => cartItem.package)
-  );
+  const subtotal = calculateSubtotal(orderDetails);
   const total = calculateTotal(orderDetails);
-
-  const breadcrumbItems = [
-    { label: "Dashboard", href: "/admin" },
-    { label: "Orders", href: "/admin/orders" },
-    {
-      label: `Edit ${orderDetails?.invoice}`,
-      href: `/admin/orders/${orderDetails?.invoice}`,
-      isCurrentPage: true,
-    },
-  ];
 
   const handleUpdateOrderStatus = (value: OrderStatus) => {
     startTransition(async () => {
-      if (orderDetails?.id) {
-        setStatus(value);
-        const result = await updateOrder({
-          orderId: orderDetails?.id,
-          orderStatus: value,
+      if (!orderDetails?.id) return;
+
+      // Update local state and order status
+      setStatus(value);
+      const result = await updateOrder({
+        orderId: orderDetails.id,
+        orderStatus: value,
+      });
+
+      // Show update result toast
+      toast({
+        title: result.success ? "Success" : "Error",
+        description: result.message,
+        variant: result.success ? "success" : "destructive",
+      });
+
+      // Send email notifications for specific status changes
+      if (["CONFIRMED", "COMPLETED", "CANCELLED"].includes(value)) {
+        const emailResult = await sendOrderStatusEmail({
+          receiver: orderDetails.user.email,
+          orderDetails: {
+            ...orderDetails,
+            status: value,
+          },
         });
 
-        toast({
-          title: result.success ? "Success" : "Error",
-          description: result.message,
-          variant: result.success ? "success" : "destructive",
-        });
-        if (value === "CONFIRMED") {
-          const emailData = {
-            receiver: orderDetails?.user.email,
-            subject: "Order Confirmation",
-            content: `Dear ${orderDetails?.user.firstName},\n\nThank you for your order. Your order has been confirmed. Your order number is ${orderDetails?.invoice}.`,
-            orderDetails: orderDetails,
-          };
-          const response = await sendEmailToCustomerOrderConfirmation(
-            emailData
-          );
+        // Only show toast if email fails
+        if (!emailResult.success) {
           toast({
-            title: response.success ? "Success" : "Error",
-            description: response.message,
-            variant: response.success ? "success" : "destructive",
-          });
-        }
-        if (value === "COMPLETED") {
-          const emailData = {
-            receiver: orderDetails?.user.email,
-            subject: "Order Completed",
-            content: `Dear ${orderDetails?.user.firstName},\n\nWe are pleased to inform you that your order has been successfully completed. Your order number is ${orderDetails?.invoice}. If you have any questions or need further assistance, please feel free to contact us.\n\nThank you for choosing ${BUSINESS_NAME}!\n\nBest regards,\nThe ${BUSINESS_NAME} Team`,
-            orderDetails: orderDetails,
-          };
-
-          const response = await sendEmailToCustomerOrderCompleted(emailData);
-          toast({
-            title: response.success ? "Success" : "Error",
-            description: response.message,
-            variant: response.success ? "success" : "destructive",
-          });
-        }
-        if (value === "CANCELLED") {
-          const emailData = {
-            receiver: orderDetails?.user.email,
-            subject: "Order Cancelled",
-            content: `Dear ${orderDetails?.user.firstName},We regret to inform you that your order has been canceled. Your order number was ${orderDetails?.invoice}.`,
-            orderDetails: orderDetails,
-          };
-
-          const response = await sendEmailToCustomerOrderCancelled(emailData);
-          toast({
-            title: response.success ? "Success" : "Error",
-            description: response.message,
-            variant: response.success ? "success" : "destructive",
+            title: "Warning",
+            description: "Order updated but email notification failed to send",
+            variant: "destructive",
           });
         }
       }
     });
   };
+
   const handleUpdatePaymentStatus = (value: PaymentStatus) => {
     startTransition(async () => {
       if (orderDetails?.id) {
@@ -200,34 +134,7 @@ export default function EditOrderForm({
     });
   };
 
-  const handleSelectEngineer = (engineerId: string) => {
-    setSelectedEngineer(engineerId);
-
-    if (engineerId === orderDetails?.assignedEngineerId) {
-      return;
-    }
-
-    startTransition(async () => {
-      if (orderDetails?.id) {
-        const result = await updateOrder({
-          orderId: orderDetails?.id,
-          assignedEngineerId: engineerId,
-        });
-
-        setOpenAssignedEngineers(false);
-        toast({
-          title: result.success ? "Success" : "Error",
-          description: result.message,
-          variant: result.success ? "success" : "destructive",
-        });
-      }
-    });
-  };
-  const handleSelectEngineerEmail = (engineerEmail: string) => {
-    setSelectedEngineerEmail(engineerEmail);
-  };
-
-  const handleDownload = async () => {
+  const handleDownloadInvoice = async () => {
     try {
       setIsLoading(true);
       const response = await generateInvoice(orderDetails.id);
@@ -260,24 +167,20 @@ export default function EditOrderForm({
     }
   };
 
-  console.log("orderDetails", orderDetails);
-
   return (
-    <ContentLayout title="Edit Order">
-      <DynamicBreadcrumb items={breadcrumbItems} />
-
+    <>
       <div className="mb-6 mt-7">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center mb-2">
+          <div className="flex items-center gap-3">
             <Link href="/admin/orders">
-              <Button variant="outline" size="icon" className="h-7 w-7 mr-2">
-                <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Back</span>
+              <Button variant="outline" size="icon" className="h-9 w-9">
+                <ChevronLeft className="h-5 w-5" />
+                <span className="sr-only">Back to Orders</span>
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold">Edit {orderDetails?.invoice}</h1>
+            <h1 className="text-2xl font-bold">{`Edit Order #${orderDetails.invoice}`}</h1>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full sm:w-auto">
             <Select
               value={status as OrderStatus}
               onValueChange={(value) => {
@@ -285,9 +188,17 @@ export default function EditOrderForm({
                   handleUpdateOrderStatus(value as OrderStatus);
                 }
               }}
+              disabled={isPending}
             >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Update Status" />
+              <SelectTrigger className="w-full sm:w-[180px]">
+                {isPending ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Updating...</span>
+                  </div>
+                ) : (
+                  <SelectValue placeholder="Update Status" />
+                )}
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -301,104 +212,39 @@ export default function EditOrderForm({
             </Select>
 
             <LoadingButton
-              type="button"
+              onClick={handleDownloadInvoice}
               disabled={isLoading}
               loading={isLoading}
-              className="text-sm h-9 font-medium flex items-center"
-              onClick={handleDownload}
-              variant="default"
+              className="h-9 text-sm font-medium flex whitespace-nowrap"
             >
               {!isLoading && <Download className="mr-2 h-4 w-4" />}
+              Download Invoice
             </LoadingButton>
           </div>
         </div>
-        <Badge variant="outline">
-          Placed:{" "}
-          {dayjs(new Date(orderDetails.createdAt)).format("DD-MM-YYYY HH:mm A")}
-        </Badge>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Assigned Engineers</h2>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Popover
-                  open={openAssignedEngineers}
-                  onOpenChange={setOpenAssignedEngineers}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={openAssignedEngineers}
-                      className="w-full sm:w-[400px] justify-between"
-                    >
-                      {selectedEngineer
-                        ? engineers?.find(
-                            (engineer) => engineer.id === selectedEngineer
-                          )?.name
-                        : "Select engineer"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Search engineer..." />
-                      <CommandList>
-                        <CommandEmpty>No engineer found.</CommandEmpty>
-                        <CommandGroup>
-                          {engineers?.map((engineer) => (
-                            <CommandItem
-                              value={
-                                engineer.firstName + " " + engineer.lastName
-                              }
-                              key={engineer.id}
-                              onSelect={() => handleSelectEngineer(engineer.id)}
-                              onChange={() =>
-                                handleSelectEngineerEmail(engineer.email)
-                              }
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  engineer.id === selectedEngineer
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {engineer.firstName + " " + engineer.lastName}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <SendEmailDialog
-                  engineerEmail={selectedEngineerEmail}
-                  orderDetails={orderDetails}
-                />
-              </div>
-            </CardContent>
-          </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <EngineerSelection
+            engineers={engineers}
+            orderDetails={orderDetails}
+          />
 
           {/* Order items */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Order Items</h2>
+              <h2 className="text-xl font-semibold mb-6">Order Items</h2>
               {orderDetails?.cartItems && orderDetails.cartItems.length > 0 ? (
-                <>
-                  <div className="border rounded-md">
+                <div className="space-y-6">
+                  <div className="bg-gray-50 rounded-lg p-4 ">
                     <Table>
                       <TableHeader>
-                        <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Price</TableHead>
-                          <TableHead>Quantity</TableHead>
-                          <TableHead>Total Price</TableHead>
+                        <TableRow className="hover:bg-transparent">
+                          <TableHead className="text-gray-500">
+                            Service Name
+                          </TableHead>
+                          <TableHead className="text-gray-500">Price</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -412,66 +258,100 @@ export default function EditOrderForm({
                     </Table>
                   </div>
 
-                  <div className="mt-4 space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span>Payment Method:</span>
-                      <span>
-                        {orderDetails.paymentMethod.replace("_", " ")}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Payment Status:</span>
-                      <span>
-                        <Select
-                          value={paymentStatus as PaymentStatus}
-                          onValueChange={(value) => {
-                            if (value) {
-                              handleUpdatePaymentStatus(value as PaymentStatus);
-                            }
-                          }}
-                        >
-                          <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Update Payment Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              {PAYMENT_STATUS_OPTION.map((option) => (
-                                <SelectItem value={option} key={option}>
-                                  {option.replace("_", " ")}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="bg-white p-2 rounded-full shadow-sm">
+                          <CreditCard className="h-5 w-5 text-primary" />
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          Payment Method
+                        </span>
+                      </div>
+                      <span className="font-medium">
+                        {toTitleCase(
+                          orderDetails.paymentMethod.replaceAll("_", " ")
+                        )}
                       </span>
                     </div>
 
-                    <div className="flex justify-between items-center">
-                      <span>Subtotal:</span>
-                      <span>£{subtotal}</span>
+                    <div className="h-px bg-gray-200" />
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="bg-white p-2 rounded-full shadow-sm">
+                          <Wallet className="h-5 w-5 text-primary" />
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          Payment Status
+                        </span>
+                      </div>
+                      <Select
+                        value={paymentStatus as PaymentStatus}
+                        onValueChange={(value) => {
+                          if (value) {
+                            handleUpdatePaymentStatus(value as PaymentStatus);
+                          }
+                        }}
+                        disabled={isPending}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          {isPending ? (
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <span>Updating...</span>
+                            </div>
+                          ) : (
+                            <SelectValue placeholder="Update Payment Status" />
+                          )}
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {PAYMENT_STATUS_OPTION.map((option) => (
+                              <SelectItem value={option} key={option}>
+                                {option.replace("_", " ")}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-500">Subtotal</span>
+                      <span className="font-medium">£{subtotal}</span>
                     </div>
                     {orderDetails.isCongestionZone && (
-                      <div className="flex justify-between">
-                        <span>Congestion Zone Fee:</span>
-                        <span>£{CONGESTION_FEE.toFixed(2)}</span>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-500">
+                          Congestion Zone Fee
+                        </span>
+                        <span className="font-medium">
+                          £{CONGESTION_FEE.toFixed(2)}
+                        </span>
                       </div>
                     )}
                     {orderDetails.parkingOptions !== "FREE" && (
-                      <div className="flex justify-between">
-                        <span>Parking Fee:</span>
-                        <span>£{PARKING_FEE.toFixed(2)}</span>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-500">Parking Fee</span>
+                        <span className="font-medium">
+                          £{PARKING_FEE.toFixed(2)}
+                        </span>
                       </div>
                     )}
-                    <div className="flex justify-between font-semibold">
-                      <span>Total:</span>
-                      <span>£{total}</span>
+                    <div className="h-px bg-gray-200" />
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold">Total</span>
+                      <span className="font-semibold text-lg">£{total}</span>
                     </div>
                   </div>
-                </>
+                </div>
               ) : (
-                <div className="text-center py-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                    <Package className="h-8 w-8 text-gray-400" />
+                <div className="text-center py-8 bg-gray-50 rounded-lg">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-sm mb-4">
+                    <Package className="h-8 w-8 text-primary" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-1">
                     No services added
@@ -483,33 +363,7 @@ export default function EditOrderForm({
               )}
             </CardContent>
           </Card>
-        </div>
 
-        {/* Schedule Info */}
-        <div className="space-y-8">
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Schedule Info</h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <CalendarDays className="h-5 w-5 text-gray-500" />
-                  <span className="text-sm">
-                    {orderDetails?.date
-                      ? dayjs(new Date(orderDetails.date)).format("DD MMM YYYY")
-                      : "Date not available"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Clock className="h-5 w-5 text-gray-500" />
-                  <span className="text-sm">
-                    {orderDetails?.timeSlot?.slotType ?? "Time not set"}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Order Notes */}
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Order Notes</h2>
@@ -519,98 +373,179 @@ export default function EditOrderForm({
             </CardContent>
           </Card>
         </div>
-      </div>
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Customer Details</h2>
-            <div className="flex items-center mb-4">
-              <Avatar className="h-12 w-12 mr-4">
-                <AvatarFallback>
-                  {orderDetails?.user?.name?.charAt(0) ?? "A"}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-medium">{orderDetails?.user.firstName}</p>
-                <p className="text-sm text-gray-500">
-                  {orderDetails?.user.email}
-                </p>
-              </div>
-            </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center gap-2">
-                <Phone className="h-5 w-5 text-gray-500" />
-                <span>{orderDetails?.user?.phone || "N/A"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Map className="h-5 w-5 text-gray-500 mt-1" />
-                <span>
-                  {orderDetails?.user?.address?.street &&
-                    `${orderDetails.user.address.street}, `}
-                  {orderDetails?.user?.address?.city &&
-                    `${orderDetails.user.address.city} `}
-                  {orderDetails?.user?.address?.postcode}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Property Details</h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center gap-2">
-                {orderDetails?.propertyType === "RESIDENTIAL" ? (
-                  <Home className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <Building className="h-5 w-5 text-gray-500" />
-                )}
-                <span>{orderDetails?.propertyType || "N/A"}</span>
-              </div>
-              {orderDetails?.propertyType === "RESIDENTIAL" && (
-                <div className="flex items-center gap-2">
-                  <Bed className="h-5 w-5 text-gray-500" />
-                  <span>{orderDetails?.residentialType || "N/A"}</span>
+        <div className="space-y-6">
+          {/* Schedule Info */}
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Schedule Info</h2>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <CalendarDays className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">
+                      Appointment Date
+                    </p>
+                    <p className="font-medium">
+                      {orderDetails?.date
+                        ? dayjs(new Date(orderDetails.date)).format(
+                            "DD MMM YYYY"
+                          )
+                        : "Date not available"}
+                    </p>
+                  </div>
                 </div>
-              )}
-              {orderDetails?.propertyType === "COMMERCIAL" && (
-                <div className="flex items-center gap-2">
-                  <ShoppingBag className="h-5 w-5 text-gray-500" />
-                  <span>{orderDetails?.commercialType || "N/A"}</span>
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <CarFront className="h-5 w-5 text-gray-500" />
-                <span>
-                  {orderDetails?.parkingOptions === "PAID"
-                    ? "Paid parking available"
-                    : orderDetails?.parkingOptions === "NO"
-                    ? "No parking available"
-                    : "Free parking available"}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Copyright className="h-5 w-5 text-gray-500" />
-                <span>
-                  {orderDetails?.isCongestionZone
-                    ? "In Congestion Zone"
-                    : "Outside Congestion Zone"}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Order Activity</h2>
-            {/* Add order activity content here */}
-            <p className="text-gray-500">No recent activity</p>
-          </CardContent>
-        </Card>
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Clock className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Session</p>
+                    <p className="font-medium">
+                      {orderDetails?.timeSlot?.slotType ?? "Time not set"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <CalendarClock className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Order Placed</p>
+                    <p className="font-medium">
+                      {dayjs(new Date(orderDetails.createdAt)).format(
+                        "DD MMM YYYY, HH:mm A"
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Customer Details</h2>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-primary text-white">
+                        {orderDetails?.user?.name?.charAt(0) ?? "A"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="ml-4">
+                    <p className="font-medium">{`${orderDetails?.user.firstName} ${orderDetails.user.lastName}`}</p>
+                    <p className="text-sm text-gray-500">
+                      {orderDetails?.user.email}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Phone className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Phone Number</p>
+                    <p className="font-medium">
+                      {orderDetails?.user?.phone || "N/A"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Map className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Address</p>
+                    <p className="font-medium">
+                      {orderDetails?.user?.address?.street &&
+                        `${orderDetails.user.address.street}, `}
+                      {orderDetails?.user?.address?.city &&
+                        `${orderDetails.user.address.city} `}
+                      {orderDetails?.user?.address?.postcode}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-6">Property Details</h2>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    {orderDetails?.propertyType === "RESIDENTIAL" ? (
+                      <Home className="h-5 w-5 text-primary" />
+                    ) : (
+                      <Building className="h-5 w-5 text-primary" />
+                    )}
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Property Type</p>
+                    <p className="font-medium">
+                      {toTitleCase(orderDetails?.propertyType) || "N/A"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <CarFront className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">Parking Status</p>
+                    <p className="font-medium">
+                      {orderDetails?.parkingOptions === "PAID"
+                        ? "Paid Parking Available"
+                        : orderDetails?.parkingOptions === "NO"
+                        ? "No Parking Available"
+                        : "Free Parking Available"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="h-px bg-gray-200" />
+
+                <div className="flex items-center">
+                  <div className="bg-white p-2 rounded-full shadow-sm">
+                    <Copyright className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500 mb-1">
+                      Congestion Zone
+                    </p>
+                    <p className="font-medium">
+                      {orderDetails?.isCongestionZone
+                        ? "In Congestion Zone"
+                        : "Outside Congestion Zone"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </ContentLayout>
+    </>
   );
 }

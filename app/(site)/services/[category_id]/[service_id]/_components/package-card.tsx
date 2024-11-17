@@ -41,7 +41,6 @@ export default function PackageCard({ pack }: { pack: Package }) {
     if (cartItem) {
       updateItemQuantity(pack.id, newValue);
 
-      // Update selected package if it matches current package
       if (selectedPackage?.package.id === pack.id) {
         setPackage({
           ...selectedPackage,
@@ -53,8 +52,16 @@ export default function PackageCard({ pack }: { pack: Package }) {
   };
 
   const handlePackageSelect = () => {
+    // If item is in cart, do nothing
     if (cartItem) return;
 
+    // If item is currently selected, deselect it
+    if (selectedPackage?.package.id === pack.id) {
+      setPackage(null);
+      return;
+    }
+
+    // Otherwise, select the item
     const newCartItem = {
       id: pack.id,
       package: pack,

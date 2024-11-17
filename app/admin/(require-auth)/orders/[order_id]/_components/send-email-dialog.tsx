@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,23 +12,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import { Mail, Send, X } from "lucide-react";
 import { OrderWithRelation } from "@/types/order";
 import { EMAIL_ADDRESS } from "@/shared/data";
 import { sendEmailToEngineerAction } from "../../../engineers/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+
+interface SendEmailDialogProps {
+  engineerEmail: string;
+  orderDetails: OrderWithRelation | null;
+}
 
 export default function SendEmailDialog({
   engineerEmail,
   orderDetails,
-}: {
-  engineerEmail: string;
-  orderDetails: OrderWithRelation | null;
-}) {
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+}: SendEmailDialogProps) {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [open, setOpen] = useState(false);
@@ -38,39 +37,57 @@ export default function SendEmailDialog({
   const { toast } = useToast();
 
   useEffect(() => {
-    if (engineerEmail) setTo(engineerEmail);
-  }, [engineerEmail]);
+    if (open && orderDetails) {
+      setSubject(`New Assignment: Order #${orderDetails.invoice}`);
+      setBody(
+        `Dear Engineer,
+  
+  You have been assigned to Order #${orderDetails.invoice}.
+  
+  Order Details:
+  - Date: ${new Date(orderDetails.date).toLocaleDateString()}
+  - Time: ${orderDetails.timeSlot.slotType}
+  - Location: ${orderDetails.user.address?.street}, ${
+          orderDetails.user.address?.city
+        }, ${orderDetails.user.address?.postcode || "N/A"}
+  
+  Customer Details:
+  - Name: ${orderDetails.user.firstName} ${orderDetails.user.lastName}
+  - Phone: ${orderDetails.user.phone || "N/A"}
+  - Email: ${orderDetails.user.email}
+  
+  Please review and confirm your availability.
+  
+  Best regards,
+  Kamal Ahmed`
+      );
+    }
+  }, [open, orderDetails]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     startTransition(async () => {
       try {
-        const emailData = {
-          subject: subject,
+        await sendEmailToEngineerAction({
+          subject,
           receiver: engineerEmail,
-          orderDetails: orderDetails,
+          orderDetails,
           content: body,
-        };
+        });
 
-        await sendEmailToEngineerAction(emailData);
-
-        // Show success toast
         toast({
-          title: "Success",
-          description: "Email sent successfully!",
+          title: "Email Sent Successfully",
+          description: "The engineer has been notified of the assignment.",
           variant: "success",
         });
 
-        // Reset form and close dialog
-        resetForm();
         setOpen(false);
+        resetForm();
       } catch (error) {
-        console.error("Error sending email:", error);
-
-        // Show error toast
         toast({
-          title: "Error",
-          description: "Failed to send email. Please try again later.",
+          title: "Failed to Send Email",
+          description:
+            "Please try again or contact support if the issue persists.",
           variant: "destructive",
         });
       }
@@ -78,8 +95,6 @@ export default function SendEmailDialog({
   };
 
   const resetForm = () => {
-    setFrom("");
-    setTo("");
     setSubject("");
     setBody("");
   };
@@ -89,82 +104,83 @@ export default function SendEmailDialog({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          onClick={() => setOpen(true)}
+          className="bg-white hover:bg-gray-50 h-10"
           disabled={!engineerEmail}
         >
           <Mail className="mr-2 h-4 w-4" />
-          Send Email
+          Notify Engineer
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[550px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            Compose New Email
+          <DialogTitle className="flex items-center gap-2 text-2xl">
+            <Mail className="h-6 w-6" />
+            Notify Assigned Engineer
           </DialogTitle>
-          <DialogDescription>
-            Fill in the details below to send your email message.
-          </DialogDescription>
+          <div className="flex items-center gap-2 mt-2">
+            <Badge variant="secondary" className="text-sm">
+              Order #{orderDetails?.invoice}
+            </Badge>
+            <Badge variant="outline" className="text-sm">
+              {orderDetails?.status}
+            </Badge>
+          </div>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <Card className="p-4 mt-4">
-            <div className="space-y-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="from" className="text-right font-semibold">
+
+        <Separator className="my-4" />
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="from" className="font-medium">
                   From
                 </Label>
-                <Input
-                  id="from"
-                  value={EMAIL_ADDRESS}
-                  onChange={(e) => setFrom(e.target.value)}
-                  className="col-span-3"
-                  disabled
-                  placeholder="your-email@example.com"
-                />
+                <span className="text-sm text-muted-foreground">
+                  {EMAIL_ADDRESS}
+                </span>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="to" className="text-right font-semibold">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="to" className="font-medium">
                   To
                 </Label>
-                <Input
-                  id="to"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  className="col-span-3"
-                  placeholder="recipient@example.com"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="subject" className="text-right font-semibold">
-                  Subject
-                </Label>
-                <Input
-                  id="subject"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="col-span-3"
-                  placeholder="Enter email subject"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="body" className="text-right font-semibold">
-                  Message
-                </Label>
-                <Textarea
-                  id="body"
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                  className="col-span-3"
-                  placeholder="Type your message here..."
-                  rows={6}
-                />
+                <span className="text-sm text-muted-foreground">
+                  {engineerEmail}
+                </span>
               </div>
             </div>
-          </Card>
-          <DialogFooter className="mt-6">
+
+            <div className="space-y-2">
+              <Label htmlFor="subject" className="font-medium">
+                Subject
+              </Label>
+              <Input
+                id="subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="w-full"
+                placeholder="Enter email subject"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="body" className="font-medium">
+                Message
+              </Label>
+              <Textarea
+                id="body"
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                className="min-h-[200px]"
+                placeholder="Type your message here..."
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3">
             <Button
               type="button"
               variant="outline"
-              className="mr-2"
               onClick={() => {
                 resetForm();
                 setOpen(false);
@@ -173,11 +189,15 @@ export default function SendEmailDialog({
               <X className="mr-2 h-4 w-4" />
               Cancel
             </Button>
-            <LoadingButton type="submit" loading={isPending}>
+            <LoadingButton
+              type="submit"
+              loading={isPending}
+              className="min-w-[120px]"
+            >
               {!isPending && <Send className="mr-2 h-4 w-4" />}
               Send Email
             </LoadingButton>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

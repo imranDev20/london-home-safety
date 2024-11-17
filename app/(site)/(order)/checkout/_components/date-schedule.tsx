@@ -179,22 +179,23 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                     className="w-full"
                   />
                 </div>
-                {field.value && (
-                  <div className="flex items-center gap-2 mt-3 p-2 bg-primary/5 border border-primary/10 rounded-md">
-                    <CalendarIcon className="w-4 h-4 text-primary" />
-                    <p className="text-sm font-medium">
-                      Selected:{" "}
-                      <span className="text-primary">
-                        {field.value.toLocaleDateString("en-US", {
-                          weekday: "long",
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </p>
-                  </div>
-                )}
+                {field.value instanceof Date &&
+                  !isNaN(field.value.getTime()) && (
+                    <div className="flex items-center gap-2 mt-3 p-2 bg-primary/5 border border-primary/10 rounded-md">
+                      <CalendarIcon className="w-4 h-4 text-primary" />
+                      <p className="text-sm font-medium">
+                        Selected:{" "}
+                        <span className="text-primary">
+                          {field.value.toLocaleDateString("en-US", {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </p>
+                    </div>
+                  )}
                 <FormMessage />
               </FormItem>
             )}

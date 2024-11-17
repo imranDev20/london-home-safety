@@ -1,29 +1,24 @@
+import React from "react";
 import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import { CreateOrderFormInput } from "../schema";
 import { CONGESTION_FEE, PARKING_FEE } from "@/shared/data";
+import { CreditCard, Wallet } from "lucide-react";
+import { Package } from "@prisma/client";
 
-export default function PaymentInfo() {
+interface PaymentInfoProps {
+  packages: Package[];
+}
+
+export default function PaymentInfo({ packages }: PaymentInfoProps) {
   const { control, watch } = useFormContext<CreateOrderFormInput>();
   const selectedPackages = watch("cartItems");
   const isCongestionZone = watch("isCongestionZone");
@@ -41,86 +36,148 @@ export default function PaymentInfo() {
     return { subtotal, congestionCharge, parkingCharge, total };
   };
 
+  const summary = priceSummary();
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Payment Information</CardTitle>
+    <Card className="bg-white">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl">Payment Information</CardTitle>
         <CardDescription>
-          Review the pricing details and choose the preferred payment method.
+          Review your order summary and select your preferred payment method
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-9">
-              <div className="bg-gray-50 p-4 rounded-md border">
-                <h4 className="text-sm font-medium text-gray-900 mb-2">
-                  Price Summary
-                </h4>
-                <div className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Subtotal:</span>
-                    <span className="text-gray-900">
-                      £{priceSummary().subtotal.toFixed(2)}
-                    </span>
-                  </div>
-                  {priceSummary().congestionCharge > 0 && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">
-                        Congestion Zone Charge:
-                      </span>
-                      <span className="text-gray-900">
-                        £{priceSummary().congestionCharge.toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                  {priceSummary().parkingCharge > 0 && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Parking Charge:</span>
-                      <span className="text-gray-900">
-                        £{priceSummary().parkingCharge.toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-sm font-medium pt-1 border-t border-gray-200">
-                    <span className="text-gray-900">Total:</span>
-                    <span className="text-gray-900">
-                      £{priceSummary().total.toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-span-3">
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Payment Method Selection */}
+          <div className="lg:col-span-1 order-2 lg:order-1">
+            <div className="space-y-4">
+              <h3 className="font-medium text-gray-900">Payment Method</h3>
               <FormField
                 control={control}
                 name="paymentMethod"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Payment Method</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select payment method" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="CASH_TO_ENGINEER">
-                          Cash To Engineer
-                        </SelectItem>
-                        <SelectItem value="BANK_TRANSFER">
-                          Bank Transfer
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="grid grid-cols-1 gap-3">
+                      <div
+                        className={`relative flex items-center space-x-3 rounded-lg border p-4 cursor-pointer hover:border-primary transition-colors ${
+                          field.value === "CASH_TO_ENGINEER"
+                            ? "border-primary bg-primary/5"
+                            : "border-gray-200"
+                        }`}
+                        onClick={() => field.onChange("CASH_TO_ENGINEER")}
+                      >
+                        <Wallet className="h-5 w-5 text-primary" />
+                        <div className="flex-1">
+                          <h3 className="text-sm font-medium text-gray-900">
+                            Cash to Engineer
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            Pay in cash when service is complete
+                          </p>
+                        </div>
+                      </div>
+
+                      <div
+                        className={`relative flex items-center space-x-3 rounded-lg border p-4 cursor-pointer hover:border-primary transition-colors ${
+                          field.value === "BANK_TRANSFER"
+                            ? "border-primary bg-primary/5"
+                            : "border-gray-200"
+                        }`}
+                        onClick={() => field.onChange("BANK_TRANSFER")}
+                      >
+                        <CreditCard className="h-5 w-5 text-primary" />
+                        <div className="flex-1">
+                          <h3 className="text-sm font-medium text-gray-900">
+                            Bank Transfer
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            Pay via bank transfer
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+            </div>
+          </div>
+
+          {/* Order Summary */}
+          <div className="lg:col-span-2 order-1 lg:order-2">
+            <div className="space-y-4">
+              <h3 className="font-medium text-gray-900">Order Summary</h3>
+              <div className="bg-gray-50 rounded-lg p-6 space-y-4">
+                <div className="space-y-3">
+                  {selectedPackages.map((selectedPkg) => {
+                    const packageDetails = packages.find(
+                      (pkg) => pkg.id === selectedPkg.packageId
+                    );
+                    return packageDetails ? (
+                      <div
+                        key={selectedPkg.packageId}
+                        className="flex justify-between text-sm text-gray-600"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span>{packageDetails.name}</span>
+                          {packageDetails.isAdditionalPackage &&
+                            selectedPkg.quantity > 1 && (
+                              <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+                                x{selectedPkg.quantity}
+                              </span>
+                            )}
+                        </div>
+                        <span className="font-medium text-gray-900">
+                          £{selectedPkg.price.toFixed(2)}
+                        </span>
+                      </div>
+                    ) : null;
+                  })}
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Subtotal</span>
+                    <span className="font-medium text-gray-900">
+                      £{summary.subtotal.toFixed(2)}
+                    </span>
+                  </div>
+
+                  {summary.congestionCharge > 0 && (
+                    <div className="flex justify-between text-sm text-gray-600">
+                      <span>Congestion Zone Fee</span>
+                      <span className="font-medium text-gray-900">
+                        £{summary.congestionCharge.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+
+                  {summary.parkingCharge > 0 && (
+                    <div className="flex justify-between text-sm text-gray-600">
+                      <span>Parking Fee</span>
+                      <span className="font-medium text-gray-900">
+                        £{summary.parkingCharge.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <Separator />
+
+                <div className="flex justify-between items-center">
+                  <span className="text-base font-medium text-gray-900">
+                    Total Amount
+                  </span>
+                  <div className="text-right">
+                    <span className="text-xl font-bold text-primary">
+                      £{summary.total.toFixed(2)}
+                    </span>
+                    <p className="text-xs text-gray-500 mt-0.5">Inc. VAT</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

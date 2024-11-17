@@ -4,8 +4,6 @@ import {
   ParkingOptions,
   PaymentMethod,
   PropertyType,
-  ResidentialType,
-  CommercialType,
 } from "@prisma/client";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -30,8 +28,6 @@ export type CustomerDetails = {
   orderDate: Date | undefined;
   timeSlotId: string;
   propertyType: PropertyType;
-  residentialType?: ResidentialType;
-  commercialType?: CommercialType;
   orderNotes: string;
 };
 

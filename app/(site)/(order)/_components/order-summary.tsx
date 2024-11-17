@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -25,9 +27,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   isPending,
 }) => {
   const pathname = usePathname();
-  const { cartItems, customerDetails } = useOrderStore();
+  const { cartItems, customerDetails, paymentMethod } = useOrderStore();
   const isCartPage = pathname === "/cart";
   const isPaymentPage = pathname === "/payment";
+
+  const isNonCreditCardPayment =
+    paymentMethod === "BANK_TRANSFER" || paymentMethod === "CASH_TO_ENGINEER";
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const parkingFee = (
@@ -43,6 +48,54 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     ? CONGESTION_FEE
     : 0;
   const totalPrice = subtotal + (!isCartPage ? parkingFee + congestionFee : 0);
+
+  const renderActionButton = () => {
+    if (isCartPage) {
+      return (
+        <div className="mt-20">
+          <Link href="/book-now" className="block">
+            <Button className="w-full mb-3 h-11 text-base" variant="outline">
+              Continue Booking
+            </Button>
+          </Link>
+          <Link href="/checkout">
+            <Button className="w-full h-11 text-base" variant="default">
+              Checkout Now
+            </Button>
+          </Link>
+        </div>
+      );
+    }
+
+    if (showProceedButton && isPaymentPage) {
+      if (isNonCreditCardPayment) {
+        return (
+          <LoadingButton
+            onClick={onProceedClick}
+            loading={isPending}
+            className="w-full mt-6 h-11 text-base"
+          >
+            Confirm & Order
+          </LoadingButton>
+        );
+      }
+      return null;
+    }
+
+    if (showProceedButton) {
+      return (
+        <LoadingButton
+          onClick={onProceedClick}
+          loading={isPending}
+          className="w-full mt-6 h-11 text-base"
+        >
+          Proceed to Payment
+        </LoadingButton>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <Card className="p-6 sticky top-6">
@@ -101,31 +154,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         </div>
       </div>
 
-      {/* Buttons */}
-      {isCartPage ? (
-        <div className="mt-20">
-          <Link href="/book-now" className="block">
-            <Button className="w-full mb-3 h-11 text-base" variant="outline">
-              Continue Booking
-            </Button>
-          </Link>
-          <Link href="/checkout">
-            <Button className="w-full h-11 text-base" variant="default">
-              Checkout Now
-            </Button>
-          </Link>
-        </div>
-      ) : (
-        showProceedButton && (
-          <LoadingButton
-            onClick={onProceedClick}
-            loading={isPending}
-            className="w-full mt-6 h-11 text-base"
-          >
-            {isPaymentPage ? "Cofirm & Order" : "Proceed to Payment"}
-          </LoadingButton>
-        )
-      )}
+      {renderActionButton()}
     </Card>
   );
 };

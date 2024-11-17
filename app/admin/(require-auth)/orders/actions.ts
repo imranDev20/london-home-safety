@@ -9,21 +9,19 @@ import { jsPDF } from "jspdf";
 import { CreateOrderFormInput, createOrderSchema } from "./new/schema";
 import { sendEmail } from "@/lib/send-email";
 
-import {
-  BUSINESS_NAME,
-  CONGESTION_FEE,
-  EMAIL_ADDRESS,
-  PARKING_FEE,
-} from "@/shared/data";
-import { notifyUserOrderPlacedEmailHtml } from "@/lib/notify-customer-order-placed-email";
-import { notifyEngineerEmailHtml } from "@/lib/notify-engineer-email";
+import { CONGESTION_FEE, EMAIL_ADDRESS, PARKING_FEE } from "@/shared/data";
+import { notifyCustomerOrderPlacedEmailHtml } from "@/lib/mail-templates/notify-customer-order-placed-email";
+import { notifyEngineerEmailHtml } from "@/lib/mail-templates/notify-engineer-email";
 import { unstable_cache as cache } from "next/cache";
 import { handlePrismaError } from "@/lib/prisma-error";
-import { generateInvoiceTemplate } from "@/lib/generate-invoice";
+import {
+  generateInvoiceId,
+  generateInvoiceTemplate,
+} from "@/lib/generate-invoice";
 import { subDays, startOfDay, endOfDay } from "date-fns";
-import { calculatePackagePrice } from "@/lib/utils";
+import { calculateSubtotal, calculateTotal } from "@/lib/utils";
 
-type OrderWithRelations = Prisma.OrderGetPayload<{
+export type OrderWithRelations = Prisma.OrderGetPayload<{
   include: {
     cartItems: {
       include: {
@@ -39,6 +37,19 @@ type OrderWithRelations = Prisma.OrderGetPayload<{
     assignedEngineer: true;
   };
 }>;
+
+interface CreateUserInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string | "";
+  address: {
+    city: string | "";
+    street: string | "";
+    postcode: string | "";
+  };
+  expertise?: string;
+}
 
 export const getOrders = cache(
   async (
@@ -258,21 +269,40 @@ export const getOrderById = cache(async (orderId: string) => {
 
 export async function deleteOrder(orderId: string) {
   try {
-    const deletedOrder = await prisma.order.delete({
-      where: {
-        id: orderId,
-      },
+    // Use a transaction to ensure both deletions succeed or fail together
+    const deletedOrder = await prisma.$transaction(async (tx) => {
+      // First, find the order to get the timeSlotId
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        select: { timeSlotId: true },
+      });
+
+      if (!order) {
+        throw new Error("Order not found");
+      }
+
+      // Delete the order
+      const deletedOrder = await tx.order.delete({
+        where: { id: orderId },
+      });
+
+      // Delete the associated timeSlot
+      await tx.timeSlot.delete({
+        where: { id: order.timeSlotId },
+      });
+
+      return deletedOrder;
     });
 
-    revalidatePath("/admin/orders");
+    revalidatePath("/admin", "layout");
 
     return {
-      message: "Order deleted successfully!",
+      message: "Order and associated time slot deleted successfully!",
       data: deletedOrder,
       success: true,
     };
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error("Error deleting order:", error);
     return handlePrismaError(error);
   }
 }
@@ -349,7 +379,13 @@ export default async function generateInvoice(orderId: string) {
             address: true,
           },
         },
-        packages: true,
+        timeSlot: true,
+        cartItems: {
+          include: {
+            package: true,
+          },
+        },
+        assignedEngineer: true,
       },
     });
 
@@ -362,8 +398,8 @@ export default async function generateInvoice(orderId: string) {
 
     const parkingFee = order.parkingOptions === "FREE" ? 0 : PARKING_FEE;
     const congestionFee = order.isCongestionZone ? CONGESTION_FEE : 0;
-    const cartTotal = order.packages.reduce((sum, item) => sum + item.price, 0);
-    const totalPrice = cartTotal + parkingFee + congestionFee;
+    const cartTotal = parseFloat(calculateSubtotal(order));
+    const totalPrice = parseFloat(calculateTotal(order));
 
     // Create a new PDF document
     const doc = new jsPDF();
@@ -455,17 +491,13 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
         });
 
         // Calculate total price from cart items and additional fees
-        const packageTotal = cartItems.reduce(
+        const cartTotal = cartItems.reduce(
           (total, item) => total + item.price,
           0
         );
-
-        const totalPrice =
-          packageTotal +
-          (data.isCongestionZone ? CONGESTION_FEE : 0) +
-          (data.parkingOptions === "NO" || data.parkingOptions === "PAID"
-            ? PARKING_FEE
-            : 0);
+        const congestionFee = data.isCongestionZone ? CONGESTION_FEE : 0;
+        const parkingFee = data.parkingOptions !== "FREE" ? PARKING_FEE : 0;
+        const totalPrice = cartTotal + congestionFee + parkingFee;
 
         // Update time slot to mark it as booked
         await prismaTransaction.timeSlot.update({
@@ -475,6 +507,9 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
             isAvailable: false,
           },
         });
+
+        // Order creation
+        const invoiceNumber = await generateInvoiceId();
 
         // Create the order with cart items
         return await prismaTransaction.order.create({
@@ -487,7 +522,7 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
             date: data.date,
             timeSlotId: data.timeSlotId,
             totalPrice: totalPrice,
-            invoice: data.invoiceId,
+            invoice: invoiceNumber,
             status: "CONFIRMED",
             paymentStatus: "UNPAID",
             paymentMethod: data.paymentMethod,
@@ -514,57 +549,60 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
         });
       },
       {
-        maxWait: 5000, // 5 seconds max to wait for a transaction slot
-        timeout: 30000, // 30 seconds max to allow the transaction to run
+        maxWait: 5000,
+        timeout: 30000,
       }
     );
 
-    // Email notifications (outside transaction)
-    await sendEmail({
-      fromEmail: EMAIL_ADDRESS,
-      fromName: "London Home Safety",
-      to: createdOrder.user.email ?? "",
-      subject: "Order Placed Successfully",
-      html: notifyUserOrderPlacedEmailHtml(createdOrder),
-    });
+    // Generate invoice and send emails outside transaction
+    try {
+      const invoice = await generateInvoice(createdOrder.id);
+      if (invoice?.data) {
+        const attachments = [
+          {
+            ContentType: "application/pdf",
+            Filename: `Invoice_${createdOrder.invoice}.pdf`,
+            Base64Content: invoice.data,
+          },
+        ];
 
-    if (createdOrder.assignedEngineer) {
-      await sendEmail({
-        fromEmail: EMAIL_ADDRESS,
-        fromName: "London Home Safety",
-        to: createdOrder.assignedEngineer.email,
-        subject: "New Service Order",
-        html: notifyEngineerEmailHtml(createdOrder),
-      });
+        // Send email to customer
+        await sendEmail({
+          fromEmail: EMAIL_ADDRESS,
+          fromName: "London Home Safety",
+          to: createdOrder.user.email ?? "",
+          subject: `Order Request #${createdOrder.invoice} Received`,
+          html: notifyCustomerOrderPlacedEmailHtml(createdOrder),
+          attachments,
+        });
+
+        // Send email to engineer if assigned
+        if (createdOrder.assignedEngineer) {
+          await sendEmail({
+            fromEmail: EMAIL_ADDRESS,
+            fromName: "London Home Safety",
+            to: createdOrder.assignedEngineer.email,
+            subject: `New Service Order #${createdOrder.invoice} Assigned`,
+            html: notifyEngineerEmailHtml(createdOrder),
+            attachments,
+          });
+        }
+      }
+    } catch (emailError) {
+      // Log error but don't fail the order creation
+      console.error("Failed to send emails or generate invoice:", emailError);
     }
 
-    // Revalidate paths
     revalidatePath("/admin", "layout");
 
     return {
       message: "Order created successfully!",
-      emailMessage: "Email sent successfully!",
       data: createdOrder,
       success: true,
-      emailSuccess: true,
     };
   } catch (error) {
-    // If there's an error, the transaction will automatically roll back
     return handlePrismaError(error);
   }
-}
-
-interface CreateUserInput {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string | "";
-  address: {
-    city: string | "";
-    street: string | "";
-    postcode: string | "";
-  };
-  expertise?: string;
 }
 
 export async function createUser(data: CreateUserInput, userType: Role) {
