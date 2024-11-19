@@ -51,6 +51,7 @@ export async function updateOrder({
         assignedEngineerId: true,
         status: true,
         paymentStatus: true,
+        timeSlotId: true,
       },
     });
 
@@ -64,7 +65,6 @@ export async function updateOrder({
     const updateData: any = {};
     let hasChanges = false;
 
-    // Check for changes and prepare data to be updated
     if (
       assignedEngineerId !== undefined &&
       assignedEngineerId !== currentOrder.assignedEngineerId
@@ -93,10 +93,31 @@ export async function updateOrder({
       };
     }
 
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: updateData,
-    });
+    let updatedOrder;
+
+    if (orderStatus === "CANCELLED") {
+      updatedOrder = await prisma.$transaction(async (tx) => {
+        const order = await tx.order.update({
+          where: { id: orderId },
+          data: updateData,
+        });
+
+        await tx.timeSlot.update({
+          where: { id: currentOrder.timeSlotId },
+          data: {
+            currentBookings: { decrement: 1 },
+            isAvailable: true,
+          },
+        });
+
+        return order;
+      });
+    } else {
+      updatedOrder = await prisma.order.update({
+        where: { id: orderId },
+        data: updateData,
+      });
+    }
 
     revalidatePath("/", "layout");
 

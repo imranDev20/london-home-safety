@@ -40,7 +40,7 @@ import { Textarea } from "@/components/ui/textarea";
 import OrderSummary from "../_components/order-summary";
 import DateSchedule from "./_components/date-schedule";
 import CheckoutEmptyState from "./_components/checkout-empty-state";
-import AddressValidationAutocomplete from "./_components/address-validation-autocomplete";
+import AddressAutocomplete from "./_components/address-autocomplete";
 
 const parkingOptions = [
   {
@@ -271,7 +271,7 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-semibold mb-6">Address</h2>
                 <div className="space-y-6">
                   {/* Ideal postcode prediction */}
-                  <AddressValidationAutocomplete />
+                  <AddressAutocomplete />
                 </div>
               </Card>
 
@@ -376,7 +376,7 @@ export default function CheckoutPage() {
                     <PopoverTrigger>
                       <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </PopoverTrigger>
-                    <PopoverContent className="w-80">
+                    <PopoverContent className="w-full">
                       <ul className="list-disc pl-4 space-y-1">
                         {infoItems.map((item, index) => (
                           <li key={index} className="text-sm">

@@ -1,12 +1,10 @@
 import { generateBlogData } from "@/shared/data";
 
-
 // This function retrieves the blog details based on the blog path
 export const getBlogDetails = (path: string) => {
   // Get the blog data array
   const blogs = generateBlogData();
   console.log("blogs", blogs);
-  
 
   // Find the blog that matches the given path
   const blog = blogs.find((blog) => blog.path === path);

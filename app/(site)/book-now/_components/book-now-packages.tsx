@@ -292,9 +292,14 @@ export default function BookNowPackages({ packages }: { packages: Package[] }) {
                                   ? "STARTS FROM"
                                   : "PRICE"}
                               </span>
-
                               <p className="text-3xl font-bold text-primary">
                                 £{currentPrice.toFixed(2)}
+                                {pack.isAdditionalPackage && (
+                                  <span className="text-sm font-normal text-gray-500 ml-1">
+                                    for {currentQuantity}{" "}
+                                    {pack.unitType || "units"}
+                                  </span>
+                                )}
                               </p>
                             </div>
 

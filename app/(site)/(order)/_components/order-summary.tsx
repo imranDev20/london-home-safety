@@ -100,61 +100,78 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   return (
     <Card className="p-6 sticky top-6">
       <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Selected Services */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between text-sm items-center"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600">{item.package.name}</span>
-                {item.package.isAdditionalPackage && (
-                  <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs font-medium">
-                    x{item.quantity}
-                  </span>
-                )}
+            <div key={item.id} className="space-y-1">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    {item.package.serviceName}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {item.package.name}
+                    {item.package.isAdditionalPackage && (
+                      <span className="ml-2 text-gray-500">
+                        ({item.quantity} {item.package.unitType || "unit"})
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <span className="font-medium text-gray-900">
+                  £{item.price.toFixed(2)}
+                </span>
               </div>
-              <span className="font-medium">£{item.price.toFixed(2)}</span>
             </div>
           ))}
         </div>
 
-        {/* Subtotal */}
+        {/* Charges Section */}
         {!isCartPage && (
           <>
             <Separator />
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Subtotal:</span>
-              <span className="text-gray-900">£{subtotal.toFixed(2)}</span>
-            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between text-gray-600">
+                <span>Subtotal</span>
+                <span className="font-medium text-gray-900">
+                  £{subtotal.toFixed(2)}
+                </span>
+              </div>
 
-            {/* Additional Fees */}
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Parking Fee:</span>
-              <span className="text-gray-900">£{parkingFee.toFixed(2)}</span>
-            </div>
+              <div className="flex justify-between text-gray-600">
+                <span>Parking Fee</span>
+                <span className="font-medium text-gray-900">
+                  £{parkingFee.toFixed(2)}
+                </span>
+              </div>
 
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Congestion Zone Fee:</span>
-              <span className="text-gray-900">£{congestionFee.toFixed(2)}</span>
+              <div className="flex justify-between text-gray-600">
+                <span>Congestion Zone Fee</span>
+                <span className="font-medium text-gray-900">
+                  £{congestionFee.toFixed(2)}
+                </span>
+              </div>
             </div>
           </>
         )}
 
-        {/* Final Total/Subtotal */}
+        {/* Total Section */}
         <Separator />
-        <div className="flex justify-between items-center text-xl font-semibold">
-          <span>{isCartPage ? "Subtotal" : "Total"}:</span>
-          <span>
-            £{(isCartPage ? subtotal : totalPrice).toFixed(2)}{" "}
-            <span className="text-body font-normal text-sm">(inc. Tax)</span>
+        <div className="flex justify-between items-center">
+          <span className="text-base font-medium text-gray-900">
+            {isCartPage ? "Subtotal" : "Total Amount"}
           </span>
+          <div className="text-right">
+            <span className="text-xl font-bold text-primary">
+              £{(isCartPage ? subtotal : totalPrice).toFixed(2)}
+            </span>
+            <p className="text-xs text-gray-500 mt-0.5">Inc. VAT</p>
+          </div>
         </div>
-      </div>
 
-      {renderActionButton()}
+        {renderActionButton()}
+      </div>
     </Card>
   );
 };

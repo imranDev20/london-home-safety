@@ -1,5 +1,3 @@
-import { PropertyType } from "@prisma/client";
-
 import { getPackages } from "@/app/admin/(require-auth)/orders/[order_id]/actions";
 import BookNowPackages from "./book-now-packages";
 

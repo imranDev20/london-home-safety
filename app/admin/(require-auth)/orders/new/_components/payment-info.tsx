@@ -38,6 +38,33 @@ export default function PaymentInfo({ packages }: PaymentInfoProps) {
 
   const summary = priceSummary();
 
+  const renderPackageInfo = (selectedPkg: any, packageDetails: Package) => {
+    const quantityDisplay = packageDetails.isAdditionalPackage
+      ? `${selectedPkg.quantity} ${packageDetails.unitType || "units"}`
+      : packageDetails.unitType;
+
+    return (
+      <div key={selectedPkg.packageId} className="space-y-1">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-gray-900">
+              {packageDetails.serviceName}
+            </p>
+            <p className="text-sm text-gray-600">
+              {packageDetails.name}
+              {quantityDisplay && (
+                <span className="ml-2 text-gray-500">({quantityDisplay})</span>
+              )}
+            </p>
+          </div>
+          <span className="font-medium text-gray-900">
+            £{selectedPkg.price.toFixed(2)}
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Card className="bg-white">
       <CardHeader className="space-y-1">
@@ -107,38 +134,24 @@ export default function PaymentInfo({ packages }: PaymentInfoProps) {
           <div className="lg:col-span-2 order-1 lg:order-2">
             <div className="space-y-4">
               <h3 className="font-medium text-gray-900">Order Summary</h3>
-              <div className="bg-gray-50 rounded-lg p-6 space-y-4">
-                <div className="space-y-3">
+              <div className="bg-gray-50 rounded-lg p-6 space-y-6">
+                {/* Services */}
+                <div className="space-y-4">
                   {selectedPackages.map((selectedPkg) => {
                     const packageDetails = packages.find(
                       (pkg) => pkg.id === selectedPkg.packageId
                     );
-                    return packageDetails ? (
-                      <div
-                        key={selectedPkg.packageId}
-                        className="flex justify-between text-sm text-gray-600"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span>{packageDetails.name}</span>
-                          {packageDetails.isAdditionalPackage &&
-                            selectedPkg.quantity > 1 && (
-                              <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
-                                x{selectedPkg.quantity}
-                              </span>
-                            )}
-                        </div>
-                        <span className="font-medium text-gray-900">
-                          £{selectedPkg.price.toFixed(2)}
-                        </span>
-                      </div>
-                    ) : null;
+                    return packageDetails
+                      ? renderPackageInfo(selectedPkg, packageDetails)
+                      : null;
                   })}
                 </div>
 
                 <Separator />
 
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm text-gray-600">
+                {/* Additional Charges */}
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
                     <span className="font-medium text-gray-900">
                       £{summary.subtotal.toFixed(2)}
@@ -146,7 +159,7 @@ export default function PaymentInfo({ packages }: PaymentInfoProps) {
                   </div>
 
                   {summary.congestionCharge > 0 && (
-                    <div className="flex justify-between text-sm text-gray-600">
+                    <div className="flex justify-between text-gray-600">
                       <span>Congestion Zone Fee</span>
                       <span className="font-medium text-gray-900">
                         £{summary.congestionCharge.toFixed(2)}
@@ -155,7 +168,7 @@ export default function PaymentInfo({ packages }: PaymentInfoProps) {
                   )}
 
                   {summary.parkingCharge > 0 && (
-                    <div className="flex justify-between text-sm text-gray-600">
+                    <div className="flex justify-between text-gray-600">
                       <span>Parking Fee</span>
                       <span className="font-medium text-gray-900">
                         £{summary.parkingCharge.toFixed(2)}
@@ -166,6 +179,7 @@ export default function PaymentInfo({ packages }: PaymentInfoProps) {
 
                 <Separator />
 
+                {/* Total */}
                 <div className="flex justify-between items-center">
                   <span className="text-base font-medium text-gray-900">
                     Total Amount

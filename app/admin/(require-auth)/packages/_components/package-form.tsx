@@ -1,6 +1,5 @@
 "use client";
 
-import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,6 +14,20 @@ import { Input } from "@/components/ui/input";
 import { LoadingButton } from "@/components/ui/loading-button";
 
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,47 +37,28 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { SERVICE_CATEGORY_OPTION, SERVICE_TYPE_OPTIONS } from "@/lib/constants";
-import { kebabToNormal } from "@/lib/utils";
-import { ALL_SERVICES } from "@/shared/data";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   ArrowLeft,
   Building2,
-  Check,
+  ChevronsUpDown,
   ClipboardList,
   Package2,
   Save,
   Tags,
-  X,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { createPackage, updatePackage } from "../actions";
 import { PackageFormInputType, packageSchema } from "../schema";
 import { Package } from "@prisma/client";
 import { Checkbox } from "@/components/ui/checkbox";
-
-const FormSection = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <Card className="shadow-md mb-6">
-    <CardHeader>
-      <CardTitle className="text-xl">{title}</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="grid gap-6 grid-cols-12">{children}</div>
-    </CardContent>
-  </Card>
-);
-
-const priceTypes = ["FIXED", "FROM", "RANGE"];
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ALL_SERVICES } from "@/shared/data";
+import { cn } from "@/lib/utils";
 
 export default function PackageForm({
   packageDetails,
@@ -89,10 +83,11 @@ export default function PackageForm({
     },
   });
 
-  const { control, handleSubmit, watch, reset } = form;
+  const { handleSubmit, reset } = form;
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
+  const [isServicePopoverOpen, setIsServicePopoverOpen] = useState(false);
 
   useEffect(() => {
     if (packageDetails) {
@@ -139,7 +134,7 @@ export default function PackageForm({
   const isUpdateMode = !!packageDetails;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-7">
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
@@ -151,21 +146,18 @@ export default function PackageForm({
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <h1 className="text-2xl font-bold">
-              {packageDetails ? "Edit Package" : "Create New Package"}
+              {packageDetails
+                ? `Edit Package ${packageDetails.name}`
+                : "Create New Package"}
             </h1>
           </div>
-          <p className="text-muted-foreground">
-            {packageDetails
-              ? "Update the package details below"
-              : "Fill in the package details to create a new service package"}
-          </p>
         </div>
         <div className="flex gap-3">
           <Link href="/admin/packages">
             <Button variant="outline">Cancel</Button>
           </Link>
           <LoadingButton type="submit" form="package-form" loading={isPending}>
-            <Save className="mr-2 h-4 w-4" />
+            {!isPending && <Save className="mr-2 h-4 w-4" />}
             {packageDetails ? "Update Package" : "Create Package"}
           </LoadingButton>
         </div>
@@ -174,8 +166,8 @@ export default function PackageForm({
       <Form {...form}>
         <form
           id="package-form"
-          onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
         >
           {/* Basic Details Card */}
           <Card>
@@ -192,7 +184,9 @@ export default function PackageForm({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Package Name</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Package Name
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Enter package name" {...field} />
                       </FormControl>
@@ -202,18 +196,88 @@ export default function PackageForm({
                 />
                 <FormField
                   control={form.control}
-                  name="price"
+                  name="serviceName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Base Price (£)</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Service Name
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="0.00" {...field} />
+                        <Popover
+                          open={isServicePopoverOpen}
+                          onOpenChange={setIsServicePopoverOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full justify-between h-10"
+                            >
+                              {field.value || "Select service"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="p-0">
+                            <Command>
+                              <CommandInput placeholder="Search service..." />
+                              <CommandList>
+                                <CommandEmpty>No service found.</CommandEmpty>
+                                <CommandGroup>
+                                  {ALL_SERVICES.map((service) => (
+                                    <CommandItem
+                                      key={service.label}
+                                      value={service.label}
+                                      onSelect={() => {
+                                        field.onChange(service.label);
+                                        setIsServicePopoverOpen(false);
+                                      }}
+                                      className="flex items-center justify-between"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <Check
+                                          className={cn(
+                                            "mr-2 h-4 w-4",
+                                            field.value === service.label
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                        <span className="font-medium">
+                                          {service.label}{" "}
+                                          {service.abbr
+                                            ? `(${service.abbr})`
+                                            : ""}
+                                        </span>
+                                      </div>
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                      Base Price (£)
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="0.00" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
@@ -252,7 +316,9 @@ export default function PackageForm({
                     <FormItem>
                       <FormLabel>Price Type</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(val) => {
+                          if (val) field.onChange(val);
+                        }}
                         value={field.value}
                       >
                         <FormControl>
@@ -274,7 +340,7 @@ export default function PackageForm({
                   control={form.control}
                   name="isAdditionalPackage"
                   render={({ field }) => (
-                    <FormItem className="flex items-start space-x-2 space-y-0">
+                    <FormItem className="flex items-start space-x-2 space-y-0 mt-2">
                       <FormControl>
                         <Checkbox
                           id="isAdditionalPackage"
@@ -348,9 +414,13 @@ export default function PackageForm({
                   name="propertyType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Property Type</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Property Type
+                      </FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(val) => {
+                          if (val) field.onChange(val);
+                        }}
                         value={field.value}
                       >
                         <FormControl>
@@ -383,9 +453,13 @@ export default function PackageForm({
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Service Category</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Service Category
+                      </FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(val) => {
+                          if (val) field.onChange(val);
+                        }}
                         value={field.value}
                       >
                         <FormControl>
@@ -428,9 +502,13 @@ export default function PackageForm({
                   name="type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Service Type</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Service Type
+                      </FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(val) => {
+                          if (val) field.onChange(val);
+                        }}
                         value={field.value}
                       >
                         <FormControl>
@@ -461,10 +539,7 @@ export default function PackageForm({
                     <FormItem>
                       <FormLabel>Unit Type</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g., per room, per device"
-                          {...field}
-                        />
+                        <Input placeholder="e.g., bedrooms, items" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

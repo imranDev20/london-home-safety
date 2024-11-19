@@ -1,9 +1,8 @@
-import { SlotType } from "@prisma/client";
+import { SlotType, TimeSlot } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { startOfDay, endOfDay, setHours, setMinutes } from "date-fns";
+import { startOfDay, endOfDay, setHours, setMinutes, isBefore } from "date-fns";
 
-// Mark this route as dynamic
 export const dynamic = "force-dynamic";
 
 const SLOT_TYPES: { [key in SlotType]: { start: number; end: number } } = {
@@ -16,7 +15,6 @@ async function createTimeSlotsForDate(date: Date) {
   const startDate = startOfDay(date);
   const endDate = endOfDay(date);
 
-  // Check if slots already exist for this date
   const existingSlots = await prisma.timeSlot.findMany({
     where: {
       date: {
@@ -30,7 +28,6 @@ async function createTimeSlotsForDate(date: Date) {
     return existingSlots;
   }
 
-  // Create slots for each type if they don't exist
   const slots = await Promise.all(
     Object.entries(SLOT_TYPES).map(([type, times]) => {
       const slotDate = new Date(date);
@@ -43,7 +40,8 @@ async function createTimeSlotsForDate(date: Date) {
           startTime,
           endTime,
           slotType: type as SlotType,
-          isBooked: false,
+          maxCapacity: 4,
+          currentBookings: 0,
           isAvailable: true,
         },
       });
@@ -51,6 +49,30 @@ async function createTimeSlotsForDate(date: Date) {
   );
 
   return slots;
+}
+
+function isPastSlot(slot: TimeSlot): boolean {
+  const now = new Date();
+  // Check if the slot's end time is before current time
+  return isBefore(slot.endTime, now);
+}
+
+async function updateSlotAvailability(slots: TimeSlot[]) {
+  return Promise.all(
+    slots.map(async (slot) => {
+      const shouldBeUnavailable =
+        slot.currentBookings >= slot.maxCapacity || isPastSlot(slot);
+
+      if (shouldBeUnavailable && slot.isAvailable) {
+        const updatedSlot = await prisma.timeSlot.update({
+          where: { id: slot.id },
+          data: { isAvailable: false },
+        });
+        return updatedSlot;
+      }
+      return slot;
+    })
+  );
 }
 
 export async function GET(request: NextRequest) {
@@ -66,11 +88,8 @@ export async function GET(request: NextRequest) {
     }
 
     const date = new Date(dateParam);
-
-    // First ensure slots exist for this date
     await createTimeSlotsForDate(date);
 
-    // Then fetch all slots for the date
     const slots = await prisma.timeSlot.findMany({
       where: {
         date: {
@@ -83,7 +102,8 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(slots);
+    const updatedSlots = await updateSlotAvailability(slots);
+    return NextResponse.json(updatedSlots);
   } catch (error) {
     console.error("Error handling time slots:", error);
     return NextResponse.json(
