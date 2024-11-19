@@ -83,22 +83,28 @@ export default function Header() {
                                   </h3>
                                   {category.children && (
                                     <ul className="space-y-2">
-                                      {category.children.map((subItem) => (
-                                        <li key={subItem.path}>
-                                          <Link
-                                            href={`/services${category.path}${subItem.path}`}
-                                            className={`text-sm text-body-dark hover:text-primary ${
-                                              isActive(
-                                                `/services${category.path}${subItem.path}`
-                                              )
-                                                ? "text-primary"
-                                                : ""
-                                            }`}
-                                          >
-                                            {subItem.label}
-                                          </Link>
-                                        </li>
-                                      ))}
+                                      {category.children.map((subItem) => {
+                                        console.log();
+                                        return (
+                                          <li key={subItem.path}>
+                                            <Link
+                                              href={`/services${category.path}${subItem.path}`}
+                                              className={`text-sm text-body-dark hover:text-primary ${
+                                                isActive(
+                                                  `/services${category.path}${subItem.path}`
+                                                )
+                                                  ? "text-primary"
+                                                  : ""
+                                              }`}
+                                            >
+                                              {subItem.label}{" "}
+                                              {subItem.abbr
+                                                ? `(${subItem.abbr})`
+                                                : ""}
+                                            </Link>
+                                          </li>
+                                        );
+                                      })}
                                     </ul>
                                   )}
                                 </div>
