@@ -30,7 +30,6 @@ interface PostcodeSearchProps {
   ) => React.ReactNode;
   buttonContent?: React.ReactNode;
   commandGroupHeading?: string;
-  popoverWidth?: string;
 }
 
 interface Address {
@@ -76,7 +75,6 @@ export default function PostcodeSearch({
   onAddressSelect,
   renderAddressItem,
   commandGroupHeading = "Suggested addresses",
-  popoverWidth = "w-[600px]",
 }: PostcodeSearchProps) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -179,7 +177,7 @@ export default function PostcodeSearch({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(popoverWidth, "p-0")} align="start">
+      <PopoverContent className={cn("p-0")} align="start">
         <Command className="rounded-lg border shadow-md">
           <CommandInput
             placeholder="Search address by postcode..."

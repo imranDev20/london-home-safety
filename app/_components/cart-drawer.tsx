@@ -119,7 +119,9 @@ export default function CartDrawer() {
                     {item.package.isAdditionalPackage && (
                       <div className="flex items-center gap-4 pt-2">
                         <span className="text-sm text-gray-600 font-medium whitespace-nowrap">
-                          Quantity:
+                          {item.package.unitType
+                            ? `Quantity (${item.package.unitType}):`
+                            : "Quantity:"}
                         </span>
                         <div className="relative flex items-stretch h-10 rounded-lg bg-gray-50/80 ring-1 ring-gray-200 p-1 hover:ring-primary/30 transition-all duration-200">
                           <button
@@ -163,6 +165,11 @@ export default function CartDrawer() {
                     )}
                     <p className="font-bold text-primary mt-2">
                       £{item.price.toFixed(2)}
+                      {item.package.isAdditionalPackage && (
+                        <span className="text-sm font-normal text-gray-600 ml-1">
+                          for {item.quantity} {item.package.unitType || "units"}
+                        </span>
+                      )}
                     </p>
                   </div>
                   <button

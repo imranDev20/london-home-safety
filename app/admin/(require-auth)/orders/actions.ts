@@ -269,9 +269,7 @@ export const getOrderById = cache(async (orderId: string) => {
 
 export async function deleteOrder(orderId: string) {
   try {
-    // Use a transaction to ensure both deletions succeed or fail together
     const deletedOrder = await prisma.$transaction(async (tx) => {
-      // First, find the order to get the timeSlotId
       const order = await tx.order.findUnique({
         where: { id: orderId },
         select: { timeSlotId: true },
@@ -281,23 +279,29 @@ export async function deleteOrder(orderId: string) {
         throw new Error("Order not found");
       }
 
-      // Delete the order
-      const deletedOrder = await tx.order.delete({
-        where: { id: orderId },
-      });
-
-      // Delete the associated timeSlot
-      await tx.timeSlot.delete({
+      const timeSlot = await tx.timeSlot.findUnique({
         where: { id: order.timeSlotId },
       });
 
-      return deletedOrder;
+      if (timeSlot) {
+        await tx.timeSlot.update({
+          where: { id: order.timeSlotId },
+          data: {
+            currentBookings: { decrement: 1 },
+            isAvailable: true,
+          },
+        });
+      }
+
+      return await tx.order.delete({
+        where: { id: orderId },
+      });
     });
 
     revalidatePath("/admin", "layout");
 
     return {
-      message: "Order and associated time slot deleted successfully!",
+      message: "Order deleted successfully!",
       data: deletedOrder,
       success: true,
     };
@@ -443,10 +447,8 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
 
     let createdOrder: OrderWithRelations;
 
-    // Database transaction
     createdOrder = await prisma.$transaction(
       async (prismaTransaction) => {
-        // Verify time slot availability first
         const timeSlot = await prismaTransaction.timeSlot.findUnique({
           where: { id: data.timeSlotId },
         });
@@ -455,29 +457,26 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
           throw new Error("Selected time slot not found");
         }
 
-        if (timeSlot.isBooked || !timeSlot.isAvailable) {
+        if (
+          !timeSlot.isAvailable ||
+          timeSlot.currentBookings >= timeSlot.maxCapacity
+        ) {
           throw new Error("Selected time slot is no longer available");
         }
 
-        // Get packages with their details
         const packages = await prismaTransaction.package.findMany({
-          where: {
-            id: {
-              in: packageIds,
-            },
-          },
+          where: { id: { in: packageIds } },
         });
 
         if (packages.length !== packageIds.length) {
           throw new Error("One or more packages not found");
         }
 
-        // Create cart items with calculated prices
+        // calculating the price using server value since price can be altered from frontend
         const cartItems = packages.map((pkg) => {
           const quantity = packageQuantities[pkg.id] || 1;
           let packagePrice = pkg.price;
 
-          // Calculate additional unit prices if applicable
           if (pkg.isAdditionalPackage && quantity > (pkg.minQuantity || 1)) {
             const extraUnits = quantity - (pkg.minQuantity || 1);
             packagePrice += extraUnits * (pkg.extraUnitPrice || 0);
@@ -490,7 +489,6 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
           };
         });
 
-        // Calculate total price from cart items and additional fees
         const cartTotal = cartItems.reduce(
           (total, item) => total + item.price,
           0
@@ -499,19 +497,18 @@ export async function createOrderByAdmin(data: CreateOrderFormInput) {
         const parkingFee = data.parkingOptions !== "FREE" ? PARKING_FEE : 0;
         const totalPrice = cartTotal + congestionFee + parkingFee;
 
-        // Update time slot to mark it as booked
         await prismaTransaction.timeSlot.update({
           where: { id: data.timeSlotId },
           data: {
-            isBooked: true,
-            isAvailable: false,
+            currentBookings: { increment: 1 },
+            isAvailable: {
+              set: timeSlot.currentBookings + 1 < timeSlot.maxCapacity,
+            },
           },
         });
 
-        // Order creation
         const invoiceNumber = await generateInvoiceId();
 
-        // Create the order with cart items
         return await prismaTransaction.order.create({
           data: {
             userId: data.userId,

@@ -39,7 +39,11 @@ export default function AddressAutocomplete() {
       isServiceable: false,
       isChecking: false,
     });
-  const { customerDetails } = useOrderStore();
+  const [manualPostcodeStatus, setManualPostcodeStatus] =
+    useState<ServiceabilityStatus>({
+      isServiceable: false,
+      isChecking: false,
+    });
 
   const updateForm = (address: Address) => {
     form.setValue("street", address.street, { shouldValidate: true });
@@ -100,17 +104,31 @@ export default function AddressAutocomplete() {
       return;
     }
 
-    setSelectedServiceability({ isServiceable: false, isChecking: true });
+    setManualPostcodeStatus({ isServiceable: false, isChecking: true });
     try {
       const result = await isAddressServiceable(postcode);
-      setSelectedServiceability({
+      setManualPostcodeStatus({
         isServiceable: result.isServiceable,
         isChecking: false,
       });
+
+      if (!result.isServiceable) {
+        form.setError("postcode", {
+          type: "manual",
+          message: "We only provide services within Greater London",
+        });
+      } else {
+        // Clear any existing errors when postcode is valid
+        form.clearErrors("postcode");
+      }
     } catch (error) {
-      setSelectedServiceability({
+      setManualPostcodeStatus({
         isServiceable: false,
         isChecking: false,
+      });
+      form.setError("postcode", {
+        type: "manual",
+        message: "Error validating postcode. Please try again.",
       });
     }
   };
@@ -132,6 +150,10 @@ export default function AddressAutocomplete() {
                 onValueChange={(value) => {
                   field.onChange(value);
                   setSelectedAddress(null);
+                  setManualPostcodeStatus({
+                    isServiceable: false,
+                    isChecking: false,
+                  });
                 }}
               >
                 <TabsList className="grid grid-cols-2">
@@ -157,9 +179,7 @@ export default function AddressAutocomplete() {
                     }
                   />
 
-                  {(selectedAddress ||
-                    (form.watch("addressSource") === "search" &&
-                      customerDetails.address.street !== "")) && (
+                  <Card className="p-6 bg-muted/50">
                     <div className="space-y-4">
                       {selectedAddress && (
                         <Alert
@@ -197,7 +217,7 @@ export default function AddressAutocomplete() {
                                 <AlertDescription>
                                   We apologize, but we currently don&apos;t
                                   provide services in your area. We only operate
-                                  in select London boroughs.
+                                  in Greater London.
                                 </AlertDescription>
                               </>
                             )}
@@ -205,65 +225,75 @@ export default function AddressAutocomplete() {
                         </Alert>
                       )}
 
-                      <Card className="p-6 bg-muted/50">
-                        <div className="space-y-4">
+                      <div className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="street"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                                Street Address
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  disabled={!selectedAddress}
+                                  readOnly
+                                  className="bg-background disabled:opacity-50"
+                                  placeholder="Search your postcode to auto-fill address"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <div className="grid grid-cols-2 gap-4">
                           <FormField
                             control={form.control}
-                            name="street"
+                            name="city"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Street Address</FormLabel>
+                                <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                                  City/Town
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     {...field}
+                                    disabled={!selectedAddress}
                                     readOnly
-                                    className="bg-background"
+                                    className="bg-background disabled:opacity-50"
+                                    placeholder="Auto-filled from postcode"
                                   />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
-                          <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="city"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>City/Town</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      readOnly
-                                      className="bg-background"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={form.control}
-                              name="postcode"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Postcode</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      readOnly
-                                      className="bg-background"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                          <FormField
+                            control={form.control}
+                            name="postcode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                                  Postcode
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    disabled={!selectedAddress}
+                                    readOnly
+                                    className="bg-background disabled:opacity-50"
+                                    placeholder="Auto-filled from postcode"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                         </div>
-                      </Card>
+                      </div>
                     </div>
-                  )}
+                  </Card>
                 </TabsContent>
 
                 <TabsContent value="manual">
@@ -274,7 +304,9 @@ export default function AddressAutocomplete() {
                         name="street"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Street Address*</FormLabel>
+                            <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                              Street Address
+                            </FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
@@ -291,9 +323,15 @@ export default function AddressAutocomplete() {
                           name="city"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>City/Town*</FormLabel>
+                              <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                                City/Town
+                              </FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="City/Town" />
+                                <Input
+                                  {...field}
+                                  placeholder="City/Town"
+                                  disabled={!manualPostcodeStatus.isServiceable}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -304,15 +342,35 @@ export default function AddressAutocomplete() {
                           name="postcode"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Postcode*</FormLabel>
+                              <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                                Postcode
+                              </FormLabel>
                               <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="Postcode"
-                                  onChange={(e) =>
-                                    field.onChange(e.target.value.toUpperCase())
-                                  }
-                                />
+                                <div className="space-y-2">
+                                  <Input
+                                    {...field}
+                                    placeholder="Postcode"
+                                    onChange={(e) => {
+                                      const value =
+                                        e.target.value.toUpperCase();
+                                      field.onChange(value);
+                                      if (
+                                        value &&
+                                        /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i.test(
+                                          value
+                                        )
+                                      ) {
+                                        handleManualSubmit(e);
+                                      }
+                                    }}
+                                  />
+                                  {manualPostcodeStatus.isChecking && (
+                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                      <span>Validating postcode...</span>
+                                    </div>
+                                  )}
+                                </div>
                               </FormControl>
                               <FormMessage />
                             </FormItem>

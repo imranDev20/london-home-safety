@@ -1,7 +1,6 @@
 import React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -21,18 +20,8 @@ import {
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
-import { SlotType } from "@prisma/client";
+import { SlotType, TimeSlot } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-
-interface TimeSlot {
-  id: string;
-  date: Date;
-  slotType: SlotType;
-  isAvailable: boolean;
-  isBooked: boolean;
-}
-
-const RequiredIndicator = () => <span className="text-destructive">*</span>;
 
 const APPOINTMENT_SESSIONS = {
   MORNING: {
@@ -74,14 +63,15 @@ function AppointmentSessionCard({
 }) {
   const info = APPOINTMENT_SESSIONS[timeSlot.slotType];
   const Icon = info.icon;
-  const isDisabled = !timeSlot.isAvailable || timeSlot.isBooked;
+  const isDisabled =
+    !timeSlot.isAvailable || timeSlot.currentBookings >= timeSlot.maxCapacity;
 
   const getStatusDisplay = () => {
-    if (timeSlot.isBooked) {
+    if (timeSlot.currentBookings >= timeSlot.maxCapacity) {
       return (
         <div className="flex items-center text-red-500 gap-1 ml-auto">
           <CalendarIcon className="w-4 h-4" />
-          <span className="text-xs font-medium">Booked</span>
+          <span className="text-xs font-medium">Fully Booked</span>
         </div>
       );
     }
@@ -133,9 +123,11 @@ function AppointmentSessionCard({
         <h3 className={cn("font-semibold", isDisabled && "text-gray-500")}>
           {info.label}
         </h3>
-        <div className="flex items-center gap-1 text-sm text-gray-600">
-          <Clock className="w-4 h-4" />
-          {info.time}
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-1">
+            <Clock className="w-4 h-4" />
+            {info.time}
+          </div>
         </div>
       </div>
 

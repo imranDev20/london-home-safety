@@ -53,6 +53,8 @@ export default function CreateOrderForm({
     startTransition(async () => {
       try {
         const result = await createOrderByAdmin(data);
+
+        console.log(result);
         if (result.success) {
           toast({
             title: "Success",
@@ -86,8 +88,6 @@ export default function CreateOrderForm({
       });
     }
   }, [errors, toast]);
-
-  console.log(errors);
 
   return (
     <Form {...form}>

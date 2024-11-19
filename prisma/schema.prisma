@@ -48,8 +48,8 @@ model Order {
   paymentMethod      PaymentMethod  @default(CREDIT_CARD)
   parkingOptions     ParkingOptions @default(NO)
   isCongestionZone   Boolean
-  timeSlotId         String         @unique
-  timeSlot           TimeSlot       @relation(fields: [timeSlotId], references: [id]) // Removed onDelete: Cascade
+  timeSlotId         String
+  timeSlot           TimeSlot       @relation(fields: [timeSlotId], references: [id])
   date               DateTime
   orderNotes         String?
   totalPrice         Float
@@ -61,19 +61,20 @@ model Order {
 }
 
 model TimeSlot {
-  id          String   @id @default(cuid())
-  date        DateTime
-  startTime   DateTime
-  endTime     DateTime
-  slotType    SlotType
-  isBooked    Boolean  @default(false)
-  isAvailable Boolean  @default(true)
-  order       Order? // Relation field without onDelete
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  date            DateTime
+  startTime       DateTime
+  endTime         DateTime
+  slotType        SlotType
+  maxCapacity     Int      @default(4) // Maximum number of bookings allowed
+  currentBookings Int      @default(0) // Current number of bookings
+  isAvailable     Boolean  @default(true) // Will be false when currentBookings >= maxCapacity
+  orders          Order[] // Changed to allow multiple orders
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@unique([date, slotType])
-  @@index([date, isBooked, isAvailable])
+  @@index([date, currentBookings, isAvailable])
 }
 
 model Review {

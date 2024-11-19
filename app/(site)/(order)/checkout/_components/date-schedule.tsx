@@ -1,5 +1,3 @@
-"use client";
-
 import { Calendar } from "@/components/ui/calendar";
 import {
   FormField,
@@ -22,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import { TimeSlot } from "@prisma/client";
 import { CheckoutFormInput } from "../schema";
-import useOrderStore from "@/hooks/use-order-store";
 import { useQuery } from "@tanstack/react-query";
 
 interface DateTimeSelectorProps {
@@ -61,16 +58,17 @@ function AppointmentSessionCard({
   selected: boolean;
   onSelect: (slotId: string) => void;
 }) {
-  const isDisabled = !slot.isAvailable || slot.isBooked;
+  const isDisabled =
+    !slot.isAvailable || slot.currentBookings >= slot.maxCapacity;
   const info = APPOINTMENT_SESSIONS[slot.slotType];
   const Icon = info.icon;
 
   const getStatusDisplay = () => {
-    if (slot.isBooked) {
+    if (slot.currentBookings >= slot.maxCapacity) {
       return (
         <div className="flex items-center text-red-500 gap-1 ml-auto">
           <CalendarIcon className="w-4 h-4" />
-          <span className="text-xs font-medium">Booked</span>
+          <span className="text-xs font-medium">Fully Booked</span>
         </div>
       );
     }
@@ -122,9 +120,11 @@ function AppointmentSessionCard({
         <h3 className={cn("font-semibold", isDisabled && "text-gray-500")}>
           {info.label}
         </h3>
-        <div className="flex items-center gap-1 text-sm text-gray-600">
-          <Clock className="w-4 h-4" />
-          {info.time}
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-1">
+            <Clock className="w-4 h-4" />
+            {info.time}
+          </div>
         </div>
       </div>
 
@@ -141,15 +141,29 @@ const fetchTimeSlots = async (date: Date): Promise<TimeSlot[]> => {
   return response.json();
 };
 
-export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
+export default function DateSchedule({
+  disabledDays = [],
+}: DateTimeSelectorProps) {
   const form = useFormContext<CheckoutFormInput>();
   const selectedDate = form.watch("date");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const { data: timeSlots = [], isLoading } = useQuery({
     queryKey: ["timeSlots", selectedDate],
     queryFn: () => fetchTimeSlots(selectedDate),
     enabled: !!selectedDate,
   });
+
+  const isDateDisabled = (date: Date): boolean => {
+    if (date < today) return true;
+    return disabledDays.some(
+      (disabledDate) =>
+        disabledDate.getFullYear() === date.getFullYear() &&
+        disabledDate.getMonth() === date.getMonth() &&
+        disabledDate.getDate() === date.getDate()
+    );
+  };
 
   return (
     <Card className="p-6">
@@ -175,7 +189,8 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                         form.setValue("timeSlotId", "");
                       }
                     }}
-                    disabled={disabledDays}
+                    disabled={isDateDisabled}
+                    fromDate={today}
                     className="w-full"
                   />
                 </div>
@@ -221,7 +236,7 @@ export default function DateSchedule({ disabledDays }: DateTimeSelectorProps) {
                     {[1, 2, 3].map((index) => (
                       <div
                         key={index}
-                        className="animate-pulse rounded-lg border-2 border-gray-100 h-[80px] p-4 flex items-center"
+                        className="animate-pulse rounded-lg border-2 border-gray-100 h-20 p-4 flex items-center"
                       >
                         <div className="flex items-center gap-4 w-full">
                           <div className="rounded-full bg-gray-200 h-10 w-10 flex-shrink-0" />

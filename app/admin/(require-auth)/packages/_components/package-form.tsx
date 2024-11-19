@@ -1,6 +1,5 @@
 "use client";
 
-import DynamicBreadcrumb from "@/components/dynamic-breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -24,10 +23,7 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { SERVICE_CATEGORY_OPTION, SERVICE_TYPE_OPTIONS } from "@/lib/constants";
-import { kebabToNormal } from "@/lib/utils";
-import { ALL_SERVICES } from "@/shared/data";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   ArrowLeft,
   Building2,
@@ -36,7 +32,6 @@ import {
   Package2,
   Save,
   Tags,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -46,6 +41,7 @@ import { createPackage, updatePackage } from "../actions";
 import { PackageFormInputType, packageSchema } from "../schema";
 import { Package } from "@prisma/client";
 import { Checkbox } from "@/components/ui/checkbox";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const FormSection = ({
   title,
@@ -139,7 +135,7 @@ export default function PackageForm({
   const isUpdateMode = !!packageDetails;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-7">
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
@@ -151,14 +147,11 @@ export default function PackageForm({
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <h1 className="text-2xl font-bold">
-              {packageDetails ? "Edit Package" : "Create New Package"}
+              {packageDetails
+                ? `Edit Package ${packageDetails.name}`
+                : "Create New Package"}
             </h1>
           </div>
-          <p className="text-muted-foreground">
-            {packageDetails
-              ? "Update the package details below"
-              : "Fill in the package details to create a new service package"}
-          </p>
         </div>
         <div className="flex gap-3">
           <Link href="/admin/packages">
@@ -192,7 +185,9 @@ export default function PackageForm({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Package Name</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Package Name
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Enter package name" {...field} />
                       </FormControl>
@@ -205,7 +200,9 @@ export default function PackageForm({
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Base Price (£)</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Base Price (£)
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="0.00" {...field} />
                       </FormControl>
@@ -274,7 +271,7 @@ export default function PackageForm({
                   control={form.control}
                   name="isAdditionalPackage"
                   render={({ field }) => (
-                    <FormItem className="flex items-start space-x-2 space-y-0">
+                    <FormItem className="flex items-start space-x-2 space-y-0 mt-2">
                       <FormControl>
                         <Checkbox
                           id="isAdditionalPackage"
@@ -348,7 +345,9 @@ export default function PackageForm({
                   name="propertyType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Property Type</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Property Type
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -383,7 +382,9 @@ export default function PackageForm({
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Service Category</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Service Category
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -428,7 +429,9 @@ export default function PackageForm({
                   name="type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Service Type</FormLabel>
+                      <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Service Type
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -461,10 +464,7 @@ export default function PackageForm({
                     <FormItem>
                       <FormLabel>Unit Type</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g., per room, per device"
-                          {...field}
-                        />
+                        <Input placeholder="e.g., bedrooms, items" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

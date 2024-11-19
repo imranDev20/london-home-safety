@@ -2,6 +2,7 @@
 
 import React, { useMemo, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import usePackageStore from "@/hooks/use-package-store";
 import useOrderStore from "@/hooks/use-order-store";
 import { Package } from "@prisma/client";
@@ -10,6 +11,7 @@ import { Check, ShoppingCart, Plus, Minus } from "lucide-react";
 export default function PackageCard({ pack }: { pack: Package }) {
   const { selectedPackage, setPackage } = usePackageStore();
   const { cartItems, updateItemQuantity, calculatePrice } = useOrderStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   const cartItem = useMemo(() => {
     return cartItems.find((item) => item.package.id === pack.id);
@@ -19,6 +21,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
 
   useEffect(() => {
     setQuantity(cartItem?.quantity ?? pack.minQuantity ?? 0);
+    setIsLoading(false);
   }, [cartItem, pack.minQuantity]);
 
   const currentPrice = useMemo(() => {
@@ -52,16 +55,13 @@ export default function PackageCard({ pack }: { pack: Package }) {
   };
 
   const handlePackageSelect = () => {
-    // If item is in cart, do nothing
     if (cartItem) return;
 
-    // If item is currently selected, deselect it
     if (selectedPackage?.package.id === pack.id) {
       setPackage(null);
       return;
     }
 
-    // Otherwise, select the item
     const newCartItem = {
       id: pack.id,
       package: pack,
@@ -71,6 +71,29 @@ export default function PackageCard({ pack }: { pack: Package }) {
 
     setPackage(newCartItem);
   };
+
+  if (isLoading) {
+    return (
+      <Card className="p-8">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-6 w-6 rounded-md" />
+          <div className="flex-grow space-y-3">
+            <div className="flex justify-between">
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-[200px]" />
+              </div>
+              <Skeleton className="h-6 w-20" />
+            </div>
+            {pack.isAdditionalPackage && (
+              <div className="flex items-center gap-4 pt-2">
+                <Skeleton className="h-10 w-[200px]" />
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -83,7 +106,9 @@ export default function PackageCard({ pack }: { pack: Package }) {
       {cartItem && (
         <div className="absolute top-0 right-0 bg-secondary text-black text-xs font-semibold px-2 py-1 rounded-bl-md flex items-center">
           <ShoppingCart className="w-3 h-3 mr-1" />
-          In Cart
+          In Cart{" "}
+          {pack.isAdditionalPackage &&
+            `(${cartItem.quantity} ${pack.unitType || "units"})`}
         </div>
       )}
 
@@ -150,7 +175,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
             {pack.isAdditionalPackage && (
               <div className="flex items-center gap-4 pt-2">
                 <span className="text-sm text-gray-600 font-medium whitespace-nowrap">
-                  Quantity:
+                  {pack.unitType ? `Quantity (${pack.unitType}):` : "Quantity:"}
                 </span>
                 <div className="relative flex items-stretch h-10 rounded-lg bg-gray-50/80 ring-1 ring-gray-200 p-1 hover:ring-primary/30 transition-all duration-200">
                   <button

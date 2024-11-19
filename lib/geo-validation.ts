@@ -1,52 +1,58 @@
-import { Point, Feature, Polygon } from "geojson";
+import { Point, Feature, Polygon, MultiPolygon, Position } from "geojson";
 
-// Cache for geocoding results to minimize API calls
 const geocodeCache: Map<string, { lat: number; lng: number }> = new Map();
 
-// Load the GeoJSON data from the public folder
-async function loadGreaterLondonBoundary(): Promise<Feature<Polygon>> {
+async function loadLondonBoundaries(): Promise<
+  Feature<Polygon | MultiPolygon>[]
+> {
   try {
-    const response = await fetch("/greater-london.geo.json");
+    const response = await fetch("/london-geo.json");
     const data = await response.json();
-    return data;
+    return data.features;
   } catch (error) {
-    console.error("Error loading Greater London boundary:", error);
-    throw new Error("Failed to load Greater London boundary data");
+    console.error("Error loading London boundaries:", error);
+    throw new Error("Failed to load London boundary data");
   }
 }
 
-// Point in polygon algorithm implementation
-function isPointInPolygon(point: Point, polygon: Feature<Polygon>): boolean {
-  const [longitude, latitude] = point.coordinates;
-  const coordinates = polygon.geometry.coordinates[0];
-
+function isPointInSimplePolygon(point: Position, polygon: Position[]): boolean {
   let inside = false;
-  for (let i = 0, j = coordinates.length - 1; i < coordinates.length; j = i++) {
-    const [xi, yi] = coordinates[i];
-    const [xj, yj] = coordinates[j];
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, yi] = polygon[i];
+    const [xj, yj] = polygon[j];
 
     const intersect =
-      yi > latitude !== yj > latitude &&
-      longitude < ((xj - xi) * (latitude - yi)) / (yj - yi) + xi;
+      yi > point[1] !== yj > point[1] &&
+      point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi;
 
     if (intersect) inside = !inside;
   }
-
   return inside;
 }
 
-// Function to geocode a UK postcode using postcodes.io (free service)
+function isPointInPolygon(
+  point: Point,
+  feature: Feature<Polygon | MultiPolygon>
+): boolean {
+  const coordinates = point.coordinates;
+
+  if (feature.geometry.type === "Polygon") {
+    return isPointInSimplePolygon(coordinates, feature.geometry.coordinates[0]);
+  } else {
+    // For MultiPolygon, check if point is in any of the polygons
+    return feature.geometry.coordinates.some((polygonCoords) =>
+      isPointInSimplePolygon(coordinates, polygonCoords[0])
+    );
+  }
+}
+
 async function geocodePostcode(
   postcode: string
 ): Promise<{ lat: number; lng: number } | null> {
-  // Remove spaces and convert to uppercase
   const cleanPostcode = postcode.replace(/\s+/g, "").toUpperCase();
 
-  // Check cache first
   const cached = geocodeCache.get(cleanPostcode);
-  if (cached) {
-    return cached;
-  }
+  if (cached) return cached;
 
   try {
     const response = await fetch(
@@ -54,18 +60,14 @@ async function geocodePostcode(
     );
     const data = await response.json();
 
-    if (!response.ok || !data.result) {
-      return null;
-    }
+    if (!response.ok || !data.result) return null;
 
     const result = {
       lat: data.result.latitude,
       lng: data.result.longitude,
     };
 
-    // Cache the result
     geocodeCache.set(cleanPostcode, result);
-
     return result;
   } catch (error) {
     console.error("Error geocoding postcode:", error);
@@ -73,10 +75,8 @@ async function geocodePostcode(
   }
 }
 
-// Additional boundaries for specific excluded areas
-const EXCLUDED_AREAS: Feature<Polygon>[] = [];
+const EXCLUDED_AREAS: Feature<Polygon | MultiPolygon>[] = [];
 
-// Main validation function
 export async function isAddressServiceable(
   postcode: string,
   options: {
@@ -87,47 +87,45 @@ export async function isAddressServiceable(
   isServiceable: boolean;
   coordinates?: { lat: number; lng: number };
   error?: string;
+  borough?: string;
 }> {
   try {
-    // Basic postcode format validation
     const postcodeRegex = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i;
     if (!postcodeRegex.test(postcode)) {
-      return {
-        isServiceable: false,
-        error: "Invalid postcode format",
-      };
+      return { isServiceable: false, error: "Invalid postcode format" };
     }
 
-    // Load Greater London boundary
-    const greaterLondonBoundary = await loadGreaterLondonBoundary();
-
-    // Geocode the postcode
+    const londonBoundaries = await loadLondonBoundaries();
     const coordinates = await geocodePostcode(postcode);
+
     if (!coordinates) {
-      return {
-        isServiceable: false,
-        error: "Unable to geocode postcode",
-      };
+      return { isServiceable: false, error: "Unable to geocode postcode" };
     }
 
-    // Create GeoJSON point from coordinates
     const point: Point = {
       type: "Point",
       coordinates: [coordinates.lng, coordinates.lat],
     };
 
-    // Check if point is in Greater London
-    const isInGreaterLondon = isPointInPolygon(point, greaterLondonBoundary);
+    let isInLondon = false;
+    let borough: string | undefined;
 
-    if (!isInGreaterLondon) {
+    for (const boundary of londonBoundaries) {
+      if (isPointInPolygon(point, boundary)) {
+        isInLondon = true;
+        borough = boundary.properties?.name;
+        break;
+      }
+    }
+
+    if (!isInLondon) {
       return {
         isServiceable: false,
         coordinates,
-        error: "Address is outside Greater London",
+        error: "Address is outside London",
       };
     }
 
-    // Check excluded areas if option is enabled
     if (options.checkExcludedAreas) {
       for (const excludedArea of EXCLUDED_AREAS) {
         if (isPointInPolygon(point, excludedArea)) {
@@ -135,6 +133,7 @@ export async function isAddressServiceable(
             isServiceable: false,
             coordinates,
             error: "Address is in excluded area",
+            borough,
           };
         }
       }
@@ -143,6 +142,7 @@ export async function isAddressServiceable(
     return {
       isServiceable: true,
       coordinates,
+      borough,
     };
   } catch (error) {
     return {
@@ -152,29 +152,22 @@ export async function isAddressServiceable(
   }
 }
 
-// Helper function to add custom excluded areas
-export function addExcludedArea(area: Feature<Polygon>) {
+export function addExcludedArea(area: Feature<Polygon | MultiPolygon>) {
   EXCLUDED_AREAS.push(area);
 }
 
-// Helper function to clear geocoding cache
 export function clearGeocodeCache() {
   geocodeCache.clear();
 }
 
-// Types for custom area definitions
 export interface ServiceAreaDefinition {
   name: string;
-  polygon: Feature<Polygon>;
+  polygon: Feature<Polygon | MultiPolygon>;
   isExcluded: boolean;
 }
 
-// Function to add multiple service area definitions
 export function updateServiceAreas(areas: ServiceAreaDefinition[]) {
-  // Clear existing excluded areas
   EXCLUDED_AREAS.length = 0;
-
-  // Add new excluded areas
   areas
     .filter((area) => area.isExcluded)
     .forEach((area) => EXCLUDED_AREAS.push(area.polygon));

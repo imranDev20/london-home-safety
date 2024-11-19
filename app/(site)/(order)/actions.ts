@@ -115,7 +115,10 @@ export async function createOrder(orderData: OrderData): Promise<{
           throw new Error("Selected time slot not found");
         }
 
-        if (timeSlot.isBooked || !timeSlot.isAvailable) {
+        if (
+          !timeSlot.isAvailable ||
+          timeSlot.currentBookings >= timeSlot.maxCapacity
+        ) {
           throw new Error("Selected time slot is no longer available");
         }
 
@@ -153,7 +156,7 @@ export async function createOrder(orderData: OrderData): Promise<{
           },
         });
 
-        // Package fetching and validation
+        // Package validation and price calculation
         const packageIds = cartItems.map((pkg) => pkg.package.id);
         const packages = await transactionPrisma.package.findMany({
           where: { id: { in: packageIds } },
@@ -164,12 +167,10 @@ export async function createOrder(orderData: OrderData): Promise<{
           throw new Error("One or more packages not found");
         }
 
-        // Price calculation
         const cartTotal = cartItems.reduce(
           (total, cartItem) => total + cartItem.price,
           0
         );
-
         const congestionFee = customerDetails.isCongestionZone
           ? CONGESTION_FEE
           : 0;
@@ -177,16 +178,18 @@ export async function createOrder(orderData: OrderData): Promise<{
           customerDetails.parkingOptions === "FREE" ? 0 : PARKING_FEE;
         const totalPrice = cartTotal + congestionFee + parkingFee;
 
-        // Update time slot to mark it as booked
+        // Update time slot to increment bookings
         await transactionPrisma.timeSlot.update({
           where: { id: customerDetails.timeSlotId },
           data: {
-            isBooked: true,
-            isAvailable: false,
+            currentBookings: { increment: 1 },
+            isAvailable: {
+              set: timeSlot.currentBookings + 1 < timeSlot.maxCapacity,
+            },
           },
         });
 
-        // Order creation
+        // Create order
         const invoiceNumber = await generateInvoiceId();
 
         return await transactionPrisma.order.create({

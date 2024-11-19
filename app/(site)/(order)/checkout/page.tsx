@@ -376,7 +376,7 @@ export default function CheckoutPage() {
                     <PopoverTrigger>
                       <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </PopoverTrigger>
-                    <PopoverContent className="w-80">
+                    <PopoverContent className="w-full">
                       <ul className="list-disc pl-4 space-y-1">
                         {infoItems.map((item, index) => (
                           <li key={index} className="text-sm">

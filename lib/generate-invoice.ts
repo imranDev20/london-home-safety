@@ -193,22 +193,22 @@ export function generateInvoiceTemplate(doc: jsPDF, data: InvoiceData) {
   doc.setTextColor(bodyColor);
   doc.setFont("helvetica", "normal");
 
-  order.cartItems.forEach((pkg, index) => {
+  order.cartItems.forEach((cartItem, index) => {
     const isEven = index % 2 === 0;
     doc.setFillColor(isEven ? sectionBackground : white);
     doc.rect(20, yPos - 5, 170, 10, "F");
 
     // Format service name - only show quantity for additional packages
-    let serviceName = `${pkg.package.serviceName} - ${pkg.package.name}`;
-    if (pkg.package.isAdditionalPackage && pkg.quantity > 1) {
-      const unitSuffix = pkg.package.unitType
-        ? ` ${pkg.package.unitType}`
+    let serviceName = `${cartItem.package.serviceName} - ${cartItem.package.name}`;
+    if (cartItem.package.isAdditionalPackage) {
+      const unitSuffix = cartItem.package.unitType
+        ? ` ${cartItem.package.unitType}`
         : "items";
-      serviceName += ` (${pkg.quantity}${unitSuffix})`;
+      serviceName += ` (${cartItem.quantity}${unitSuffix})`;
     }
 
     yPos = wrapText(doc, serviceName, 25, yPos, 130, 10);
-    doc.text(`£${pkg.price.toFixed(2)}`, 185, yPos, { align: "right" });
+    doc.text(`£${cartItem.price.toFixed(2)}`, 185, yPos, { align: "right" });
     yPos += 15;
   });
 

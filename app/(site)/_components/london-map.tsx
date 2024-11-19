@@ -17,33 +17,29 @@ const LondonMap = ({ activeDistrict, ...props }: LondonMapProps) => {
     >
       <style>
         {`
-   .borough {
-     fill: #f9c3ac;
-     stroke: #000;
-     stroke-width: 1;
-     transition: all 0.3s ease;
-   }
-   .borough:hover {
-     fill: #f0a088;
-     cursor: pointer;
-     stroke-width: 1.5;
-     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-   }
-   .borough.active {
-     fill: #4A90E2;
-     stroke-width: 1.5;
-     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-   }
-   .borough.active:hover {
-     fill: #357ABD;
-   }
- `}
+            .borough {
+                fill: #f9c3ac;
+                stroke: #000;
+                stroke-width: 1;
+                transition: all 0.3s ease;
+            }
+            .borough:hover {
+                fill: #f0a088;
+                cursor: pointer;
+                stroke-width: 1.5;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            }
+            .borough.active {
+                fill: #4A90E2;
+                stroke-width: 1.5;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            }
+            .borough.active:hover {
+                fill: #357ABD;
+            }
+        `}
       </style>
-      <defs>
-        <style>
-          {".cls-1{fill:#f9c3ac;stroke:#000;stroke-miterlimit:10;}"}
-        </style>
-      </defs>
+
       <path
         className="cls-1"
         d="M839.63,377.87l0-.32M533.78,392.8a1.77,1.77,0,0,1,0-.2m321-253.8-.13-.25m-464,158h0m97.24-118.13h-.24M590.7,242.77l-.09-.22m-54.83,31.14-.17-.14m37,120.08,0,.1"
@@ -80,7 +76,7 @@ const LondonMap = ({ activeDistrict, ...props }: LondonMapProps) => {
       {/* CITY OF WESTMINSTER */}
       <path
         className={`borough ${
-          activeDistrict === "city of westminster" ? "active" : ""
+          activeDistrict === "westminster" ? "active" : ""
         }`}
         d="M529.92,388.26c-3.63.32-5.88.74-8,2.05a14.82,14.82,0,0,0-4.66,4.65,16.72,16.72,0,0,0-2.33,8.55c-.5,12-.75,18-1.56,21.74-.95,4.38-2.79,12.8-9.33,16.3-3.1,1.66-6.9,2-10.09,2.33-4,.38-4.25-.21-9.32,0-1.66.07-3.14.19-4.76.39A31.88,31.88,0,0,1,473,433c-1.6-4.65-1.29-7.58-3.1-15.54-.84-3.67-1.72-6.63-2.33-8.54l-10.27,6.21q-3.63.84-7.59,1.55c-3.8.68-7.44,1.18-10.87,1.55l-.78-7h-5.43l-3.88-18.64-7,.77-1.55-7L414,384.83c-.26-1.55-.52-3.11-.77-4.66a24.49,24.49,0,0,1-6.21-9.32l4.08-1.36a18.64,18.64,0,0,0-8.74-10.29L390,356.09v-6.21a57.14,57.14,0,0,1,10.88-4.66,58,58,0,0,1,6.21-1.55,15.28,15.28,0,0,1,8.54,11.65A79.55,79.55,0,0,0,421,336.69l5.43,3.88,12.43-13.19L455.18,339l7-6.21h11.64l6.11,25.47,8.64,1.71a16.69,16.69,0,0,0,3.1,7c1.52,2,2.92,2.78,6.21,5.44,1.55,1.25,3.71,3.08,6.21,5.44q1.16,4.26,2.33,8.54l22.91-7.75Q529.63,383.46,529.92,388.26Z"
       />
