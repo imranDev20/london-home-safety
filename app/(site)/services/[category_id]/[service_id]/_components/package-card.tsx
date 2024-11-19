@@ -156,9 +156,6 @@ export default function PackageCard({ pack }: { pack: Package }) {
                 <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">
                   {pack.name}
                 </h3>
-                <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                  {pack.description}
-                </p>
               </div>
               <div className="text-right">
                 <div className="text-xl font-bold text-primary">

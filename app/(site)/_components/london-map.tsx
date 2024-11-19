@@ -5,8 +5,6 @@ interface LondonMapProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const LondonMap = ({ activeDistrict, ...props }: LondonMapProps) => {
-  console.log(activeDistrict);
-
   return (
     <svg
       id="Layer_1"
