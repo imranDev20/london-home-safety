@@ -2865,6 +2865,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Contact", path: "/contact" },
 ];
 
+// Delete this fn in later refactorings
 export const generateBlogData = () => {
   return [
     {

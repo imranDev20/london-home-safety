@@ -114,7 +114,8 @@ export default async function ServiceDetailsPage({
             <div className="col-span-1 order-2 md:order-1 mt-10">
               <DynamicBreadcrumb items={breadCrumbOptions} isTransparent />
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight mt-10">
-                {currentService?.label}
+                {currentService?.label}{" "}
+                {currentService?.abbr ? `(${currentService.abbr})` : ""}
               </h1>
               <p className="mb-8 leading-relaxed text-lg text-white">
                 {currentService?.detailedDesc?.details}

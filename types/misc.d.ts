@@ -35,8 +35,6 @@ export type NavItem = {
 
 export type NavLeafItem = Omit<NavItem, "children"> & {
   categoryPath?: string;
-  authorName?: string;
-  publishedDate?: string;
 };
 
 export type SendEmailDataType = {

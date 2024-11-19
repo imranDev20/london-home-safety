@@ -26,7 +26,7 @@ export default function ServiceCard({
   price: number | string;
   siteSettings: SiteSettingWithRelations;
 }) {
-  const { description, image, path, label, categoryPath } = service;
+  const { description, image, path, label, categoryPath, abbr } = service;
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
@@ -59,7 +59,7 @@ export default function ServiceCard({
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <h4 className="absolute bottom-4 left-4 text-xl sm:text-2xl font-bold text-white">
-              {label}
+              {label} {abbr ? `(${abbr})` : ""}
             </h4>
           </CardHeader>
           <CardContent className="p-4 sm:p-6 flex-grow">
