@@ -442,6 +442,9 @@ export default function PackageForm({
                           <SelectItem value="BUSINESS_SECTOR">
                             Business Sectors
                           </SelectItem>
+                          <SelectItem value="NOT_APPLICABLE">
+                            NOT APPLICABLE
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
