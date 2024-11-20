@@ -86,6 +86,7 @@
     "eslint-config-next": "14.2.5",
     "postcss": "^8.4.41",
     "prisma": "^5.22.0",
+    "supabase": "^1.223.10",
     "tailwindcss": "^3.4.10",
     "typescript": "^5"
   },
