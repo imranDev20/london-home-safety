@@ -8,7 +8,7 @@ import ContactMap from "./_components/contact-map";
 
 const breadCrumbOptions = [
   {
-    label: "Contact us",
+    label: "Contact Us",
     isCurrentPage: true,
   },
 ];

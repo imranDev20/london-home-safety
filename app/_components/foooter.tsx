@@ -125,7 +125,7 @@ export default function Footer({
               Disclaimer
             </Link>
             <Link href="#" className="hover:underline">
-              Contact us
+              Contact Us
             </Link>
           </div>
         </div>
