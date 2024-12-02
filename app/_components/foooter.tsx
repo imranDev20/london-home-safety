@@ -115,7 +115,7 @@ export default function Footer({
           </div>
         </div>
         <hr className="my-10 border-gray-400" />
-        <div className="container mx-auto mt-8   pt-6 flex justify-between text-sm">
+        <div className="container mx-auto mt-8 pt-6 flex justify-between text-sm">
           <p>©2024 Home Safety London. All Rights Reserved</p>
           <div className="flex space-x-4">
             <Link href="#" className="hover:underline">
@@ -129,6 +129,15 @@ export default function Footer({
             </Link>
           </div>
         </div>
+        <p className="text-xs text-gray-300 text-center mt-4">
+          Website designed & developed by{" "}
+          <Link
+            href="https://spiderbyteit.com"
+            className="hover:underline text-secondary"
+          >
+            Spiderbyte IT
+          </Link>
+        </p>
       </div>
     </footer>
   );
