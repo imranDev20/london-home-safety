@@ -85,7 +85,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
               <Skeleton className="h-6 w-20" />
             </div>
             {pack.isAdditionalPackage && (
-              <div className="flex items-center gap-4 pt-2">
+              <div className="flex items-center gap-4">
                 <Skeleton className="h-10 w-[200px]" />
               </div>
             )}
@@ -151,7 +151,7 @@ export default function PackageCard({ pack }: { pack: Package }) {
           </div>
 
           <div className="flex-grow space-y-3">
-            <div className="flex justify-between items-start pt-2">
+            <div className="flex justify-between items-start">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">
                   {pack.name}
