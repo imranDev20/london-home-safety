@@ -86,10 +86,10 @@ export default function Footer({
               <li className="flex items-center">
                 <MdLocalPhone className="mr-2 text-xl" />
                 <a
-                  href={`tel:${siteSettings?.phone1 || ""}`}
+                  href={`tel:${siteSettings?.phone2 || ""}`}
                   className="hover:underline"
                 >
-                  {siteSettings?.phone1 || "No phone number available"}
+                  {siteSettings?.phone2 || "No phone number available"}
                 </a>
               </li>
               <li className="flex items-center">
